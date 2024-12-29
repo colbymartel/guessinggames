@@ -821,7 +821,7 @@ select:focus {
     </header>
     </nav>
     <section class="game-section">
-        <h3>Game #1</h3>
+        <h3>Game #2</h3>
         <div class="game-container">
             <select id="question-dropdown">
                 <option value="" disabled selected>Select a question...</option>
@@ -905,8 +905,8 @@ select:focus {
         <div class="popup-content">
             <button class="close-popup" id="close-celebration-popup">&times;</button>
             <h2>🎉 Congratulations! 🎉</h2>
-            <p>You correctly guessed <strong id="correct-artist-name">Kyle O'Connor</strong>!</p>
-            <img src="/kyleoconnor.png">
+            <p>You correctly guessed <strong id="correct-artist-name">Sam Greenberg</strong>!</p>
+            <img src="/samgreenberg.png">
             <p>Questions used: <span id="questions-used-popup">0</span></p>
             <p>Guesses made: <span id="guesses-made-popup">0</span></p>
             <p>Hints used: <span id="hints-used-popup">0</span></p>
@@ -923,8 +923,8 @@ select:focus {
         <div class="popup-content">
             <button class="close-popup" id="close-giveup-popup">&times;</button>
             <h2>Better Luck Tomorrow! 🎉</h2>
-            <p>The correct answer is <strong id="giveup-correct-artist-name">Kyle O'Connor</strong>!</p>
-            <img src="/kyleoconnor.jpg">
+            <p>The correct answer is <strong id="giveup-correct-artist-name">Sam Greenberg</strong>!</p>
+            <img src="/samgreenberg.jpg">
             <p>Questions used: <span id="giveup-questions-used-popup">0</span></p>
             <p>Guesses made: <span id="giveup-guesses-made-popup">0</span></p>
             <p>Hints used: <span id="giveup-hints-used-popup">0</span></p>
@@ -1007,30 +1007,30 @@ const raffleButton = document.getElementById("raffle-button");
 const countdownPopup = document.getElementById("countdown-popup");
 
 const hints = [
-    "Hint: At least 3 other students shared this first name.",
-    "Hint: He was a year-round athlete.",
-    "Hint: He has orange hair.",
-    "Hint: His initials are 'KO'.",
+    "Hint: They attend an east coast college.",
+    "Hint: He is a business student.",
+    "Hint: His first name starts with 'S'.",
+    "Hint: He was on the SAFE squad."
 ];
 
 const predefinedAnswers = {
     // Basic Info
     "is this a male student?": "Yes!",
-    "are they cuffed?":"Yes!",
+    "are they cuffed?":"I don't think so!",
 "are they married?":"No!",
-"did they date?":"Yes!",
+"did they date?":"I don't think so!",
 "did they attend Nashua South?":"Yes!",
-"did they attend Main Dunstable?":"No!",
-"did they graduate in 2020?":"Yes!",
+"did they attend Main Dunstable?":"I don't think so!",
+"did they graduate in 2020?":"No!",
 "did they attend college?":"Yes!",
 "did they attend an ivy league?":"No!",
-"were they top 100 in our class?":"No!",
-"were they top 25 in our class?":"No!",
+"were they top 100 in our class?":"Not our class!",
+"were they top 25 in our class?":"Not our class!",
 "honors or AP?":"Yes!",
-"were they in AP Lang?":"No!",
-"mr claffey?":"Yes!",
-"ms aucoin?":"Yes!",
-"ms soucy?":"Yes!",
+"were they in AP Lang?":"Maybe!",
+"mr claffey?":"I think so!",
+"ms aucoin?":"Maybe!",
+"ms soucy?":"Maybe!",
 "skip squad?":"No!",
 "online gym?":"No!",
 "run for class office?":"No!",
@@ -1039,25 +1039,25 @@ const predefinedAnswers = {
 "innovations club?":"No!",
 "did they play sports":"Yes!",
 "did they play winter sports":"Yes!",
-"did they play spring sports":"Yes!",
-"did they play football":"Yes!",
+"did they play spring sports":"No!",
+"did they play football":"No!",
 "did they run":"No!",
-"did they play basketball":"No!",
-"senior choice award nominee?":"Yes!",
+"did they play basketball":"Yes!",
+"senior choice award nominee?":"No!",
 "senior choice award winner?":"No!",
-"did they go to jprom":"Yes!",
+"did they go to jprom":"No, canceled!",
 "mr nhs?":"No!",
-"yearbook superlative?":"No!",
-"yearbook quote?":"No!",
+"yearbook superlative?":"Unknown!",
+"yearbook quote?":"Unknown!",
 "scholarship?":"No!",
 "do they have dark hair?":"No!",
-"do they have blond hair?":"No!",
+"do they have blond hair?":"Yes!",
 "do they have tattoos?":"No!",
 "do they wear glasses?":"No!",
-"do they go by their birth name?":"Yes!",
-"do they have siblings?":"Yes!",
+"do they go by their birth name?":"Nickname!",
+"do they have siblings?":"Unknown!",
 "do they have a common first name?":"Yes!",
-"what does their name start with?":"Yes!"
+"what does their name start with?":"No!"
 };
 
 
@@ -1102,7 +1102,7 @@ function transformHintToGiveUp() {
 
     // Add the Give Up functionality to the new button
     giveUpButton.addEventListener("click", () => {
-        showGiveUpPopup("Kyle O'Connor"); // Replace with the correct answer dynamically
+        showGiveUpPopup("Sam Greenberg"); // Replace with the correct answer dynamically
     });
 }
 
@@ -1245,7 +1245,7 @@ submitGuess.addEventListener("click", () => {
     guessCount++;
     updateProgress();
 
-    const correctAnswer = "Kyle O'Connor"; // Example correct answer
+    const correctAnswer = "Sam Greenberg"; // Example correct answer
     if (guess.toLowerCase() === correctAnswer.toLowerCase()) {
         guessResponse.textContent = `Correct! The artist is ${correctAnswer}. 🎉`;
         guessResponse.className = "response guess-response correct";
@@ -1407,7 +1407,7 @@ function toggleMenu() {
 
         const artists = [
    "Kyle O'Connor","Kyle Salemi","Kyle Hancock","Kyle Nguyen","Jeffrey Lam","Adyant Shankar","Colby Martel","Cara Lecklider","Ananya Bakshi","Srinath Rangan","Nitish Bodicharla","Prudhvi Siddabathula","Joey Buturla","Ben Levine","Jake Smith","Paul Marchand","George Eid","Brandon Yan", "Zach Gauthier","Abby Bender",
-   "Owen Long","Kevin Flaherty","Caden Hedquist", "Lia Whitesel","Joanne Lee","Greg Hall","Joshua Kalman","Henry Hanya","Charlie Collins","Sid Gupta", "Kara Kelliher"
+   "Owen Long","Kevin Flaherty","Josh Gao", "Kendle Lam", "Sam Greenberg", "Caden Hedquist", "Lia Whitesel","Joanne Lee","Greg Hall","Joshua Kalman","Henry Hanya","Charlie Collins","Sid Gupta", "Kara Kelliher"
 ];
 
         // Adjust the autocomplete list width and position
