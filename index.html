@@ -49,15 +49,27 @@
       padding: 20px;
       text-align: center;
     }
-    
-    /* Center two large rectangular buttons */
     .button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 100%;
-      max-width: 400px;
-    }
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;  /* Adjust gap as needed */
+  width: 100%;
+  max-width: 800px;  /* Adjust as needed */
+}
+
+/* Make each button a square with rounded edges and center the content */
+.button-group button {
+  width: 150px;  /* Adjust size as needed */
+  height: 150px;
+  border-radius: 50px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
     
     .button-group button {
       padding: 20px;
@@ -106,6 +118,9 @@
     .footer a:hover {
       color: #ff914d;
     }
+    .btn-locked i {
+  margin-left: 8px; /* Adjust as needed */
+}
 
   </style>
 </head>
@@ -127,7 +142,7 @@
             Coming Soon <i class="fas fa-lock"></i> 
           </button>
           <button class="btn-locked" disabled>
-            Coming Soon <i class="fas fa-lock"></i> 
+            Coming Soon  <i class="fas fa-lock"></i> 
           </button>
       </div>
       
