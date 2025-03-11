@@ -98,7 +98,14 @@
       background-color: #315f85;
       transform: scale(1.02);
     }
-    
+    .btn-active-character {
+      background-color: #30b5bc;
+      color: white;
+    }
+    .btn-active-character:hover {
+      background-color: #117379;
+      transform: scale(1.02);
+    }
     /* Locked button */
     .btn-locked {
       background-color: #ccc;
@@ -129,14 +136,13 @@
     .btn-locked i {
   margin-left: 8px; /* Adjust as needed */
 }
-
   </style>
 </head>
 <body>
   <!-- Header -->
   <header class="header">
     <div class="logo">
-      <img src="GuessingGameslogo.png" alt="Guessing Games Logo" loading="lazy">
+      <img src="GGlogo.png" alt="Guessing Games Logo" loading="lazy">
     </div>
   </header>
   
@@ -146,9 +152,9 @@
         <button class="btn-active" onclick="window.location.href='https://guessthesinger.com'">
             <img src="SingerLogo.png" alt="Guess The Singer" style="width:100%; max-width:300px;">
         </button>
-        <button class="btn-locked" disabled>
-            Coming Soon <i class="fas fa-lock"></i> 
-          </button>
+        <button class="btn-active-character" onclick="window.location.href='https://guessthecharacter.com'">
+          <img src="characterlogo1.png" alt="Guess The Singer" style="width:100%; max-width:300px;">
+      </button>
           <button class="btn-locked" disabled>
             Coming Soon  <i class="fas fa-lock"></i> 
           </button>
