@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match the Singer | Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      width: 100%;
+      margin: 0;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+
+    h1 {
+      color: #315f85;
+      margin: 30px auto 10px;
+      text-align: center;
+    }
+
+    #score {
+      font-size: 1.2rem;
+      color: #315f85;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, 100px);
+      grid-template-rows: repeat(4, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: #315f85;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0;
+      transition: background-color 0.3s;
+    }
+
+    .card.revealed {
+      font-size: 0.9rem;
+      background-color: #4caf50;
+    }
+
+    .card.match {
+      background-color: #4caf50 !important;
+      cursor: default;
+    }
+
+    .card.mismatch {
+      background-color: #e74c3c !important;
+    }
+
+    img.singer-img {
+      width: 80%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    #message {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+
+    #restartBtn {
+      display: none;
+      margin: 0 auto 30px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #restartBtn:hover {
+      background-color: #ffd84d;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <h1>Match the Singer</h1>
+  <div id="score">Score: 1000 | High Score: <span id="highScore">0</span></div>
+  <div id="message"></div>
+  <div class="grid" id="gameGrid"></div>
+  <button id="restartBtn" onclick="location.reload()">Play Again</button>
+
+  <script>
+    const allSingers = [
+      { name: 'Adele', image: 'adele.jpg' },
+      { name: 'Ariana Grande', image: 'arianagrande.jpg' },
+      { name: 'Bad Bunny', image: 'badbunny.jpg' },
+      { name: 'Benson Boone', image: 'bensonboone.jpg' },
+      { name: 'Billie Eilish', image: 'billieeilish.jpg' },
+      { name: 'Bruno Mars', image: 'brunomars.jpg' },
+      { name: 'Drake', image: 'drake.jpg' },
+      { name: 'Elvis Presley', image: 'elvispresley.jpg' },
+      { name: 'Harry Styles', image: 'harrystyles.jpg' },
+      { name: 'J. Cole', image: 'jcole.jpg' },
+      { name: 'Jennie', image: 'jennie.jpg' },
+      { name: 'Joe Jonas', image: 'joejonas.jpg' },
+      { name: 'Lady Gaga', image: 'ladygaga.jpg' },
+      { name: 'Madison Beer', image: 'madisonbeer.jpg' },
+      { name: 'Nicki Minaj', image: 'nickiminaj.jpg' },
+      { name: 'Olivia Rodrigo', image: 'orodrigo.jpg' },
+      { name: 'Rosé', image: 'rose.jpg' },
+      { name: 'Selena Gomezz', image: 'selenagomez.jpg' },
+      { name: 'Snoop Dogg', image: 'snoopdogg.jpg' },
+    ];
+
+    // Shuffle and select 12 singers
+    const selectedSingers = allSingers.sort(() => 0.5 - Math.random()).slice(0, 12);
+
+    const gameGrid = document.getElementById('gameGrid');
+    const scoreEl = document.getElementById('score');
+    const messageEl = document.getElementById('message');
+    const restartBtn = document.getElementById('restartBtn');
+    const highScoreEl = document.getElementById('highScore');
+
+    let score = 1000;
+    let highScore = localStorage.getItem('matchHighScore') || 0;
+    let revealed = [];
+    let lock = false;
+    let matchesFound = 0;
+
+    highScoreEl.textContent = highScore;
+
+    let cards = [];
+    selectedSingers.forEach(singer => {
+      cards.push({ type: 'name', value: singer.name, matchId: singer.name });
+      cards.push({ type: 'image', value: singer.image, matchId: singer.name });
+    });
+
+    cards = cards.sort(() => 0.5 - Math.random());
+
+    cards.forEach((cardData) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.dataset.type = cardData.type;
+      card.dataset.value = cardData.value;
+      card.dataset.matchId = cardData.matchId;
+
+      card.addEventListener('click', () => handleCardClick(card));
+      gameGrid.appendChild(card);
+    });
+
+    function handleCardClick(card) {
+      if (lock || card.classList.contains('revealed') || card.classList.contains('match')) return;
+
+      revealCard(card);
+      revealed.push(card);
+
+      if (revealed.length === 2) {
+        lock = true;
+        const [first, second] = revealed;
+        const isMatch =
+          first.dataset.matchId === second.dataset.matchId &&
+          first.dataset.type !== second.dataset.type;
+
+        if (isMatch) {
+          first.classList.add('match');
+          second.classList.add('match');
+          matchesFound++;
+          revealed = [];
+          lock = false;
+
+          if (matchesFound === selectedSingers.length) {
+            messageEl.textContent = '🎉 You won!';
+            restartBtn.style.display = 'block';
+            if (score > highScore) {
+              localStorage.setItem('matchHighScore', score);
+              highScoreEl.textContent = score;
+            }
+          }
+        } else {
+          score -= 10;
+          updateScore();
+          first.classList.add('mismatch');
+          second.classList.add('mismatch');
+          setTimeout(() => {
+            hideCard(first);
+            hideCard(second);
+            revealed = [];
+            lock = false;
+          }, 2000);
+
+          if (score <= 0) {
+            messageEl.textContent = '💀 Game Over!';
+            lock = true;
+            restartBtn.style.display = 'block';
+          }
+        }
+      }
+    }
+
+    function revealCard(card) {
+      card.classList.add('revealed');
+      if (card.dataset.type === 'name') {
+        card.textContent = card.dataset.value;
+      } else {
+        card.innerHTML = `<img class="singer-img" src="images/${card.dataset.value}" alt="">`;
+      }
+    }
+
+    function hideCard(card) {
+      card.classList.remove('revealed', 'mismatch');
+      card.innerHTML = '';
+      card.textContent = '';
+    }
+
+    function updateScore() {
+      scoreEl.innerHTML = `Score: ${score} | High Score: <span id="highScore">${highScoreEl.textContent}</span>`;
+    }
+  </script>
+</body>
+</html>

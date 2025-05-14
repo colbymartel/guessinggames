@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Guess The Singer: Test your music knowledge with daily challenges." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    /* Nav Links */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #315f85;
+  padding: 15px 30px;
+  color: white;
+}
+
+.nav-links a {
+  color: white;
+  margin-left: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1rem;
+}
+.nav-links a:hover {
+  color: #ffcb05;
+}
+
+/* Section Titles */
+.category-row {
+  margin-top: 40px;
+}
+
+.category-row h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Game Grid (Reuse Previous) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 25px;
+}
+
+
+    /* Main Grid */
+    .main {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* tighter spacing between Music and More Games */
+}
+
+
+
+    .game-tile {
+      width: 180px;
+      height: 180px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #4682b4, #315f85);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .game-tile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(70, 130, 180, 0.6);
+    }
+
+    .game-tile.character {
+      background: linear-gradient(135deg, #30b5bc, #117379);
+    }
+
+    .game-tile.locked {
+      background: #c1c1c1;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .game-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 30px;
+    }
+
+    .footer {
+      background-color: #315f85;
+      color: white;
+      text-align: center;
+      padding: 15px 10px;
+      font-size: 1rem;
+      margin-top: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .footer a:hover {
+      color: #ff914d;
+    }
+
+.category-header{
+  padding: 30px 20px 20px 30px; /* top, right, bottom, left */
+  margin-bottom: -40px;
+
+}
+.category-header h2 {
+  font-size: 1.8rem;
+  color: #222;
+}
+
+.category-header p {
+  color: #555;
+  margin-top: 6px;
+  margin-bottom: 20px;
+
+}
+
+.tabs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px; /* Increase from 25px */
+}
+
+
+.tab {
+  padding: 8px 16px;
+  border: none;
+  background-color: #e1ecf4;
+  color: #333;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab.active, .tab:hover {
+  background-color: #4682b4;
+  color: white;
+}
+
+.game-scroll-row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 20px 10px 20px; /* top, right, bottom, left */
+}
+.more-games .game-scroll-row{
+  margin-bottom: 40px;
+}
+.game-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: 200px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+@media (max-width: 768px) {
+  .main {
+    padding: 20px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    margin-left: 12px;
+  }
+
+  .game-card {
+    width: 160px;
+  }
+}
+
+
+.game-card h3 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.game-card p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.game-card.locked {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.logo img {
+  height: 40px;
+  width: auto;
+}
+.search-suggestions {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  width: 300px;
+  background: white;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 999;
+  display: none;
+  flex-direction: column;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-suggestion {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.search-suggestion:last-child {
+  border-bottom: none;
+}
+
+.search-suggestion:hover {
+  background-color: #f0f4fa;
+}
+.search-bar {
+  padding: 8px 16px 8px 36px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  background-color: white;
+  color: #315f85;
+  width: 220px;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.search-bar::placeholder {
+  color: #888;
+}
+.login-btn {
+  background-color: #ffcb05;
+  border: none;
+  padding: 8px 16px;
+  height: 40px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #1e2b38;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+}
+
+.login-btn:hover {
+  background-color: #e6b800;  /* slightly darker yellow */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.game-card.locked {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(100%);
+  overflow: hidden;
+}
+
+.locked-text {
+  font-weight: 500;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="#"><img src="GGlogo.png" alt="Guessing Games Logo" /></a>
+  </div>
+  <div class="nav-links">
+    <a href="/index.html">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/trending.html">🔥 Trending</a>
+    <a href="/show.html">🎙️ Live Shows</a>
+    <a href="/leaderboard.html">🏆 Leaderboard</a>
+  </div>
+  <div class="nav-actions">
+    <input type="text" placeholder="Search games..." class="search-bar" oninput="showSuggestions(this.value)">
+    <div class="search-suggestions" id="suggestions"></div>
+    <button class="login-btn">Login</button>
+  </div>
+</nav>
+
+<!-- Trending Section -->
+<section class="category-block">
+  <div class="category-header">
+    <h2>🎮 All Games</h2>
+    <p>Check out our entire collection of Guessing Games! New games are added each month!</p>
+  </div>
+<!-- 🎵 Music Games -->
+  <div class="category-header">
+    <h2>🎵 Music Games</h2>
+    <p>Test your music knowledge with daily challenges, face matching, and album trivia!</p>
+  </div>
+
+  <div class="game-scroll-row">
+    <div class="game-card" onclick="location.href='https://guessthesinger.com'">
+      <img src="singericon.png" alt="Guess The Singer">
+      <h3>Guess The Singer</h3>
+      <p>Daily mystery artist game.</p>
+    </div>
+    <div class="game-card" onclick="location.href='/memory.html'">
+        <img src="lockicon.png" alt="Music Memory Game">
+      <h3>Music Memory Game</h3>
+      <p>Match images with singer names.</p>
+    </div>
+      <div class="game-card locked">
+      <img src="lockicon.png" alt="Name That Singer">
+      <h3>Name That Singer</h3>
+      <p>Timed face matching with a global leaderboard.</p>
+    </div>
+    <div class="game-card" onclick="location.href='/grammys.html'">
+      <img src="lockicon.png" alt="Grammy Whammy">
+    <h3>Grammy Whammy</h3>
+    <p>Guess which singer has won more Grammys.</p>
+  </div>
+    <div class="game-card locked">
+    <img src="lockicon.png" alt="Name That Singer">
+    <h3>Name That Singer</h3>
+    <p>Timed face matching with a global leaderboard.</p>
+  </div>
+    <div class="game-card locked">
+        <img src="lockicon.png" alt="Album Cover Challenge">
+      <h3>Album Cover Challenge</h3>
+      <p>Guess the artist from iconic album covers.</p>
+    </div>
+   
+  </div>
+</section>
+
+<!-- 🎮 More Games -->
+<section class="category-block more-games">
+  <div class="category-header">
+    <h2>🔒 More Games</h2>
+    <p>Guess athletes, colleges, cities, and more — some even give back to real-world causes!</p>
+  </div>
+
+  <div class="game-scroll-row">
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="Guess The Athlete">
+      <h3>Guess The Athlete</h3>
+      <p>Test your sports knowledge with athlete trivia.</p>
+    </div>
+
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="Guess The College">
+      <h3>Guess The College</h3>
+      <p>50% of ad revenue funds scholarships. Play to support students.</p>
+    </div>
+
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="Guess The Food">
+      <h3>Guess The Food</h3>
+      <p>Guess the food image and support Feeding America.</p>
+    </div>
+
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="Guess The Animal">
+      <h3>Guess The Animal</h3>
+      <p>Play to support wildlife conservation efforts.</p>
+    </div>
+
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="Guess The City">
+      <h3>Guess The City</h3>
+      <p>Guess cities from images submitted by real subscribers!</p>
+    </div>
+
+    <div class="game-card locked">
+             <img src="lockicon.png" alt="Guess The Character">
+      <h3>Guess The Character</h3>
+      <p>Identify popular movie & TV characters by face.</p>
+    </div>
+
+    <div class="game-card locked">
+      <img src="lockicon.png" alt="GuessToGive">
+      <h3>GuessToGive</h3>
+      <p>Every 100 visits donates $1 to people in need. Play with purpose.</p>
+    </div>
+  </div>
+</section>
+
+</section>
+
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2024 Colby Martel |
+    <a href="https://www.instagram.com/colbymartel19/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.youtube.com/ColbyMartel" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.tiktok.com/@ColbyMartel" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+  </footer>
+  <script>
+    const games = [
+      { name: "Guess The Singer", url: "https://guessthesinger.com" },
+      { name: "Name That Singer", url: "#" },
+      { name: "Album Cover Challenge", url: "#" },
+      { name: "Guess The Athlete", url: "#" },
+      { name: "Guess The Food", url: "#" },
+      { name: "Guess The Animal", url: "#" },
+      { name: "Guess The College", url: "#" },
+      { name: "Guess The City", url: "#" },
+      { name: "Guess The Character", url: "https://guessthecharacter.com" },
+      { name: "GuessToGive", url: "https://guesstogive.com" }
+    ];
+  
+    function showSuggestions(query) {
+      const suggestionsContainer = document.getElementById('suggestions');
+      const search = query.toLowerCase().trim();
+  
+      if (!search) {
+        suggestionsContainer.style.display = 'none';
+        return;
+      }
+  
+      const matchedGames = games.filter(game => game.name.toLowerCase().includes(search));
+      
+      suggestionsContainer.innerHTML = matchedGames.length
+        ? matchedGames.map(game =>
+            `<div class="search-suggestion" onclick="location.href='${game.url}'">
+               ${game.name}
+             </div>`).join('')
+        : `<div class="search-suggestion">No matches found</div>`;
+  
+      suggestionsContainer.style.display = 'flex';
+    }
+  
+    // Optional: Close suggestions on click outside
+    document.addEventListener("click", (e) => {
+      const isSearch = e.target.closest('.search-bar') || e.target.closest('#suggestions');
+      if (!isSearch) document.getElementById('suggestions').style.display = 'none';
+    });
+  </script>  
+</body>
+</html>

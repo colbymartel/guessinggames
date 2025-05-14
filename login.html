@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Guessing Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background-color: #7cd5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    nav {
+      width: 100%;
+      margin: 0;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+
+    .login-box {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      margin-top: 60px;
+    }
+
+    .login-box h1 {
+      font-size: 1.8rem;
+      color: #1e2b38;
+      margin-bottom: 25px;
+    }
+
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      font-size: 1rem;
+    }
+
+    .login-box button {
+      margin-top: 15px;
+      padding: 12px 24px;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-box button:hover {
+      background-color: #ffd84d;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <div class="login-box">
+    <h1>Login to Guessing Games</h1>
+    <input type="text" placeholder="Username" required>
+    <input type="password" placeholder="Password" required>
+    <button>Login</button>
+    <div class="footer-text">
+      Don't have an account? <a href="#">Sign up</a>
+    </div>
+  </div>
+</body>
+</html>

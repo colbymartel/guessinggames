@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who's That Singer? | Guessing Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom right, #e7f1f9, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    nav {
+      background: #1e2b38;
+      width: 100%;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .container {
+      margin-top: 40px;
+    }
+
+    #singer-image {
+      width: 300px;
+      height: 300px;
+      image-rendering: pixelated;
+      transition: filter 0.3s;
+      border-radius: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1rem;
+      width: 300px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffd84d;
+    }
+
+    #timer, #score, #highscore {
+      font-size: 1.2rem;
+      margin-top: 15px;
+      color: #315f85;
+    }
+
+    #message {
+      font-size: 1.4rem;
+      color: #28a745;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <button>Login</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Who's That Singer?</h1>
+    <img id="singer-image" src="" alt="Singer" />
+    <div id="timer">Time Left: 10</div>
+    <div id="score">Score: 0</div>
+    <div id="highscore">High Score: 0</div>
+    <input type="text" id="guess" placeholder="Type the singer's name..." />
+    <br />
+    <button onclick="submitGuess()">Submit</button>
+    <button onclick="passSinger()">Pass</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const allSingers = [
+      { name: 'Adele', image: 'adele.jpg' },
+      { name: 'Ariana Grande', image: 'arianagrande.jpg' },
+      { name: 'Bad Bunny', image: 'badbunny.jpg' },
+      { name: 'Benson Boone', image: 'bensonboone.jpg' },
+      { name: 'Billie Eilish', image: 'billieeilish.jpg' },
+      { name: 'Bruno Mars', image: 'brunomars.jpg' },
+      { name: 'Drake', image: 'drake.jpg' },
+      { name: 'Elvis Presley', image: 'elvispresley.jpg' },
+      { name: 'Harry Styles', image: 'harrystyles.jpg' },
+      { name: 'J. Cole', image: 'jcole.jpg' },
+      { name: 'Jennie', image: 'jennie.jpg' },
+      { name: 'Joe Jonas', image: 'joejonas.jpg' },
+      { name: 'Lady Gaga', image: 'ladygaga.jpg' },
+      { name: 'Madison Beer', image: 'madisonbeer.jpg' },
+      { name: 'Nicki Minaj', image: 'nickiminaj.jpg' },
+      { name: 'Olivia Rodrigo', image: 'orodrigo.jpg' },
+      { name: 'Rosé', image: 'rose.jpg' },
+      { name: 'Selena Gomez', image: 'selenagomez.jpg' },
+      { name: 'Snoop Dogg', image: 'snoopdogg.jpg' },
+    ];
+
+    const singers = [...allSingers].sort(() => 0.5 - Math.random()).slice(0, 10);
+    let current = 0;
+    let score = 0;
+    let highScore = localStorage.getItem('pixelGameHighScore') || 0;
+    let timeLeft = 10;
+    let timer;
+    let startTime;
+
+    document.getElementById("highscore").textContent = `High Score: ${highScore}`;
+
+    function loadSinger() {
+      const singer = singers[current];
+      document.getElementById('singer-image').src = 'images/' + singer.image;
+      timeLeft = 10;
+      document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+      document.getElementById('guess').value = "";
+      pixelLevel(10);
+      let second = 0;
+      timer = setInterval(() => {
+        second++;
+        timeLeft--;
+        const blurAmount = Math.round(Math.pow(10 - second, 1.5));
+        pixelLevel(blurAmount);
+        document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          passSinger();
+        }
+      }, 1000);
+    }
+
+    function pixelLevel(level) {
+      document.getElementById('singer-image').style.filter = `blur(${level}px)`;
+    }
+
+    function submitGuess() {
+      const input = document.getElementById('guess').value.trim().toLowerCase();
+      if (input === singers[current].name.toLowerCase()) {
+        clearInterval(timer);
+        score += timeLeft;
+        document.getElementById('score').textContent = `Score: ${score}`;
+        current++;
+        if (current >= 10) {
+          endGame();
+        } else {
+          loadSinger();
+        }
+      }
+    }
+
+    function passSinger() {
+      clearInterval(timer);
+      score = Math.max(0, score - 5);
+      document.getElementById('score').textContent = `Score: ${score}`;
+      current++;
+      if (current >= 10) {
+        endGame();
+      } else {
+        loadSinger();
+      }
+    }
+
+    function endGame() {
+      const timeTaken = Math.round((Date.now() - startTime) / 1000);
+      document.getElementById('message').textContent = `🎉 You finished! Final Score: ${score} | Time: ${timeTaken}s`;
+      if (score > highScore) {
+        localStorage.setItem('pixelGameHighScore', score);
+        document.getElementById("highscore").textContent = `High Score: ${score}`;
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      current = 0;
+      document.getElementById('score').textContent = `Score: 0`;
+      document.getElementById('message').textContent = '';
+      startTime = Date.now();
+      loadSinger();
+    }
+
+    window.onload = () => {
+      startTime = Date.now();
+      loadSinger();
+    };
+  </script>
+</body>
+</html>

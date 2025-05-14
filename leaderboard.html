@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: #1e2b38;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+
+    header {
+      background: #315f85;
+      color: white;
+      padding: 60px 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #d0e0f0;
+    }
+
+    main {
+      padding: 40px 30px;
+      flex: 1;
+    }
+
+    .leaderboard {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .leaderboard h2 {
+      background-color: #4682b4;
+      color: white;
+      padding: 20px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .leaderboard th, .leaderboard td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .leaderboard tr:hover {
+      background-color: #f5faff;
+    }
+
+    .leaderboard th {
+      background-color: #f0f4fa;
+    }
+
+    .pagination {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .pagination button {
+      background-color: #4682b4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .pagination button:hover {
+      background-color: #315f85;
+    }
+
+    footer {
+      background: #315f85;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Leaderboard</h1>
+    <p>See who's topping the charts this week!</p>
+  </header>
+
+  <main>
+    <div class="leaderboard">
+      <h2>Top Players</h2>
+      <table id="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <!-- Rows inserted by JS -->
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button onclick="changePage(-1)">&laquo; Prev</button>
+        <button onclick="changePage(1)">Next &raquo;</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2024 Guessing Games | 
+    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
+    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
+    <a href="https://www.tiktok.com/@Colbymartel">TikTok</a>
+  </footer>
+
+  <script>
+    const players = [
+      { name: "ColbyM", score: 9850 },
+      { name: "GuessQueen99", score: 9230 },
+      { name: "MusicGuru88", score: 8900 },
+      { name: "TriviaKing", score: 8650 },
+      { name: "SongMaster", score: 8420 },
+      { name: "LyricLegend", score: 8200 },
+      { name: "FastFingers", score: 8030 },
+      { name: "SingItBack", score: 7900 },
+      { name: "TheGuessr", score: 7725 },
+      { name: "NoteHunter", score: 7600 },
+      { name: "EchoChamp", score: 7520 },
+      { name: "RhythmAce", score: 7400 },
+      { name: "MelodyWhiz", score: 7330 },
+      { name: "VibeSniper", score: 7200 },
+      { name: "TrackTamer", score: 7100 },
+      { name: "BeatBoss", score: 7000 },
+      { name: "QuizJammer", score: 6900 },
+      { name: "NoteBlazer", score: 6800 },
+      { name: "TempoTitan", score: 6700 },
+      { name: "HookHero", score: 6600 }
+    ];
+
+    let currentPage = 0;
+    const rowsPerPage = 10;
+
+    function renderTable() {
+      const tbody = document.getElementById('leaderboard-body');
+      tbody.innerHTML = '';
+      const start = currentPage * rowsPerPage;
+      const end = start + rowsPerPage;
+      players.slice(start, end).forEach((player, index) => {
+        const row = `<tr>
+          <td>${start + index + 1}</td>
+          <td>${player.name}</td>
+          <td>${player.score}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function changePage(direction) {
+      const totalPages = Math.ceil(players.length / rowsPerPage);
+      currentPage = Math.min(Math.max(currentPage + direction, 0), totalPages - 1);
+      renderTable();
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guessing Games</title>
+  <title>About Colby Martel | Guessing Games</title>
   <link rel="icon" href="/favicongg.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -21,23 +21,6 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-    }
-
-    header {
-      background: #315f85;
-      color: white;
-      padding: 60px 30px;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-
-    header p {
-      font-size: 1.2rem;
-      color: #d0e0f0;
     }
 
     nav {
@@ -104,64 +87,57 @@
       transform: translateY(-1px);
     }
 
-    .hero {
+    header {
+      background: #315f85;
+      color: white;
       padding: 60px 30px;
       text-align: center;
     }
 
-    .hero h2 {
-      font-size: 2rem;
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #d0e0f0;
+    }
+
+    main {
+      padding: 40px 30px;
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .about-section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .about-section img {
+      width: 180px;
+      height: 180px;
+      border-radius: 10%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .about-section h2 {
+      font-size: 1.8rem;
+      color: #315f85;
       margin-bottom: 15px;
     }
 
-    .hero button {
-      margin-top: 20px;
-      background-color: #4682b4;
-      color: white;
-      padding: 12px 24px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-    }
-
-    .hero button:hover {
-      background-color: #315f85;
-    }
-
-    .category-section {
-      padding: 40px 30px;
-    }
-
-    .category-section h3 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: #315f85;
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 20px;
-    }
-
-    .category-tile {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-      cursor: pointer;
-    }
-
-    .category-tile:hover {
-      transform: translateY(-5px);
-    }
-
-    .category-tile h4 {
-      margin-top: 10px;
-      font-size: 1.1rem;
+    .about-section p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 15px;
     }
 
     footer {
@@ -182,9 +158,10 @@
 <body>
   <nav>
     <div class="nav-links">
-      <a href="#">Home</a>
+      <a href="/index.html">Home</a>
       <a href="/allgames.html">Games</a>
-      <a href="/about.html">About</a>
+      <a href="/show.html">Live Shows</a>
+      <a href="/leaderboard.html">Leaderboard</a>
     </div>
     <div class="nav-actions">
       <input type="text" class="search-bar" placeholder="Search games...">
@@ -193,51 +170,34 @@
   </nav>
 
   <header>
-    <h1>Guessing Games</h1>
-    <p>Fun. Fast. Free. Play guessing games that give back.</p>
+    <h1>Meet the Creator</h1>
+    <p>Colby Martel — Creator of Guess The Singer & Guessing Games</p>
   </header>
 
-  <section class="hero">
-    <h2>Today's Featured Game</h2>
-    <p>Guess The Singer #168 – Can you name them in 15 questions?</p>
-    <button onclick="location.href='https://guessthesinger.com'">Play Now</button>
-  </section>
-
-  <section class="category-section">
-    <h3>Explore Categories</h3>
-    <div class="category-grid">
-      <div class="category-tile" onclick="location.href='/music'">
-        <i class="fas fa-music fa-2x"></i>
-        <h4>Music Games</h4>
-      </div>
-      <div class="category-tile" onclick="location.href='/athletes'">
-        <i class="fas fa-basketball-ball fa-2x"></i>
-        <h4>Athletes</h4>
-      </div>
-      <div class="category-tile" onclick="location.href='/colleges'">
-        <i class="fas fa-graduation-cap fa-2x"></i>
-        <h4>Colleges</h4>
-      </div>
-      <div class="category-tile" onclick="location.href='/food'">
-        <i class="fas fa-hamburger fa-2x"></i>
-        <h4>Food</h4>
-      </div>
-      <div class="category-tile" onclick="location.href='/characters'">
-        <i class="fas fa-film fa-2x"></i>
-        <h4>Characters</h4>
-      </div>
-      <div class="category-tile" onclick="location.href='/guesstogive'">
-        <i class="fas fa-heart fa-2x"></i>
-        <h4>Play for Good</h4>
-      </div>
-    </div>
-  </section>
+  <main>
+    <section class="about-section">
+      <img src="/images/colby-martel.jpg" alt="Colby Martel">
+      <h2>Hi, I’m Colby!</h2>
+      <p>
+        I’m a creator from New Hampshire who loves games, music, and meaningful connection. I started Guess The Singer in 2023 as a fun way to combine my love for music and interactive challenges.
+      </p>
+      <p>
+        Since then, the project has grown into a community of players, fans, and college campuses who love to compete, laugh, and give back — all through games.
+      </p>
+      <p>
+        I believe guessing games can do more than entertain. That’s why some of our games help support scholarships, Feeding America, and even wildlife conservation.
+      </p>
+      <p>
+        Thanks for being here — I hope you play, share, and join me on the journey.
+      </p>
+    </section>
+  </main>
 
   <footer>
-    &copy; 2024 Guess The Singer | 
+    &copy; 2024 Guessing Games | 
     <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
     <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
-    <a href="https://www.tiktok.com/@Colbymartel">TikTok</a>
+    <a href="https://www.tiktok.com/@ColbyMartel">TikTok</a>
   </footer>
 </body>
 </html>
