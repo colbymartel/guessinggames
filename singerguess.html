@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Singer with Questions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom right, #e7f1f9, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    nav {
+      width: 100%;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      margin-top: 40px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .guess-input, .question-input {
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffd84d;
+    }
+
+    .response {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #d4edda;
+      color: #155724;
+      font-weight: bold;
+    }
+
+    #hint-box {
+      margin-top: 10px;
+      font-style: italic;
+      color: #666;
+    }
+
+    #suggestions {
+      text-align: left;
+      max-width: 600px;
+      margin: 5px 0;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .suggestion-item {
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      margin: 2px 0;
+    }
+
+    .suggestion-item:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Guess the Mystery Singer</h1>
+
+    <input type="text" id="questionInput" class="question-input" placeholder="Ask a yes/no question..." oninput="showSuggestions(this.value)">
+    <div id="suggestions"></div>
+
+    <div class="btn-row">
+      <button onclick="submitQuestion()">Ask</button>
+      <button onclick="getHint()">Hint</button>
+    </div>
+
+    <div id="responseBox" class="response" style="display: none;"></div>
+    <div id="hint-box"></div>
+
+    <input type="text" id="guessInput" class="guess-input" placeholder="Guess the singer...">
+    <button onclick="submitGuess()">Submit Guess</button>
+
+    <div id="finalMessage" class="response" style="display: none;"></div>
+  </div>
+
+  <script>
+    const mysterySinger = {
+      name: 'Adele',
+      gender: 'female',
+      genre: 'pop',
+      era: '2010s',
+      nationality: 'British',
+      hints: ['Won multiple Grammys', 'Known for powerful ballads', 'Her debut album was titled "19"']
+    };
+
+    let hintIndex = 0;
+
+    const suggestionsMap = {
+      'female': 'Is this a female artist?',
+      'male': 'Is this a male artist?',
+      'pop': 'Is this artist known for pop music?',
+      'british': 'Is this artist British?',
+      'uk': 'Is this artist from the UK?',
+      '2010': 'Did this artist rise to fame in the 2010s?',
+      'era': 'Did this artist become popular in the 2010s?'
+    };
+
+    function showSuggestions(value) {
+      const box = document.getElementById('suggestions');
+      box.innerHTML = '';
+      if (value.length < 3) return;
+      const matches = Object.keys(suggestionsMap).filter(k => value.toLowerCase().includes(k));
+      matches.forEach(match => {
+        const suggestion = document.createElement('div');
+        suggestion.className = 'suggestion-item';
+        suggestion.textContent = suggestionsMap[match];
+        suggestion.onclick = () => {
+          document.getElementById('questionInput').value = suggestionsMap[match];
+          box.innerHTML = '';
+          submitQuestion();
+        };
+        box.appendChild(suggestion);
+      });
+    }
+
+    function submitQuestion() {
+      const question = document.getElementById('questionInput').value.toLowerCase();
+      let response = '';
+
+      if (question.includes('male')) {
+        response = mysterySinger.gender === 'male' ? 'Yes, the singer is male.' : 'No, the singer is female.';
+      } else if (question.includes('female')) {
+        response = mysterySinger.gender === 'female' ? 'Yes, the singer is female.' : 'No, the singer is male.';
+      } else if (question.includes('pop')) {
+        response = mysterySinger.genre === 'pop' ? 'Yes, the singer makes pop music.' : 'No, it is not their main genre.';
+      } else if (question.includes('british') || question.includes('uk')) {
+        response = mysterySinger.nationality === 'British' ? 'Yes, the singer is British.' : 'No, they are not from the UK.';
+      } else if (question.includes('2010') || question.includes('era')) {
+        response = `Yes, the singer became popular in the ${mysterySinger.era}.`;
+      } else {
+        response = "I can't answer that question. Try asking about gender, genre, nationality, or era.";
+      }
+
+      const responseBox = document.getElementById('responseBox');
+      responseBox.textContent = response;
+      responseBox.style.display = 'block';
+      document.getElementById('questionInput').value = '';
+      document.getElementById('suggestions').innerHTML = '';
+    }
+
+    function getHint() {
+      const hintBox = document.getElementById('hint-box');
+      if (hintIndex < mysterySinger.hints.length) {
+        hintBox.textContent = `Hint: ${mysterySinger.hints[hintIndex]}`;
+        hintIndex++;
+      } else {
+        hintBox.textContent = 'No more hints available!';
+      }
+    }
+
+    function submitGuess() {
+      const guess = document.getElementById('guessInput').value.trim().toLowerCase();
+      const finalMessage = document.getElementById('finalMessage');
+      if (guess === mysterySinger.name.toLowerCase()) {
+        finalMessage.textContent = '🎉 Correct! You guessed the mystery singer!';
+      } else {
+        finalMessage.textContent = '❌ That is not correct. Try again!';
+      }
+      finalMessage.style.display = 'block';
+      document.getElementById('guessInput').value = '';
+    }
+  </script>
+</body>
+</html>

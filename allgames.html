@@ -321,6 +321,20 @@
 .locked-text {
   font-weight: 500;
 }
+.badge-trending {
+  background-color: #ffcb05;
+  color: #1e2b38;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.game-card {
+  position: relative;
+}
 
 
   </style>
@@ -335,9 +349,10 @@
   <div class="nav-links">
     <a href="/index.html">Home</a>
     <a href="/about.html">About</a>
-    <a href="/trending.html">🔥 Trending</a>
     <a href="/show.html">🎙️ Live Shows</a>
     <a href="/leaderboard.html">🏆 Leaderboard</a>
+    <a href="/leaderboard.html">🌎 Community</a>
+
   </div>
   <div class="nav-actions">
     <input type="text" placeholder="Search games..." class="search-bar" oninput="showSuggestions(this.value)">
@@ -360,30 +375,26 @@
 
   <div class="game-scroll-row">
     <div class="game-card" onclick="location.href='https://guessthesinger.com'">
-      <img src="singericon.png" alt="Guess The Singer">
+      <img src="/icons/singericon.png" alt="Guess The Singer">
       <h3>Guess The Singer</h3>
       <p>Daily mystery artist game.</p>
     </div>
     <div class="game-card" onclick="location.href='/memory.html'">
-        <img src="lockicon.png" alt="Music Memory Game">
-      <h3>Music Memory Game</h3>
+        <img src="/icons/brainicon.png" alt="Music Memory Game">
+      <h3>Music Memory Match</h3>
       <p>Match images with singer names.</p>
-    </div>
-      <div class="game-card locked">
-      <img src="lockicon.png" alt="Name That Singer">
-      <h3>Name That Singer</h3>
-      <p>Timed face matching with a global leaderboard.</p>
+      <span class="badge-trending">🔥 Trending</span>
     </div>
     <div class="game-card" onclick="location.href='/grammys.html'">
-      <img src="lockicon.png" alt="Grammy Whammy">
+      <img src="/icons/grammyicon.png" alt="Grammy Whammy">
     <h3>Grammy Whammy</h3>
     <p>Guess which singer has won more Grammys.</p>
   </div>
-    <div class="game-card locked">
-    <img src="lockicon.png" alt="Name That Singer">
-    <h3>Name That Singer</h3>
-    <p>Timed face matching with a global leaderboard.</p>
-  </div>
+  <div class="game-card" onclick="location.href='/facesinger.html'">
+    <img src="/icons/faceicon.png" alt="Name That Singer">
+      <h3>Name That Singer</h3>
+      <p>Timed face matching with a global leaderboard.</p>
+    </div>
     <div class="game-card locked">
         <img src="lockicon.png" alt="Album Cover Challenge">
       <h3>Album Cover Challenge</h3>
@@ -401,12 +412,16 @@
   </div>
 
   <div class="game-scroll-row">
+    <div class="game-card" onclick="location.href='/guesssports.html'">
+      <img src="/icons/sportscluesicon.png" alt="Name That Singer">
+        <h3>Guess The Athlete</h3>
+        <p>Guess the mystery sports star as clues unlock.</p>
+      </div>
     <div class="game-card locked">
-      <img src="lockicon.png" alt="Guess The Athlete">
-      <h3>Guess The Athlete</h3>
-      <p>Test your sports knowledge with athlete trivia.</p>
-    </div>
-
+      <img src="lockicon.png" alt="Name That Singer">
+        <h3>Memory Madness</h3>
+        <p>Match images with athlete names.</p>
+      </div>
     <div class="game-card locked">
       <img src="lockicon.png" alt="Guess The College">
       <h3>Guess The College</h3>

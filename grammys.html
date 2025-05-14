@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>More Grammys? | Guessing Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
+      color: #333;
+      text-align: center;
+    }
+
+    nav {
+      background: #1e2b38;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    #game {
+      padding-top: 30px;
+    }
+
+    #score, #timer, #lives {
+      font-size: 1.2rem;
+      margin: 10px;
+    }
+
+    .singer-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 30px 0;
+    }
+
+    .singer {
+      width: 200px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 3px solid transparent;
+    }
+
+    .singer img {
+      width: 100%;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .singer-name {
+      padding: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    .singer-grammys {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .correct {
+      border-color: green;
+    }
+
+    .wrong {
+      border-color: red;
+    }
+
+    #nextBtn, #restartBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 20px;
+      background: #ffcb05;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+
+    #nextBtn:hover, #restartBtn:hover {
+      background: #ffd84d;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#game {
+  flex: 1;
+}
+
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+        <input type="text" class="search-bar" placeholder="Search games...">
+        <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <div id="game">
+    <h1>Who Has More Grammys?</h1>
+    <div id="score">Score: 0 | High Score: 0</div>
+    <div id="lives">❤️❤️❤️</div>
+    <div id="timer">Time Left: 15</div>
+    <div class="singer-container">
+      <div class="singer" onclick="selectSinger(0)">
+        <img id="img1" src="" alt="Singer 1">
+        <div class="singer-name" id="name1"></div>
+        <div class="singer-grammys" id="grammys1"></div>
+      </div>
+      <div class="singer" onclick="selectSinger(1)">
+        <img id="img2" src="" alt="Singer 2">
+        <div class="singer-name" id="name2"></div>
+        <div class="singer-grammys" id="grammys2"></div>
+      </div>
+    </div>
+    <div id="result"></div>
+    <button id="nextBtn" onclick="nextRound()">Next</button>
+    <button id="restartBtn" onclick="restartGame()">Play Again</button>
+  </div>
+
+  <script>
+ const singers = [
+  { name: 'Adele', grammys: 16, image: 'adele.jpg' },
+  { name: 'Beyonce', grammys: 35, image: 'beyonce.jpg' },
+  { name: 'Taylor Swift', grammys: 14, image: 'taylorswift.jpg' },
+  { name: 'Kanye West', grammys: 24, image: 'kanye.jpg' },
+  { name: 'Billie Eilish', grammys: 9, image: 'billie.jpg' },
+  { name: 'Bruno Mars', grammys: 16, image: 'bruno.jpg' },
+  { name: 'Jay-Z', grammys: 24, image: 'jayz.jpg' },
+  { name: 'Lady Gaga', grammys: 14, image: 'gaga.jpg' },
+  { name: 'Kendrick Lamar', grammys: 22, image: 'kendrick.jpg' },
+  { name: 'Stevie Wonder', grammys: 25, image: 'stevie.jpg' },
+  { name: 'Eminem', grammys: 15, image: 'eminem.jpg' },
+  { name: 'Rihanna', grammys: 9, image: 'rihanna.jpg' },
+  { name: 'Whitney Houston', grammys: 6, image: 'whitney.jpg' },
+  { name: 'Usher', grammys: 8, image: 'usher.jpg' },
+  { name: 'Mary J. Blige', grammys: 9, image: 'maryj.jpg' },
+  { name: 'Frank Sinatra', grammys: 9, image: 'sinatra.jpg' },
+  { name: 'Lauryn Hill', grammys: 8, image: 'lauryn.jpg' },
+  { name: 'Justin Timberlake', grammys: 10, image: 'justin.jpg' },
+  { name: 'Michael Jackson', grammys: 13, image: 'mj.jpg' },
+  { name: 'Sheryl Crow', grammys: 9, image: 'sheryl.jpg' },
+  { name: 'John Legend', grammys: 12, image: 'johnlegend.jpg' },
+  { name: 'Carrie Underwood', grammys: 8, image: 'carrie.jpg' },
+  { name: 'Metallica', grammys: 9, image: 'metallica.jpg' },
+  { name: 'Barbra Streisand', grammys: 8, image: 'barbra.jpg' },
+  { name: 'Kacey Musgraves', grammys: 8, image: 'kacey.jpg' },
+  { name: 'Amy Grant', grammys: 6, image: 'amygrant.jpg' },
+  { name: 'Norah Jones', grammys: 9, image: 'norah.jpg' },
+  { name: 'Dr. Dre', grammys: 7, image: 'dre.jpg' },
+  { name: 'Madonna', grammys: 7, image: 'madonna.jpg' },
+  { name: 'Prince', grammys: 7, image: 'prince.jpg' },
+  { name: 'Simon & Garfunkel', grammys: 7, image: 'simongarfunkel.jpg' },
+  { name: 'Chaka Khan', grammys: 10, image: 'chakakhan.jpg' },
+  { name: 'Linda Ronstadt', grammys: 10, image: 'lindaronstadt.jpg' },
+  { name: 'Bobby McFerrin', grammys: 10, image: 'bobbymcferrin.jpg' },
+  { name: 'Joni Mitchell', grammys: 10, image: 'jonimitchell.jpg' },
+  { name: 'Finneas O\'Connell', grammys: 10, image: 'finneas.jpg' },
+  { name: 'Pat Metheny', grammys: 20, image: 'patmetheny.jpg' },
+  { name: 'CeCe Winans', grammys: 15, image: 'cecewinans.jpg' },
+  { name: 'Alicia Keys', grammys: 15, image: 'aliciakeys.jpg' },
+  { name: 'Bela Fleck', grammys: 14, image: 'belafleck.jpg' },
+  { name: 'Jerry Douglas', grammys: 14, image: 'jerrydouglas.jpg' },
+  { name: 'Phil Ramone', grammys: 14, image: 'philramone.jpg' },
+];
+
+    let score = 0, highScore = localStorage.getItem('grammyHighScore') || 0, lives = 3;
+    let singerPair = [];
+    let timer, timeLeft = 15;
+
+    function getTwoDifferentSingers() {
+      let a, b;
+      do {
+        a = singers[Math.floor(Math.random() * singers.length)];
+        b = singers[Math.floor(Math.random() * singers.length)];
+      } while (a === b || a.grammys === b.grammys);
+      return [a, b];
+    }
+
+    function loadRound() {
+      document.getElementById('result').textContent = '';
+      document.querySelectorAll('.singer').forEach(el => el.classList.remove('correct', 'wrong'));
+      document.querySelectorAll('.singer-grammys').forEach(el => el.style.display = 'none');
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('restartBtn').style.display = 'none';
+
+      timeLeft = 15;
+      document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          handleWrong();
+        }
+      }, 1000);
+
+      singerPair = getTwoDifferentSingers();
+      document.getElementById('img1').src = `images/${singerPair[0].image}`;
+      document.getElementById('img2').src = `images/${singerPair[1].image}`;
+      document.getElementById('name1').textContent = singerPair[0].name;
+      document.getElementById('name2').textContent = singerPair[1].name;
+    }
+
+    function selectSinger(index) {
+      clearInterval(timer);
+      const otherIndex = index === 0 ? 1 : 0;
+      const selected = singerPair[index];
+      const other = singerPair[otherIndex];
+
+      const isCorrect = selected.grammys > other.grammys;
+      document.querySelectorAll('.singer')[index].classList.add(isCorrect ? 'correct' : 'wrong');
+      document.querySelectorAll('.singer')[otherIndex].classList.add(!isCorrect ? 'correct' : 'wrong');
+
+      document.getElementById('grammys1').textContent = `${singerPair[0].grammys} Grammys`;
+      document.getElementById('grammys2').textContent = `${singerPair[1].grammys} Grammys`;
+      document.getElementById('grammys1').style.display = 'block';
+      document.getElementById('grammys2').style.display = 'block';
+
+      if (isCorrect) {
+        score += 10;
+        document.getElementById('score').textContent = `Score: ${score} | High Score: ${highScore}`;
+        document.getElementById('nextBtn').style.display = 'inline-block';
+      } else {
+        handleWrong();
+      }
+    }
+
+    function handleWrong() {
+      lives--;
+      document.getElementById('lives').textContent = '❤️'.repeat(lives) + '🤍'.repeat(3 - lives);
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('grammyHighScore', highScore);
+      }
+      document.getElementById('grammys1').textContent = `${singerPair[0].grammys} Grammys`;
+      document.getElementById('grammys2').textContent = `${singerPair[1].grammys} Grammys`;
+      document.getElementById('grammys1').style.display = 'block';
+      document.getElementById('grammys2').style.display = 'block';
+
+      if (lives <= 0) {
+        document.getElementById('result').textContent = `Game Over! Your score: ${score}`;
+        document.getElementById('restartBtn').style.display = 'inline-block';
+      } else {
+        document.getElementById('nextBtn').style.display = 'inline-block';
+      }
+    }
+
+    function nextRound() {
+      loadRound();
+    }
+
+    function restartGame() {
+      score = 0;
+      lives = 3;
+      document.getElementById('score').textContent = `Score: ${score} | High Score: ${highScore}`;
+      document.getElementById('lives').textContent = '❤️❤️❤️';
+      loadRound();
+    }
+
+    window.onload = restartGame;
+  </script>
+</body>
+</html>

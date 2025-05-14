@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Athlete | Guessing Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom right, #e7f1f9, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    nav {
+      width: 100%;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .clue-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 30px 0;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    .clue {
+      padding: 15px;
+      background-color: #315f85;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 15px;
+      opacity: 1;
+    }
+
+    .clue.locked {
+      opacity: 0.5;
+    }
+
+    .guess-input {
+      padding: 10px;
+      font-size: 1rem;
+      width: 300px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    #message {
+      font-size: 1.4rem;
+      color: #28a745;
+      margin-top: 20px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 1.1rem;
+      margin-top: 20px;
+      color: #315f85;
+    }
+
+    #play-again {
+      display: none;
+      margin-top: 20px;
+    }
+    .search-bar {
+  padding: 8px 16px 8px 36px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  background: white;
+  color: #315f85;
+  font-size: 0.95rem;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  box-shadow: 0 0 2px rgba(0,0,0,0.1);
+}
+
+.search-bar::placeholder {
+  color: #888;
+}
+
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <h1>Guess the Mystery Athlete</h1>
+  <div class="stats">
+    <span id="timer">Time Left: 100</span>
+    <span id="highscore">High Score: 0</span>
+    <span id="score">Correct: 0 / 5</span>
+  </div>
+
+  <div class="clue-container" id="clueContainer">
+    <div class="clue" id="clue1"></div>
+    <div class="clue locked" id="clue2">🔒</div>
+    <div class="clue locked" id="clue3">🔒</div>
+    <div class="clue locked" id="clue4">🔒</div>
+    <div class="clue locked" id="clue5">🔒</div>
+  </div>
+
+  <input type="text" id="guess" class="guess-input" placeholder="Type the athlete's name...">
+  <div class="btn-row" id="buttonRow">
+    <button onclick="submitGuess()">Submit</button>
+    <button onclick="passAthlete()">Pass</button>
+  </div>
+
+  <button id="play-again" onclick="restartGame()">Play Again</button>
+  <div id="message"></div>
+
+  <script>
+   const athletes = [
+  {
+    name: 'Stephen Curry',
+    clues: ['🏀 Basketball Player', 'Western Conference', 'Golden State Warriors', 'Point Guard', 'Unanimous MVP']
+  },
+  {
+    name: 'Tom Brady',
+    clues: ['🏈 Football Player', '7 Super Bowl Wins', 'Played for Patriots', 'Quarterback', 'Retired in 2023']
+  },
+  {
+    name: 'Serena Williams',
+    clues: ['🎾 Tennis Legend', '23 Grand Slams', 'Played Doubles with Venus', 'Olympic Gold Medalist', 'GOAT Debate']
+  },
+  {
+    name: 'LeBron James',
+    clues: ['🏀 Basketball Player', 'Los Angeles Lakers', '4 NBA Championships', 'Known as \"The King\"', 'All-Time Scoring Leader']
+  },
+  {
+    name: 'Lionel Messi',
+    clues: ['⚽ Soccer Legend', 'Argentina National Team', 'World Cup Champion', 'Played for Barcelona', '8 Ballon d\'Or']
+  },
+  {
+    name: 'Cristiano Ronaldo',
+    clues: ['⚽ Soccer Superstar', 'Portugal National Team', 'Champions League Legend', 'Played for Real Madrid', '5 Ballon d\'Or']
+  },
+  {
+    name: 'Michael Jordan',
+    clues: ['🏀 Basketball Legend', 'Chicago Bulls', '6 NBA Championships', 'Space Jam Star', 'Wore #23']
+  },
+  {
+    name: 'Tiger Woods',
+    clues: ['🏌️‍♂️ Golf Icon', 'Masters Winner', '15 Major Titles', 'Comeback King', 'Red Shirt on Sundays']
+  },
+  {
+    name: 'Usain Bolt',
+    clues: ['🏃‍♂️ Track Star', 'Fastest Man Alive', '8 Olympic Golds', '100m World Record', 'Lightning Bolt Pose']
+  },
+  {
+    name: 'Simone Biles',
+    clues: ['🤸‍♀️ Gymnast', 'Team USA', 'Most Decorated Gymnast', '4\'8\" Powerhouse', 'Mental Health Advocate']
+  },
+  {
+    name: 'Naomi Osaka',
+    clues: ['🎾 Tennis Star', 'Grand Slam Winner', 'Represents Japan', 'Mental Health Advocate', 'Olympic Competitor']
+  },
+  {
+    name: 'Shaquille O\'Neal',
+    clues: ['🏀 Basketball Giant', 'Played for Lakers & Magic', 'Known as \"Shaq\"', '4-Time NBA Champion', 'Dominant Center']
+  },
+  {
+    name: 'Kobe Bryant',
+    clues: ['🏀 Lakers Legend', '5-Time NBA Champion', 'Black Mamba', '81-Point Game', 'Tragic Helicopter Crash']
+  },
+  {
+    name: 'Floyd Mayweather',
+    clues: ['🥊 Boxing Champion', '50-0 Record', 'Defensive Master', 'Fought Pacquiao & McGregor', 'Nickname \"Money\"']
+  },
+  {
+    name: 'Michael Phelps',
+    clues: ['🏊‍♂️ Swimmer', 'Olympic Legend', 'Most Gold Medals Ever', 'Nickname \"The Fish\"', 'USA Relay Dominator']
+  }
+];
+function shuffleArray(array) {
+  return array.sort(() => 0.5 - Math.random());
+}
+
+// Game variables
+let athleteQueue = shuffleArray([...athletes]);
+let currentAthlete;
+let clueIndex = 0;
+let correctCount = 0;
+let timeLeft = 100;
+let timer;
+let clueTimer;
+let highScore = localStorage.getItem('athleteGameHighScore') || 0;
+
+document.getElementById("highscore").textContent = `High Score: ${highScore}`;
+
+// Timer
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+    if (timeLeft <= 0) endGame(false);
+  }, 1000);
+}
+
+// Load new athlete
+function loadAthlete() {
+  clearTimeout(clueTimer);
+
+  if (athleteQueue.length === 0) {
+    athleteQueue = shuffleArray([...athletes]);
+  }
+
+  currentAthlete = athleteQueue.shift();
+  clueIndex = 0;
+
+  document.getElementById('clueContainer').style.display = 'flex';
+  document.getElementById('message').textContent = '';
+  document.getElementById('guess').style.display = 'inline-block';
+  document.getElementById('buttonRow').style.display = 'flex';
+  document.getElementById('play-again').style.display = 'none';
+
+  for (let i = 0; i < 5; i++) {
+    const clueEl = document.getElementById(`clue${i + 1}`);
+    clueEl.textContent = i === 0 ? currentAthlete.clues[0] : '🔒';
+    clueEl.classList.toggle('locked', i !== 0);
+  }
+
+  clueTimer = setTimeout(revealNextClue, 3000);
+}
+
+// Reveal next clue
+function revealNextClue() {
+  clueIndex++;
+  if (clueIndex < 5) {
+    const clueEl = document.getElementById(`clue${clueIndex + 1}`);
+    clueEl.textContent = currentAthlete.clues[clueIndex];
+    clueEl.classList.remove('locked');
+    clueTimer = setTimeout(revealNextClue, 5000);
+  }
+}
+
+// Handle guess
+function submitGuess() {
+  const inputEl = document.getElementById('guess');
+  const input = inputEl.value.trim().toLowerCase();
+  inputEl.value = '';
+
+  if (input === currentAthlete.name.toLowerCase()) {
+    correctCount++;
+    document.getElementById("score").textContent = `Correct: ${correctCount} / 5`;
+    if (correctCount >= 5) {
+      endGame(true);
+    } else {
+      loadAthlete();
+    }
+  } else {
+    document.getElementById('message').textContent = '❌ Try again!';
+  }
+}
+
+// Pass current athlete
+function passAthlete() {
+  loadAthlete();
+}
+
+// End game
+function endGame(won) {
+  clearInterval(timer);
+  clearTimeout(clueTimer);
+  document.getElementById('clueContainer').style.display = 'none';
+  document.getElementById('guess').style.display = 'none';
+  document.getElementById('buttonRow').style.display = 'none';
+  document.getElementById('play-again').style.display = 'inline-block';
+
+  const finalMessage = won
+    ? `🎉 Congrats! You won with ${timeLeft} seconds left!`
+    : `💀 Game Over! Final Score: ${correctCount}`;
+  document.getElementById('message').textContent = finalMessage;
+
+  if (won && timeLeft > highScore) {
+    localStorage.setItem('athleteGameHighScore', timeLeft);
+    document.getElementById("highscore").textContent = `High Score: ${timeLeft}`;
+  }
+}
+
+// Restart game
+function restartGame() {
+  correctCount = 0;
+  timeLeft = 100;
+  document.getElementById("score").textContent = `Correct: 0 / 5`;
+  document.getElementById("timer").textContent = `Time Left: 100`;
+  loadAthlete();
+  startTimer();
+}
+
+// Start the game
+window.onload = function () {
+  loadAthlete();
+  startTimer();
+};
+</script>
+</body>
+</html>

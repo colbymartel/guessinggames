@@ -162,9 +162,36 @@
     #restartBtn:hover {
       background-color: #ffd84d;
     }
+    #rulesModal{
+      position: fixed;
+  top: 70px; /* Push below nav bar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 43, 56, 0.95);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 30px;
+  text-align: center;
+    }
+    #startGameBtn{
+      background-color: #ffcb05;
+    color: #1e2b38;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  
   <nav>
     <div class="nav-links">
       <a href="/index.html">Home</a>
@@ -176,12 +203,48 @@
       <button class="login-btn">Login</button>
     </div>
   </nav>
+  <div id="rulesModal">
+  <h2 style="margin-bottom: 20px;">🎵 How to Play: Match the Singer</h2>
+  <p style="max-width: 500px; font-size: 1.1rem; margin-bottom: 20px;">
+    Flip two cards at a time to find matching pairs: one with a singer's <strong>name</strong>, one with their <strong>photo</strong>.
+    <br><br>
+    Match correctly to earn points! Every mismatch costs you 10 points.
+  </p>
 
+  <div style="display: flex; gap: 30px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center;">
+    <!-- Correct Match -->
+    <div style="text-align: center;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background:#4caf50; padding: 20px; border-radius: 10px; width: 120px; font-weight: bold;">Lady Gaga</div>
+        <div style="background:#4caf50; padding: 10px; border-radius: 10px; width: 120px;">
+          <img src="images/ladygaga.jpg" style="width: 100%; border-radius: 6px;" alt="Lady Gaga">
+        </div>
+      </div>
+      <div style="margin-top: 10px; color: #4caf50; font-weight: bold;">Correct Match ✅</div>
+    </div>
+
+    <!-- Incorrect Match -->
+    <div style="text-align: center;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background:#e74c3c; padding: 20px; border-radius: 10px; width: 120px; font-weight: bold;">Lady Gaga</div>
+        <div style="background:#e74c3c; padding: 10px; border-radius: 10px; width: 120px;">
+          <img src="images/drake.jpg" style="width: 100%; border-radius: 6px;" alt="Drake">
+        </div>
+      </div>
+      <div style="margin-top: 10px; color: #e74c3c; font-weight: bold;">Incorrect Match ❌</div>
+    </div>
+  </div>
+
+  <button id="startGameBtn">Start Game</button>
+</div>
+
+<div id="gameContainer" style="display: none;">
   <h1>Match the Singer</h1>
   <div id="score">Score: 1000 | High Score: <span id="highScore">0</span></div>
   <div id="message"></div>
   <div class="grid" id="gameGrid"></div>
   <button id="restartBtn" onclick="location.reload()">Play Again</button>
+</div>
 
   <script>
     const allSingers = [
@@ -309,6 +372,25 @@
     function updateScore() {
       scoreEl.innerHTML = `Score: ${score} | High Score: <span id="highScore">${highScoreEl.textContent}</span>`;
     }
+    const rulesModal = document.getElementById('rulesModal');
+const gameContainer = document.getElementById('gameContainer');
+const startGameBtn = document.getElementById('startGameBtn');
+
+if (localStorage.getItem('matchRulesShown') === 'true') {
+  rulesModal.style.display = 'none';
+  gameContainer.style.display = 'block';
+} else {
+  rulesModal.style.display = 'flex'; // in case styles changed
+  gameContainer.style.display = 'none';
+}
+
+startGameBtn.addEventListener('click', () => {
+  localStorage.setItem('matchRulesShown', 'true');
+  rulesModal.style.display = 'none';
+  gameContainer.style.display = 'block';
+});
+
+
   </script>
 </body>
 </html>
