@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spell the Singer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom right, #e7f1f9, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    nav {
+      width: 100%;
+      margin: 0;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+    .container {
+      margin-top: 40px;
+      max-width: 600px;
+      width: 100%;
+    }
+    #blanks {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      word-spacing: 10px;
+    }
+    .guess-input {
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .btn-row {
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #ffcb05;
+      color: #1e2b38;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ffd84d;
+    }
+    .stats {
+      font-size: 1.2rem;
+      margin-bottom: 35px;
+      color: #315f85;
+    }
+    .message {
+      font-size: 1.2rem;
+      color: #28a745;
+      margin-top: 20px;
+    }
+    .emoji {
+      font-size: 2rem;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-links">
+          <a href="/index.html">Home</a>
+          <a href="/allgames.html">Games</a>
+          <a href="/about.html">About</a>
+        </div>
+        <div class="nav-actions">
+          <input type="text" class="search-bar" placeholder="Search games...">
+          <button class="login-btn">Login</button>
+        </div>
+      </nav>
+
+  <div class="container">
+    <div class="emoji">🐝</div>
+    <h1 class="game-title">Spell the Singer</h1>
+    <div class="stats">
+      Time Left: <span id="timer">100</span> | High Score: <span id="highscore">0</span> | Correct: <span id="correctCount">0</span>/5
+    </div>
+    <div id="blanks"></div>
+    <input type="text" id="guessInput" class="guess-input" placeholder="Guess the singer...">
+    <div class="btn-row">
+      <button onclick="submitGuess()">Submit Guess</button>
+      <button id="play-again" onclick="startGame()" style="display:none">Play Again</button>
+    </div>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    const singers = [
+      "Adele", "Taylor Swift", "Bruno Mars", "Ed Sheeran", "Lady Gaga", "Justin Bieber", "Beyonce",
+      "Rihanna", "Harry Styles", "Ariana Grande", "Billie Eilish", "Sam Smith", "Dua Lipa", "Shawn Mendes",
+      "Camila Cabello", "Selena Gomez", "Katy Perry", "Nicki Minaj", "Doja Cat", "Post Malone", "Olivia Rodrigo",
+      "The Weeknd", "Drake", "Lizzo", "Miley Cyrus", "Halsey", "SZA", "Frank Ocean", "Charlie Puth",
+      "Jennifer Lopez", "Kelly Clarkson", "Jason Derulo", "Zayn Malik", "Liam Payne", "Louis Tomlinson",
+      "Niall Horan", "Avril Lavigne", "Britney Spears", "Mariah Carey", "Alicia Keys", "John Legend",
+      "Elton John", "Stevie Wonder", "Aretha Franklin", "Whitney Houston", "Celine Dion", "Michael Bublé",
+      "Eminem", "50 Cent", "Kendrick Lamar", "Travis Scott", "Tyler Creator", "Ice Spice", "Flo Rida",
+      "Pitbull", "Sia", "Adam Levine", "Chris Brown", "Tinashe", "Lana Del Rey", "Lorde", "Troye Sivan",
+      "Tove Lo", "Becky G", "Anitta", "Karol G", "Bad Bunny", "Rosalia", "J Balvin", "Shakira",
+      "Ricky Martin", "Luis Fonsi", "Paul McCartney", "Mick Jagger", "Freddie Mercury", "David Bowie",
+      "George Michael", "Elvis Presley", "Prince", "Billy Joel", "Bob Dylan", "James Taylor", "Phil Collins",
+      "Jon Bon Jovi", "Sting"
+    ];
+
+    let currentSinger = "";
+    let revealedLetters = [];
+    let correctCount = 0;
+    let timeLeft = 100;
+    let timerInterval, revealInterval;
+    let singerQueue = [];
+    let highScore = localStorage.getItem('spellSingerHighScore') || 0;
+    document.getElementById('highscore').textContent = highScore;
+
+    function shuffle(array) {
+      return array.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+      singerQueue = shuffle([...singers]);
+      correctCount = 0;
+      timeLeft = 100;
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('timer').textContent = timeLeft;
+      document.getElementById('play-again').style.display = 'none';
+      document.getElementById('message').textContent = '';
+      clearInterval(timerInterval);
+      clearInterval(revealInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+      loadNextSinger();
+    }
+    function updateBlanks() {
+  document.getElementById('blanks').innerHTML = revealedLetters
+    .map(char => char === ' ' 
+      ? '<span style="margin: 0 15px;">&nbsp;</span>' 
+      : `<span style="display: inline-block; width: 20px; margin: 0 6px; border-bottom: 2px solid #000; font-weight: bold;">${char === '_' ? '&nbsp;' : char}</span>`)
+    .join('');
+}
+
+
+    function loadNextSinger() {
+      if (singerQueue.length === 0) singerQueue = shuffle([...singers]);
+      currentSinger = singerQueue.shift().toUpperCase();
+      revealedLetters = currentSinger.split('').map(char => char === ' ' ? ' ' : '_');
+      updateBlanks();
+      clearInterval(revealInterval);
+      let unrevealedIndices = currentSinger.split('').map((_, i) => i).filter(i => currentSinger[i] !== ' ');
+
+      revealInterval = setInterval(() => {
+        if (unrevealedIndices.length === 0) return;
+        const randIndex = unrevealedIndices.splice(Math.floor(Math.random() * unrevealedIndices.length), 1)[0];
+        revealedLetters[randIndex] = currentSinger[randIndex];
+        updateBlanks();
+      }, 4000);
+    }
+
+    function submitGuess() {
+      const guess = document.getElementById('guessInput').value.trim().toUpperCase();
+      document.getElementById('guessInput').value = '';
+      if (guess === currentSinger) {
+        correctCount++;
+        document.getElementById('correctCount').textContent = correctCount;
+        if (correctCount >= 5) {
+          endGame(true);
+        } else {
+          loadNextSinger();
+        }
+      } else {
+        document.getElementById('message').textContent = '❌ Incorrect. Try again!';
+        setTimeout(() => document.getElementById('message').textContent = '', 2000);
+      }
+    }
+
+    function endGame(won) {
+  clearInterval(timerInterval);
+  clearInterval(revealInterval);
+  const score = won ? timeLeft : 0;
+  document.getElementById('message').textContent = won 
+    ? `🎉 You win! Score: ${score}` 
+    : '⏰ Time is up!';
+  
+  if (score > highScore) {
+    localStorage.setItem('spellSingerHighScore', score);
+    document.getElementById('highscore').textContent = score;
+  }
+
+  document.getElementById('play-again').style.display = 'inline-block';
+  document.querySelector('button[onclick="submitGuess()"]').style.display = 'none'; // 👈 Hide the button
+}
+
+
+    window.onload = startGame;
+  </script>
+</body>
+</html>

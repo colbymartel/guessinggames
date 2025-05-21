@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fortune Singer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to bottom right, #fefcea, #f1daae);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 2rem;
+      color: #8b5e3c;
+    }
+
+    .stats {
+      font-size: 1.1rem;
+      margin: 10px 0 20px;
+      color: #5a3c23;
+    }
+
+    #fortune {
+      background-color: #fff8e1;
+      border: 2px dashed #d4af37;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      width: 90%;
+      max-width: 400px;
+      min-height: 60px;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #cookie {
+  width: 100px;
+  height: 100px;
+  background-image: url('/images/cookie.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+
+    #cookie:hover {
+      transform: scale(1.1);
+    }
+
+    .guess-input {
+      padding: 10px;
+      font-size: 1rem;
+      width: 300px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #d4af37;
+      color: #4a321c;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #c49d2d;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #8b5e3c;
+    }
+
+    nav {
+      width: 100%;
+      margin: 0;
+      padding: 15px 30px;
+      background: #1e2b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffcb05;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: #315f85;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-bar::placeholder {
+      color: #888;
+    }
+
+    .login-btn {
+      background-color: #ffcb05;
+      border: none;
+      padding: 8px 16px;
+      height: 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #1e2b38;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800;
+      transform: translateY(-1px);
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+  <h1>🥠 Fortune Singer</h1>
+  <div class="stats">Correct: <span id="correctCount">0</span>/5 | Fortunes Used: <span id="clueCount">0</span>/10</div>
+
+  <div id="fortune">Click the cookie for your first clue!</div>
+  <div id="cookie" onclick="revealClue()"></div>
+
+  <input type="text" id="guessInput" class="guess-input" placeholder="Type your guess..." />
+  <br>
+  <button class="btn" onclick="submitGuess()">Submit Guess</button>
+
+  <div id="message"></div>
+
+  <script>
+    const singers = [
+      {
+        name: "Taylor Swift",
+        clues: [
+          "Pop and Country artist",
+          "Known for storytelling lyrics",
+          "Started with 'Tim McGraw'",
+          "Dated multiple celebrities",
+          "Album: '1989'",
+        ]
+      },
+      {
+        name: "Drake",
+        clues: [
+          "Canadian rapper",
+          "Started on Degrassi",
+          "Album: 'Take Care'",
+          "Often sings about emotions",
+          "Famous for memes and dancing",
+        ]
+      },
+      {
+        name: "Billie Eilish",
+        clues: [
+          "Whispers in songs",
+          "Debut album: 'WHEN WE ALL FALL ASLEEP...'",
+          "Dark visuals and oversized clothes",
+          "Brother helps produce music",
+          "Won multiple Grammys at a young age",
+        ]
+      },
+      {
+        name: "Beyonce",
+        clues: [
+          "Started with Destiny’s Child",
+          "Married to Jay-Z",
+          "Sasha Fierce is her alter ego",
+          "Album: 'Lemonade'",
+          "Queen of live performances",
+        ]
+      },
+      {
+        name: "Bruno Mars",
+        clues: [
+          "Funk-inspired pop artist",
+          "Hits include 'Uptown Funk' and '24K Magic'",
+          "Incredible live vocals",
+          "Hawaiian roots",
+          "Retro vibes in music videos",
+        ]
+      }
+    ];
+
+    let currentIndex = 0;
+    let clueIndex = 0;
+    let correctCount = 0;
+    let totalCluesUsed = 0;
+
+    function revealClue() {
+      const singer = singers[currentIndex];
+      if (clueIndex < singer.clues.length && totalCluesUsed < 10) {
+        document.getElementById('fortune').textContent = singer.clues[clueIndex];
+        clueIndex++;
+        totalCluesUsed++;
+        document.getElementById('clueCount').textContent = totalCluesUsed;
+      } else if (totalCluesUsed >= 10) {
+        endGame(false);
+      } else {
+        document.getElementById('fortune').textContent = "No more clues. Make a guess!";
+      }
+    }
+
+    function submitGuess() {
+      const guess = document.getElementById('guessInput').value.trim().toLowerCase();
+      const correctName = singers[currentIndex].name.toLowerCase();
+
+      if (guess === correctName) {
+        correctCount++;
+        document.getElementById('correctCount').textContent = correctCount;
+        document.getElementById('message').textContent = "✅ Correct! Next singer...";
+        nextSinger();
+      } else {
+        document.getElementById('message').textContent = "❌ Try again or reveal another clue.";
+      }
+
+      document.getElementById('guessInput').value = '';
+    }
+
+    function nextSinger() {
+      clueIndex = 0;
+      currentIndex++;
+      document.getElementById('fortune').textContent = "Click the cookie for your first clue!";
+      document.getElementById('message').textContent = "";
+
+      if (correctCount === 5) {
+        endGame(true);
+      } else if (currentIndex >= singers.length) {
+        endGame(false);
+      }
+    }
+
+    function endGame(won) {
+      document.getElementById('fortune').textContent = won
+        ? "🎉 You won! You guessed all 5 singers!"
+        : "💀 Game Over. You've used all 10 fortunes.";
+
+      document.getElementById('cookie').style.display = "none";
+      document.getElementById('guessInput').style.display = "none";
+      document.querySelector('.btn').style.display = "none";
+      document.getElementById('message').textContent = "";
+    }
+  </script>
+</body>
+</html>

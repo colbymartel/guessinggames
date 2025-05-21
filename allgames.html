@@ -207,6 +207,10 @@
   border-radius: 10px;
   margin-bottom: 10px;
 }
+.nav-links a:last-of-type {
+  margin-right: 20px;
+}
+
 @media (max-width: 768px) {
   .main {
     padding: 20px;
@@ -336,30 +340,177 @@
   position: relative;
 }
 
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-links a {
+    margin: 10px 0;
+    font-size: 1rem;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .login-btn {
+    width: 100%;
+  }
+
+  .main {
+    padding: 10px;
+  }
+
+  .game-scroll-row {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .game-card {
+    width: 140px;
+  }
+
+  .game-card img {
+    height: 140px;
+  }
+
+  .category-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .category-header p {
+    font-size: 0.95rem;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab {
+    width: 100%;
+    text-align: center;
+  }
+
+  .stats {
+    font-size: 1rem;
+  }
+
+  .footer {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .footer a {
+    font-size: 1rem;
+    margin: 0 5px;
+  }
+}.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.bar {
+  height: 3px;
+  width: 25px;
+  background-color: white;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 15px 20px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: #315f85;
+    padding: 10px 0;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links a,
+  .nav-links .search-bar,
+  .nav-links .login-btn {
+    margin: 8px 20px;
+  }
+
+  .search-bar {
+    width: calc(100% - 40px);
+  }
+
+  .login-btn {
+    width: calc(100% - 40px);
+  }
+
+  .search-suggestions {
+    position: static;
+    width: calc(100% - 40px);
+    margin: 0 auto;
+  }
+}
+
 
   </style>
 </head>
 <body>
-
-  <!-- NAVBAR -->
-<nav class="navbar">
-  <div class="logo">
-    <a href="#"><img src="GGlogo.png" alt="Guessing Games Logo" /></a>
-  </div>
-  <div class="nav-links">
-    <a href="/index.html">Home</a>
-    <a href="/about.html">About</a>
-    <a href="/show.html">🎙️ Live Shows</a>
-    <a href="/leaderboard.html">🏆 Leaderboard</a>
-    <a href="/leaderboard.html">🌎 Community</a>
-
-  </div>
-  <div class="nav-actions">
-    <input type="text" placeholder="Search games..." class="search-bar" oninput="showSuggestions(this.value)">
-    <div class="search-suggestions" id="suggestions"></div>
-    <button class="login-btn">Login</button>
-  </div>
-</nav>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="#"><img src="GGlogo.png" alt="Guessing Games Logo" /></a>
+    </div>
+  
+    <!-- Hamburger icon -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  
+    <!-- Collapsible nav menu -->
+    <div class="nav-links" id="mobileMenu">
+      <a href="/index.html">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/show.html">🎙️ Live Shows</a>
+      <a href="/leaderboard.html">🏆 Leaderboard</a>
+      <a href="/leaderboard.html">🌎 Community</a>
+      
+      <!-- Search and login within dropdown -->
+      <input type="text" placeholder="Search games..." class="search-bar" oninput="showSuggestions(this.value)">
+      <div class="search-suggestions" id="suggestions"></div>
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+  
 
 <!-- Trending Section -->
 <section class="category-block">
@@ -380,11 +531,23 @@
       <p>Daily mystery artist game.</p>
     </div>
     <div class="game-card" onclick="location.href='/memory.html'">
-        <img src="/icons/brainicon.png" alt="Music Memory Game">
+        <img src="/icons/brainicon.png" alt="Music Memory Match">
       <h3>Music Memory Match</h3>
       <p>Match images with singer names.</p>
       <span class="badge-trending">🔥 Trending</span>
     </div>
+    <div class="game-card" onclick="location.href='/spelling.html'">
+      <img src="/icons/spellingbee.png" alt="Spell the Singer">
+    <h3>Spell the Singer</h3>
+    <p>Spell the singer before all letters appear.</p>
+    <span class="badge-trending">🔥 Trending</span>
+  </div>
+  <div class="game-card" onclick="location.href='/fortune.html'">
+    <img src="/icons/fortune.png" alt="Fortune Singer">
+  <h3>Fame 'n Fortune</h3>
+  <p>Guess the singer with fortune cookie clues.</p>
+  <span class="badge-trending">🔥 Trending</span>
+</div>
     <div class="game-card" onclick="location.href='/grammys.html'">
       <img src="/icons/grammyicon.png" alt="Grammy Whammy">
     <h3>Grammy Whammy</h3>
@@ -395,6 +558,7 @@
       <h3>Name That Singer</h3>
       <p>Timed face matching with a global leaderboard.</p>
     </div>
+    
     <div class="game-card locked">
         <img src="lockicon.png" alt="Album Cover Challenge">
       <h3>Album Cover Challenge</h3>
