@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flag Guessing Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4682b4, #254a6d);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .game-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .game-header h1 {
+      color: #254a6d;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .flag-image {
+      width: 300px;
+      height: 200px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      object-fit: cover;
+      border: 3px solid #e0e0e0;
+    }
+
+    .country-input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 3px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #4682b4, #254a6d);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🌍 Flag Guesser</h1>
+      <p>Guess the country from its flag!</p>
+    </div>
+
+    <div class="flag-container">
+      <img id="flagImage" class="flag-image" src="" alt="Country Flag">
+    </div>
+
+    <div class="input-section">
+      <input type="text" id="countryInput" class="country-input" placeholder="Enter country name..." autocomplete="off">
+      <button id="submitBtn" class="submit-btn">Submit Answer</button>
+    </div>
+
+    <div id="feedback"></div>
+  </div>
+
+  <script>
+    const flags = [
+      { country: "Afghanistan", image: "flags/Flag_of_Afghanistan_Flat_Wavy-1024x785.png" },
+      { country: "Albania", image: "flags/Flag_of_Albania_Flat_Wavy-1024x841.png" },
+      { country: "Algeria", image: "flags/Flag_of_Algeria_Flat_Wavy-512x393.png" },
+      { country: "Australia", image: "flags/Flag_of_Australia_Flat_Square-512x512.png" },
+      { country: "Austria", image: "flags/Flag_of_Austria_Flat_Wavy-512x393.png" }
+    ];
+
+    let currentFlagIndex = 0;
+    let score = 0;
+
+    const flagImage = document.getElementById('flagImage');
+    const countryInput = document.getElementById('countryInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const feedback = document.getElementById('feedback');
+
+    function loadFlag() {
+      if (currentFlagIndex >= flags.length) {
+        alert('Game complete! Score: ' + score + '/' + flags.length);
+        return;
+      }
+      const flag = flags[currentFlagIndex];
+      flagImage.src = flag.image;
+      countryInput.value = '';
+      countryInput.focus();
+    }
+
+    function checkAnswer() {
+      const userAnswer = countryInput.value.trim().toLowerCase();
+      const correctAnswer = flags[currentFlagIndex].country.toLowerCase();
+      
+      if (userAnswer === correctAnswer) {
+        score++;
+        feedback.textContent = 'Correct!';
+        feedback.style.color = 'green';
+      } else {
+        feedback.textContent = 'Incorrect. The answer was ' + flags[currentFlagIndex].country;
+        feedback.style.color = 'red';
+      }
+      
+      currentFlagIndex++;
+      setTimeout(loadFlag, 2000);
+    }
+
+    submitBtn.addEventListener('click', checkAnswer);
+    countryInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkAnswer();
+      }
+    });
+
+    loadFlag();
+  </script>
+</body>
+</html>
