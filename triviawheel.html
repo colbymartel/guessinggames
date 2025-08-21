@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spin & Guess — Wheel Quiz</title>
+<style>
+  :root{
+    --bg:#0e1020; --panel:#111634; --panel-2:#0b0f24; --text:#f5f7ff;
+    --accent:#7c3aed; --good:#22c55e; --bad:#ef4444; --muted:#97a0d6;
+    --ring:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:radial-gradient(1200px 700px at 50% -20%, #1a2150 0%, #0e1020 60%); color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 32px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  h1{margin:0;font-size:clamp(18px,2.6vw,26px);letter-spacing:.2px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  button{
+    background:linear-gradient(180deg,#1a1f47,#14183a);
+    color:var(--text); border:1px solid #252c5e; padding:9px 14px; border-radius:12px;
+    cursor:pointer; font-weight:700; transition:transform .06s ease, background .2s ease, border .2s ease;
+  }
+  button:hover{transform:translateY(-1px); background:#1e2452}
+  button:disabled{opacity:.5; cursor:not-allowed}
+  button.primary{background:linear-gradient(180deg,#7c3aed,#6d28d9); border-color:#5b21b6}
+  button.primary:hover{background:linear-gradient(180deg,#8742ff,#7a35ef)}
+  .hud{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px;
+    background:linear-gradient(180deg,#13183a,#0e1331); border:1px solid #262e64; padding:8px 12px; border-radius:12px}
+  .stat{font-weight:800}
+
+  /* NEW: Ticker */
+  .ticker{
+    margin-top:10px; border:1px solid #262e64; border-radius:12px;
+    background:linear-gradient(180deg,#0e1331,#0b1029);
+    overflow:hidden;
+  }
+  .ticker-inner{ height:36px; display:flex; align-items:center; }
+  .ticker-track{
+    white-space:nowrap; font-weight:900; padding-left:100%;
+    animation: ticker-scroll 12s linear infinite;
+    padding-right:24px;
+  }
+  @keyframes ticker-scroll{
+    from{ transform: translateX(0); }
+    to  { transform: translateX(-100%); }
+  }
+
+  .grid{display:grid; grid-template-columns: 1fr; gap:14px; margin-top:14px}
+  @media(min-width:900px){ .grid{grid-template-columns: 1.1fr .9fr} }
+
+  .stage{
+    position:relative; border:1px solid #272f66; border-radius:18px; overflow:hidden;
+    background: radial-gradient(900px 500px at 50% 120%, #151a3b 10%, #0e1020 70%);
+    min-height:520px; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  canvas{display:block; max-width:100%; height:auto}
+  .pointer{
+    position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-bottom:18px solid var(--ring);
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));
+  }
+  .wheel-plate{position:relative}
+  .wheel-shadow{
+    position:absolute; inset:0; border-radius:999px; box-shadow:0 18px 60px rgba(0,0,0,.45) inset, 0 40px 80px rgba(0,0,0,.35);
+    pointer-events:none;
+  }
+  .center-cap{
+    position:absolute; width:86px; height:86px; border-radius:50%;
+    background: radial-gradient(80px 80px at 50% 50%, #ffe099, #f59e0b);
+    border:3px solid #8c5a0a; top:50%; left:50%; transform:translate(-50%,-50%);
+    display:grid; place-items:center; font-weight:900; color:#371f03; text-shadow:0 1px 0 #fff5;
+  }
+
+  .panel{
+    border:1px solid #242b5b; border-radius:16px; background:linear-gradient(180deg,#13183a,#0c1130);
+    padding:14px;
+  }
+  .qa{ display:none; flex-direction:column; gap:10px; }
+  .qa.show{display:flex}
+  .topic-tag{display:inline-block; padding:4px 10px; border-radius:999px; font-weight:800; background:#1f2553; border:1px solid #2a3270; color:#e6e8ff}
+  .question{font-size:clamp(16px,2vw,20px); font-weight:800}
+  .options{display:grid; gap:8px}
+  .opt{
+    background:linear-gradient(180deg,#161c43,#121739); border:1px solid #2a3270; border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:700;
+    transition:transform .06s ease, background .2s ease, border .2s ease, box-shadow .2s ease;
+  }
+  .opt:hover{transform:translateY(-1px); background:#1a2050}
+  .opt.correct{border-color:#12893f; background:linear-gradient(180deg,#173b2a,#102c1f); box-shadow:0 0 0 2px rgba(34,197,94,.25)}
+  .opt.wrong{border-color:#7a1d1d; background:linear-gradient(180deg,#2b1416,#220f13); box-shadow:0 0 0 2px rgba(239,68,68,.22)}
+  .explain{font-size:14px; color:var(--muted)}
+  .footer-row{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:6px}
+  .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; padding:2px 6px; border-radius:6px; border:1px solid #2a3270; background:#121739; color:#cbd5ff}
+
+  .toast{
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%) translateY(12px);
+    background:#0c1024; border:1px solid #2a3270; color:#fff; padding:8px 12px; border-radius:10px;
+    font-weight:800; opacity:0; transition:opacity .25s ease, transform .25s ease; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎡 Spin & Guess — Topic Wheel</h1>
+    <div class="controls">
+      <button id="spinBtn" class="primary">Spin (S)</button>
+      <button id="againBtn" disabled>Spin Again</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </header>
+
+  <div class="hud">
+    <div class="stat">Score: <span id="score">0</span></div>
+    <div class="stat">Streak: <span id="streak">0</span></div>
+    <div>Topic Count: <span id="topicCount">6</span></div>
+    <div style="opacity:.85">Keys: <span class="kbd">S</span> spin, <span class="kbd">1–4</span> answer, <span class="kbd">Enter</span> confirm</div>
+  </div>
+
+  <!-- NEW: Ticker -->
+  <div class="ticker" aria-live="polite">
+    <div class="ticker-inner">
+      <div id="tickerTrack" class="ticker-track">Ready to spin! • Press S or click Spin</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="stage">
+      <div class="pointer" aria-hidden="true"></div>
+      <div class="wheel-plate">
+        <canvas id="wheel" width="520" height="520" aria-label="Spinning wheel"></canvas>
+        <div class="wheel-shadow"></div>
+        <div class="center-cap">SPIN</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div id="qa" class="qa" aria-live="polite" aria-atomic="true">
+        <div><span id="topicTag" class="topic-tag">Topic</span></div>
+        <div id="qText" class="question">Question will appear here.</div>
+        <div id="options" class="options"></div>
+        <div class="footer-row">
+          <div class="explain" id="explain"></div>
+          <div>
+            <button id="submitBtn" class="primary" disabled>Submit (Enter)</button>
+            <button id="nextBtn" disabled>Next (Auto-Spin)</button>
+          </div>
+        </div>
+      </div>
+      <div id="idleMsg" style="opacity:.9">Press <span class="kbd">S</span> or click <b>Spin</b> to choose a topic.</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(() => {
+  // ---------- Data ----------
+  const TOPICS = [
+    {label:"Art",       color:"#f43f5e"},
+    {label:"History",   color:"#f59e0b"},
+    {label:"Geography", color:"#10b981"},
+    {label:"Pop Culture", color:"#3b82f6"},
+    {label:"Science",   color:"#8b5cf6"},
+    {label:"Sports",    color:"#22c55e"}
+  ];
+
+  const BANK = {
+    "Art":[
+      {q:"Who painted the Mona Lisa?", a:["Van Gogh","Leonardo da Vinci","Michelangelo","Raphael"], c:1, x:"Hangs in the Louvre, Paris."},
+      {q:"Impressionism began in which country?", a:["Italy","France","Netherlands","Spain"], c:1},
+      {q:"Which artist cut off part of his ear?", a:["Van Gogh","Picasso","Dali","Monet"], c:0}
+    ],
+    "History":[
+      {q:"The Roman Empire fell in which year (Western)?", a:["476 CE","1066 CE","1492 CE","44 BCE"], c:0},
+      {q:"Who was the first U.S. President?", a:["Thomas Jefferson","George Washington","John Adams","James Madison"], c:1},
+      {q:"The Great Wall is primarily in which country?", a:["China","Mongolia","Korea","Japan"], c:0}
+    ],
+    "Geography":[
+      {q:"What is the capital of Canada?", a:["Toronto","Vancouver","Ottawa","Montreal"], c:2},
+      {q:"Which river runs through Egypt?", a:["Amazon","Nile","Yangtze","Danube"], c:1},
+      {q:"Mount Kilimanjaro is in which country?", a:["Kenya","Tanzania","Uganda","Ethiopia"], c:1}
+    ],
+    "Pop Culture":[
+      {q:"Who plays Iron Man in the MCU?", a:["Chris Evans","Robert Downey Jr.","Chris Hemsworth","Mark Ruffalo"], c:1},
+      {q:"Which show features 'Central Perk'?", a:["Seinfeld","Friends","How I Met Your Mother","The Office"], c:1},
+      {q:"Which artist released '1989'?", a:["Adele","Taylor Swift","Katy Perry","Dua Lipa"], c:1}
+    ],
+    "Science":[
+      {q:"What gas do plants absorb?", a:["Oxygen","Nitrogen","Carbon Dioxide","Helium"], c:2},
+      {q:"H2O is the chemical formula for:", a:["Salt","Water","Hydrogen Peroxide","Methane"], c:1},
+      {q:"Earth is the ___ planet from the sun.", a:["2nd","3rd","4th","5th"], c:1}
+    ],
+    "Sports":[
+      {q:"How many players on a soccer team (on field)?", a:["9","10","11","12"], c:2},
+      {q:"The NBA Finals trophy is named after:", a:["Larry O'Brien","Bill Russell","Red Auerbach","Naismith"], c:0},
+      {q:"Which country hosts Wimbledon?", a:["USA","France","Australia","UK"], c:3}
+    ]
+  };
+
+  const asked = Object.fromEntries(Object.keys(BANK).map(k => [k, new Set()]));
+
+  // ---------- State ----------
+  const state = {
+    rotation: 0,
+    spinning: false,
+    score: 0,
+    streak: 0,
+    selectedTopicIndex: null,
+    currentQA: null,
+    chosenIndex: null,
+  };
+
+  // ---------- Elements ----------
+  const wheel = document.getElementById('wheel');
+  const ctx = wheel.getContext('2d');
+  const spinBtn = document.getElementById('spinBtn');
+  const againBtn = document.getElementById('againBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const scoreEl = document.getElementById('score');
+  const streakEl = document.getElementById('streak');
+  const topicCountEl = document.getElementById('topicCount');
+  const qaBox = document.getElementById('qa');
+  const idleMsg = document.getElementById('idleMsg');
+  const topicTag = document.getElementById('topicTag');
+  const qText = document.getElementById('qText');
+  const opts = document.getElementById('options');
+  const explain = document.getElementById('explain');
+  const submitBtn = document.getElementById('submitBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const toast = document.getElementById('toast');
+
+  // NEW: ticker elements
+  const tickerTrack = document.getElementById('tickerTrack');
+
+  topicCountEl.textContent = TOPICS.length;
+
+  // ---------- Wheel Drawing ----------
+  function drawWheel(rotation=0){
+    const w = wheel.width, h = wheel.height;
+    const cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 12;
+    ctx.clearRect(0,0,w,h);
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(rotation);
+
+    const seg = (Math.PI*2)/TOPICS.length;
+
+    for (let i=0;i<TOPICS.length;i++){
+      const start = i*seg, end = start+seg;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,r,start,end,false); ctx.closePath();
+      const grad = ctx.createLinearGradient(0,0,Math.cos(start+seg/2)*r,Math.sin(start+seg/2)*r);
+      grad.addColorStop(0,shade(TOPICS[i].color,0.25));
+      grad.addColorStop(1,TOPICS[i].color);
+      ctx.fillStyle = grad; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = "#0b0f24"; ctx.stroke();
+
+      // label
+      ctx.save();
+      ctx.fillStyle = "#0b0f24";
+      ctx.font = '900 16px Inter, system-ui, Arial';
+      ctx.rotate(start + seg/2);
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      const label = TOPICS[i].label;
+      const txtW = ctx.measureText(label).width + 18;
+      const pillR = 12;
+      ctx.save(); ctx.translate(r*0.62,0);
+      roundedRectPath(ctx, -txtW/2, -16/2, txtW, 16, pillR);
+      ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fill();
+      ctx.restore();
+      ctx.save(); ctx.translate(r*0.62,0); ctx.fillStyle = "#0b0f24"; ctx.fillText(label, 0, 0); ctx.restore();
+      ctx.restore();
+    }
+
+    // rim
+    ctx.beginPath(); ctx.arc(0,0,r+6,0,Math.PI*2);
+    ctx.lineWidth = 12; ctx.strokeStyle = "#1e2751"; ctx.stroke();
+    ctx.restore();
+  }
+
+  function roundedRectPath(ctx, x, y, w, h, r){
+    r = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+
+  function shade(hex, amt=0.2){
+    const c = hex.replace('#','');
+    const n = parseInt(c,16);
+    let r = (n>>16)&255, g = (n>>8)&255, b = n&255;
+    r = Math.min(255, Math.max(0, Math.round(r + (255-r)*amt)));
+    g = Math.min(255, Math.max(0, Math.round(g + (255-g)*amt)));
+    b = Math.min(255, Math.max(0, Math.round(b + (255-b)*amt)));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // initial draw
+  drawWheel(state.rotation);
+
+  // ---------- Spin Logic ----------
+  function spin(){
+    if (state.spinning) return;
+    state.spinning = true;
+    setButtonsDuringSpin(true);
+    hideQA();
+    setTicker("Spinning...");
+
+    const idx = Math.floor(Math.random()*TOPICS.length);
+    state.selectedTopicIndex = idx;
+
+    const seg = (Math.PI*2)/TOPICS.length;
+    const pointerAngle = -Math.PI/2; // top
+    const centerAngle = (idx + 0.5) * seg;
+    const targetBase = pointerAngle - centerAngle;
+    const turns = 5 + Math.floor(Math.random()*3); // 5–7 spins
+    const finalRotation = normalize(targetBase) + turns*(Math.PI*2);
+
+    const start = state.rotation;
+    const end = finalRotation;
+    const dur = 3400 + Math.random()*600;
+    const t0 = performance.now();
+
+    (function animate(t){
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = easeOutCubic(p);
+      state.rotation = start + (end - start)*eased;
+      drawWheel(state.rotation);
+      if (p < 1) { requestAnimationFrame(animate); }
+      else {
+        state.spinning = false;
+        state.rotation = normalize(state.rotation);
+        drawWheel(state.rotation);
+        onSpinEnd(idx);
+      }
+    })(performance.now());
+  }
+
+  function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+  function normalize(a){ const tau = Math.PI*2; a = a % tau; if (a < 0) a += tau; return a; }
+
+  function setButtonsDuringSpin(spinning){
+    spinBtn.disabled = spinning;
+    againBtn.disabled = true;
+    resetBtn.disabled = spinning;
+  }
+
+  function onSpinEnd(idx){
+    const topic = TOPICS[idx].label;
+    setTicker(`🎯 Landed on: ${topic}`);
+    againBtn.disabled = true;
+    showQuestion(topic);
+  }
+
+  // ---------- Questions ----------
+  function showQuestion(topic){
+    const list = BANK[topic];
+    if (!list || list.length === 0) {
+      toastMsg("No questions for " + topic);
+      againBtn.disabled = false;
+      return;
+    }
+
+    if (asked[topic].size >= list.length) asked[topic].clear();
+    let i;
+    for (let tries=0; tries<20; tries++){
+      i = Math.floor(Math.random()*list.length);
+      if (!asked[topic].has(i)) break;
+    }
+    asked[topic].add(i);
+    const qa = list[i];
+    state.currentQA = {topic, ...qa};
+    state.chosenIndex = null;
+
+    topicTag.textContent = topic;
+    qText.textContent = qa.q;
+    explain.textContent = "";
+    submitBtn.disabled = true;
+    nextBtn.disabled = true;
+
+    opts.innerHTML = "";
+    qa.a.forEach((txt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.type = 'button';
+      btn.textContent = (idx+1) + ". " + txt;
+      btn.addEventListener('click', () => selectOption(idx, btn));
+      opts.appendChild(btn);
+    });
+
+    idleMsg.style.display = "none";
+    qaBox.classList.add('show');
+    againBtn.disabled = true;
+    spinBtn.disabled = true; // wait until answer
+  }
+
+  function selectOption(idx, el){
+    state.chosenIndex = idx;
+    [...opts.children].forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    submitBtn.disabled = false;
+  }
+
+  function grade(){
+    if (state.chosenIndex == null || !state.currentQA) return;
+    const correctIdx = state.currentQA.c;
+
+    [...opts.children].forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === correctIdx) btn.classList.add('correct');
+      if (idx === state.chosenIndex && idx !== correctIdx) btn.classList.add('wrong');
+    });
+
+    const correct = (state.chosenIndex === correctIdx);
+    if (correct){
+      state.streak++;
+      const delta = 100 + Math.min(50, state.streak*5);
+      state.score += delta;
+      explain.textContent = "Correct! +" + delta + " points. " + (state.currentQA.x || "");
+      toastMsg("✅ Correct! Streak " + state.streak);
+    } else {
+      state.streak = 0;
+      explain.textContent = "Not quite. " + (state.currentQA.x || "");
+      toastMsg("❌ Incorrect");
+    }
+    updateHud();
+    nextBtn.disabled = false;
+    againBtn.disabled = false;
+    spinBtn.disabled = false;
+    submitBtn.disabled = true;
+  }
+
+  function hideQA(){
+    qaBox.classList.remove('show');
+    idleMsg.style.display = "";
+    opts.innerHTML = "";
+    explain.textContent = "";
+    state.currentQA = null;
+    state.chosenIndex = null;
+  }
+
+  // UPDATED: Next now auto-spins
+  function next(){
+    hideQA();
+    againBtn.disabled = true;
+    // small delay so UI updates before spin
+    setTimeout(() => { spin(); }, 150);
+  }
+
+  function updateHud(){
+    scoreEl.textContent = state.score;
+    streakEl.textContent = state.streak;
+  }
+
+  // ---------- Events ----------
+  spinBtn.addEventListener('click', spin);
+  againBtn.addEventListener('click', spin);
+  resetBtn.addEventListener('click', () => {
+    state.rotation = 0; state.spinning = false;
+    state.score = 0; state.streak = 0; updateHud();
+    drawWheel(state.rotation);
+    hideQA();
+    setTicker("Ready to spin! • Press S or click Spin");
+    toastMsg("Reset");
+  });
+  submitBtn.addEventListener('click', grade);
+  nextBtn.addEventListener('click', next);
+
+  // Keyboard support
+  window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 's' && !spinBtn.disabled) { spin(); }
+    if (!qaBox.classList.contains('show')) return;
+    if (['1','2','3','4'].includes(e.key)){
+      const idx = Number(e.key)-1;
+      const btn = opts.children[idx];
+      if (btn) selectOption(idx, btn);
+    }
+    if (e.key === 'Enter' && !submitBtn.disabled){
+      grade();
+    }
+  });
+
+  // ---------- Ticker control ----------
+  function setTicker(msg){
+    // Repeat message for smooth scroll, restart animation
+    const repeated = Array(4).fill(msg).join("   •   ");
+    tickerTrack.textContent = repeated;
+    tickerTrack.style.animation = 'none'; // restart
+    // force reflow
+    void tickerTrack.offsetHeight;
+    tickerTrack.style.animation = '';
+  }
+
+  // ---------- Toast ----------
+  let toastTimer=null;
+  function toastMsg(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'), 1000);
+  }
+
+})();
+</script>
+</body>
+</html>

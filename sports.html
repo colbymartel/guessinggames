@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports Games - Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.3rem;
+      color: #666;
+      font-weight: 400;
+    }
+
+    nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #333;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links a {
+      color: #333;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #3b7bbf;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #333;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      transition: border-color 0.3s;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #3b7bbf;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px 20px;
+    }
+
+    .featured-game {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .featured-game h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .featured-game p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .play-btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+    }
+
+    .play-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(59, 123, 191, 0.4);
+    }
+
+    .categories-section {
+      margin-top: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: white;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    .category-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2.5rem;
+      color: white;
+      background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .category-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .category-card p {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* Sports-specific colors */
+    .category-card.athletes {
+      --card-color-1: #68abda;
+      --card-color-2: #458eb7;
+    }
+
+    .category-card.basketball {
+      --card-color-1: #ff6b35;
+      --card-color-2: #e55a2b;
+    }
+
+    .category-card.football {
+      --card-color-1: #8b4513;
+      --card-color-2: #654321;
+    }
+
+    .category-card.baseball {
+      --card-color-1: #ff6b35;
+      --card-color-2: #e55a2b;
+    }
+
+    .category-card.soccer {
+      --card-color-1: #228b22;
+      --card-color-2: #006400;
+    }
+
+    .category-card.olympics {
+      --card-color-1: #ffd700;
+      --card-color-2: #ffb347;
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      text-align: center;
+      padding: 30px;
+      margin-top: auto;
+      box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+    }
+
+    footer a {
+      color: #3b7bbf;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #2a5a8a;
+    }
+
+    @media (max-width: 768px) {
+      .categories-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .featured-game {
+        padding: 30px 20px;
+      }
+
+      .featured-game h2 {
+        font-size: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <header>
+    <h1>🏈 Sports Games</h1>
+    <p>Test your knowledge of athletes, sports stars, and legends!</p>
+  </header>
+
+  <div class="main-content">
+    <!-- Featured Game Section -->
+    <div class="featured-game">
+      <h2>🏀 Guess The Athlete</h2>
+      <p>Unlock clues to identify famous sports stars and legends from basketball, football, and more!</p>
+      <button class="play-btn" onclick="location.href='/guesssports.html'">Play Now</button>
+    </div>
+
+    <!-- Game Categories Section -->
+    <div class="categories-section">
+      <h2 class="section-title">Explore Sports Games</h2>
+      <div class="categories-grid">
+        <div class="category-card athletes" onclick="location.href='/guesssports.html'">
+          <div class="category-icon">
+            <i class="fas fa-basketball-ball"></i>
+          </div>
+          <h3>Guess The Athlete</h3>
+          <p>Unlock clues to identify famous sports stars and legends</p>
+        </div>
+
+        <div class="category-card basketball" onclick="location.href='/sportsmemory.html'">
+          <div class="category-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h3>Match The Sports Star</h3>
+          <p>Memory game matching athlete names with their photos</p>
+        </div>
+
+        <div class="category-card football" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-football-ball"></i>
+          </div>
+          <h3>Football Legends</h3>
+          <p>Identify NFL stars and football greats</p>
+        </div>
+
+        <div class="category-card basketball" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-basketball-ball"></i>
+          </div>
+          <h3>NBA Stars</h3>
+          <p>Guess basketball players from past and present</p>
+        </div>
+
+        <div class="category-card baseball" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-baseball-ball"></i>
+          </div>
+          <h3>Baseball Heroes</h3>
+          <p>Identify MLB legends and current stars</p>
+        </div>
+
+        <div class="category-card soccer" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-futbol"></i>
+          </div>
+          <h3>Soccer Stars</h3>
+          <p>Guess international soccer players and legends</p>
+        </div>
+
+        <div class="category-card olympics" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-medal"></i>
+          </div>
+          <h3>Olympic Champions</h3>
+          <p>Identify Olympic athletes and medalists</p>
+        </div>
+
+        <div class="category-card athletes" onclick="location.href='#'">
+          <div class="category-icon">
+            <i class="fas fa-running"></i>
+          </div>
+          <h3>Track & Field</h3>
+          <p>Guess sprinters, jumpers, and track legends</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 Guess The Singer | 
+    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
+    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
+    <a href="https://www.tiktok.com/@Colbymartel">TikTok</a>
+  </footer>
+</body>
+</html> 

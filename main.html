@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guessing Games - Coming Soon</title>
+  <title>Guessing Games</title>
   <link rel="icon" href="/favicongg.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -185,8 +185,8 @@
   <nav aria-label="Primary">
     <div class="nav-links">
       <a href="#">Home</a>
-      <a href="#">Games</a>
-      <a href="#">About</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
     </div>
     <div class="nav-actions">
       <input type="text" class="search-bar" placeholder="Search games…" aria-label="Search games">
@@ -200,103 +200,118 @@
   </header>
 
   <main class="main-content">
-  
+    <!-- Featured Game -->
+    <section class="featured-game" aria-labelledby="feat-title">
+      <h2 id="feat-title">🕵️ Can You Spot the Lie?</h2>
+      <p>Two truths and a lie. Pick the lie to score points before the time runs out!</p>
+      <button class="play-btn" onclick="location.href='/lies.html'">Play Now</button>
+    </section>
 
     <!-- Categories -->
     <section class="categories-section" aria-labelledby="cat-title">
-      <h2 id="cat-title" class="section-title">Coming Soon</h2>
+      <h2 id="cat-title" class="section-title">Explore Game Categories</h2>
       <div class="categories-grid">
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-music" aria-hidden="true"></i></div>
+        <article class="category-card music" onclick="location.href='/musicgames.html'" tabindex="0" role="link" aria-label="Open Music Games">
+          <div class="category-icon">
+            <img src="/images/MusicalMatcha.png" alt="Music Games" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:contain;border-radius:50%;display:block" />
+          </div>
           <h3>Music Games</h3>
           <p>Guess singers, songs, and musical artists</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-running" aria-hidden="true"></i></div>
+        <article class="category-card athletes" onclick="location.href='/sports.html'" tabindex="0" role="link" aria-label="Open Athletes">
+          <div class="category-icon">
+            <img src="/images/lionfootball.png" alt="Athletes" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />
+          </div>
           <h3>Athletes</h3>
           <p>Identify sports stars and legends</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-graduation-cap" aria-hidden="true"></i></div>
+        <article class="category-card colleges" onclick="location.href='/collegegames.html'" tabindex="0" role="link" aria-label="Open Colleges">
+          <div class="category-icon">
+            <img src="/images/owl.png" alt="Colleges" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />
+          </div>
           <h3>Colleges</h3>
           <p>Learn about universities and campuses</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
+        <article class="category-card geography" onclick="location.href='/geographygames.html'" tabindex="0" role="link" aria-label="Open Geography">
+          <div class="category-icon">
+            <img src="/images/geography.png" alt="Geography" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />
+          </div>
           <h3>Geography</h3>
           <p>Learn about countries and places</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-star" aria-hidden="true"></i></div>
+        <article class="category-card characters" onclick="location.href='/charactergames.html'" tabindex="0" role="link" aria-label="Open Characters">
+          <div class="category-icon"><i class="fas fa-film" aria-hidden="true"></i></div>
           <h3>Characters</h3>
           <p>Guess famous characters from movies &amp; TV</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
-          <div class="category-icon"><i class="fas fa-bible" aria-hidden="true"></i></div>
+        <article class="category-card biblestudy" onclick="location.href='/biblestudy.html'" tabindex="0" role="link" aria-label="Open Bible Study">
+          <div class="category-icon">
+            <img src="/images/biblelamb.jpg" alt="Bible Study" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />
+          </div>
           <h3>Bible Study</h3>
           <p>Guess verses and explore scripture-based games</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card good disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-heart" aria-hidden="true"></i></div>
           <h3>Play for Good</h3>
           <p>Games that make a difference</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card science disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-flask" aria-hidden="true"></i></div>
           <h3>Science &amp; Nature</h3>
           <p>Explore the natural world</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card math disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-calculator" aria-hidden="true"></i></div>
           <h3>Math Games</h3>
           <p>Fun with numbers and calculations</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card food disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-hamburger" aria-hidden="true"></i></div>
           <h3>Food &amp; Cuisine</h3>
           <p>Discover dishes from around the world</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card brain disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-brain" aria-hidden="true"></i></div>
           <h3>Brain Games</h3>
           <p>Challenge your mind</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card spanish disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-language" aria-hidden="true"></i></div>
           <h3>Language Learning</h3>
           <p>Learn new languages through games</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card puzzles disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-puzzle-piece" aria-hidden="true"></i></div>
           <h3>Puzzles</h3>
           <p>Solve challenging puzzles</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card paint disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-palette" aria-hidden="true"></i></div>
           <h3>Creative Activities</h3>
           <p>Express your creativity</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card animals disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-paw" aria-hidden="true"></i></div>
           <h3>Animals</h3>
           <p>Learn about wildlife and pets</p>
         </article>
 
-        <article class="category-card disabled" aria-disabled="true">
+        <article class="category-card grammar disabled" aria-disabled="true">
           <div class="category-icon"><i class="fas fa-book" aria-hidden="true"></i></div>
           <h3>Grammar &amp; Language</h3>
           <p>Improve your language skills</p>
@@ -306,10 +321,22 @@
   </main>
 
   <footer>
-    &copy; 2025 Guessing Games &nbsp;|&nbsp;
+    &copy; 2024 Guess The Singer &nbsp;|&nbsp;
     <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
     <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
     <a href="https://www.tiktok.com/@Colbymartel">TikTok</a>
   </footer>
+
+  <script>
+    // Enable keyboard activation on cards
+    document.querySelectorAll('.category-card[role="link"]').forEach(card=>{
+      card.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+  </script>
 </body>
 </html>

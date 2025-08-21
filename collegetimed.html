@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess The College | Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #333;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links a {
+      color: #333;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #3b7bbf;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #333;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      transition: border-color 0.3s;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #3b7bbf;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+    }
+
+    .container {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .stats-bar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      border-radius: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #333;
+      display: inline-block;
+    }
+
+    .divider {
+      margin: 0 15px;
+      color: #ccc;
+    }
+
+    #progress-bar-wrapper {
+      width: 300px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      margin: 15px auto;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .clues-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .clue-card {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      text-align: center;
+      min-height: 120px;
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+
+    .clue-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .clue-card-front,
+    .clue-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+      padding: 15px;
+      top: 0;
+      left: 0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .clue-card-front {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      font-weight: 600;
+      transform: rotateY(0deg);
+    }
+
+    .clue-card-back {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      transform: rotateY(180deg);
+      font-weight: 600;
+    }
+
+    .clue-title {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      opacity: 0.8;
+      font-weight: 600;
+    }
+
+    .clue-content {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .clue-logo {
+      max-width: 60px;
+      max-height: 60px;
+      border-radius: 10px;
+    }
+
+    .input-controls {
+      margin: 20px 0;
+    }
+
+    .guess-input {
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      width: 300px;
+      margin-bottom: 15px;
+      font-family: 'Montserrat', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    .guess-input:focus {
+      outline: none;
+      border-color: #3b7bbf;
+    }
+
+    button {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: all 0.3s;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+    }
+
+    #message {
+      margin: 15px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    #play-again-btn {
+      display: none;
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin-top: 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+      
+      .stats-bar {
+        margin-bottom: 10px;
+        padding: 12px 25px;
+      }
+
+      #progress-bar-wrapper {
+        margin: 10px auto;
+      }
+      
+      .clues-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        max-width: 400px;
+        margin: 15px auto;
+      }
+
+      .clue-card {
+        min-height: 100px;
+      }
+
+      .clue-card-front,
+      .clue-card-back {
+        padding: 10px;
+      }
+
+      .clue-title {
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+      }
+
+      .clue-content {
+        font-size: 0.9rem;
+      }
+
+      .clue-logo {
+        max-width: 50px;
+        max-height: 50px;
+      }
+
+      .input-controls {
+        margin: 15px 0;
+      }
+
+      .guess-input {
+        width: 250px;
+        margin-bottom: 10px;
+      }
+
+      #message {
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>🎓 Guess The College</h1>
+    <div class="stats-bar">
+      <span id="timer">Time Left: 100</span>
+      <span class="divider">|</span>
+      <span id="highscore">High Score: 0</span>
+    </div>   
+    <div id="progress-bar-wrapper">
+      <div id="progress-bar"></div>
+    </div>      
+    <div class="clues-grid">
+      <div class="clue-card" id="clue-1">
+        <div class="clue-card-front">
+          <div class="clue-title">Acceptance Rate</div>
+          <div class="clue-content" id="acceptance-rate"></div>
+        </div>
+        <div class="clue-card-back">
+          <div class="clue-title">Acceptance Rate</div>
+          <div class="clue-content" id="acceptance-rate-back"></div>
+        </div>
+      </div>
+      
+      <div class="clue-card" id="clue-2">
+        <div class="clue-card-front">
+          <div class="clue-title">State</div>
+          <div class="clue-content" id="state"></div>
+        </div>
+        <div class="clue-card-back">
+          <div class="clue-title">State</div>
+          <div class="clue-content" id="state-back"></div>
+        </div>
+      </div>
+      
+      <div class="clue-card" id="clue-3">
+        <div class="clue-card-front">
+          <div class="clue-title">Mascot</div>
+          <div class="clue-content" id="mascot"></div>
+        </div>
+        <div class="clue-card-back">
+          <div class="clue-title">Mascot</div>
+          <div class="clue-content" id="mascot-back"></div>
+        </div>
+      </div>
+      
+      <div class="clue-card" id="clue-4">
+        <div class="clue-card-front">
+          <div class="clue-title">Logo</div>
+          <div class="clue-content" id="logo"></div>
+        </div>
+        <div class="clue-card-back">
+          <div class="clue-title">Logo</div>
+          <div class="clue-content">
+            <img id="logo-image" class="clue-logo" src="" alt="College Logo" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-controls">
+      <input type="text" id="guess" class="guess-input" placeholder="Type the college name..." />
+      <br />
+      <button id="submit-btn" onclick="submitGuess()">Submit</button>
+      <button id="pass-btn" onclick="passCollege()">Pass</button>
+    </div>
+
+    <div id="message"></div>
+    <button id="play-again-btn" onclick="resetGame()">Play Again</button>
+  </div>
+
+  <script>
+    const allColleges = [
+      { 
+        name: 'Harvard University', 
+        image: 'harvard.png',
+        acceptanceRate: '4.6%',
+        state: 'Massachusetts',
+        mascot: 'Crimson'
+      },
+      { 
+        name: 'Stanford University', 
+        image: 'stanford.png',
+        acceptanceRate: '4.3%',
+        state: 'California',
+        mascot: 'Tree'
+      },
+      { 
+        name: 'MIT', 
+        image: 'mit.png',
+        acceptanceRate: '6.7%',
+        state: 'Massachusetts',
+        mascot: 'Beaver'
+      },
+      { 
+        name: 'Yale University', 
+        image: 'yale.png',
+        acceptanceRate: '5.9%',
+        state: 'Connecticut',
+        mascot: 'Bulldog'
+      },
+      { 
+        name: 'Princeton University', 
+        image: 'princeton.png',
+        acceptanceRate: '5.6%',
+        state: 'New Jersey',
+        mascot: 'Tiger'
+      },
+      { 
+        name: 'Columbia University', 
+        image: 'columbia.png',
+        acceptanceRate: '5.1%',
+        state: 'New York',
+        mascot: 'Lion'
+      },
+      { 
+        name: 'University of Pennsylvania', 
+        image: 'penn.png',
+        acceptanceRate: '7.4%',
+        state: 'Pennsylvania',
+        mascot: 'Quaker'
+      },
+      { 
+        name: 'Dartmouth College', 
+        image: 'dartmouth.png',
+        acceptanceRate: '8.8%',
+        state: 'New Hampshire',
+        mascot: 'Big Green'
+      },
+      { 
+        name: 'Brown University', 
+        image: 'brown.png',
+        acceptanceRate: '7.7%',
+        state: 'Rhode Island',
+        mascot: 'Bear'
+      },
+      { 
+        name: 'Cornell University', 
+        image: 'cornell.png',
+        acceptanceRate: '10.6%',
+        state: 'New York',
+        mascot: 'Big Red'
+      },
+      { 
+        name: 'University of California Berkeley', 
+        image: 'berkeley.png',
+        acceptanceRate: '14.4%',
+        state: 'California',
+        mascot: 'Golden Bear'
+      },
+      { 
+        name: 'UCLA', 
+        image: 'ucla.png',
+        acceptanceRate: '12.4%',
+        state: 'California',
+        mascot: 'Bruin'
+      },
+      { 
+        name: 'University of Michigan', 
+        image: 'michigan.png',
+        acceptanceRate: '20.2%',
+        state: 'Michigan',
+        mascot: 'Wolverine'
+      },
+      { 
+        name: 'University of Virginia', 
+        image: 'virginia.png',
+        acceptanceRate: '20.7%',
+        state: 'Virginia',
+        mascot: 'Cavalier'
+      },
+      { 
+        name: 'Duke University', 
+        image: 'duke.png',
+        acceptanceRate: '7.8%',
+        state: 'North Carolina',
+        mascot: 'Blue Devil'
+      },
+      { 
+        name: 'Northwestern University', 
+        image: 'northwestern.png',
+        acceptanceRate: '9.1%',
+        state: 'Illinois',
+        mascot: 'Wildcat'
+      },
+      { 
+        name: 'University of Chicago', 
+        image: 'chicago.png',
+        acceptanceRate: '6.2%',
+        state: 'Illinois',
+        mascot: 'Phoenix'
+      },
+      { 
+        name: 'Johns Hopkins University', 
+        image: 'johnshopkins.png',
+        acceptanceRate: '11.2%',
+        state: 'Maryland',
+        mascot: 'Blue Jay'
+      },
+      { 
+        name: 'Vanderbilt University', 
+        image: 'vanderbilt.png',
+        acceptanceRate: '9.6%',
+        state: 'Tennessee',
+        mascot: 'Commodore'
+      },
+      { 
+        name: 'Rice University', 
+        image: 'rice.png',
+        acceptanceRate: '9.5%',
+        state: 'Texas',
+        mascot: 'Owl'
+      },
+      { 
+        name: 'Georgetown University', 
+        image: 'georgetown.png',
+        acceptanceRate: '14.5%',
+        state: 'District of Columbia',
+        mascot: 'Hoya'
+      },
+      { 
+        name: 'University of Notre Dame', 
+        image: 'notredame.png',
+        acceptanceRate: '15.1%',
+        state: 'Indiana',
+        mascot: 'Fighting Irish'
+      },
+      { 
+        name: 'Carnegie Mellon University', 
+        image: 'cmu.png',
+        acceptanceRate: '15.4%',
+        state: 'Pennsylvania',
+        mascot: 'Scotty'
+      },
+      { 
+        name: 'University of Southern California', 
+        image: 'usc.png',
+        acceptanceRate: '12.5%',
+        state: 'California',
+        mascot: 'Trojan'
+      },
+      { 
+        name: 'New York University', 
+        image: 'nyu.png',
+        acceptanceRate: '16.2%',
+        state: 'New York',
+        mascot: 'Bobcat'
+      },
+      { 
+        name: 'Tufts University', 
+        image: 'tufts.png',
+        acceptanceRate: '15.0%',
+        state: 'Massachusetts',
+        mascot: 'Jumbo'
+      },
+      { 
+        name: 'Wake Forest University', 
+        image: 'wakeforest.png',
+        acceptanceRate: '29.4%',
+        state: 'North Carolina',
+        mascot: 'Demon Deacon'
+      },
+      { 
+        name: 'Boston University', 
+        image: 'bu.png',
+        acceptanceRate: '18.9%',
+        state: 'Massachusetts',
+        mascot: 'Terrier'
+      },
+      { 
+        name: 'University of Rochester', 
+        image: 'rochester.png',
+        acceptanceRate: '35.5%',
+        state: 'New York',
+        mascot: 'Yellowjacket'
+      },
+      { 
+        name: 'Case Western Reserve University', 
+        image: 'casewestern.png',
+        acceptanceRate: '29.3%',
+        state: 'Ohio',
+        mascot: 'Spartan'
+      },
+      { 
+        name: 'Brandeis University', 
+        image: 'brandeis.png',
+        acceptanceRate: '39.0%',
+        state: 'Massachusetts',
+        mascot: 'Judge'
+      },
+      { 
+        name: 'Lehigh University', 
+        image: 'lehigh.png',
+        acceptanceRate: '46.0%',
+        state: 'Pennsylvania',
+        mascot: 'Mountain Hawk'
+      },
+      { 
+        name: 'Villanova University', 
+        image: 'villanova.png',
+        acceptanceRate: '28.2%',
+        state: 'Pennsylvania',
+        mascot: 'Wildcat'
+      },
+      { 
+        name: 'University of Miami', 
+        image: 'miami.png',
+        acceptanceRate: '28.1%',
+        state: 'Florida',
+        mascot: 'Hurricane'
+      },
+      { 
+        name: 'Syracuse University', 
+        image: 'syracuse.png',
+        acceptanceRate: '44.4%',
+        state: 'New York',
+        mascot: 'Orange'
+      },
+      { 
+        name: 'University of Pittsburgh', 
+        image: 'pitt.png',
+        acceptanceRate: '49.1%',
+        state: 'Pennsylvania',
+        mascot: 'Panther'
+      },
+      { 
+        name: 'University of Wisconsin-Madison', 
+        image: 'wisconsin.png',
+        acceptanceRate: '51.7%',
+        state: 'Wisconsin',
+        mascot: 'Badger'
+      },
+      { 
+        name: 'University of Illinois Urbana-Champaign', 
+        image: 'illinois.png',
+        acceptanceRate: '59.7%',
+        state: 'Illinois',
+        mascot: 'Fighting Illini'
+      },
+      { 
+        name: 'University of Washington', 
+        image: 'washington.png',
+        acceptanceRate: '53.5%',
+        state: 'Washington',
+        mascot: 'Husky'
+      },
+      { 
+        name: 'University of Texas at Austin', 
+        image: 'utexas.png',
+        acceptanceRate: '31.8%',
+        state: 'Texas',
+        mascot: 'Longhorn'
+      },
+      { 
+        name: 'University of Florida', 
+        image: 'florida.png',
+        acceptanceRate: '30.1%',
+        state: 'Florida',
+        mascot: 'Gator'
+      },
+      { 
+        name: 'Ohio State University', 
+        image: 'ohiostate.png',
+        acceptanceRate: '53.7%',
+        state: 'Ohio',
+        mascot: 'Buckeye'
+      },
+      { 
+        name: 'Penn State University', 
+        image: 'pennstate.png',
+        acceptanceRate: '54.2%',
+        state: 'Pennsylvania',
+        mascot: 'Nittany Lion'
+      }
+    ];
+  
+    let unseenColleges = [];
+    let passedColleges = [];
+    let currentCollege = null;
+    let correctCount = 0;
+    let timeLeft = 100;
+    let timer;
+    let highScore = localStorage.getItem('collegeGameHighScore') || 0;
+    let clueRevealTimer;
+    let currentClueIndex = 0;
+  
+    document.getElementById("highscore").textContent = `High Score: ${highScore}`;
+  
+    function updateTimerDisplay() {
+      document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
+    }
+  
+    function updateProgressBar() {
+      const percent = (correctCount / 10) * 100;
+      document.getElementById('progress-bar').style.width = `${percent}%`;
+    }
+  
+    function resetClueCards() {
+      // Reset all clue cards to front (hidden)
+      for (let i = 1; i <= 4; i++) {
+        const card = document.getElementById(`clue-${i}`);
+        card.classList.remove('flipped');
+      }
+      currentClueIndex = 0;
+      
+      // Clear any existing reveal timer
+      if (clueRevealTimer) {
+        clearTimeout(clueRevealTimer);
+      }
+    }
+  
+    function revealNextClue() {
+      if (currentClueIndex < 4) {
+        currentClueIndex++;
+        const card = document.getElementById(`clue-${currentClueIndex}`);
+        card.classList.add('flipped');
+        
+        // Set up next reveal
+        if (currentClueIndex < 4) {
+          clueRevealTimer = setTimeout(revealNextClue, 3000);
+        }
+      }
+    }
+  
+    function loadNextCollege() {
+      if (correctCount >= 10 || timeLeft <= 0) {
+        endGame();
+        return;
+      }
+  
+      if (unseenColleges.length > 0) {
+        currentCollege = unseenColleges.shift();
+      } else if (passedColleges.length > 0) {
+        currentCollege = passedColleges.shift();
+      } else {
+        endGame();
+        return;
+      }
+  
+      // Reset clue cards
+      resetClueCards();
+      
+      // Set up clue content
+      document.getElementById('acceptance-rate').textContent = '???';
+      document.getElementById('acceptance-rate-back').textContent = currentCollege.acceptanceRate;
+      
+      document.getElementById('state').textContent = '???';
+      document.getElementById('state-back').textContent = currentCollege.state;
+      
+      document.getElementById('mascot').textContent = '???';
+      document.getElementById('mascot-back').textContent = currentCollege.mascot;
+      
+      document.getElementById('logo').textContent = '???';
+      // For now, use placeholder for logo
+      document.getElementById('logo-image').src = 'https://via.placeholder.com/60x60/3b7bbf/ffffff?text=' + encodeURIComponent(currentCollege.name.split(' ')[0]);
+      
+      // Start revealing clues
+      setTimeout(revealNextClue, 1000);
+      
+      document.getElementById('guess').value = '';
+    }
+  
+    function submitGuess() {
+      const input = document.getElementById('guess').value.trim().toLowerCase();
+      if (input === currentCollege.name.toLowerCase()) {
+        correctCount++;
+        updateProgressBar();
+        document.getElementById('message').textContent = '✅ Correct!';
+        // Reset clue cards immediately to prevent showing next college's info
+        resetClueCards();
+        setTimeout(() => {
+          document.getElementById('message').textContent = '';
+          loadNextCollege();
+        }, 1000);
+      } else {
+        document.getElementById('message').textContent = '❌ Try again!';
+        setTimeout(() => {
+          document.getElementById('message').textContent = '';
+        }, 1000);
+      }
+    }
+  
+    function passCollege() {
+      timeLeft = Math.max(0, timeLeft - 5);
+      updateTimerDisplay();
+      passedColleges.push(currentCollege);
+      document.getElementById('message').textContent = '⏭️ Passed!';
+      setTimeout(() => {
+        document.getElementById('message').textContent = '';
+        loadNextCollege();
+      }, 1000);
+    }
+  
+    function endGame() {
+      clearInterval(timer);
+      if (clueRevealTimer) {
+        clearTimeout(clueRevealTimer);
+      }
+      document.getElementById('message').textContent = `🎉 Game Over! Final Score: ${timeLeft}`;
+      document.getElementById('guess').style.display = 'none';
+      document.getElementById('submit-btn').style.display = 'none';
+      document.getElementById('pass-btn').style.display = 'none';
+      document.getElementById('play-again-btn').style.display = 'inline-block';
+  
+      if (timeLeft > highScore) {
+        localStorage.setItem('collegeGameHighScore', timeLeft);
+        document.getElementById("highscore").textContent = `High Score: ${timeLeft}`;
+      }
+    }
+  
+    function resetGame() {
+      unseenColleges = [...allColleges].sort(() => 0.5 - Math.random());
+      passedColleges = [];
+      correctCount = 0;
+      timeLeft = 100;
+      updateTimerDisplay();
+      updateProgressBar();
+  
+      document.getElementById('message').textContent = '';
+      document.getElementById('guess').style.display = 'inline-block';
+      document.getElementById('submit-btn').style.display = 'inline-block';
+      document.getElementById('pass-btn').style.display = 'inline-block';
+      document.getElementById('play-again-btn').style.display = 'none';
+  
+      clearInterval(timer);
+      if (clueRevealTimer) {
+        clearTimeout(clueRevealTimer);
+      }
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+  
+      loadNextCollege();
+    }
+  
+    // Handle Enter key press
+    document.getElementById('guess').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        submitGuess();
+      }
+    });
+  
+    window.onload = resetGame;
+  </script>
+</body>
+</html> 

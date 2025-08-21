@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landmarks Challenge - Guessing Games</title>
+    <link rel="icon" href="/favicongg.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-links a {
+            color: #333;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3b7bbf;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-bar {
+            padding: 8px 16px 8px 36px;
+            height: 40px;
+            border-radius: 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #333;
+            font-size: 0.95rem;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+            background-size: 16px;
+            background-repeat: no-repeat;
+            background-position: 12px center;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #3b7bbf;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(59, 123, 191, 0.1);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 100%;
+        }
+
+        .landmark-display {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 3px solid rgba(59, 123, 191, 0.3);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .landmark-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .guess-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .guess-input:focus {
+            outline: none;
+            border-color: #3b7bbf;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .correct {
+            background: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        .reveal {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ef6c00;
+            border: 2px solid #ff9800;
+        }
+
+        #play-again-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            margin-top: 20px;
+        }
+
+        .high-score {
+            background: rgba(255, 193, 7, 0.2);
+            color: #f57c00;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            border: 2px solid #ffc107;
+        }
+
+        .fun-fact {
+            background: rgba(156, 39, 176, 0.2);
+            color: #7b1fa2;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            border: 2px solid #9c27b0;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .landmark-display {
+                height: 250px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="/index.html">Home</a>
+            <a href="/geographygames.html">Geography Games</a>
+            <a href="/about.html">About</a>
+        </div>
+        <div class="nav-actions">
+            <input type="text" class="search-bar" placeholder="Search games...">
+            <button class="login-btn">Login</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="game-container">
+            <h1 class="game-title">🏛️ Landmarks Challenge</h1>
+            <p class="game-subtitle">Name the landmark from its image - 100 seconds to get as many as possible!</p>
+
+            <div class="stats-bar">
+                <span>Score: <span id="score">0</span></span>
+                <span>Time: <span id="time">100</span>s</span>
+            </div>
+
+            <div class="progress-bar-wrapper">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+
+            <div class="landmark-display" id="landmarkDisplay">
+                <img id="landmarkImage" src="" alt="Landmark" style="display: none;">
+            </div>
+
+            <input type="text" id="guessInput" class="guess-input" placeholder="Type the landmark name..." style="display: none;">
+
+            <div class="controls">
+                <button id="startBtn">Start Game</button>
+                <button id="submitBtn" style="display: none;">Submit</button>
+                <button id="passBtn" style="display: none;">Pass</button>
+            </div>
+
+            <div id="message"></div>
+            <button id="play-again-btn" style="display: none;">Play Again</button>
+        </div>
+    </main>
+
+    <script>
+        // Landmark data with images, answers, and fun facts
+        const landmarksData = [
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Eiffel_Tower_from_the_Tour_Montparnasse_3%2C_Paris_May_2008.jpg/1200px-Eiffel_Tower_from_the_Tour_Montparnasse_3%2C_Paris_May_2008.jpg",
+                answer: "eiffel tower",
+                fact: "Built in 1889 for the World's Fair, this 1,063-foot iron lattice tower in Paris was originally meant to be temporary!"
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1200px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+                answer: "colosseum",
+                fact: "This ancient amphitheater in Rome could hold up to 80,000 spectators for gladiatorial contests and public spectacles."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Taj_Mahal_in_India_-_Kristian_Bertel.jpg/1200px-Taj_Mahal_in_India_-_Kristian_Bertel.jpg",
+                answer: "taj mahal",
+                fact: "Built by Emperor Shah Jahan as a mausoleum for his beloved wife Mumtaz Mahal, this white marble wonder took 22 years to complete."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Golden_Gate_Bridge-001.jpg/1200px-Golden_Gate_Bridge-001.jpg",
+                answer: "golden gate bridge",
+                fact: "This iconic red suspension bridge in San Francisco spans 1.7 miles and was completed in 1937, becoming the world's longest suspension bridge at the time."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg/1200px-La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg",
+                answer: "eiffel tower",
+                fact: "The Eiffel Tower was the world's tallest man-made structure for 41 years until the Chrysler Building was built in 1930."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Statue_of_Liberty%2C_NY.jpg/1200px-Statue_of_Liberty%2C_NY.jpg",
+                answer: "statue of liberty",
+                fact: "A gift from France to the United States, this 305-foot copper statue represents freedom and democracy, welcoming immigrants to New York Harbor."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Great_Wall_of_China_near_Jinshanling.jpg/1200px-Great_Wall_of_China_near_Jinshanling.jpg",
+                answer: "great wall of china",
+                fact: "Stretching over 13,000 miles, this ancient fortification was built over 2,000 years ago to protect China from nomadic invasions."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Pyramids_of_the_Giza_Necropolis.jpg/1200px-Pyramids_of_the_Giza_Necropolis.jpg",
+                answer: "pyramids of giza",
+                fact: "Built around 2560 BCE, the Great Pyramid was the tallest man-made structure for over 3,800 years and contains over 2 million stone blocks."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Christ_the_Redeemer_-_Cristo_Redentor.jpg/1200px-Christ_the_Redeemer_-_Cristo_Redentor.jpg",
+                answer: "christ the redeemer",
+                fact: "This 98-foot statue of Jesus Christ overlooks Rio de Janeiro from Mount Corcovado and was completed in 1931 after 9 years of construction."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Petra_Jordan_BW_21.JPG/1200px-Petra_Jordan_BW_21.JPG",
+                answer: "petra",
+                fact: "This ancient city carved into red sandstone cliffs in Jordan was the capital of the Nabataean Kingdom and is known as the 'Rose City' due to its color."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Machu_Picchu%2C_Peru.jpg/1200px-Machu_Picchu%2C_Peru.jpg",
+                answer: "machu picchu",
+                fact: "This 15th-century Inca citadel sits 7,970 feet above sea level in the Andes Mountains and was abandoned during the Spanish conquest."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Sydney_Opera_House_Sails.jpg/1200px-Sydney_Opera_House_Sails.jpg",
+                answer: "sydney opera house",
+                fact: "This iconic performing arts center with its distinctive sail-like shells was designed by Danish architect Jørn Utzon and opened in 1973."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Angkor_Wat.jpg/1200px-Angkor_Wat.jpg",
+                answer: "angkor wat",
+                fact: "The largest religious monument in the world, this temple complex in Cambodia was originally built as a Hindu temple and later converted to Buddhism."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Burj_Khalifa.jpg/1200px-Burj_Khalifa.jpg",
+                answer: "burj khalifa",
+                fact: "Standing 2,717 feet tall, this skyscraper in Dubai is the world's tallest building and has 163 floors, including the world's highest outdoor observation deck."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stonehenge_2007_07_30.jpg/1200px-Stonehenge_2007_07_30.jpg",
+                answer: "stonehenge",
+                fact: "This prehistoric monument in England consists of massive standing stones arranged in a circle, built between 3000-2000 BCE, and aligns with the summer solstice."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Leaning_Tower_of_Pisa_2.jpg/1200px-Leaning_Tower_of_Pisa_2.jpg",
+                answer: "leaning tower of pisa",
+                fact: "This famous bell tower in Italy began leaning during construction due to soft ground, and now tilts at about 3.99 degrees from vertical."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Sagrada_Familia_01.jpg/1200px-Sagrada_Familia_01.jpg",
+                answer: "sagrada familia",
+                fact: "This massive church in Barcelona, designed by Antoni Gaudí, has been under construction since 1882 and is expected to be completed in 2026."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Notre_Dame_de_Paris_2013-07-24.jpg/1200px-Notre_Dame_de_Paris_2013-07-24.jpg",
+                answer: "notre dame",
+                fact: "This medieval Catholic cathedral in Paris took nearly 200 years to build and features stunning Gothic architecture with flying buttresses."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Big_Ben_London.jpg/1200px-Big_Ben_London.jpg",
+                answer: "big ben",
+                fact: "The nickname for the Great Bell of the clock at the north end of the Houses of Parliament in London, though it technically refers to the bell, not the clock tower."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Buckingham_Palace_2.jpg/1200px-Buckingham_Palace_2.jpg",
+                answer: "buckingham palace",
+                fact: "The London residence and administrative headquarters of the British monarch, this palace has 775 rooms and is one of the few working royal palaces remaining."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Tower_Bridge_London.jpg/1200px-Tower_Bridge_London.jpg",
+                answer: "tower bridge",
+                fact: "This Victorian bridge over the River Thames in London can open to allow ships to pass through, and was completed in 1894 after 8 years of construction."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arc_de_Triomphe%2C_Paris_21_October_2010.jpg/1200px-Arc_de_Triomphe%2C_Paris_21_October_2010.jpg",
+                answer: "arc de triomphe",
+                fact: "This triumphal arch in Paris honors those who fought and died for France in the French Revolutionary and Napoleonic Wars, and stands at the western end of the Champs-Élysées."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Louvre_Museum_Paris.jpg/1200px-Louvre_Museum_Paris.jpg",
+                answer: "louvre",
+                fact: "The world's largest art museum, this former royal palace in Paris houses the Mona Lisa and over 35,000 works of art spanning 9,000 years of history."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Chichen_Itza_3.jpg/1200px-Chichen_Itza_3.jpg",
+                answer: "chichen itza",
+                fact: "This ancient Mayan city in Mexico features the famous El Castillo pyramid, which was designed so that during the spring and fall equinoxes, shadows create the illusion of a serpent descending the steps."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Easter_Island_Moai.jpg/1200px-Easter_Island_Moai.jpg",
+                answer: "easter island",
+                fact: "This remote island in the Pacific Ocean is famous for its 887 massive stone statues called moai, which were created by the Rapa Nui people between 1250-1500 CE."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Mount_Rushmore.jpg/1200px-Mount_Rushmore.jpg",
+                answer: "mount rushmore",
+                fact: "This massive sculpture in South Dakota features the 60-foot heads of four U.S. presidents: Washington, Jefferson, Roosevelt, and Lincoln, carved into the granite face of Mount Rushmore."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Liberty_Bell.jpg/1200px-Liberty_Bell.jpg",
+                answer: "liberty bell",
+                fact: "This iconic symbol of American independence in Philadelphia was commissioned in 1752 and rang to announce the first public reading of the Declaration of Independence."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Alcatraz_Island.jpg/1200px-Alcatraz_Island.jpg",
+                answer: "alcatraz",
+                fact: "This island in San Francisco Bay housed a federal prison from 1934-1963, known for housing notorious criminals like Al Capone, and is now a popular tourist attraction."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Hoover_Dam.jpg/1200px-Hoover_Dam.jpg",
+                answer: "hoover dam",
+                fact: "This concrete arch-gravity dam on the Colorado River was built during the Great Depression and provides hydroelectric power to Arizona, California, and Nevada."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Niagara_Falls.jpg/1200px-Niagara_Falls.jpg",
+                answer: "niagara falls",
+                fact: "These three waterfalls on the border between Canada and the United States have the highest flow rate of any waterfall in North America, with over 6 million cubic feet of water falling every minute."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Grand_Canyon.jpg/1200px-Grand_Canyon.jpg",
+                answer: "grand canyon",
+                fact: "This 277-mile-long canyon in Arizona was carved by the Colorado River over millions of years and reveals nearly 2 billion years of Earth's geological history."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Yellowstone_National_Park.jpg/1200px-Yellowstone_National_Park.jpg",
+                answer: "yellowstone",
+                fact: "America's first national park, established in 1872, is home to the world's largest concentration of geysers, including the famous Old Faithful."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Redwood_National_Park.jpg/1200px-Redwood_National_Park.jpg",
+                answer: "redwood forest",
+                fact: "These ancient trees in California can grow over 350 feet tall and live for more than 2,000 years, making them some of the tallest and oldest living things on Earth."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Death_Valley.jpg/1200px-Death_Valley.jpg",
+                answer: "death valley",
+                fact: "This desert valley in California holds the record for the highest air temperature ever recorded on Earth at 134°F (56.7°C) in 1913."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Monument_Valley.jpg/1200px-Monument_Valley.jpg",
+                answer: "monument valley",
+                fact: "This region on the Arizona-Utah border features distinctive sandstone buttes that have been featured in countless Western films and is sacred to the Navajo Nation."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Bryce_Canyon.jpg/1200px-Bryce_Canyon.jpg",
+                answer: "bryce canyon",
+                fact: "This national park in Utah is famous for its unique geological structures called hoodoos, which are tall, thin spires of rock that protrude from the bottom of arid basins."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Zion_National_Park.jpg/1200px-Zion_National_Park.jpg",
+                answer: "zion national park",
+                fact: "This park in Utah features dramatic red rock formations and the famous Zion Canyon, which is 15 miles long and up to 2,640 feet deep."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arches_National_Park.jpg/1200px-Arches_National_Park.jpg",
+                answer: "arches national park",
+                fact: "This park in Utah contains over 2,000 natural sandstone arches, including the famous Delicate Arch, which is 52 feet tall and 32 feet wide."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Canyonlands_National_Park.jpg/1200px-Canyonlands_National_Park.jpg",
+                answer: "canyonlands",
+                fact: "This national park in Utah preserves a colorful landscape eroded into countless canyons, mesas, and buttes by the Colorado River and its tributaries."
+            },
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Capitol_Reef_National_Park.jpg/1200px-Capitol_Reef_National_Park.jpg",
+                answer: "capitol reef",
+                fact: "This park in Utah is named for its white domes of Navajo Sandstone that resemble the U.S. Capitol building, and features a 100-mile-long wrinkle in the Earth's crust."
+            }
+        ];
+
+        // Game state variables
+        let score = 0;
+        let timeLeft = 100;
+        let timer;
+        let currentLandmarkIndex = 0;
+        let shuffledLandmarks = [];
+        let gameActive = false;
+
+        // DOM elements
+        const startBtn = document.getElementById('startBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const passBtn = document.getElementById('passBtn');
+        const guessInput = document.getElementById('guessInput');
+        const landmarkImage = document.getElementById('landmarkImage');
+        const landmarkDisplay = document.getElementById('landmarkDisplay');
+        const scoreEl = document.getElementById('score');
+        const timeEl = document.getElementById('time');
+        const progressBar = document.getElementById('progress-bar');
+        const messageEl = document.getElementById('message');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        // Initialize game
+        function initializeGame() {
+            score = 0;
+            timeLeft = 100;
+            currentLandmarkIndex = 0;
+            shuffledLandmarks = [...landmarksData].sort(() => Math.random() - 0.5);
+            gameActive = false;
+            
+            scoreEl.textContent = score;
+            timeEl.textContent = timeLeft;
+            progressBar.style.width = '100%';
+            
+            messageEl.textContent = '';
+            messageEl.className = '';
+            
+            startBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+            passBtn.style.display = 'none';
+            guessInput.style.display = 'none';
+            playAgainBtn.style.display = 'none';
+            
+            landmarkImage.style.display = 'none';
+            landmarkDisplay.innerHTML = '<div style="font-size: 3rem; color: #ccc;">🏛️</div>';
+        }
+
+        // Start timer
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                progressBar.style.width = (timeLeft / 100 * 100) + '%';
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Stop timer
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        // Show current landmark
+        function showCurrentLandmark() {
+            if (currentLandmarkIndex < shuffledLandmarks.length) {
+                const currentLandmark = shuffledLandmarks[currentLandmarkIndex];
+                landmarkImage.src = currentLandmark.image;
+                landmarkImage.style.display = 'block';
+                landmarkDisplay.innerHTML = '';
+                landmarkDisplay.appendChild(landmarkImage);
+            }
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            const userGuess = guessInput.value.trim().toLowerCase();
+            const currentLandmark = shuffledLandmarks[currentLandmarkIndex];
+            const correctAnswer = currentLandmark.answer;
+            
+            if (userGuess === correctAnswer || 
+                userGuess === correctAnswer.replace(' ', '') ||
+                userGuess === correctAnswer.replace(' of ', ' ') ||
+                userGuess === correctAnswer.replace(' the ', ' ') ||
+                (correctAnswer.includes('tower') && userGuess === correctAnswer.replace(' tower', '')) ||
+                (correctAnswer.includes('bridge') && userGuess === correctAnswer.replace(' bridge', '')) ||
+                (correctAnswer.includes('palace') && userGuess === correctAnswer.replace(' palace', '')) ||
+                (correctAnswer.includes('museum') && userGuess === correctAnswer.replace(' museum', '')) ||
+                (correctAnswer.includes('park') && userGuess === correctAnswer.replace(' park', '')) ||
+                (correctAnswer.includes('valley') && userGuess === correctAnswer.replace(' valley', '')) ||
+                (correctAnswer.includes('canyon') && userGuess === correctAnswer.replace(' canyon', '')) ||
+                (correctAnswer.includes('falls') && userGuess === correctAnswer.replace(' falls', '')) ||
+                (correctAnswer.includes('dam') && userGuess === correctAnswer.replace(' dam', '')) ||
+                (correctAnswer.includes('island') && userGuess === correctAnswer.replace(' island', '')) ||
+                (correctAnswer.includes('mountain') && userGuess === correctAnswer.replace(' mountain', '')) ||
+                (correctAnswer.includes('mount') && userGuess === correctAnswer.replace(' mount', ''))) {
+                
+                score++;
+                scoreEl.textContent = score;
+                messageEl.textContent = `Correct! +1 point`;
+                messageEl.className = 'correct';
+            } else {
+                messageEl.textContent = `Incorrect. The answer was: ${correctAnswer}`;
+                messageEl.className = 'incorrect';
+            }
+            
+            setTimeout(() => {
+                nextLandmark();
+            }, 1500);
+        }
+
+        // Pass question
+        function passQuestion() {
+            const currentLandmark = shuffledLandmarks[currentLandmarkIndex];
+            messageEl.innerHTML = `
+                <div class="reveal">The answer was: ${currentLandmark.answer}</div>
+                <div class="fun-fact">💡 Fun Fact: ${currentLandmark.fact}</div>
+            `;
+            messageEl.className = 'reveal';
+            
+            setTimeout(() => {
+                nextLandmark();
+            }, 3000);
+        }
+
+        // Move to next landmark
+        function nextLandmark() {
+            currentLandmarkIndex++;
+            guessInput.value = '';
+            messageEl.textContent = '';
+            messageEl.className = '';
+            
+            if (currentLandmarkIndex < shuffledLandmarks.length) {
+                showCurrentLandmark();
+            } else {
+                // Shuffle again if we've gone through all landmarks
+                shuffledLandmarks = [...landmarksData].sort(() => Math.random() - 0.5);
+                currentLandmarkIndex = 0;
+                showCurrentLandmark();
+            }
+        }
+
+        // End game
+        function endGame() {
+            stopTimer();
+            gameActive = false;
+            
+            // Save high score
+            const currentHighScore = localStorage.getItem('landmarksHighScore') || 0;
+            if (score > currentHighScore) {
+                localStorage.setItem('landmarksHighScore', score);
+                messageEl.innerHTML = `<div class="high-score">🎉 New High Score: ${score}!</div>`;
+            } else {
+                messageEl.innerHTML = `<div>Game Over! Final Score: ${score}</div>`;
+            }
+            
+            submitBtn.style.display = 'none';
+            passBtn.style.display = 'none';
+            guessInput.style.display = 'none';
+            playAgainBtn.style.display = 'inline-block';
+            
+            landmarkImage.style.display = 'none';
+            landmarkDisplay.innerHTML = '<div style="font-size: 3rem; color: #ccc;">🏛️</div>';
+        }
+
+        // Reset game
+        function resetGame() {
+            initializeGame();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', () => {
+            gameActive = true;
+            startBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+            passBtn.style.display = 'inline-block';
+            guessInput.style.display = 'block';
+            
+            showCurrentLandmark();
+            startTimer();
+        });
+
+        submitBtn.addEventListener('click', submitAnswer);
+        passBtn.addEventListener('click', passQuestion);
+        playAgainBtn.addEventListener('click', resetGame);
+
+        guessInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && gameActive) {
+                submitAnswer();
+            }
+        });
+
+        // Initialize game on load
+        initializeGame();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Alumni | Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    nav {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      padding: 14px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    nav .left a { color:#333; text-decoration:none; margin-right:16px; font-weight:600; }
+    nav .right { display:flex; gap:10px; align-items:center; }
+    .search { padding: 8px 12px; height: 38px; width: 240px; border-radius: 20px; border: 2px solid #e0e0e0; }
+    .btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: #fff; border: none; padding: 10px 18px;
+      border-radius: 20px; font-weight: 700; cursor:pointer;
+    }
+
+    main {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: calc(100vh - 80px);
+      padding: 20px;
+    }
+    h1 { color: #fff; font-size: 2.4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 10px; }
+    .stats {
+      display:inline-flex; gap:14px; align-items:center;
+      margin: 12px 0 25px; padding: 12px 18px; border-radius: 22px;
+      background: rgba(255,255,255,0.95); font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .question-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      margin: 0 auto 20px;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .celebrity-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .question-text {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .input-section {
+      margin: 20px 0;
+    }
+    .guess {
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 26px;
+      width: 300px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .guess:focus {
+      outline: none;
+      border-color: #3b7bbf;
+    }
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    #message {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+      min-height: 28px;
+      margin-top: 10px;
+    }
+    #playAgain { display: none; }
+
+    .answer-reveal {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      display: none;
+    }
+    .correct-answer {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+    .answer-explanation {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .question-card { max-width: 90%; padding: 20px; }
+      .celebrity-name { font-size: 2rem; }
+      .guess { width: 250px; }
+      main { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="left">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="right">
+      <input class="search" placeholder="Search games..." />
+      <button class="btn">Login</button>
+    </div>
+  </nav>
+
+  <main>
+    <h1>🎓 College Alumni</h1>
+    <div class="stats">
+      <div id="score">Score: 0</div>
+      <div>|</div>
+      <div id="timer">Time: 100s</div>
+      <div>|</div>
+      <div id="high">High Score: 0</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+      <div class="celebrity-name" id="celebrityName">🎓 College Alumni Challenge</div>
+      <div class="question-text" id="questionText">You have 100 seconds to name as many colleges as possible from their famous alumni!</div>
+      <div class="input-section">
+        <input id="guess" class="guess" placeholder="Type the college name..." autocomplete="off" />
+      </div>
+      <div class="controls">
+        <button class="btn" id="submitBtn">Submit</button>
+        <button class="btn" id="passBtn">Pass</button>
+        <button class="btn" id="startBtn">Start Game</button>
+        <button class="btn" id="playAgain">Play Again</button>
+      </div>
+    </div>
+
+    <div class="answer-reveal" id="answerReveal">
+      <div class="correct-answer" id="correctAnswer"></div>
+      <div class="answer-explanation" id="answerExplanation"></div>
+    </div>
+
+    <div id="message"></div>
+  </main>
+
+  <script>
+    // College alumni data
+    const alumniData = [
+      { celebrity: "Barack Obama", college: "Harvard University" },
+      { celebrity: "Mark Zuckerberg", college: "Harvard University" },
+      { celebrity: "Bill Gates", college: "Harvard University" },
+      { celebrity: "Emma Watson", college: "Brown University" },
+      { celebrity: "Natalie Portman", college: "Harvard University" },
+      { celebrity: "John F. Kennedy", college: "Harvard University" },
+      { celebrity: "Tommy Lee Jones", college: "Harvard University" },
+      { celebrity: "Conan O'Brien", college: "Harvard University" },
+      { celebrity: "Matt Damon", college: "Harvard University" },
+      { celebrity: "Rashida Jones", college: "Harvard University" },
+      { celebrity: "Will Ferrell", college: "University of Southern California" },
+      { celebrity: "Judd Apatow", college: "University of Southern California" },
+      { celebrity: "George Lucas", college: "University of Southern California" },
+      { celebrity: "John Wayne", college: "University of Southern California" },
+      { celebrity: "John Ritter", college: "University of Southern California" },
+      { celebrity: "Forest Whitaker", college: "University of Southern California" },
+      { celebrity: "Will Smith", college: "University of Pennsylvania" },
+      { celebrity: "Donald Trump", college: "University of Pennsylvania" },
+      { celebrity: "Elizabeth Banks", college: "University of Pennsylvania" },
+      { celebrity: "Noam Chomsky", college: "University of Pennsylvania" },
+      { celebrity: "Warren Buffett", college: "University of Pennsylvania" },
+      { celebrity: "John Legend", college: "University of Pennsylvania" },
+      { celebrity: "Steve Carell", college: "Denison University" },
+      { celebrity: "Jennifer Garner", college: "Denison University" },
+      { celebrity: "Steve Jobs", college: "Reed College" },
+      { celebrity: "Howard Hughes", college: "Rice University" },
+      { celebrity: "Lance Armstrong", college: "University of Texas" },
+      { celebrity: "Matthew McConaughey", college: "University of Texas" },
+      { celebrity: "Owen Wilson", college: "University of Texas" },
+      { celebrity: "Renée Zellweger", college: "University of Texas" },
+      { celebrity: "Ethan Hawke", college: "University of Texas" },
+      { celebrity: "Wes Anderson", college: "University of Texas" },
+      { celebrity: "Laura Bush", college: "Southern Methodist University" },
+      { celebrity: "Kathy Bates", college: "Southern Methodist University" },
+      { celebrity: "Angela Bassett", college: "Yale University" },
+      { celebrity: "Meryl Streep", college: "Yale University" },
+      { celebrity: "Jodie Foster", college: "Yale University" },
+      { celebrity: "Paul Newman", college: "Yale University" },
+      { celebrity: "Sigourney Weaver", college: "Yale University" },
+      { celebrity: "Edward Norton", college: "Yale University" },
+      { celebrity: "Claire Danes", college: "Yale University" },
+      { celebrity: "Lupita Nyong'o", college: "Yale University" },
+      { celebrity: "Anderson Cooper", college: "Yale University" },
+      { celebrity: "Chelsea Clinton", college: "Stanford University" },
+      { celebrity: "Reese Witherspoon", college: "Stanford University" },
+      { celebrity: "Tiger Woods", college: "Stanford University" },
+      { celebrity: "John Steinbeck", college: "Stanford University" },
+      { celebrity: "Sally Ride", college: "Stanford University" },
+      { celebrity: "Sigourney Weaver", college: "Stanford University" },
+      { celebrity: "Ryan Reynolds", college: "Vancouver Film School" },
+      { celebrity: "Seth Rogen", college: "Vancouver Film School" },
+      { celebrity: "Michael J. Fox", college: "Vancouver Film School" },
+      { celebrity: "Tom Hanks", college: "California State University" },
+      { celebrity: "Aaron Paul", college: "California State University" },
+      { celebrity: "Danny Trejo", college: "California State University" },
+      { celebrity: "Brad Pitt", college: "University of Missouri" },
+      { celebrity: "Jon Hamm", college: "University of Missouri" },
+      { celebrity: "Sheryl Crow", college: "University of Missouri" },
+      { celebrity: "Ellen DeGeneres", college: "University of New Orleans" },
+      { celebrity: "Wynton Kelly", college: "University of New Orleans" },
+      { celebrity: "Harry Connick Jr.", college: "University of New Orleans" },
+      { celebrity: "Julia Roberts", college: "Georgia State University" },
+      { celebrity: "Ludacris", college: "Georgia State University" },
+      { celebrity: "Ryan Seacrest", college: "University of Georgia" },
+      { celebrity: "Kim Basinger", college: "University of Georgia" },
+      { celebrity: "Amy Sedaris", college: "University of Georgia" },
+      { celebrity: "Ryan Reynolds", college: "University of Georgia" },
+      { celebrity: "Chris Pratt", college: "University of Oregon" },
+      { celebrity: "Ken Kesey", college: "University of Oregon" },
+      { celebrity: "Phil Knight", college: "University of Oregon" },
+      { celebrity: "Steve Prefontaine", college: "University of Oregon" },
+      { celebrity: "Katy Perry", college: "University of California" },
+      { celebrity: "Steve Wozniak", college: "University of California" },
+      { celebrity: "Gregory Peck", college: "University of California" },
+      { celebrity: "Timothy Leary", college: "University of California" },
+      { celebrity: "Earl Warren", college: "University of California" },
+      { celebrity: "Jack London", college: "University of California" },
+      { celebrity: "John Muir", college: "University of California" },
+      { celebrity: "Robert Redford", college: "University of Colorado" },
+      { celebrity: "Trey Parker", college: "University of Colorado" },
+      { celebrity: "Matt Stone", college: "University of Colorado" },
+      { celebrity: "Robert Redford", college: "University of Colorado" },
+      { celebrity: "Glenn Close", college: "College of William and Mary" },
+      { celebrity: "Jon Stewart", college: "College of William and Mary" },
+      { celebrity: "Thomas Jefferson", college: "College of William and Mary" },
+      { celebrity: "James Monroe", college: "College of William and Mary" },
+      { celebrity: "John Tyler", college: "College of William and Mary" },
+      { celebrity: "Beyoncé", college: "Texas Southern University" },
+      { celebrity: "Barbara Jordan", college: "Texas Southern University" },
+      { celebrity: "Michael Strahan", college: "Texas Southern University" },
+      { celebrity: "Yolanda Adams", college: "Texas Southern University" },
+      { celebrity: "Oprah Winfrey", college: "Tennessee State University" },
+      { celebrity: "Wilma Rudolph", college: "Tennessee State University" },
+      { celebrity: "Ed Temple", college: "Tennessee State University" },
+      { celebrity: "Morgan Freeman", college: "Jackson State University" },
+      { celebrity: "Walter Payton", college: "Jackson State University" },
+      { celebrity: "Robert Smith", college: "Jackson State University" },
+      { celebrity: "Samuel L. Jackson", college: "Morehouse College" },
+      { celebrity: "Martin Luther King Jr.", college: "Morehouse College" },
+      { celebrity: "Spike Lee", college: "Morehouse College" },
+      { celebrity: "Howard Thurman", college: "Morehouse College" },
+      { celebrity: "Edwin Moses", college: "Morehouse College" },
+      { celebrity: "Howard Thurman", college: "Morehouse College" },
+      { celebrity: "Kendrick Lamar", college: "University of California" },
+      { celebrity: "Kamala Harris", college: "Howard University" },
+      { celebrity: "Thurgood Marshall", college: "Howard University" },
+      { celebrity: "Toni Morrison", college: "Howard University" },
+      { celebrity: "Sean Combs", college: "Howard University" },
+      { celebrity: "Chadwick Boseman", college: "Howard University" },
+      { celebrity: "Taraji P. Henson", college: "Howard University" },
+      { celebrity: "Phylicia Rashad", college: "Howard University" },
+      { celebrity: "Debbie Allen", college: "Howard University" },
+      { celebrity: "Jessye Norman", college: "Howard University" },
+      { celebrity: "Amanda Gorman", college: "Harvard University" },
+      { celebrity: "Mindy Kaling", college: "Dartmouth College" },
+      { celebrity: "Shonda Rhimes", college: "Dartmouth College" },
+      { celebrity: "Robert Frost", college: "Dartmouth College" },
+      { celebrity: "Dr. Seuss", college: "Dartmouth College" },
+      { celebrity: "Fred Rogers", college: "Dartmouth College" },
+      { celebrity: "Rachel Dratch", college: "Dartmouth College" },
+      { celebrity: "Timothy Geithner", college: "Dartmouth College" },
+      { celebrity: "Aisha Tyler", college: "Dartmouth College" },
+      { celebrity: "Connie Britton", college: "Dartmouth College" },
+      { celebrity: "Mindy Kaling", college: "Dartmouth College" },
+      { celebrity: "Shonda Rhimes", college: "Dartmouth College" },
+      { celebrity: "Robert Frost", college: "Dartmouth College" },
+      { celebrity: "Dr. Seuss", college: "Dartmouth College" },
+      { celebrity: "Fred Rogers", college: "Dartmouth College" },
+      { celebrity: "Rachel Dratch", college: "Dartmouth College" },
+      { celebrity: "Timothy Geithner", college: "Dartmouth College" },
+      { celebrity: "Aisha Tyler", college: "Dartmouth College" },
+      { celebrity: "Connie Britton", college: "Dartmouth College" }
+    ];
+
+    // Game state
+    let score = 0;
+    let timeLeft = 100;
+    let gameActive = false;
+    let questionQueue = [];
+    let currentQuestion = 0;
+    let timer = null;
+    let highScore = localStorage.getItem('collegeAlumniHighScore') || 0;
+
+    // DOM elements
+    const celebrityNameEl = document.getElementById('celebrityName');
+    const questionTextEl = document.getElementById('questionText');
+    const guessInput = document.getElementById('guess');
+    const submitBtn = document.getElementById('submitBtn');
+    const passBtn = document.getElementById('passBtn');
+    const startBtn = document.getElementById('startBtn');
+    const playAgainBtn = document.getElementById('playAgain');
+    const messageEl = document.getElementById('message');
+    const progressEl = document.getElementById('progress');
+    const answerRevealEl = document.getElementById('answerReveal');
+    const correctAnswerEl = document.getElementById('correctAnswer');
+    const answerExplanationEl = document.getElementById('answerExplanation');
+
+    // Initialize
+    document.getElementById('high').textContent = `High Score: ${highScore}`;
+
+    // Alias map for common college name variants
+    const alias = new Map([
+      ['harvard', 'harvard university'], ['harvard college', 'harvard university'],
+      ['stanford', 'stanford university'], ['stanford college', 'stanford university'],
+      ['yale', 'yale university'], ['yale college', 'yale university'],
+      ['princeton', 'princeton university'], ['princeton college', 'princeton university'],
+      ['mit', 'massachusetts institute of technology'], ['m.i.t', 'massachusetts institute of technology'],
+      ['caltech', 'california institute of technology'], ['cal tech', 'california institute of technology'],
+      ['berkeley', 'university of california berkeley'], ['uc berkeley', 'university of california berkeley'],
+      ['ucla', 'university of california los angeles'], ['uc la', 'university of california los angeles'],
+      ['usc', 'university of southern california'], ['u.s.c', 'university of southern california'],
+      ['upenn', 'university of pennsylvania'], ['u penn', 'university of pennsylvania'],
+      ['columbia', 'columbia university'], ['columbia college', 'columbia university'],
+      ['nyu', 'new york university'], ['n.y.u', 'new york university'],
+      ['georgetown', 'georgetown university'], ['georgetown college', 'georgetown university'],
+      ['duke', 'duke university'], ['duke college', 'duke university'],
+      ['vanderbilt', 'vanderbilt university'], ['vanderbilt college', 'vanderbilt university'],
+      ['emory', 'emory university'], ['emory college', 'emory university'],
+      ['rice', 'rice university'], ['rice college', 'rice university'],
+      ['brown', 'brown university'], ['brown college', 'brown university'],
+      ['dartmouth', 'dartmouth college'], ['dartmouth university', 'dartmouth college'],
+      ['cornell', 'cornell university'], ['cornell college', 'cornell university'],
+      ['penn', 'university of pennsylvania'], ['penn state', 'pennsylvania state university'],
+      ['penn state', 'pennsylvania state university'], ['pennsylvania state', 'pennsylvania state university'],
+      ['michigan', 'university of michigan'], ['umich', 'university of michigan'],
+      ['ucla', 'university of california los angeles'], ['uc la', 'university of california los angeles'],
+      ['berkeley', 'university of california berkeley'], ['uc berkeley', 'university of california berkeley'],
+      ['cal', 'university of california berkeley'], ['california', 'university of california'],
+      ['texas', 'university of texas'], ['ut austin', 'university of texas'],
+      ['austin', 'university of texas'], ['ut', 'university of texas'],
+      ['georgia', 'university of georgia'], ['uga', 'university of georgia'],
+      ['florida', 'university of florida'], ['uf', 'university of florida'],
+      ['ohio state', 'ohio state university'], ['osu', 'ohio state university'],
+      ['michigan state', 'michigan state university'], ['msu', 'michigan state university'],
+      ['wisconsin', 'university of wisconsin'], ['uw', 'university of wisconsin'],
+      ['minnesota', 'university of minnesota'], ['umn', 'university of minnesota'],
+      ['illinois', 'university of illinois'], ['uiuc', 'university of illinois'],
+      ['purdue', 'purdue university'], ['purdue college', 'purdue university'],
+      ['indiana', 'indiana university'], ['iu', 'indiana university'],
+      ['kentucky', 'university of kentucky'], ['uk', 'university of kentucky'],
+      ['tennessee', 'university of tennessee'], ['utk', 'university of tennessee'],
+      ['alabama', 'university of alabama'], ['ua', 'university of alabama'],
+      ['auburn', 'auburn university'], ['auburn college', 'auburn university'],
+      ['ole miss', 'university of mississippi'], ['mississippi', 'university of mississippi'],
+      ['lsu', 'louisiana state university'], ['louisiana state', 'louisiana state university'],
+      ['arkansas', 'university of arkansas'], ['ua', 'university of arkansas'],
+      ['missouri', 'university of missouri'], ['mizzou', 'university of missouri'],
+      ['kansas', 'university of kansas'], ['ku', 'university of kansas'],
+      ['oklahoma', 'university of oklahoma'], ['ou', 'university of oklahoma'],
+      ['oklahoma state', 'oklahoma state university'], ['osu', 'oklahoma state university'],
+      ['texas a&m', 'texas a&m university'], ['tamu', 'texas a&m university'],
+      ['baylor', 'baylor university'], ['baylor college', 'baylor university'],
+      ['tcu', 'texas christian university'], ['texas christian', 'texas christian university'],
+      ['smu', 'southern methodist university'], ['southern methodist', 'southern methodist university'],
+      ['rice', 'rice university'], ['rice college', 'rice university'],
+      ['houston', 'university of houston'], ['uh', 'university of houston'],
+      ['texas tech', 'texas tech university'], ['ttu', 'texas tech university'],
+      ['colorado', 'university of colorado'], ['cu', 'university of colorado'],
+      ['colorado state', 'colorado state university'], ['csu', 'colorado state university'],
+      ['utah', 'university of utah'], ['u of u', 'university of utah'],
+      ['byu', 'brigham young university'], ['brigham young', 'brigham young university'],
+      ['arizona', 'university of arizona'], ['ua', 'university of arizona'],
+      ['arizona state', 'arizona state university'], ['asu', 'arizona state university'],
+      ['nevada', 'university of nevada'], ['unlv', 'university of nevada las vegas'],
+      ['oregon', 'university of oregon'], ['uo', 'university of oregon'],
+      ['oregon state', 'oregon state university'], ['osu', 'oregon state university'],
+      ['washington', 'university of washington'], ['uw', 'university of washington'],
+      ['washington state', 'washington state university'], ['wsu', 'washington state university'],
+      ['boise state', 'boise state university'], ['bsu', 'boise state university'],
+      ['montana', 'university of montana'], ['um', 'university of montana'],
+      ['wyoming', 'university of wyoming'], ['uw', 'university of wyoming'],
+      ['north dakota', 'university of north dakota'], ['und', 'university of north dakota'],
+      ['south dakota', 'university of south dakota'], ['usd', 'university of south dakota'],
+      ['nebraska', 'university of nebraska'], ['unl', 'university of nebraska lincoln'],
+      ['iowa', 'university of iowa'], ['ui', 'university of iowa'],
+      ['iowa state', 'iowa state university'], ['isu', 'iowa state university'],
+      ['northwestern', 'northwestern university'], ['northwestern college', 'northwestern university'],
+      ['chicago', 'university of chicago'], ['uchicago', 'university of chicago'],
+      ['notre dame', 'university of notre dame'], ['nd', 'university of notre dame'],
+      ['depaul', 'depaul university'], ['depaul college', 'depaul university'],
+      ['loyola', 'loyola university chicago'], ['loyola chicago', 'loyola university chicago'],
+      ['illinois state', 'illinois state university'], ['isu', 'illinois state university'],
+      ['northern illinois', 'northern illinois university'], ['niu', 'northern illinois university'],
+      ['western michigan', 'western michigan university'], ['wmu', 'western michigan university'],
+      ['central michigan', 'central michigan university'], ['cmu', 'central michigan university'],
+      ['eastern michigan', 'eastern michigan university'], ['emu', 'eastern michigan university'],
+      ['wayne state', 'wayne state university'], ['wayne', 'wayne state university'],
+      ['michigan tech', 'michigan technological university'], ['mtu', 'michigan technological university'],
+      ['grand valley', 'grand valley state university'], ['gvsu', 'grand valley state university'],
+      ['western kentucky', 'western kentucky university'], ['wku', 'western kentucky university'],
+      ['eastern kentucky', 'eastern kentucky university'], ['eku', 'eastern kentucky university'],
+      ['northern kentucky', 'northern kentucky university'], ['nku', 'northern kentucky university'],
+      ['morehead state', 'morehead state university'], ['msu', 'morehead state university'],
+      ['murray state', 'murray state university'], ['msu', 'murray state university'],
+      ['tennessee state', 'tennessee state university'], ['tsu', 'tennessee state university'],
+      ['austin peay', 'austin peay state university'], ['apsu', 'austin peay state university'],
+      ['middle tennessee', 'middle tennessee state university'], ['mtsu', 'middle tennessee state university'],
+      ['east tennessee', 'east tennessee state university'], ['etsu', 'east tennessee state university'],
+      ['memphis', 'university of memphis'], ['memphis state', 'university of memphis'],
+      ['vanderbilt', 'vanderbilt university'], ['vandy', 'vanderbilt university'],
+      ['belmont', 'belmont university'], ['belmont college', 'belmont university'],
+      ['lipscomb', 'lipscomb university'], ['lipscomb college', 'lipscomb university'],
+      ['trevecca', 'trevecca nazarene university'], ['trevecca nazarene', 'trevecca nazarene university'],
+      ['fisk', 'fisk university'], ['fisk college', 'fisk university'],
+      ['tennessee tech', 'tennessee technological university'], ['ttu', 'tennessee technological university'],
+      ['ut martin', 'university of tennessee martin'], ['ut martin', 'university of tennessee martin'],
+      ['ut chattanooga', 'university of tennessee chattanooga'], ['utc', 'university of tennessee chattanooga'],
+      ['ut knoxville', 'university of tennessee'], ['utk', 'university of tennessee'],
+      ['howard', 'howard university'], ['howard college', 'howard university'],
+      ['spelman', 'spelman college'], ['spelman university', 'spelman college'],
+      ['morehouse', 'morehouse college'], ['morehouse university', 'morehouse college'],
+      ['clark atlanta', 'clark atlanta university'], ['clark atlanta college', 'clark atlanta university'],
+      ['hampton', 'hampton university'], ['hampton college', 'hampton university'],
+      ['norfolk state', 'norfolk state university'], ['nsu', 'norfolk state university'],
+      ['virginia state', 'virginia state university'], ['vsu', 'virginia state university'],
+      ['virginia tech', 'virginia polytechnic institute and state university'], ['vt', 'virginia polytechnic institute and state university'],
+      ['virginia commonwealth', 'virginia commonwealth university'], ['vcu', 'virginia commonwealth university'],
+      ['old dominion', 'old dominion university'], ['odu', 'old dominion university'],
+      ['james madison', 'james madison university'], ['jmu', 'james madison university'],
+      ['george mason', 'george mason university'], ['gmu', 'george mason university'],
+      ['william and mary', 'college of william and mary'], ['w&m', 'college of william and mary'],
+      ['virginia', 'university of virginia'], ['uva', 'university of virginia'],
+      ['virginia military institute', 'virginia military institute'], ['vmi', 'virginia military institute'],
+      ['washington and lee', 'washington and lee university'], ['w&l', 'washington and lee university'],
+      ['randolph macon', 'randolph macon college'], ['randolph macon university', 'randolph macon college'],
+      ['hampden sydney', 'hampden sydney college'], ['hampden sydney university', 'hampden sydney college'],
+      ['roanoke', 'roanoke college'], ['roanoke university', 'roanoke college'],
+      ['lynchburg', 'university of lynchburg'], ['lynchburg college', 'university of lynchburg'],
+      ['liberty', 'liberty university'], ['liberty college', 'liberty university'],
+      ['regent', 'regent university'], ['regent college', 'regent university'],
+      ['christopher newport', 'christopher newport university'], ['cnu', 'christopher newport university'],
+      ['longwood', 'longwood university'], ['longwood college', 'longwood university'],
+      ['radford', 'radford university'], ['radford college', 'radford university'],
+      ['virginia western', 'virginia western community college'], ['vwcc', 'virginia western community college'],
+      ['tidewater', 'tidewater community college'], ['tcc', 'tidewater community college'],
+      ['northern virginia', 'northern virginia community college'], ['nvcc', 'northern virginia community college'],
+      ['central virginia', 'central virginia community college'], ['cvcc', 'central virginia community college'],
+      ['southside virginia', 'southside virginia community college'], ['svcc', 'southside virginia community college'],
+      ['virginia highlands', 'virginia highlands community college'], ['vhcc', 'virginia highlands community college'],
+      ['mountain empire', 'mountain empire community college'], ['mecc', 'mountain empire community college'],
+      ['southwest virginia', 'southwest virginia community college'], ['swvcc', 'southwest virginia community college'],
+      ['wytheville', 'wytheville community college'], ['wcc', 'wytheville community college'],
+      ['danville', 'danville community college'], ['dcc', 'danville community college'],
+      ['patrick henry', 'patrick henry community college'], ['phcc', 'patrick henry community college'],
+      ['piedmont virginia', 'piedmont virginia community college'], ['pvcc', 'piedmont virginia community college'],
+      ['reynolds', 'j. sargeant reynolds community college'], ['jsrcc', 'j. sargeant reynolds community college'],
+      ['john tyler', 'john tyler community college'], ['jtcc', 'john tyler community college'],
+      ['brightpoint', 'brightpoint community college'], ['bcc', 'brightpoint community college'],
+      ['germanna', 'germanna community college'], ['gcc', 'germanna community college'],
+      ['laurel ridge', 'laurel ridge community college'], ['lrcc', 'laurel ridge community college'],
+      ['lord fairfax', 'lord fairfax community college'], ['lfcc', 'lord fairfax community college'],
+      ['blue ridge', 'blue ridge community college'], ['brcc', 'blue ridge community college'],
+      ['central virginia', 'central virginia community college'], ['cvcc', 'central virginia community college'],
+      ['southside virginia', 'southside virginia community college'], ['svcc', 'southside virginia community college'],
+      ['virginia highlands', 'virginia highlands community college'], ['vhcc', 'virginia highlands community college'],
+      ['mountain empire', 'mountain empire community college'], ['mecc', 'mountain empire community college'],
+      ['southwest virginia', 'southwest virginia community college'], ['swvcc', 'southwest virginia community college'],
+      ['wytheville', 'wytheville community college'], ['wcc', 'wytheville community college'],
+      ['danville', 'danville community college'], ['dcc', 'danville community college'],
+      ['patrick henry', 'patrick henry community college'], ['phcc', 'patrick henry community college'],
+      ['piedmont virginia', 'piedmont virginia community college'], ['pvcc', 'piedmont virginia community college'],
+      ['reynolds', 'j. sargeant reynolds community college'], ['jsrcc', 'j. sargeant reynolds community college'],
+      ['john tyler', 'john tyler community college'], ['jtcc', 'john tyler community college'],
+      ['brightpoint', 'brightpoint community college'], ['bcc', 'brightpoint community college'],
+      ['germanna', 'germanna community college'], ['gcc', 'germanna community college'],
+      ['laurel ridge', 'laurel ridge community college'], ['lrcc', 'laurel ridge community college'],
+      ['lord fairfax', 'lord fairfax community college'], ['lfcc', 'lord fairfax community college'],
+      ['blue ridge', 'blue ridge community college']
+    ]);
+
+    function normalizeName(str) {
+      return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function canonical(str) {
+      const n = normalizeName(str);
+      return alias.get(n) || n;
+    }
+
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function initializeGame() {
+      // Create question queue with all alumni
+      questionQueue = shuffleArray([...alumniData]);
+      currentQuestion = 0;
+      gameActive = true;
+      timeLeft = 100;
+      
+      // Start timer
+      startTimer();
+      
+      // Show first question
+      showQuestion();
+      
+      // Update UI
+      startBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+      passBtn.style.display = 'inline-block';
+      guessInput.style.display = 'inline-block';
+      guessInput.disabled = false;
+      guessInput.focus();
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questionQueue.length) {
+        // Shuffle and restart the queue
+        questionQueue = shuffleArray([...alumniData]);
+        currentQuestion = 0;
+      }
+
+      const question = questionQueue[currentQuestion];
+      celebrityNameEl.textContent = question.celebrity;
+      questionTextEl.textContent = `What college did ${question.celebrity} attend?`;
+      
+      // Update progress based on time remaining
+      const progress = ((100 - timeLeft) / 100) * 100;
+      progressEl.style.width = `${progress}%`;
+      
+      // Clear input and focus
+      guessInput.value = '';
+      guessInput.focus();
+      
+      // Hide answer reveal
+      answerRevealEl.style.display = 'none';
+    }
+
+    function submitAnswer() {
+      if (!gameActive) return;
+      
+      const userAnswer = guessInput.value.trim();
+      if (!userAnswer) return;
+      
+      const question = questionQueue[currentQuestion];
+      const correctCollege = question.college;
+      
+      const user = canonical(userAnswer);
+      const target = canonical(correctCollege);
+      
+      if (user === target) {
+        // Correct answer - 1 point
+        score++;
+        document.getElementById('score').textContent = `Score: ${score}`;
+        messageEl.textContent = '✅ Correct! +1 point';
+        messageEl.style.color = '#4CAF50';
+        
+        setTimeout(() => {
+          messageEl.textContent = '';
+          currentQuestion++;
+          showQuestion();
+        }, 1000);
+      } else {
+        // Wrong answer - no penalty, just try again
+        messageEl.textContent = '❌ Try again';
+        messageEl.style.color = '#ff4444';
+        
+        setTimeout(() => {
+          messageEl.textContent = '';
+        }, 1000);
+      }
+    }
+
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+        
+        // Update progress bar color based on time remaining
+        const progress = ((100 - timeLeft) / 100) * 100;
+        progressEl.style.width = `${progress}%`;
+        
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    function passQuestion() {
+      if (!gameActive) return;
+      
+      const question = questionQueue[currentQuestion];
+      const correctCollege = question.college;
+      
+      // Show correct answer briefly
+      correctAnswerEl.textContent = correctCollege;
+      answerExplanationEl.textContent = `${question.celebrity} attended ${correctCollege}.`;
+      answerRevealEl.style.display = 'block';
+      
+      messageEl.textContent = '⏭️ Passed - no points';
+      messageEl.style.color = '#FF9800';
+      
+      setTimeout(() => {
+        messageEl.textContent = '';
+        answerRevealEl.style.display = 'none';
+        currentQuestion++;
+        showQuestion();
+      }, 2000);
+    }
+
+    function endGame() {
+      gameActive = false;
+      stopTimer();
+      
+      messageEl.textContent = `🎉 Time's up! Final Score: ${score}`;
+      messageEl.style.color = '#fff';
+      
+      submitBtn.style.display = 'none';
+      passBtn.style.display = 'none';
+      guessInput.style.display = 'none';
+      playAgainBtn.style.display = 'inline-block';
+      
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('collegeAlumniHighScore', highScore);
+        document.getElementById('high').textContent = `High Score: ${highScore}`;
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      timeLeft = 100;
+      gameActive = false;
+      
+      stopTimer();
+      
+      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+      messageEl.textContent = '';
+      
+      // Reset UI
+      startBtn.style.display = 'inline-block';
+      submitBtn.style.display = 'none';
+      passBtn.style.display = 'none';
+      playAgainBtn.style.display = 'none';
+      guessInput.style.display = 'none';
+      answerRevealEl.style.display = 'none';
+      
+      // Reset progress
+      progressEl.style.width = '0%';
+      
+      // Show welcome message
+      celebrityNameEl.textContent = '🎓 College Alumni Challenge';
+      questionTextEl.textContent = 'You have 100 seconds to name as many colleges as possible from their famous alumni!';
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', initializeGame);
+    submitBtn.addEventListener('click', submitAnswer);
+    passBtn.addEventListener('click', passQuestion);
+    playAgainBtn.addEventListener('click', resetGame);
+    
+    guessInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitAnswer();
+      }
+    });
+
+    // Initialize
+    resetGame();
+  </script>
+</body>
+</html> 

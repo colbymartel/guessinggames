@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capital Cities | Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    nav {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      padding: 14px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    nav .left a { color:#333; text-decoration:none; margin-right:16px; font-weight:600; }
+    nav .right { display:flex; gap:10px; align-items:center; }
+    .search { padding: 8px 12px; height: 38px; width: 240px; border-radius: 20px; border: 2px solid #e0e0e0; }
+    .btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: #fff; border: none; padding: 10px 18px;
+      border-radius: 20px; font-weight: 700; cursor:pointer;
+    }
+
+    main {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: calc(100vh - 80px);
+      padding: 20px;
+    }
+    h1 { color: #fff; font-size: 2.4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 10px; }
+    .stats {
+      display:inline-flex; gap:14px; align-items:center;
+      margin: 12px 0 25px; padding: 12px 18px; border-radius: 22px;
+      background: rgba(255,255,255,0.95); font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .question-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      margin: 0 auto 20px;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .capital-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .question-text {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .input-section {
+      margin: 20px 0;
+    }
+    .guess {
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 26px;
+      width: 300px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .guess:focus {
+      outline: none;
+      border-color: #3b7bbf;
+    }
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .strikes {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .strike {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ddd;
+      border: 2px solid #999;
+    }
+    .strike.used {
+      background: #ff4444;
+      border-color: #cc0000;
+    }
+
+    #message {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+      min-height: 28px;
+      margin-top: 10px;
+    }
+    #playAgain { display: none; }
+
+    .answer-reveal {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      display: none;
+    }
+    .correct-answer {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+    .answer-explanation {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .question-card { max-width: 90%; padding: 20px; }
+      .capital-name { font-size: 2rem; }
+      .guess { width: 250px; }
+      main { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="left">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="right">
+      <input class="search" placeholder="Search games..." />
+      <button class="btn">Login</button>
+    </div>
+  </nav>
+
+  <main>
+    <h1>🏛️ Capital Cities</h1>
+    <div class="stats">
+      <div id="score">Score: 0</div>
+      <div>|</div>
+      <div id="timer">Time: 100s</div>
+      <div>|</div>
+      <div id="high">High Score: 0</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+      <div class="capital-name" id="capitalName">Ready to start!</div>
+      <div class="question-text" id="questionText">Click "Start Game" to begin! You have 100 seconds to name as many countries as possible.</div>
+      <div class="input-section">
+        <input id="guess" class="guess" placeholder="Type the country name..." autocomplete="off" />
+      </div>
+      <div class="controls">
+        <button class="btn" id="submitBtn">Submit</button>
+        <button class="btn" id="passBtn">Pass</button>
+        <button class="btn" id="startBtn">Start Game</button>
+        <button class="btn" id="playAgain">Play Again</button>
+      </div>
+    </div>
+
+    <div class="answer-reveal" id="answerReveal">
+      <div class="correct-answer" id="correctAnswer"></div>
+      <div class="answer-explanation" id="answerExplanation"></div>
+    </div>
+
+
+
+    <div id="message"></div>
+  </main>
+
+  <script>
+    // Capital cities data with country names
+    const capitalsData = [
+      { capital: "Paris", country: "France" },
+      { capital: "London", country: "United Kingdom" },
+      { capital: "Berlin", country: "Germany" },
+      { capital: "Madrid", country: "Spain" },
+      { capital: "Rome", country: "Italy" },
+      { capital: "Amsterdam", country: "Netherlands" },
+      { capital: "Brussels", country: "Belgium" },
+      { capital: "Vienna", country: "Austria" },
+      { capital: "Prague", country: "Czech Republic" },
+      { capital: "Budapest", country: "Hungary" },
+      { capital: "Warsaw", country: "Poland" },
+      { capital: "Stockholm", country: "Sweden" },
+      { capital: "Oslo", country: "Norway" },
+      { capital: "Copenhagen", country: "Denmark" },
+      { capital: "Helsinki", country: "Finland" },
+      { capital: "Reykjavik", country: "Iceland" },
+      { capital: "Dublin", country: "Ireland" },
+      { capital: "Lisbon", country: "Portugal" },
+      { capital: "Athens", country: "Greece" },
+      { capital: "Sofia", country: "Bulgaria" },
+      { capital: "Bucharest", country: "Romania" },
+      { capital: "Belgrade", country: "Serbia" },
+      { capital: "Zagreb", country: "Croatia" },
+      { capital: "Ljubljana", country: "Slovenia" },
+      { capital: "Bratislava", country: "Slovakia" },
+      { capital: "Vilnius", country: "Lithuania" },
+      { capital: "Riga", country: "Latvia" },
+      { capital: "Tallinn", country: "Estonia" },
+      { capital: "Moscow", country: "Russia" },
+      { capital: "Kiev", country: "Ukraine" },
+      { capital: "Minsk", country: "Belarus" },
+      { capital: "Vilnius", country: "Lithuania" },
+      { capital: "Riga", country: "Latvia" },
+      { capital: "Tallinn", country: "Estonia" },
+      { capital: "Helsinki", country: "Finland" },
+      { capital: "Stockholm", country: "Sweden" },
+      { capital: "Oslo", country: "Norway" },
+      { capital: "Copenhagen", country: "Denmark" },
+      { capital: "Reykjavik", country: "Iceland" },
+      { capital: "Dublin", country: "Ireland" },
+      { capital: "London", country: "United Kingdom" },
+      { capital: "Paris", country: "France" },
+      { capital: "Brussels", country: "Belgium" },
+      { capital: "Amsterdam", country: "Netherlands" },
+      { capital: "Berlin", country: "Germany" },
+      { capital: "Vienna", country: "Austria" },
+      { capital: "Prague", country: "Czech Republic" },
+      { capital: "Warsaw", country: "Poland" },
+      { capital: "Budapest", country: "Hungary" },
+      { capital: "Bratislava", country: "Slovakia" },
+      { capital: "Ljubljana", country: "Slovenia" },
+      { capital: "Zagreb", country: "Croatia" },
+      { capital: "Belgrade", country: "Serbia" },
+      { capital: "Sofia", country: "Bulgaria" },
+      { capital: "Bucharest", country: "Romania" },
+      { capital: "Athens", country: "Greece" },
+      { capital: "Rome", country: "Italy" },
+      { capital: "Madrid", country: "Spain" },
+      { capital: "Lisbon", country: "Portugal" },
+      { capital: "Washington D.C.", country: "United States" },
+      { capital: "Ottawa", country: "Canada" },
+      { capital: "Mexico City", country: "Mexico" },
+      { capital: "Brasilia", country: "Brazil" },
+      { capital: "Buenos Aires", country: "Argentina" },
+      { capital: "Santiago", country: "Chile" },
+      { capital: "Lima", country: "Peru" },
+      { capital: "Bogota", country: "Colombia" },
+      { capital: "Caracas", country: "Venezuela" },
+      { capital: "Quito", country: "Ecuador" },
+      { capital: "La Paz", country: "Bolivia" },
+      { capital: "Asuncion", country: "Paraguay" },
+      { capital: "Montevideo", country: "Uruguay" },
+      { capital: "Havana", country: "Cuba" },
+      { capital: "Kingston", country: "Jamaica" },
+      { capital: "Port-au-Prince", country: "Haiti" },
+      { capital: "Santo Domingo", country: "Dominican Republic" },
+      { capital: "San Juan", country: "Puerto Rico" },
+      { capital: "Panama City", country: "Panama" },
+      { capital: "San Jose", country: "Costa Rica" },
+      { capital: "Managua", country: "Nicaragua" },
+      { capital: "Tegucigalpa", country: "Honduras" },
+      { capital: "San Salvador", country: "El Salvador" },
+      { capital: "Guatemala City", country: "Guatemala" },
+      { capital: "Belmopan", country: "Belize" },
+      { capital: "Tokyo", country: "Japan" },
+      { capital: "Seoul", country: "South Korea" },
+      { capital: "Beijing", country: "China" },
+      { capital: "New Delhi", country: "India" },
+      { capital: "Bangkok", country: "Thailand" },
+      { capital: "Hanoi", country: "Vietnam" },
+      { capital: "Phnom Penh", country: "Cambodia" },
+      { capital: "Vientiane", country: "Laos" },
+      { capital: "Yangon", country: "Myanmar" },
+      { capital: "Dhaka", country: "Bangladesh" },
+      { capital: "Kathmandu", country: "Nepal" },
+      { capital: "Thimphu", country: "Bhutan" },
+      { capital: "Colombo", country: "Sri Lanka" },
+      { capital: "Male", country: "Maldives" },
+      { capital: "Islamabad", country: "Pakistan" },
+      { capital: "Kabul", country: "Afghanistan" },
+      { capital: "Tashkent", country: "Uzbekistan" },
+      { capital: "Astana", country: "Kazakhstan" },
+      { capital: "Bishkek", country: "Kyrgyzstan" },
+      { capital: "Dushanbe", country: "Tajikistan" },
+      { capital: "Ashgabat", country: "Turkmenistan" },
+      { capital: "Baku", country: "Azerbaijan" },
+      { capital: "Tbilisi", country: "Georgia" },
+      { capital: "Yerevan", country: "Armenia" },
+      { capital: "Tehran", country: "Iran" },
+      { capital: "Baghdad", country: "Iraq" },
+      { capital: "Damascus", country: "Syria" },
+      { capital: "Beirut", country: "Lebanon" },
+      { capital: "Amman", country: "Jordan" },
+      { capital: "Jerusalem", country: "Israel" },
+      { capital: "Riyadh", country: "Saudi Arabia" },
+      { capital: "Kuwait City", country: "Kuwait" },
+      { capital: "Doha", country: "Qatar" },
+      { capital: "Abu Dhabi", country: "United Arab Emirates" },
+      { capital: "Muscat", country: "Oman" },
+      { capital: "Sanaa", country: "Yemen" },
+      { capital: "Manama", country: "Bahrain" },
+      { capital: "Ankara", country: "Turkey" },
+      { capital: "Nicosia", country: "Cyprus" },
+      { capital: "Cairo", country: "Egypt" },
+      { capital: "Tripoli", country: "Libya" },
+      { capital: "Tunis", country: "Tunisia" },
+      { capital: "Algiers", country: "Algeria" },
+      { capital: "Rabat", country: "Morocco" },
+      { capital: "Nouakchott", country: "Mauritania" },
+      { capital: "Dakar", country: "Senegal" },
+      { capital: "Banjul", country: "Gambia" },
+      { capital: "Bissau", country: "Guinea-Bissau" },
+      { capital: "Conakry", country: "Guinea" },
+      { capital: "Freetown", country: "Sierra Leone" },
+      { capital: "Monrovia", country: "Liberia" },
+      { capital: "Abidjan", country: "Ivory Coast" },
+      { capital: "Accra", country: "Ghana" },
+      { capital: "Lome", country: "Togo" },
+      { capital: "Porto Novo", country: "Benin" },
+      { capital: "Lagos", country: "Nigeria" },
+      { capital: "Yaounde", country: "Cameroon" },
+      { capital: "Malabo", country: "Equatorial Guinea" },
+      { capital: "Libreville", country: "Gabon" },
+      { capital: "Brazzaville", country: "Congo" },
+      { capital: "Kinshasa", country: "Democratic Republic of the Congo" },
+      { capital: "Bangui", country: "Central African Republic" },
+      { capital: "N'Djamena", country: "Chad" },
+      { capital: "Khartoum", country: "Sudan" },
+      { capital: "Juba", country: "South Sudan" },
+      { capital: "Addis Ababa", country: "Ethiopia" },
+      { capital: "Asmara", country: "Eritrea" },
+      { capital: "Djibouti", country: "Djibouti" },
+      { capital: "Mogadishu", country: "Somalia" },
+      { capital: "Nairobi", country: "Kenya" },
+      { capital: "Kampala", country: "Uganda" },
+      { capital: "Kigali", country: "Rwanda" },
+      { capital: "Bujumbura", country: "Burundi" },
+      { capital: "Dar es Salaam", country: "Tanzania" },
+      { capital: "Lusaka", country: "Zambia" },
+      { capital: "Harare", country: "Zimbabwe" },
+      { capital: "Gaborone", country: "Botswana" },
+      { capital: "Windhoek", country: "Namibia" },
+      { capital: "Pretoria", country: "South Africa" },
+      { capital: "Maseru", country: "Lesotho" },
+      { capital: "Mbabane", country: "Eswatini" },
+      { capital: "Maputo", country: "Mozambique" },
+      { capital: "Antananarivo", country: "Madagascar" },
+      { capital: "Victoria", country: "Seychelles" },
+      { capital: "Port Louis", country: "Mauritius" },
+      { capital: "Saint-Denis", country: "Reunion" },
+      { capital: "Canberra", country: "Australia" },
+      { capital: "Wellington", country: "New Zealand" },
+      { capital: "Port Moresby", country: "Papua New Guinea" },
+      { capital: "Honiara", country: "Solomon Islands" },
+      { capital: "Port Vila", country: "Vanuatu" },
+      { capital: "Noumea", country: "New Caledonia" },
+      { capital: "Suva", country: "Fiji" },
+      { capital: "Nuku'alofa", country: "Tonga" },
+      { capital: "Apia", country: "Samoa" },
+      { capital: "Funafuti", country: "Tuvalu" },
+      { capital: "Tarawa", country: "Kiribati" },
+      { capital: "Majuro", country: "Marshall Islands" },
+      { capital: "Palikir", country: "Micronesia" },
+      { capital: "Koror", country: "Palau" },
+      { capital: "Yaren", country: "Nauru" }
+    ];
+
+    // Game state
+    let score = 0;
+    let timeLeft = 100;
+    let gameActive = false;
+    let questionQueue = [];
+    let currentQuestion = 0;
+    let timer = null;
+    let highScore = localStorage.getItem('capitalsHighScore') || 0;
+
+    // DOM elements
+    const capitalNameEl = document.getElementById('capitalName');
+    const questionTextEl = document.getElementById('questionText');
+    const guessInput = document.getElementById('guess');
+    const submitBtn = document.getElementById('submitBtn');
+    const passBtn = document.getElementById('passBtn');
+    const startBtn = document.getElementById('startBtn');
+    const playAgainBtn = document.getElementById('playAgain');
+    const messageEl = document.getElementById('message');
+    const progressEl = document.getElementById('progress');
+    const answerRevealEl = document.getElementById('answerReveal');
+    const correctAnswerEl = document.getElementById('correctAnswer');
+    const answerExplanationEl = document.getElementById('answerExplanation');
+
+    // Initialize
+    document.getElementById('high').textContent = `High Score: ${highScore}`;
+
+    // Alias map for common country name variants
+    const alias = new Map([
+      ['usa', 'united states'], ['u.s.a', 'united states'], ['us', 'united states'], ['united states of america', 'united states'],
+      ['russian federation', 'russia'], ['uk', 'united kingdom'], ['u.k', 'united kingdom'], ['england', 'united kingdom'],
+      ['south korea', 'korea, republic of'], ['north korea', 'korea, democratic people\'s republic of'],
+      ['congo', 'democratic republic of the congo'], ['drc', 'democratic republic of the congo'],
+      ['czechia', 'czech republic'], ['eswatini', 'swaziland'], ['cape verde', 'cabo verde'],
+      ['ivory coast', 'côte d\'ivoire'], ['republic of the congo', 'congo'], ['bolivia', 'bolivia (plurinational state of)'],
+      ['venezuela', 'venezuela (bolivarian republic of)'], ['syria', 'syrian arab republic'],
+      ['laos', 'lao people\'s democratic republic'], ['moldova', 'moldova, republic of'],
+      ['palestine', 'palestine, state of'], ['tanzania', 'tanzania, united republic of'],
+      ['iran', 'iran (islamic republic of)'], ['macedonia', 'north macedonia']
+    ]);
+
+    function normalizeName(str) {
+      return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function canonical(str) {
+      const n = normalizeName(str);
+      return alias.get(n) || n;
+    }
+
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function initializeGame() {
+      // Create question queue with all capitals
+      questionQueue = shuffleArray([...capitalsData]);
+      currentQuestion = 0;
+      gameActive = true;
+      timeLeft = 100;
+      
+      // Start timer
+      startTimer();
+      
+      // Show first question
+      showQuestion();
+      
+      // Update UI
+      startBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+      passBtn.style.display = 'inline-block';
+      guessInput.style.display = 'inline-block';
+      guessInput.disabled = false;
+      guessInput.focus();
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questionQueue.length) {
+        // Shuffle and restart the queue
+        questionQueue = shuffleArray([...capitalsData]);
+        currentQuestion = 0;
+      }
+
+      const question = questionQueue[currentQuestion];
+      capitalNameEl.textContent = question.capital;
+      questionTextEl.textContent = `What country is ${question.capital} the capital of?`;
+      
+      // Update progress based on time remaining
+      const progress = ((100 - timeLeft) / 100) * 100;
+      progressEl.style.width = `${progress}%`;
+      
+      // Clear input and focus
+      guessInput.value = '';
+      guessInput.focus();
+      
+      // Hide answer reveal
+      answerRevealEl.style.display = 'none';
+    }
+
+    function submitAnswer() {
+      if (!gameActive) return;
+      
+      const userAnswer = guessInput.value.trim();
+      if (!userAnswer) return;
+      
+      const question = questionQueue[currentQuestion];
+      const correctCountry = question.country;
+      
+      const user = canonical(userAnswer);
+      const target = canonical(correctCountry);
+      
+      if (user === target) {
+        // Correct answer - 1 point
+        score++;
+        document.getElementById('score').textContent = `Score: ${score}`;
+        messageEl.textContent = '✅ Correct! +1 point';
+        messageEl.style.color = '#4CAF50';
+        
+        setTimeout(() => {
+          messageEl.textContent = '';
+          currentQuestion++;
+          showQuestion();
+        }, 1000);
+      } else {
+        // Wrong answer - no penalty, just try again
+        messageEl.textContent = '❌ Try again';
+        messageEl.style.color = '#ff4444';
+        
+        setTimeout(() => {
+          messageEl.textContent = '';
+        }, 1000);
+      }
+    }
+
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+        
+        // Update progress bar color based on time remaining
+        const progress = ((100 - timeLeft) / 100) * 100;
+        progressEl.style.width = `${progress}%`;
+        
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    function passQuestion() {
+      if (!gameActive) return;
+      
+      const question = questionQueue[currentQuestion];
+      const correctCountry = question.country;
+      
+      // Show correct answer briefly
+      correctAnswerEl.textContent = correctCountry;
+      answerExplanationEl.textContent = `${question.capital} is the capital of ${correctCountry}.`;
+      answerRevealEl.style.display = 'block';
+      
+      messageEl.textContent = '⏭️ Passed - no points';
+      messageEl.style.color = '#FF9800';
+      
+      setTimeout(() => {
+        messageEl.textContent = '';
+        answerRevealEl.style.display = 'none';
+        currentQuestion++;
+        showQuestion();
+      }, 2000);
+    }
+
+    function endGame() {
+      gameActive = false;
+      stopTimer();
+      
+      messageEl.textContent = `🎉 Time's up! Final Score: ${score}`;
+      messageEl.style.color = '#fff';
+      
+      submitBtn.style.display = 'none';
+      passBtn.style.display = 'none';
+      guessInput.style.display = 'none';
+      playAgainBtn.style.display = 'inline-block';
+      
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('capitalsHighScore', highScore);
+        document.getElementById('high').textContent = `High Score: ${highScore}`;
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      timeLeft = 100;
+      gameActive = false;
+      
+      stopTimer();
+      
+      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+      messageEl.textContent = '';
+      
+      // Reset UI
+      startBtn.style.display = 'inline-block';
+      submitBtn.style.display = 'none';
+      passBtn.style.display = 'none';
+      playAgainBtn.style.display = 'none';
+      guessInput.style.display = 'none';
+      answerRevealEl.style.display = 'none';
+      
+      // Reset progress
+      progressEl.style.width = '0%';
+      
+      // Show welcome message
+      capitalNameEl.textContent = '🏛️ Capital Cities Challenge';
+      questionTextEl.textContent = 'You have 100 seconds to name as many countries as possible from their capital cities!';
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', initializeGame);
+    submitBtn.addEventListener('click', submitAnswer);
+    passBtn.addEventListener('click', passQuestion);
+    playAgainBtn.addEventListener('click', resetGame);
+    
+    guessInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitAnswer();
+      }
+    });
+
+    // Initialize
+    resetGame();
+  </script>
+</body>
+</html> 

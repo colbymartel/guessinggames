@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Logo Challenge - Guessing Games</title>
+    <link rel="icon" href="/favicongg.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-links a {
+            color: #333;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3b7bbf;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-bar {
+            padding: 8px 16px 8px 36px;
+            height: 40px;
+            border-radius: 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #333;
+            font-size: 0.95rem;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+            background-size: 16px;
+            background-repeat: no-repeat;
+            background-position: 12px center;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #3b7bbf;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(59, 123, 191, 0.1);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 100%;
+        }
+
+        .logo-display {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 3px solid rgba(59, 123, 191, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .logo-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .guess-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .guess-input:focus {
+            outline: none;
+            border-color: #3b7bbf;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .correct {
+            background: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        .reveal {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ef6c00;
+            border: 2px solid #ff9800;
+        }
+
+        #play-again-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            margin-top: 20px;
+        }
+
+        .high-score {
+            background: rgba(255, 193, 7, 0.2);
+            color: #f57c00;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            border: 2px solid #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .logo-display {
+                width: 150px;
+                height: 150px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="/index.html">Home</a>
+            <a href="/collegegames.html">College Games</a>
+            <a href="/about.html">About</a>
+        </div>
+        <div class="nav-actions">
+            <input type="text" class="search-bar" placeholder="Search games...">
+            <button class="login-btn">Login</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="game-container">
+            <h1 class="game-title">🏛️ College Logo Challenge</h1>
+            <p class="game-subtitle">Name the college from its logo - 100 seconds to get as many as possible!</p>
+
+            <div class="stats-bar">
+                <span>Score: <span id="score">0</span></span>
+                <span>Time: <span id="time">100</span>s</span>
+            </div>
+
+            <div class="progress-bar-wrapper">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+
+            <div class="logo-display" id="logoDisplay">
+                <img id="collegeLogo" src="" alt="College Logo" style="display: none;">
+            </div>
+
+            <input type="text" id="guessInput" class="guess-input" placeholder="Type the college name..." style="display: none;">
+
+            <div class="controls">
+                <button id="startBtn">Start Game</button>
+                <button id="submitBtn" style="display: none;">Submit</button>
+                <button id="passBtn" style="display: none;">Pass</button>
+            </div>
+
+            <div id="message"></div>
+            <button id="play-again-btn" style="display: none;">Play Again</button>
+        </div>
+    </main>
+
+    <script>
+        // College logo data with image URLs and correct answers
+        const collegeLogos = [
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a0/Harvard_University_logo.svg/1200px-Harvard_University_logo.svg.png", answer: "harvard" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Yale_University_logo.svg/1200px-Yale_University_logo.svg.png", answer: "yale" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Princeton_University_logo.svg/1200px-Princeton_University_logo.svg.png", answer: "princeton" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Stanford_University_logo.svg/1200px-Stanford_University_logo.svg.png", answer: "stanford" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/MIT_logo.svg/1200px-MIT_logo.svg.png", answer: "mit" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Columbia_University_logo.svg/1200px-Columbia_University_logo.svg.png", answer: "columbia" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/University_of_Pennsylvania_logo.svg/1200px-University_of_Pennsylvania_logo.svg.png", answer: "penn" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Dartmouth_College_logo.svg/1200px-Dartmouth_College_logo.svg.png", answer: "dartmouth" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Brown_University_logo.svg/1200px-Brown_University_logo.svg.png", answer: "brown" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Cornell_University_logo.svg/1200px-Cornell_University_logo.svg.png", answer: "cornell" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_logo.svg/1200px-University_of_California_logo.svg.png", answer: "berkeley" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/UCLA_logo.svg/1200px-UCLA_logo.svg.png", answer: "ucla" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Michigan_logo.svg/1200px-University_of_Michigan_logo.svg.png", answer: "michigan" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Texas_logo.svg/1200px-University_of_Texas_logo.svg.png", answer: "texas" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Florida_logo.svg/1200px-University_of_Florida_logo.svg.png", answer: "florida" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Wisconsin_logo.svg/1200px-University_of_Wisconsin_logo.svg.png", answer: "wisconsin" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Illinois_logo.svg/1200px-University_of_Illinois_logo.svg.png", answer: "illinois" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Washington_logo.svg/1200px-University_of_Washington_logo.svg.png", answer: "washington" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Virginia_logo.svg/1200px-University_of_Virginia_logo.svg.png", answer: "virginia" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_North_Carolina_logo.svg/1200px-University_of_North_Carolina_logo.svg.png", answer: "north carolina" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Georgia_logo.svg/1200px-University_of_Georgia_logo.svg.png", answer: "georgia" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Alabama_logo.svg/1200px-University_of_Alabama_logo.svg.png", answer: "alabama" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Tennessee_logo.svg/1200px-University_of_Tennessee_logo.svg.png", answer: "tennessee" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Kentucky_logo.svg/1200px-University_of_Kentucky_logo.svg.png", answer: "kentucky" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Auburn_logo.svg/1200px-University_of_Auburn_logo.svg.png", answer: "auburn" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_LSU_logo.svg/1200px-University_of_LSU_logo.svg.png", answer: "lsu" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Arkansas_logo.svg/1200px-University_of_Arkansas_logo.svg.png", answer: "arkansas" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Mississippi_logo.svg/1200px-University_of_Mississippi_logo.svg.png", answer: "mississippi" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Missouri_logo.svg/1200px-University_of_Missouri_logo.svg.png", answer: "missouri" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Oklahoma_logo.svg/1200px-University_of_Oklahoma_logo.svg.png", answer: "oklahoma" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Kansas_logo.svg/1200px-University_of_Kansas_logo.svg.png", answer: "kansas" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Iowa_logo.svg/1200px-University_of_Iowa_logo.svg.png", answer: "iowa" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Minnesota_logo.svg/1200px-University_of_Minnesota_logo.svg.png", answer: "minnesota" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Indiana_logo.svg/1200px-University_of_Indiana_logo.svg.png", answer: "indiana" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Purdue_logo.svg/1200px-University_of_Purdue_logo.svg.png", answer: "purdue" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Ohio_State_logo.svg/1200px-University_of_Ohio_State_logo.svg.png", answer: "ohio state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Michigan_State_logo.svg/1200px-University_of_Michigan_State_logo.svg.png", answer: "michigan state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Penn_State_logo.svg/1200px-University_of_Penn_State_logo.svg.png", answer: "penn state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Rutgers_logo.svg/1200px-University_of_Rutgers_logo.svg.png", answer: "rutgers" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Maryland_logo.svg/1200px-University_of_Maryland_logo.svg.png", answer: "maryland" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Nebraska_logo.svg/1200px-University_of_Nebraska_logo.svg.png", answer: "nebraska" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Colorado_logo.svg/1200px-University_of_Colorado_logo.svg.png", answer: "colorado" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Arizona_logo.svg/1200px-University_of_Arizona_logo.svg.png", answer: "arizona" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Arizona_State_logo.svg/1200px-University_of_Arizona_State_logo.svg.png", answer: "arizona state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Utah_logo.svg/1200px-University_of_Utah_logo.svg.png", answer: "utah" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Oregon_logo.svg/1200px-University_of_Oregon_logo.svg.png", answer: "oregon" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Oregon_State_logo.svg/1200px-University_of_Oregon_State_logo.svg.png", answer: "oregon state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Washington_State_logo.svg/1200px-University_of_Washington_State_logo.svg.png", answer: "washington state" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Davis_logo.svg/1200px-University_of_California_Davis_logo.svg.png", answer: "uc davis" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_San_Diego_logo.svg/1200px-University_of_California_San_Diego_logo.svg.png", answer: "uc san diego" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Irvine_logo.svg/1200px-University_of_California_Irvine_logo.svg.png", answer: "uc irvine" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Santa_Barbara_logo.svg/1200px-University_of_California_Santa_Barbara_logo.svg.png", answer: "uc santa barbara" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Santa_Cruz_logo.svg/1200px-University_of_California_Santa_Cruz_logo.svg.png", answer: "uc santa cruz" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Riverside_logo.svg/1200px-University_of_California_Riverside_logo.svg.png", answer: "uc riverside" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Merced_logo.svg/1200px-University_of_California_Merced_logo.svg.png", answer: "uc merced" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_San_Francisco_logo.svg/1200px-University_of_California_San_Francisco_logo.svg.png", answer: "uc san francisco" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Los_Angeles_logo.svg/1200px-University_of_California_Los_Angeles_logo.svg.png", answer: "ucla" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Berkeley_logo.svg/1200px-University_of_California_Berkeley_logo.svg.png", answer: "berkeley" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Santa_Cruz_logo.svg/1200px-University_of_California_Santa_Cruz_logo.svg.png", answer: "uc santa cruz" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Davis_logo.svg/1200px-University_of_California_Davis_logo.svg.png", answer: "uc davis" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_San_Diego_logo.svg/1200px-University_of_California_San_Diego_logo.svg.png", answer: "uc san diego" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Irvine_logo.svg/1200px-University_of_California_Irvine_logo.svg.png", answer: "uc irvine" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Santa_Barbara_logo.svg/1200px-University_of_California_Santa_Barbara_logo.svg.png", answer: "uc santa barbara" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Riverside_logo.svg/1200px-University_of_California_Riverside_logo.svg.png", answer: "uc riverside" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_Merced_logo.svg/1200px-University_of_California_Merced_logo.svg.png", answer: "uc merced" },
+            { logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_California_San_Francisco_logo.svg/1200px-University_of_California_San_Francisco_logo.svg.png", answer: "uc san francisco" }
+        ];
+
+        // Game state variables
+        let score = 0;
+        let timeLeft = 100;
+        let timer;
+        let currentLogoIndex = 0;
+        let shuffledLogos = [];
+        let gameActive = false;
+
+        // DOM elements
+        const startBtn = document.getElementById('startBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const passBtn = document.getElementById('passBtn');
+        const guessInput = document.getElementById('guessInput');
+        const collegeLogo = document.getElementById('collegeLogo');
+        const logoDisplay = document.getElementById('logoDisplay');
+        const scoreEl = document.getElementById('score');
+        const timeEl = document.getElementById('time');
+        const progressBar = document.getElementById('progress-bar');
+        const messageEl = document.getElementById('message');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        // Initialize game
+        function initializeGame() {
+            score = 0;
+            timeLeft = 100;
+            currentLogoIndex = 0;
+            shuffledLogos = [...collegeLogos].sort(() => Math.random() - 0.5);
+            gameActive = false;
+            
+            scoreEl.textContent = score;
+            timeEl.textContent = timeLeft;
+            progressBar.style.width = '100%';
+            
+            messageEl.textContent = '';
+            messageEl.className = '';
+            
+            startBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+            passBtn.style.display = 'none';
+            guessInput.style.display = 'none';
+            playAgainBtn.style.display = 'none';
+            
+            collegeLogo.style.display = 'none';
+            logoDisplay.innerHTML = '<div style="font-size: 3rem; color: #ccc;">🏛️</div>';
+        }
+
+        // Start timer
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                progressBar.style.width = (timeLeft / 100 * 100) + '%';
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Stop timer
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        // Show current logo
+        function showCurrentLogo() {
+            if (currentLogoIndex < shuffledLogos.length) {
+                const currentLogo = shuffledLogos[currentLogoIndex];
+                collegeLogo.src = currentLogo.logo;
+                collegeLogo.style.display = 'block';
+                logoDisplay.innerHTML = '';
+                logoDisplay.appendChild(collegeLogo);
+            }
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            const userGuess = guessInput.value.trim().toLowerCase();
+            const currentLogo = shuffledLogos[currentLogoIndex];
+            const correctAnswer = currentLogo.answer;
+            
+            if (userGuess === correctAnswer || 
+                userGuess === correctAnswer.replace(' ', '') ||
+                userGuess === correctAnswer.replace('university of ', '') ||
+                userGuess === correctAnswer.replace('university', '') ||
+                userGuess === correctAnswer.replace('college', '') ||
+                (correctAnswer.includes('university') && userGuess === correctAnswer.replace('university', 'univ')) ||
+                (correctAnswer.includes('state') && userGuess === correctAnswer.replace('state', 'st'))) {
+                
+                score++;
+                scoreEl.textContent = score;
+                messageEl.textContent = `Correct! +1 point`;
+                messageEl.className = 'correct';
+            } else {
+                messageEl.textContent = `Incorrect. The answer was: ${correctAnswer}`;
+                messageEl.className = 'incorrect';
+            }
+            
+            setTimeout(() => {
+                nextLogo();
+            }, 1500);
+        }
+
+        // Pass question
+        function passQuestion() {
+            const currentLogo = shuffledLogos[currentLogoIndex];
+            messageEl.textContent = `The answer was: ${currentLogo.answer}`;
+            messageEl.className = 'reveal';
+            
+            setTimeout(() => {
+                nextLogo();
+            }, 1500);
+        }
+
+        // Move to next logo
+        function nextLogo() {
+            currentLogoIndex++;
+            guessInput.value = '';
+            messageEl.textContent = '';
+            messageEl.className = '';
+            
+            if (currentLogoIndex < shuffledLogos.length) {
+                showCurrentLogo();
+            } else {
+                // Shuffle again if we've gone through all logos
+                shuffledLogos = [...collegeLogos].sort(() => Math.random() - 0.5);
+                currentLogoIndex = 0;
+                showCurrentLogo();
+            }
+        }
+
+        // End game
+        function endGame() {
+            stopTimer();
+            gameActive = false;
+            
+            // Save high score
+            const currentHighScore = localStorage.getItem('collegeLogoHighScore') || 0;
+            if (score > currentHighScore) {
+                localStorage.setItem('collegeLogoHighScore', score);
+                messageEl.innerHTML = `<div class="high-score">🎉 New High Score: ${score}!</div>`;
+            } else {
+                messageEl.innerHTML = `<div>Game Over! Final Score: ${score}</div>`;
+            }
+            
+            submitBtn.style.display = 'none';
+            passBtn.style.display = 'none';
+            guessInput.style.display = 'none';
+            playAgainBtn.style.display = 'inline-block';
+            
+            collegeLogo.style.display = 'none';
+            logoDisplay.innerHTML = '<div style="font-size: 3rem; color: #ccc;">🏛️</div>';
+        }
+
+        // Reset game
+        function resetGame() {
+            initializeGame();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', () => {
+            gameActive = true;
+            startBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+            passBtn.style.display = 'inline-block';
+            guessInput.style.display = 'block';
+            
+            showCurrentLogo();
+            startTimer();
+        });
+
+        submitBtn.addEventListener('click', submitAnswer);
+        passBtn.addEventListener('click', passQuestion);
+        playAgainBtn.addEventListener('click', resetGame);
+
+        guessInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && gameActive) {
+                submitAnswer();
+            }
+        });
+
+        // Initialize game on load
+        initializeGame();
+    </script>
+</body>
+</html> 

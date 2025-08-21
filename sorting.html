@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Falling Names: Actor / Singer / Athlete</title>
+<style>
+  :root {
+    --bg: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+    --panel: rgba(255,255,255,0.95);
+    --text: #333333;
+    --good: #22c55e;
+    --bad: #ef4444;
+    --accent: #2a5a8a;
+    --highlight: #ffd54f;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji"; }
+
+  /* Nav copied to match index */
+  nav[aria-label="Primary"]{
+    position: sticky; top: 0; z-index: 10; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding: 10px 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-links a{ color:#333; text-decoration:none; font-weight:700; margin-right:14px }
+  .nav-links a:hover{ text-decoration:underline }
+  .nav-actions{ display:flex; align-items:center; gap:10px }
+  .search-bar{ min-width:200px; height:36px; padding:6px 12px; border-radius:999px; border:1px solid rgba(0,0,0,0.12) }
+  .btn{ background:#2a5a8a; color:#fff; border:none; padding:8px 14px; border-radius:999px; font-weight:800; cursor:pointer }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 12px 16px 24px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+  h1 { font-size: clamp(18px, 2.4vw, 24px); margin: 0; letter-spacing:.3px; color:#ffffff;}
+  .controls { display:flex; gap:8px; flex-wrap:wrap;}
+  button {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform .06s ease, background .2s ease, border .2s ease;
+  }
+  button:hover { transform: translateY(-1px); background:#ffffff; }
+  button.primary { background: #2a5a8a; color:#fff; border-color: #2a5a8a; }
+  button.primary:hover { background:#2f66a6; }
+  .hud {
+    display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.08); padding: 8px 12px; border-radius: 12px;
+  }
+  .stat { font-weight:700; }
+  .canvas-shell {
+    position: relative; margin-top: 12px; border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.08); background: #2a5a8a;
+  }
+  #game { display:block; width:100%; height:520px; }
+  .help {
+    margin-top:10px; font-size: 14px; opacity:.85; line-height:1.5; color:#ffffff;
+  }
+  .pill { padding: 2px 8px; border-radius: 999px; background:#ffffff; border:1px solid rgba(0,0,0,0.08); font-weight:800; color:#0f172a;}
+  .flash {
+    position:absolute; inset:0; pointer-events:none; opacity:0;
+    transition: opacity .25s ease;
+  }
+  .flash.good { background: rgba(34,197,94,0.16); }
+  .flash.bad  { background: rgba(239,68,68,0.16); }
+  .toast {
+    position:absolute; top:12px; right:12px;
+    background: rgba(255,255,255,0.95); border:1px solid rgba(0,0,0,0.08); padding:8px 12px; border-radius:10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    font-weight:700; opacity:0; transform: translateY(-6px); transition: all .25s ease; color:#333;
+  }
+  .toast.show { opacity:1; transform: translateY(0); }
+</style>
+</head>
+<body>
+  <nav aria-label="Primary">
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games…" aria-label="Search games">
+      <button class="btn">Login</button>
+    </div>
+  </nav>
+<div class="wrap">
+  <header>
+    <h1>Falling Names — Sort into <span class="pill">Actor</span> / <span class="pill">Singer</span> / <span class="pill">Athlete</span></h1>
+    <div class="controls">
+      <button id="startBtn" class="primary">Start</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </header>
+
+  <div class="hud">
+    <div class="stat">Score: <span id="score">0</span></div>
+    <div class="stat">Streak: <span id="streak">0</span></div>
+    <div class="stat">Lives: <span id="lives">3</span></div>
+    <div>Speed: <span id="speed">1.0x</span></div>
+    <div style="opacity:.8">Use <b>← →</b> to select a bin, <b>Enter</b> to submit. <b>Click a bin</b> to submit immediately.</div>
+  </div>
+
+  <div class="canvas-shell">
+    <canvas id="game" width="960" height="520" aria-label="Game canvas"></canvas>
+    <div id="flashGood" class="flash good"></div>
+    <div id="flashBad" class="flash bad"></div>
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <div class="help">
+    <b>Rules:</b> Names fall from the top. Pick the correct bin before it lands. If you don’t submit, your highlighted bin will be used when it hits bottom.  
+    <b>Shortcuts:</b> Space = pause/resume, R = reset.
+  </div>
+</div>
+
+<script>
+(() => {
+  // --- Data ----------------------------------------------------------
+  const ACTORS = [
+  "Tom Hanks",
+  "Meryl Streep",
+  "Denzel Washington",
+  "Zendaya",
+  "Leonardo DiCaprio",
+  "Ryan Gosling",
+  "Emma Stone",
+  "Robert De Niro",
+  "Scarlett Johansson",
+  "Keanu Reeves",
+  "Florence Pugh",
+  "Timothée Chalamet",
+  "Jennifer Lawrence",
+  "Angela Bassett",
+  "Cillian Murphy",
+  "Brad Pitt",
+  "Natalie Portman",
+  "Viola Davis",
+  "Christian Bale",
+  "Cate Blanchett",
+  "Hugh Jackman",
+  "Anne Hathaway",
+  "Matt Damon",
+  "Ben Affleck",
+  "Nicole Kidman",
+  "Joaquin Phoenix",
+  "Amy Adams",
+  "Samuel L. Jackson",
+  "Charlize Theron",
+  "Michael B. Jordan",
+  "Gal Gadot",
+  "Chris Hemsworth",
+  "Chris Evans",
+  "Mark Ruffalo",
+  "Benedict Cumberbatch",
+  "Robert Downey Jr.",
+  "Morgan Freeman",
+  "Julia Roberts",
+  "Sandra Bullock",
+  "Harrison Ford",
+  "Will Smith",
+  "Jason Momoa",
+  "Pedro Pascal",
+  "Oscar Isaac",
+  "Adam Driver",
+  "Daisy Ridley",
+  "Lupita Nyong'o",
+  "Daniel Kaluuya",
+  "Brie Larson",
+  "Mahershala Ali",
+  "Rami Malek",
+  "Emily Blunt",
+  "John Krasinski",
+  "Paul Rudd",
+  "Evangeline Lilly",
+  "Salma Hayek",
+  "Antonio Banderas",
+  "Dev Patel",
+  "Daniel Craig",
+  "Hugh Grant",
+  "Taron Egerton",
+  "Tilda Swinton",
+  "Forest Whitaker",
+  "Regina King",
+  "Jodie Comer",
+  "Jodie Foster",
+  "Rosamund Pike",
+  "Anya Taylor-Joy",
+  "Millie Bobby Brown",
+  "Winona Ryder",
+  "Helena Bonham Carter",
+  "Gary Oldman",
+  "Colin Firth",
+  "Rachel Weisz",
+  "Adam Sandler",
+  "Jack Black",
+  "Saoirse Ronan",
+  "Margot Robbie",
+  "Ryan Reynolds",
+  "Chadwick Boseman",
+  "Brendan Fraser",
+  "Michelle Yeoh",
+  "Jamie Lee Curtis",
+  "Austin Butler",
+  "Paul Mescal",
+  "Barry Keoghan",
+  "Greta Gerwig",
+  "Lily Gladstone",
+  "Awkwafina",
+  "Daniel Radcliffe",
+  "Emma Watson",
+  "Rupert Grint",
+  "Keira Knightley",
+  "Orlando Bloom",
+  "Viggo Mortensen",
+  "Ian McKellen",
+  "Andy Serkis",
+  "Zoe Saldana",
+  "Sigourney Weaver",
+  "David Harbour",
+  "Millie Alcock",
+  "Bella Ramsey",
+  "Pedro Alonso",
+  "Riz Ahmed"
+];
+
+const SINGERS = [
+  "Taylor Swift",
+  "Beyoncé",
+  "Ed Sheeran",
+  "Ariana Grande",
+  "The Weeknd",
+  "Rihanna",
+  "Bruno Mars",
+  "Billie Eilish",
+  "Olivia Rodrigo",
+  "Drake",
+  "Harry Styles",
+  "Dua Lipa",
+  "Bad Bunny",
+  "SZA",
+  "Post Malone",
+  "Justin Bieber",
+  "Katy Perry",
+  "Lady Gaga",
+  "Adele",
+  "Sam Smith",
+  "Shawn Mendes",
+  "Selena Gomez",
+  "Demi Lovato",
+  "Nicki Minaj",
+  "Cardi B",
+  "Miley Cyrus",
+  "Kendrick Lamar",
+  "J. Cole",
+  "Travis Scott",
+  "Lil Nas X",
+  "Doja Cat",
+  "Lil Baby",
+  "Future",
+  "21 Savage",
+  "Lizzo",
+  "Khalid",
+  "Camila Cabello",
+  "Halsey",
+  "Lorde",
+  "Zayn",
+  "Niall Horan",
+  "Charlie Puth",
+  "Meghan Trainor",
+  "Jason Derulo",
+  "Ne-Yo",
+  "Usher",
+  "Alicia Keys",
+  "Chris Brown",
+  "Mary J. Blige",
+  "Kelly Clarkson",
+  "P!nk",
+  "Christina Aguilera",
+  "Jennifer Lopez",
+  "Ellie Goulding",
+  "Calvin Harris",
+  "Rita Ora",
+  "Zara Larsson",
+  "Becky G",
+  "Shakira",
+  "Enrique Iglesias",
+  "Maluma",
+  "Karol G",
+  "Anitta",
+  "Rosalía",
+  "Ozuna",
+  "J Balvin",
+  "The Kid LAROI",
+  "Sia",
+  "Lana Del Rey",
+  "AURORA",
+  "Rauw Alejandro",
+  "Feid",
+  "Luis Fonsi",
+  "Daddy Yankee",
+  "Nicky Jam",
+  "Farruko",
+  "Sech",
+  "Peso Pluma",
+  "Manuel Turizo",
+  "Anuel AA",
+  "David Guetta",
+  "Tiesto",
+  "Marshmello",
+  "Zedd",
+  "Avicii",
+  "Chris Martin",
+  "Adam Levine",
+  "Matty Healy",
+  "Hayley Williams",
+  "Florence Welch",
+  "Elton John",
+  "Paul McCartney",
+  "Bruce Springsteen",
+  "Stevie Wonder",
+  "Lionel Richie",
+  "Phil Collins",
+  "Celine Dion",
+  "Whitney Houston",
+  "Mariah Carey",
+  "Janet Jackson"
+];
+const ATHLETES = [
+  "LeBron James","Serena Williams","Simone Biles","Lionel Messi","Cristiano Ronaldo",
+  "Roger Federer","Rafael Nadal","Novak Djokovic","Naomi Osaka","Michael Phelps",
+  "Usain Bolt","Tiger Woods","Tom Brady","Peyton Manning","Stephen Curry",
+  "Kevin Durant","Giannis Antetokounmpo","Kylian Mbappé","Zlatan Ibrahimović","Virat Kohli",
+  "Sachin Tendulkar","AB de Villiers","Mithali Raj","Sunisa Lee","Chloe Kim",
+  "Shaun White","Mikaela Shiffrin","Kelly Slater","Tony Hawk","Lewis Hamilton",
+  "Max Verstappen","Sebastian Vettel","Valentino Rossi","Conor McGregor","Ronda Rousey",
+  "Khabib Nurmagomedov","Israel Adesanya","Amanda Nunes","Michelle Kwan","Alex Morgan",
+  "Megan Rapinoe","Erling Haaland","Luka Dončić","Nikola Jokić","Shohei Ohtani",
+  "Aaron Judge","Patrick Mahomes","Katie Ledecky","Simone Manuel","Rory McIlroy",
+  "Brooks Koepka","Dustin Johnson","Jordan Spieth","Damian Lillard","Kawhi Leonard",
+  "James Harden","Kyler Murray","Jalen Hurts","Joe Burrow","Josh Allen",
+  "Brock Purdy","Sidney Crosby","Alex Ovechkin","Connor McDavid","Novak Djokovic",
+  "Iga Świątek","Coco Gauff","Emma Raducanu","Carlos Alcaraz","Casper Ruud",
+  "Suni Lee","Allyson Felix","Shelly-Ann Fraser-Pryce","Yulimar Rojas","Armand Duplantis",
+  "Sydney McLaughlin-Levrone","Noah Lyles","Grant Holloway","Karsten Warholm","Eliud Kipchoge",
+  "Mo Farah","Eileen Gu","Nathan Chen","Yuzuru Hanyu","Neeraj Chopra",
+  "PV Sindhu","Sun Yang","Ian Thorpe","Neymar","Antoine Griezmann",
+  "Robert Lewandowski","Sergio Ramos","Manuel Neuer","Virgil van Dijk","Harry Kane",
+  "Kevin De Bruyne","Sadio Mané","Didier Drogba","Mesut Özil","Carli Lloyd"
+];
+
+  // Build a map of name -> Set(categories) so some names can belong to multiple
+  const NAME_TO_CATS = new Map();
+  function addName(name, cat){
+    const set = NAME_TO_CATS.get(name) || new Set();
+    set.add(cat);
+    NAME_TO_CATS.set(name, set);
+  }
+  ACTORS.forEach(n => addName(n, "Actor"));
+  SINGERS.forEach(n => addName(n, "Singer"));
+  ATHLETE.forEach(n => addName(n, "Athlete"));
+
+  // Explicit multi-category overrides
+  addName("Ariana Grande", "Actor"); // singer and actor
+  addName("Zendaya", "Singer");      // actor and singer
+  addName("Taylor Swift", "Actor");
+addName("Beyoncé", "Actor");
+addName("Billie Eilish", "Actor");
+addName("Olivia Rodrigo", "Actor");
+addName("Rihanna", "Actor");
+addName("Lady Gaga", "Actor");
+addName("Jennifer Lopez", "Actor");
+addName("Harry Styles", "Actor");
+addName("Drake", "Actor");
+addName("Camila Cabello", "Actor");
+addName("The Weeknd", "Actor");
+addName("Justin Bieber", "Actor");
+addName("Nicki Minaj", "Actor");
+addName("Cardi B", "Actor");
+addName("Usher", "Actor");
+addName("Alicia Keys", "Actor");
+addName("Mary J. Blige", "Actor");
+addName("Kelly Clarkson", "Actor");
+addName("Christina Aguilera", "Actor");
+addName("P!nk", "Actor");
+addName("Bruno Mars", "Actor");
+addName("Shakira", "Actor");
+addName("Selena Gomez", "Actor");
+addName("Demi Lovato", "Actor");
+addName("Katy Perry", "Actor");
+addName("Halsey", "Actor");
+addName("Ed Sheeran", "Actor");
+addName("Sia", "Actor");
+
+// Actors who also sing
+addName("Will Smith", "Singer");
+addName("Hugh Jackman", "Singer");
+addName("Jack Black", "Singer");
+addName("Ryan Gosling", "Singer");
+addName("Emma Stone", "Singer");
+addName("Taron Egerton", "Singer");
+addName("Scarlett Johansson", "Singer");
+addName("Keira Knightley", "Singer");
+addName("Daniel Radcliffe", "Singer");
+addName("Emma Watson", "Singer");
+addName("Oscar Isaac", "Singer");
+addName("Awkwafina", "Singer");
+addName("Riz Ahmed", "Singer");
+
+// Athletes who also act
+addName("LeBron James", "Actor");
+addName("Serena Williams", "Actor");
+addName("Ronda Rousey", "Actor");
+addName("Conor McGregor", "Actor");
+addName("Neymar", "Actor");
+addName("Tom Brady", "Actor");
+addName("Peyton Manning", "Actor");
+addName("Tony Hawk", "Actor");
+addName("Lewis Hamilton", "Actor");
+addName("Alex Morgan", "Actor");
+addName("Kevin Durant", "Actor");
+
+  const BANK = Array.from(NAME_TO_CATS.entries()).map(([name, set]) => ({
+    name,
+    cats: Array.from(set) // e.g., ["Singer","Actor"]
+  }));
+
+const state = {
+  running: false,
+  paused: false,
+  score: 0,
+  streak: 0,
+  lives: 3,
+  speedMult: 1,
+  selectedBin: 1, // center bin
+  current: null,
+  bins: [],
+  lastTime: 0,
+};
+
+// --- Canvas & layout ---
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+function layoutBins() {
+  const { width, height } = canvas;
+  const binHeight = Math.floor(height * 0.22);
+  const binY = height - binHeight;
+  const binW = Math.floor(width / 3);
+  state.bins = [
+    { x: 0,      y: binY, w: binW,      h: binHeight, label: "Actor"  },
+    { x: binW,   y: binY, w: binW,      h: binHeight, label: "Singer" },
+    { x: binW*2, y: binY, w: width-binW*2, h: binHeight, label: "Athlete" },
+  ];
+}
+
+function binCenterX(idx) {
+  const b = state.bins[idx];
+  return b.x + b.w / 2;
+}
+
+function resizeCanvas() {
+  const shell = canvas.parentElement;
+  const w = shell.clientWidth;
+  const h = Math.max(420, Math.min(620, Math.round(w * 0.54)));
+  canvas.width = w;
+  canvas.height = h;
+  layoutBins();
+  // Retarget current falling item to the new center of the selected bin on resize
+  if (state.current) state.current.tx = binCenterX(state.selectedBin);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // now safe: state exists
+
+
+
+  // --- UI elements ---------------------------------------------------
+  const scoreEl = document.getElementById('score');
+  const streakEl = document.getElementById('streak');
+  const livesEl  = document.getElementById('lives');
+  const speedEl  = document.getElementById('speed');
+  const startBtn = document.getElementById('startBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const flashGood = document.getElementById('flashGood');
+  const flashBad  = document.getElementById('flashBad');
+  const toast = document.getElementById('toast');
+
+  function setToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 900);
+  }
+
+  function flash(which) {
+    const el = which === 'good' ? flashGood : flashBad;
+    el.style.opacity = 1;
+    setTimeout(()=> el.style.opacity = 0, 180);
+  }
+
+  // --- Helpers -------------------------------------------------------
+  function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function spawnItem() {
+    const pick = randChoice(BANK);
+    const x = binCenterX(state.selectedBin); // center above selected bin
+    const y = -20;
+    const fallBase = 80; // pixels per second (slower base)
+    const speed = fallBase * state.speedMult;
+    state.current = {
+      text: pick.name,
+      cats: pick.cats,
+      x, y, vy: speed,
+      tx: x // target x used for easing when bin selection changes
+    };
+  }
+
+  function isCorrectSelection(selectedLabel, item){
+    if (item && Array.isArray(item.cats)) return item.cats.includes(selectedLabel);
+    if (item && typeof item.cat === 'string') return item.cat === selectedLabel;
+    return false;
+  }
+
+  function adjustDifficulty(correct) {
+    // scoring & lives
+    if (correct) {
+      state.streak++;
+      state.score += 10 + Math.min(40, state.streak*2);
+    } else {
+      state.streak = 0;
+      state.lives--;
+    }
+    // speed progression: increase by 0.05 after every name (no cap)
+    state.speedMult = state.speedMult + 0.05;
+    updateHud();
+  }
+
+  function updateHud() {
+    scoreEl.textContent = state.score;
+    streakEl.textContent = state.streak;
+    livesEl.textContent = state.lives;
+    speedEl.textContent = state.speedMult.toFixed(1) + 'x';
+  }
+
+  function resetGame() {
+    state.running = false;
+    state.paused = false;
+    state.score = 0;
+    state.streak = 0;
+    state.lives = 3;
+    state.speedMult = 1;
+    state.selectedBin = 1;
+    state.current = null;
+    state.lastTime = 0;
+    updateHud();
+    draw(); // clear
+  }
+
+  // --- Input ---------------------------------------------------------
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === ' '){ // pause/resume
+      e.preventDefault();
+      if (!state.running) return;
+      state.paused = !state.paused;
+      setToast(state.paused ? 'Paused' : 'Resumed');
+      return;
+    }
+    if (e.key.toLowerCase() === 'r'){
+      resetGame();
+      start();
+      return;
+    }
+    if (!state.running || state.paused) return;
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      state.selectedBin = Math.max(0, state.selectedBin - 1);
+      if (state.current) state.current.tx = binCenterX(state.selectedBin);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      state.selectedBin = Math.min(2, state.selectedBin + 1);
+      if (state.current) state.current.tx = binCenterX(state.selectedBin);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      submitSelection();
+    }
+  });
+
+  canvas.addEventListener('click', (e)=>{
+    if (!state.running) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const binIdx = state.bins.findIndex(b => x>=b.x && x<=b.x+b.w && y>=b.y && y<=b.y+b.h);
+    if (binIdx !== -1) {
+      state.selectedBin = binIdx;
+      if (state.current) state.current.tx = binCenterX(state.selectedBin);
+      submitSelection(); // click = submit immediately
+    }
+  });
+
+  function submitSelection() {
+    if (!state.current) return;
+    const selectedLabel = state.bins[state.selectedBin].label;
+    const correct = isCorrectSelection(selectedLabel, state.current);
+    adjustDifficulty(correct);
+    flash(correct ? 'good' : 'bad');
+    if (state.lives <= 0) { gameOver(); return; }
+    spawnItem();
+  }
+
+  // --- Game Loop -----------------------------------------------------
+  function start() {
+    if (state.running) return;
+    state.running = true;
+    state.paused = false;
+    updateHud();
+    spawnItem();
+    state.lastTime = performance.now();
+    requestAnimationFrame(tick);
+  }
+
+  function tick(ts) {
+    if (!state.running) return;
+    const dt = Math.min(0.05, (ts - state.lastTime) / 1000); // cap delta
+    state.lastTime = ts;
+    if (!state.paused) {
+      update(dt);
+      draw();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function update(dt) {
+    if (!state.current) return;
+    state.current.y += state.current.vy * dt;
+    // Smoothly ease horizontally toward the selected bin's center
+    if (typeof state.current.tx === 'number') {
+      const ease = Math.min(1, dt * 6); // responsive easing factor
+      state.current.x += (state.current.tx - state.current.x) * ease;
+    }
+
+    // Auto-judge on floor contact
+    const floorY = state.bins[0].y;
+    if (state.current.y >= floorY) {
+      // Use current highlighted bin
+      const selectedLabel = state.bins[state.selectedBin].label;
+      const correct = isCorrectSelection(selectedLabel, state.current);
+      adjustDifficulty(correct);
+      flash(correct ? 'good' : 'bad');
+
+      // Out of lives?
+      if (state.lives <= 0) {
+        gameOver();
+        return;
+      }
+      // ensure newly spawned item uses the updated multiplier
+      spawnItem();
+    }
+  }
+
+  function gameOver() {
+    state.running = false;
+    draw(true);
+    setToast('Game Over — press Start to try again');
+  }
+
+  // --- Rendering -----------------------------------------------------
+  function draw(showGameOver=false) {
+    const { width:w, height:h } = canvas;
+
+    // background
+    ctx.clearRect(0,0,w,h);
+    const grd = ctx.createLinearGradient(0,0,0,h);
+    grd.addColorStop(0, "#3b7bbf");
+    grd.addColorStop(1, "#2a5a8a");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,w,h);
+
+    // falling item
+    if (state.current) {
+      ctx.save();
+      ctx.fillStyle = "#e5e7ff";
+      // smaller, with max width and dynamic font to avoid edge clipping
+      const base = Math.max(16, Math.round(w * 0.032));
+      ctx.font = `bold ${base}px Inter, system-ui, Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // subtle shadow
+      ctx.shadowColor = "rgba(0,0,0,.45)";
+      ctx.shadowBlur = 8;
+      // clamp horizontal position to keep full text visible
+      const margin = Math.max(24, Math.round(w * 0.06));
+      const clampedX = Math.max(margin, Math.min(w - margin, state.current.x));
+      ctx.fillText(state.current.text, clampedX, state.current.y);
+      ctx.restore();
+    } else {
+      // idle text
+      ctx.save();
+      ctx.fillStyle = "rgba(255,255,255,.82)";
+      ctx.font = `600 ${Math.max(18, Math.round(w*0.03))}px Inter, system-ui, Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText("Press Start to play", w/2, h*0.35);
+      ctx.restore();
+    }
+
+    // bins
+    state.bins.forEach((b, i) => {
+      const isSel = (i === state.selectedBin);
+      // base
+      ctx.save();
+      // darker versions of site blue for bins
+      const binBase = "#224c86"; // darker than #2a5a8a
+      const binSel  = "#1e4174";
+      ctx.fillStyle = isSel ? binSel : binBase;
+      ctx.strokeStyle = isSel ? "#ffd54f" : "#365a93";
+      ctx.lineWidth = isSel ? 3 : 2;
+      roundRect(ctx, b.x+6, b.y+6, b.w-12, b.h-12, 14, true, true);
+
+      // label
+      ctx.fillStyle = isSel ? "#ffd38a" : "#c9cff9";
+      ctx.font = `800 ${Math.max(16, Math.round(w*0.022))}px Inter, system-ui, Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(b.label, b.x + b.w/2, b.y + b.h/2);
+
+      // highlight glow
+      if (isSel) {
+        ctx.strokeStyle = "rgba(245,158,11,.45)";
+        ctx.lineWidth = 8;
+        roundRect(ctx, b.x+3, b.y+3, b.w-6, b.h-6, 16, false, true);
+      }
+      ctx.restore();
+    });
+
+    // divider lines
+    ctx.save();
+    ctx.strokeStyle = "#2b3163";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(state.bins[1].x, state.bins[1].y+10);
+    ctx.lineTo(state.bins[1].x, h-10);
+    ctx.moveTo(state.bins[2].x, state.bins[2].y+10);
+    ctx.lineTo(state.bins[2].x, h-10);
+    ctx.stroke();
+    ctx.restore();
+
+    if (showGameOver) {
+      ctx.save();
+      ctx.fillStyle = "rgba(10,12,24,.75)";
+      ctx.fillRect(0,0,w,h);
+      ctx.fillStyle = "#fff";
+      ctx.font = `800 ${Math.max(24, Math.round(w*0.05))}px Inter, system-ui, Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText("Game Over", w/2, h*0.38);
+      ctx.font = `600 ${Math.max(14, Math.round(w*0.025))}px Inter, system-ui, Arial`;
+      ctx.fillText("Press Start to play again", w/2, h*0.48);
+      ctx.restore();
+    }
+  }
+
+  function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+    if (w < 2*r) r = w/2;
+    if (h < 2*r) r = h/2;
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y,   x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x,   y+h, r);
+    ctx.arcTo(x,   y+h, x,   y,   r);
+    ctx.arcTo(x,   y,   x+w, y,   r);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }
+
+  // --- Buttons -------------------------------------------------------
+  startBtn.addEventListener('click', () => { if (!state.running) { start(); }});
+  pauseBtn.addEventListener('click', () => {
+    if (!state.running) return;
+    state.paused = !state.paused;
+    setToast(state.paused ? 'Paused' : 'Resumed');
+  });
+  resetBtn.addEventListener('click', () => { resetGame(); });
+
+  // Initial draw
+  resetGame();
+})();
+</script>
+</body>
+</html>
