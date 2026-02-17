@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Books of the Bible - Guessing Games</title>
+  <link rel="icon" href="/favicongg.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #333;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-links a {
+      color: #333;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: #3b7bbf; }
+    .nav-actions { display: flex; align-items: center; gap: 15px; }
+    .search-bar {
+      padding: 8px 16px 8px 36px;
+      height: 40px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #333;
+      font-size: 0.95rem;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      transition: border-color 0.3s;
+    }
+    .search-bar:focus { outline: none; border-color: #3b7bbf; }
+    .login-btn {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3); }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      padding: 34px 30px;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    header p {
+      font-size: 1.15rem;
+      color: #666;
+      font-weight: 400;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .game-wrap {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .top-row {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f3f7fb;
+      border: 1px solid rgba(0,0,0,0.06);
+      font-weight: 700;
+      color: #234d7d;
+    }
+    .pill i { color: #3b7bbf; }
+
+    .lives {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff6f6;
+      border: 1px solid rgba(0,0,0,0.06);
+      font-weight: 700;
+      color: #8a2a2a;
+    }
+    .heart {
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      transform: rotate(45deg);
+      background: #e74c3c;
+      position: relative;
+      border-radius: 2px;
+      box-shadow: 0 1px 4px rgba(231, 76, 60, 0.25);
+    }
+    .heart:before, .heart:after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #e74c3c;
+      border-radius: 50%;
+    }
+    .heart:before { left: -6px; top: 0; }
+    .heart:after { left: 0; top: -6px; }
+    .heart.off, .heart.off:before, .heart.off:after { background: #c7c7c7; box-shadow: none; }
+
+    .verse-card {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      border-radius: 18px;
+      padding: 22px;
+      color: white;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+      border: 2px solid rgba(255,255,255,0.65);
+      margin-bottom: 18px;
+    }
+    .verse-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+    .verse-text {
+      font-size: 1.25rem;
+      line-height: 1.75;
+      font-weight: 600;
+      letter-spacing: 0.1px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    /* Autocomplete wrapper */
+    .autocomplete {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .guess-input {
+      width: 100%;
+      padding: 12px 14px;
+      height: 48px;
+      border-radius: 14px;
+      border: 2px solid #e0e0e0;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .guess-input:focus {
+      border-color: #3b7bbf;
+      box-shadow: 0 6px 18px rgba(59,123,191,0.18);
+    }
+
+    /* Suggestions dropdown */
+    .suggest-box {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 54px;
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 14px;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+      overflow: hidden;
+      max-height: 260px;
+      overflow-y: auto;
+      display: none;
+      z-index: 20;
+    }
+    .suggest-item {
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #234d7d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .suggest-item:hover,
+    .suggest-item.active {
+      background: #f3f7fb;
+    }
+    .suggest-muted {
+      font-weight: 600;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .btn {
+      height: 48px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      font-size: 0.98rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+      color: white;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.14);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 22px rgba(0,0,0,0.18); }
+    .btn-ghost {
+      background: #f3f7fb;
+      color: #234d7d;
+      border: 2px solid rgba(35,77,125,0.12);
+    }
+    .btn-ghost:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.10); }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: #f7fbff;
+      color: #234d7d;
+      font-weight: 700;
+      display: none;
+    }
+    .feedback.good { background: #f2fff6; color: #1e6b3d; }
+    .feedback.bad  { background: #fff2f2; color: #8a2a2a; }
+
+    .mini-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .small-note { color: #666; font-weight: 600; font-size: 0.95rem; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999;
+    }
+    .modal {
+      width: min(560px, 96vw);
+      background: rgba(255,255,255,0.98);
+      border-radius: 20px;
+      padding: 22px;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    .modal h2 {
+      font-size: 1.9rem;
+      margin-bottom: 8px;
+      background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+    }
+    .modal p { color: #555; font-weight: 600; line-height: 1.6; margin-bottom: 14px; }
+    .modal .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+    .stat-box {
+      background: #f3f7fb;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: left;
+    }
+    .stat-box .k { font-size: 0.9rem; color: #666; font-weight: 700; }
+    .stat-box .v { font-size: 1.4rem; color: #234d7d; font-weight: 900; margin-top: 2px; }
+    .modal .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    footer {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      color: #333;
+      text-align: center;
+      padding: 20px;
+      margin-top: auto;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    footer a { color: #3b7bbf; text-decoration: none; margin: 0 10px; font-weight: 600; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      header h1 { font-size: 2.2rem; }
+      header p { font-size: 1.05rem; }
+      .verse-text { font-size: 1.1rem; }
+      .modal .stats-grid { grid-template-columns: 1fr; }
+      nav { padding: 14px 16px; }
+      .nav-links a { margin: 0 10px; }
+      .main-content { padding: 26px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/allgames.html">Games</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" class="search-bar" placeholder="Search games...">
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <header>
+    <h1>📚 Books of the Bible</h1>
+    <p>You’ll see a verse. Your job: guess which <b>book</b> it’s from. Keep your <b>streak</b> alive — you get <b>3 lives</b>. Miss 3 times and you’re out.</p>
+  </header>
+
+  <div class="main-content">
+    <div class="game-wrap">
+      <div class="top-row">
+        <div class="pill" title="Your current streak">
+          <i class="fas fa-fire"></i>
+          Streak: <span id="streak">0</span>
+        </div>
+        <div class="pill" title="Your best streak (saved)">
+          <i class="fas fa-trophy"></i>
+          Best: <span id="bestStreak">0</span>
+        </div>
+        <div class="pill" title="Total correct this run">
+          <i class="fas fa-check-circle"></i>
+          Correct: <span id="correct">0</span>
+        </div>
+        <div class="lives" title="You have 3 lives">
+          Lives:
+          <span class="heart" id="h1"></span>
+          <span class="heart" id="h2"></span>
+          <span class="heart" id="h3"></span>
+        </div>
+      </div>
+
+      <div class="verse-card">
+        <div class="verse-tag">
+          <i class="fas fa-scroll"></i>
+          Guess the book
+        </div>
+
+        <div class="verse-text" id="verseText">Loading verse…</div>
+
+        <div class="input-row">
+          <div class="autocomplete">
+            <input
+              id="guessInput"
+              class="guess-input"
+              type="text"
+              placeholder="Type a Bible book (e.g., Genesis, John, Romans, etc.)"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div id="suggestBox" class="suggest-box"></div>
+          </div>
+
+          <button class="btn btn-primary" id="submitBtn">
+            <i class="fas fa-paper-plane"></i> Submit
+          </button>
+          <button class="btn btn-ghost" id="skipBtn" title="Skip (streak resets)">
+            <i class="fas fa-forward"></i> Skip
+          </button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="mini-row">
+          <div class="small-note" id="lastAnswerNote" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="mini-row">
+        <button class="btn btn-ghost" id="resetBtn">
+          <i class="fas fa-redo"></i> Reset Run
+        </button>
+        <div class="small-note">Goal: don’t break the chain. 🔥</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Game Over</h2>
+      <p id="gameOverMsg">You’re out of lives.</p>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="k">Run streak</div>
+          <div class="v" id="mStreak">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="k">Best streak</div>
+          <div class="v" id="mBest">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="k">Correct answers</div>
+          <div class="v" id="mCorrect">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="k">Last verse answer</div>
+          <div class="v" id="mLast">—</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="playAgainBtn">
+          <i class="fas fa-play"></i> Play Again
+        </button>
+        <button class="btn btn-ghost" id="closeModalBtn">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 Guessing Games |
+    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
+    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
+    <a href="https://www.tiktok.com/@ColbyMartel">TikTok</a>
+  </footer>
+
+  <script>
+    // ---- Canonical Books ----
+    const BOOKS = [
+      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
+      "Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings",
+      "1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms",
+      "Proverbs","Ecclesiastes","Song of Songs","Isaiah","Jeremiah","Lamentations",
+      "Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum",
+      "Habakkuk","Zephaniah","Haggai","Zechariah","Malachi",
+      "Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians",
+      "Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians",
+      "1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter",
+      "1 John","2 John","3 John","Jude","Revelation"
+    ];
+
+    // Optional aliases users might type
+    const ALIASES = new Map([
+      ["psalm", "Psalms"],
+      ["psalms", "Psalms"],
+      ["song of solomon", "Song of Songs"],
+      ["song of songs", "Song of Songs"],
+      ["canticles", "Song of Songs"],
+      ["revelations", "Revelation"],
+      ["rev", "Revelation"],
+      ["gen", "Genesis"],
+      ["ex", "Exodus"],
+      ["lev", "Leviticus"],
+      ["num", "Numbers"],
+      ["deut", "Deuteronomy"],
+      ["1 cor", "1 Corinthians"],
+      ["2 cor", "2 Corinthians"],
+      ["1 sam", "1 Samuel"],
+      ["2 sam", "2 Samuel"],
+      ["1 thess", "1 Thessalonians"],
+      ["2 thess", "2 Thessalonians"],
+      ["1 tim", "1 Timothy"],
+      ["2 tim", "2 Timothy"],
+      ["1 pet", "1 Peter"],
+      ["2 pet", "2 Peter"],
+      ["1 john", "1 John"],
+      ["2 john", "2 John"],
+      ["3 john", "3 John"]
+    ]);
+
+    // ---- Verse pool (sample set) ----
+    const VERSES = [
+      { book: "John", ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." },
+      { book: "Psalms", ref: "Psalm 23:1", text: "The Lord is my shepherd; I shall not want." },
+      { book: "Proverbs", ref: "Proverbs 3:5-6", text: "Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths." },
+      { book: "Philippians", ref: "Philippians 4:6", text: "Be anxious for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God." },
+      { book: "Romans", ref: "Romans 8:28", text: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose." },
+      { book: "Genesis", ref: "Genesis 1:1", text: "In the beginning God created the heaven and the earth." },
+      { book: "Exodus", ref: "Exodus 14:14", text: "The Lord shall fight for you, and ye shall hold your peace." },
+      { book: "Matthew", ref: "Matthew 5:14", text: "Ye are the light of the world. A city that is set on an hill cannot be hid." },
+      { book: "Isaiah", ref: "Isaiah 41:10", text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness." },
+      { book: "Jeremiah", ref: "Jeremiah 29:11", text: "For I know the thoughts that I think toward you, saith the Lord, thoughts of peace, and not of evil, to give you an expected end." },
+      { book: "Joshua", ref: "Joshua 1:9", text: "Be strong and of a good courage; be not afraid, neither be thou dismayed: for the Lord thy God is with thee whithersoever thou goest." },
+      { book: "1 Corinthians", ref: "1 Corinthians 13:4", text: "Love is patient, love is kind; love envieth not; love vaunteth not itself, is not puffed up." },
+      { book: "James", ref: "James 1:2", text: "My brethren, count it all joy when ye fall into divers temptations;" },
+      { book: "Revelation", ref: "Revelation 21:4", text: "And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away." },
+      { book: "Micah", ref: "Micah 6:8", text: "What doth the Lord require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?" },
+      { book: "Hebrews", ref: "Hebrews 11:1", text: "Now faith is the substance of things hoped for, the evidence of things not seen." }
+    ];
+
+    // ---- State ----
+    let streak = 0;
+    let bestStreak = Number(localStorage.getItem("bibleBooks_bestStreak") || 0);
+    let correct = 0;
+    let lives = 3;
+
+    let current = null;
+    let lastIdx = -1;
+
+    // ---- Elements ----
+    const elStreak = document.getElementById("streak");
+    const elBest = document.getElementById("bestStreak");
+    const elCorrect = document.getElementById("correct");
+    const elVerseText = document.getElementById("verseText");
+    const elGuess = document.getElementById("guessInput");
+    const elFeedback = document.getElementById("feedback");
+    const elLastAnswerNote = document.getElementById("lastAnswerNote");
+
+    const hearts = [document.getElementById("h1"), document.getElementById("h2"), document.getElementById("h3")];
+
+    const modalOverlay = document.getElementById("modalOverlay");
+    const mStreak = document.getElementById("mStreak");
+    const mBest = document.getElementById("mBest");
+    const mCorrect = document.getElementById("mCorrect");
+    const mLast = document.getElementById("mLast");
+    const gameOverMsg = document.getElementById("gameOverMsg");
+
+    const suggestBox = document.getElementById("suggestBox");
+
+    // Autocomplete state
+    let currentSuggestions = [];
+    let activeSuggestionIndex = -1;
+
+    // ---- Helpers ----
+    function canon(s) {
+      return (s || "")
+        .toLowerCase()
+        .replace(/\./g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function normalizeBookInput(val) {
+      const raw = canon(val);
+      if (!raw) return "";
+      if (ALIASES.has(raw)) return ALIASES.get(raw);
+      const direct = BOOKS.find(b => canon(b) === raw);
+      if (direct) return direct;
+      return raw;
+    }
+
+    function getSuggestions(query) {
+      const q = canon(query);
+      if (!q) return [];
+      return BOOKS.filter(b => canon(b).startsWith(q)).slice(0, 8);
+    }
+
+    function showSuggestions(list) {
+      currentSuggestions = list;
+      activeSuggestionIndex = -1;
+
+      if (!list.length) {
+        suggestBox.style.display = "none";
+        suggestBox.innerHTML = "";
+        return;
+      }
+
+      suggestBox.innerHTML = list.map((b, i) => {
+        const hint = (i === 0) ? "Enter to submit" : "Click";
+        return `
+          <div class="suggest-item" data-index="${i}">
+            <span>${b}</span>
+            <span class="suggest-muted">${hint}</span>
+          </div>
+        `;
+      }).join("");
+
+      suggestBox.style.display = "block";
+    }
+
+    function setActiveSuggestion(i) {
+      const items = [...suggestBox.querySelectorAll(".suggest-item")];
+      items.forEach(x => x.classList.remove("active"));
+      if (i >= 0 && i < items.length) {
+        items[i].classList.add("active");
+        activeSuggestionIndex = i;
+      } else {
+        activeSuggestionIndex = -1;
+      }
+    }
+
+    function acceptSuggestion(index = 0) {
+      if (!currentSuggestions.length) return false;
+      const chosen = currentSuggestions[Math.max(0, Math.min(index, currentSuggestions.length - 1))];
+      elGuess.value = chosen;
+      suggestBox.style.display = "none";
+      suggestBox.innerHTML = "";
+      currentSuggestions = [];
+      activeSuggestionIndex = -1;
+      return true;
+    }
+
+    function updateHUD() {
+      elStreak.textContent = String(streak);
+      elBest.textContent = String(bestStreak);
+      elCorrect.textContent = String(correct);
+
+      hearts.forEach((h, idx) => {
+        const alive = idx < lives;
+        h.classList.toggle("off", !alive);
+      });
+    }
+
+    function setFeedback(type, msg) {
+      elFeedback.className = "feedback";
+      elFeedback.classList.add(type);
+      elFeedback.textContent = msg;
+      elFeedback.style.display = "block";
+    }
+
+    function clearFeedback() {
+      elFeedback.style.display = "none";
+      elFeedback.textContent = "";
+      elFeedback.className = "feedback";
+      elLastAnswerNote.style.display = "none";
+      elLastAnswerNote.textContent = "";
+    }
+
+    function nextVerse() {
+      clearFeedback();
+      elGuess.value = "";
+      showSuggestions([]);
+      elGuess.focus();
+
+      if (!VERSES.length) {
+        elVerseText.textContent = "No verses loaded.";
+        return;
+      }
+
+      // pick a random verse; avoid immediate repeats when possible
+      let idx = Math.floor(Math.random() * VERSES.length);
+      if (VERSES.length > 1 && idx === lastIdx) {
+        idx = (idx + 1) % VERSES.length;
+      }
+      lastIdx = idx;
+
+      current = VERSES[idx];
+      elVerseText.textContent = `“${current.text}”`;
+    }
+
+    function endGame(reasonText) {
+      modalOverlay.style.display = "flex";
+      gameOverMsg.textContent = reasonText || "You’re out of lives.";
+      mStreak.textContent = String(streak);
+      mBest.textContent = String(bestStreak);
+      mCorrect.textContent = String(correct);
+      mLast.textContent = current ? `${current.book} (${current.ref})` : "—";
+    }
+
+    function closeModal() {
+      modalOverlay.style.display = "none";
+    }
+
+    function hardResetRun() {
+      streak = 0;
+      correct = 0;
+      lives = 3;
+      updateHUD();
+      nextVerse();
+    }
+
+    // ---- Game Actions ----
+    function submitGuess() {
+      if (!current) return;
+
+      const typed = elGuess.value.trim();
+      if (!typed) {
+        setFeedback("bad", "Type a book name first (e.g., “gen”, “john”, “romans”).");
+        return;
+      }
+
+      const normalized = normalizeBookInput(typed);
+      const correctBook = current.book;
+
+      const isCorrect =
+        typeof normalized === "string" &&
+        canon(normalized) === canon(correctBook);
+
+      if (isCorrect) {
+        streak += 1;
+        correct += 1;
+
+        if (streak > bestStreak) {
+          bestStreak = streak;
+          localStorage.setItem("bibleBooks_bestStreak", String(bestStreak));
+        }
+
+        updateHUD();
+        setFeedback("good", `✅ Correct! That verse is from ${correctBook}. (Streak +1)`);
+        elLastAnswerNote.style.display = "block";
+        elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+
+        setTimeout(nextVerse, 850);
+      } else {
+        lives -= 1;
+        streak = 0;
+        updateHUD();
+
+        if (lives <= 0) {
+          setFeedback("bad", `❌ Wrong. The answer was ${correctBook}.`);
+          endGame(`❌ Wrong answer — you used your last life. The verse was from ${correctBook} (${current.ref}).`);
+          return;
+        }
+
+        setFeedback("bad", `❌ Not quite. The answer was ${correctBook}. Streak reset. (${lives} lives left)`);
+        elLastAnswerNote.style.display = "block";
+        elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+
+        setTimeout(nextVerse, 950);
+      }
+    }
+
+    function skipVerse() {
+      if (!current) return;
+      streak = 0;
+      updateHUD();
+      setFeedback("bad", `⏭️ Skipped. The answer was ${current.book}. Streak reset.`);
+      elLastAnswerNote.style.display = "block";
+      elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+      setTimeout(nextVerse, 900);
+    }
+
+    // ---- Buttons ----
+    document.getElementById("submitBtn").addEventListener("click", submitGuess);
+    document.getElementById("skipBtn").addEventListener("click", skipVerse);
+    document.getElementById("resetBtn").addEventListener("click", hardResetRun);
+
+    document.getElementById("playAgainBtn").addEventListener("click", () => {
+      closeModal();
+      hardResetRun();
+    });
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // ---- Autocomplete wiring ----
+    elGuess.addEventListener("input", () => {
+      const list = getSuggestions(elGuess.value);
+      showSuggestions(list);
+    });
+
+    elGuess.addEventListener("keydown", (e) => {
+      const boxOpen = suggestBox.style.display === "block";
+      const typed = elGuess.value.trim();
+
+      if (boxOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+        e.preventDefault();
+        const max = currentSuggestions.length - 1;
+        if (e.key === "ArrowDown") {
+          const next = (activeSuggestionIndex < max) ? activeSuggestionIndex + 1 : 0;
+          setActiveSuggestion(next);
+        } else {
+          const prev = (activeSuggestionIndex > 0) ? activeSuggestionIndex - 1 : max;
+          setActiveSuggestion(prev);
+        }
+        return;
+      }
+
+      if (e.key === "Tab" && boxOpen) {
+        e.preventDefault();
+        const idx = activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0;
+        acceptSuggestion(idx);
+        return;
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+
+        // If not exact and suggestions exist, autocomplete to best (or highlighted) first
+        const exactMatch = BOOKS.some(b => canon(b) === canon(typed)) || ALIASES.has(canon(typed));
+        if (!exactMatch && currentSuggestions.length) {
+          const idx = activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0;
+          acceptSuggestion(idx);
+        } else if (ALIASES.has(canon(typed))) {
+          // If user typed an alias like "gen" and there is no dropdown, convert to canonical
+          elGuess.value = ALIASES.get(canon(typed));
+        }
+
+        submitGuess();
+        return;
+      }
+
+      if (e.key === "Escape") {
+        showSuggestions([]);
+      }
+    });
+
+    // Click suggestion => fill + submit
+    suggestBox.addEventListener("mousedown", (e) => {
+      const item = e.target.closest(".suggest-item");
+      if (!item) return;
+      const idx = Number(item.getAttribute("data-index"));
+      acceptSuggestion(idx);
+      submitGuess();
+    });
+
+    // Hide suggestions on blur (delay for click)
+    elGuess.addEventListener("blur", () => {
+      setTimeout(() => showSuggestions([]), 120);
+    });
+
+    // ---- Init ----
+    updateHUD();
+    nextVerse();
+  </script>
+</body>
+</html>

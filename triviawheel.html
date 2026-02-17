@@ -28,24 +28,6 @@
   .hud{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px;
     background:linear-gradient(180deg,#13183a,#0e1331); border:1px solid #262e64; padding:8px 12px; border-radius:12px}
   .stat{font-weight:800}
-
-  /* NEW: Ticker */
-  .ticker{
-    margin-top:10px; border:1px solid #262e64; border-radius:12px;
-    background:linear-gradient(180deg,#0e1331,#0b1029);
-    overflow:hidden;
-  }
-  .ticker-inner{ height:36px; display:flex; align-items:center; }
-  .ticker-track{
-    white-space:nowrap; font-weight:900; padding-left:100%;
-    animation: ticker-scroll 12s linear infinite;
-    padding-right:24px;
-  }
-  @keyframes ticker-scroll{
-    from{ transform: translateX(0); }
-    to  { transform: translateX(-100%); }
-  }
-
   .grid{display:grid; grid-template-columns: 1fr; gap:14px; margin-top:14px}
   @media(min-width:900px){ .grid{grid-template-columns: 1.1fr .9fr} }
 
@@ -76,7 +58,10 @@
     border:1px solid #242b5b; border-radius:16px; background:linear-gradient(180deg,#13183a,#0c1130);
     padding:14px;
   }
-  .qa{ display:none; flex-direction:column; gap:10px; }
+
+  .qa{
+    display:none; flex-direction:column; gap:10px;
+  }
   .qa.show{display:flex}
   .topic-tag{display:inline-block; padding:4px 10px; border-radius:999px; font-weight:800; background:#1f2553; border:1px solid #2a3270; color:#e6e8ff}
   .question{font-size:clamp(16px,2vw,20px); font-weight:800}
@@ -118,13 +103,6 @@
     <div style="opacity:.85">Keys: <span class="kbd">S</span> spin, <span class="kbd">1–4</span> answer, <span class="kbd">Enter</span> confirm</div>
   </div>
 
-  <!-- NEW: Ticker -->
-  <div class="ticker" aria-live="polite">
-    <div class="ticker-inner">
-      <div id="tickerTrack" class="ticker-track">Ready to spin! • Press S or click Spin</div>
-    </div>
-  </div>
-
   <div class="grid">
     <div class="stage">
       <div class="pointer" aria-hidden="true"></div>
@@ -144,7 +122,7 @@
           <div class="explain" id="explain"></div>
           <div>
             <button id="submitBtn" class="primary" disabled>Submit (Enter)</button>
-            <button id="nextBtn" disabled>Next (Auto-Spin)</button>
+            <button id="nextBtn" disabled>Next / Spin Again</button>
           </div>
         </div>
       </div>
@@ -200,11 +178,12 @@
     ]
   };
 
+  // Track asked indices per topic to reduce repeats
   const asked = Object.fromEntries(Object.keys(BANK).map(k => [k, new Set()]));
 
   // ---------- State ----------
   const state = {
-    rotation: 0,
+    rotation: 0,       // absolute rotation in radians
     spinning: false,
     score: 0,
     streak: 0,
@@ -232,9 +211,6 @@
   const nextBtn = document.getElementById('nextBtn');
   const toast = document.getElementById('toast');
 
-  // NEW: ticker elements
-  const tickerTrack = document.getElementById('tickerTrack');
-
   topicCountEl.textContent = TOPICS.length;
 
   // ---------- Wheel Drawing ----------
@@ -242,39 +218,68 @@
     const w = wheel.width, h = wheel.height;
     const cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 12;
     ctx.clearRect(0,0,w,h);
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(rotation);
+
+    // outer disc
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(rotation);
 
     const seg = (Math.PI*2)/TOPICS.length;
 
+    // segments
     for (let i=0;i<TOPICS.length;i++){
-      const start = i*seg, end = start+seg;
-      ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,r,start,end,false); ctx.closePath();
+      const start = i*seg;
+      const end   = start+seg;
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.arc(0,0,r,start,end,false);
+      ctx.closePath();
+      // segment gradient
       const grad = ctx.createLinearGradient(0,0,Math.cos(start+seg/2)*r,Math.sin(start+seg/2)*r);
       grad.addColorStop(0,shade(TOPICS[i].color,0.25));
       grad.addColorStop(1,TOPICS[i].color);
-      ctx.fillStyle = grad; ctx.fill();
-      ctx.lineWidth = 2; ctx.strokeStyle = "#0b0f24"; ctx.stroke();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#0b0f24";
+      ctx.stroke();
 
-      // label
+      // text
       ctx.save();
       ctx.fillStyle = "#0b0f24";
       ctx.font = '900 16px Inter, system-ui, Arial';
       ctx.rotate(start + seg/2);
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // pill behind text
       const label = TOPICS[i].label;
       const txtW = ctx.measureText(label).width + 18;
       const pillR = 12;
-      ctx.save(); ctx.translate(r*0.62,0);
+      ctx.save();
+      ctx.translate(r*0.62,0);
       roundedRectPath(ctx, -txtW/2, -16/2, txtW, 16, pillR);
-      ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,.85)";
+      ctx.fill();
       ctx.restore();
-      ctx.save(); ctx.translate(r*0.62,0); ctx.fillStyle = "#0b0f24"; ctx.fillText(label, 0, 0); ctx.restore();
+
+      // label text
+      ctx.save();
+      ctx.translate(r*0.62,0);
+      ctx.fillStyle = "#0b0f24";
+      ctx.fillText(label, 0, 0);
+      ctx.restore();
+
       ctx.restore();
     }
 
     // rim
-    ctx.beginPath(); ctx.arc(0,0,r+6,0,Math.PI*2);
-    ctx.lineWidth = 12; ctx.strokeStyle = "#1e2751"; ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0,0,r+6,0,Math.PI*2);
+    ctx.lineWidth = 12;
+    ctx.strokeStyle = "#1e2751";
+    ctx.stroke();
+
     ctx.restore();
   }
 
@@ -308,16 +313,17 @@
     state.spinning = true;
     setButtonsDuringSpin(true);
     hideQA();
-    setTicker("Spinning...");
 
+    // choose topic index first
     const idx = Math.floor(Math.random()*TOPICS.length);
     state.selectedTopicIndex = idx;
 
+    // compute target rotation so chosen segment center aligns at pointer (top = -PI/2)
     const seg = (Math.PI*2)/TOPICS.length;
-    const pointerAngle = -Math.PI/2; // top
+    const pointerAngle = -Math.PI/2;
     const centerAngle = (idx + 0.5) * seg;
-    const targetBase = pointerAngle - centerAngle;
-    const turns = 5 + Math.floor(Math.random()*3); // 5–7 spins
+    const targetBase = pointerAngle - centerAngle; // modulo 2π
+    const turns = 5 + Math.floor(Math.random()*3); // 5–7 full spins
     const finalRotation = normalize(targetBase) + turns*(Math.PI*2);
 
     const start = state.rotation;
@@ -330,9 +336,11 @@
       const eased = easeOutCubic(p);
       state.rotation = start + (end - start)*eased;
       drawWheel(state.rotation);
-      if (p < 1) { requestAnimationFrame(animate); }
-      else {
+      if (p < 1) {
+        requestAnimationFrame(animate);
+      } else {
         state.spinning = false;
+        // Normalize rotation to keep numbers small
         state.rotation = normalize(state.rotation);
         drawWheel(state.rotation);
         onSpinEnd(idx);
@@ -341,7 +349,12 @@
   }
 
   function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
-  function normalize(a){ const tau = Math.PI*2; a = a % tau; if (a < 0) a += tau; return a; }
+  function normalize(a){
+    const tau = Math.PI*2;
+    a = a % tau;
+    if (a < 0) a += tau;
+    return a;
+  }
 
   function setButtonsDuringSpin(spinning){
     spinBtn.disabled = spinning;
@@ -350,10 +363,8 @@
   }
 
   function onSpinEnd(idx){
-    const topic = TOPICS[idx].label;
-    setTicker(`🎯 Landed on: ${topic}`);
     againBtn.disabled = true;
-    showQuestion(topic);
+    showQuestion(TOPICS[idx].label);
   }
 
   // ---------- Questions ----------
@@ -365,9 +376,11 @@
       return;
     }
 
+    // pick an unused index; if all asked, reset set
     if (asked[topic].size >= list.length) asked[topic].clear();
     let i;
-    for (let tries=0; tries<20; tries++){
+    const attempts = 20;
+    for (let tries=0; tries<attempts; tries++){
       i = Math.floor(Math.random()*list.length);
       if (!asked[topic].has(i)) break;
     }
@@ -382,6 +395,7 @@
     submitBtn.disabled = true;
     nextBtn.disabled = true;
 
+    // render options
     opts.innerHTML = "";
     qa.a.forEach((txt, idx) => {
       const btn = document.createElement('button');
@@ -400,6 +414,7 @@
 
   function selectOption(idx, el){
     state.chosenIndex = idx;
+    // clear prior selection focus
     [...opts.children].forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     submitBtn.disabled = false;
@@ -409,6 +424,7 @@
     if (state.chosenIndex == null || !state.currentQA) return;
     const correctIdx = state.currentQA.c;
 
+    // mark buttons
     [...opts.children].forEach((btn, idx) => {
       btn.disabled = true;
       if (idx === correctIdx) btn.classList.add('correct');
@@ -443,12 +459,9 @@
     state.chosenIndex = null;
   }
 
-  // UPDATED: Next now auto-spins
   function next(){
     hideQA();
     againBtn.disabled = true;
-    // small delay so UI updates before spin
-    setTimeout(() => { spin(); }, 150);
   }
 
   function updateHud(){
@@ -464,7 +477,6 @@
     state.score = 0; state.streak = 0; updateHud();
     drawWheel(state.rotation);
     hideQA();
-    setTicker("Ready to spin! • Press S or click Spin");
     toastMsg("Reset");
   });
   submitBtn.addEventListener('click', grade);
@@ -483,17 +495,6 @@
       grade();
     }
   });
-
-  // ---------- Ticker control ----------
-  function setTicker(msg){
-    // Repeat message for smooth scroll, restart animation
-    const repeated = Array(4).fill(msg).join("   •   ");
-    tickerTrack.textContent = repeated;
-    tickerTrack.style.animation = 'none'; // restart
-    // force reflow
-    void tickerTrack.offsetHeight;
-    tickerTrack.style.animation = '';
-  }
 
   // ---------- Toast ----------
   let toastTimer=null;

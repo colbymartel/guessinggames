@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess The Stranger 🎤</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --brand-blue: #4F7EA1;
+      --green: #4CAF50;
+      --yellow: #FFD54F;
+      --red: #E53935;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--brand-blue);
+      color: white;
+      display: flex;
+      justify-content: center;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px 40px 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(22px, 4vw, 32px);
+      text-align: center;
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 25px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.2),
+        inset 0 0 12px rgba(255,255,255,0.2);
+      margin: 10px 0 30px 0;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .stat {
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .board {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+
+    .previous-container {
+      padding: 16px 22px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.25),
+        inset 0 0 14px rgba(255,255,255,0.18);
+      transition: 0.3s ease;
+    }
+
+    .previous-container.active {
+      animation: popIn 0.35s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.96); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .tile {
+      width: min(12vw, 75px);
+      height: min(14vw, 85px);
+      border-radius: 16px;
+      background: white;
+      color: var(--brand-blue);
+      font-weight: bold;
+      font-size: clamp(20px, 5vw, 32px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.25s ease;
+    }
+
+    .correct { background: var(--green); color: white; }
+    .present { background: var(--yellow); color: black; }
+    .wrong { background: var(--red); color: white; }
+
+    .keyboard {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .key-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .key {
+      flex: 1;
+      max-width: 42px;
+      padding: 12px 0;
+      border-radius: 10px;
+      background: white;
+      color: var(--brand-blue);
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      font-size: clamp(12px, 3vw, 16px);
+      transition: 0.15s ease;
+    }
+
+    .key.correct { background: var(--green); color: white; }
+    .key.present { background: var(--yellow); color: black; }
+    .key.wrong { background: var(--red); color: white; }
+
+    .wide {
+      flex: 2;
+      max-width: 90px;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: clamp(16px, 3vw, 20px);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .play-again {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: white;
+      color: var(--brand-blue);
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="game">
+
+  <h1>Guess The Stranger</h1>
+
+  <div class="hud">
+    <div class="stat">
+      <div class="stat-label">Attempts</div>
+      <div class="stat-value" id="attempts">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">⏱ Time</div>
+      <div class="stat-value"><span id="timer">0</span>s</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">🔥 Best</div>
+      <div class="stat-value" id="bestScore">--</div>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="previous-container" id="previousContainer">
+      <div class="row" id="previousRow"></div>
+    </div>
+    <div class="row" id="currentRow"></div>
+  </div>
+
+  <div class="keyboard" id="keyboard"></div>
+
+  <div class="message" id="message"></div>
+  <button class="play-again" id="playAgainBtn">Play Another Name</button>
+
+</div>
+
+<script>
+
+const names = ["OLIVIA","JACKSON","EMMA","NOAH","AVA","LUCAS","SOPHIA","MASON","VINCENT"];
+
+let target;
+let currentGuess;
+let attempts;
+let time;
+let gameOver;
+let timerInterval;
+
+const previousRow = document.getElementById("previousRow");
+const currentRow = document.getElementById("currentRow");
+const previousContainer = document.getElementById("previousContainer");
+const playAgainBtn = document.getElementById("playAgainBtn");
+
+let best = localStorage.getItem("bestTime");
+if (best) document.getElementById("bestScore").innerText = best + "s";
+
+function startGame() {
+  target = names[Math.floor(Math.random() * names.length)];
+  currentGuess = "";
+  attempts = 0;
+  time = 0;
+  gameOver = false;
+
+  document.getElementById("attempts").innerText = 0;
+  document.getElementById("timer").innerText = 0;
+  document.getElementById("message").innerText = "";
+  playAgainBtn.style.display = "none";
+
+  previousRow.innerHTML = "";
+  currentRow.innerHTML = "";
+  previousContainer.classList.remove("active");
+
+  createRow(previousRow);
+  createRow(currentRow);
+
+  document.querySelectorAll(".key").forEach(k => {
+    k.classList.remove("correct","present","wrong");
+  });
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!gameOver) {
+      time++;
+      document.getElementById("timer").innerText = time;
+    }
+  }, 1000);
+}
+
+function createRow(row) {
+  for (let i = 0; i < target.length; i++) {
+    const tile = document.createElement("div");
+    tile.classList.add("tile");
+    row.appendChild(tile);
+  }
+}
+
+function updateCurrentRow() {
+  const tiles = currentRow.children;
+  for (let i = 0; i < target.length; i++) {
+    tiles[i].innerText = currentGuess[i] || "";
+    tiles[i].className = "tile";
+  }
+}
+
+function submitGuess() {
+  if (currentGuess.length !== target.length) return;
+
+  previousContainer.classList.remove("active");
+  attempts++;
+  document.getElementById("attempts").innerText = attempts;
+
+  const tiles = previousRow.children;
+
+  for (let i = 0; i < target.length; i++) {
+    tiles[i].innerText = currentGuess[i];
+
+    const keyButton = [...document.querySelectorAll(".key")]
+      .find(k => k.innerText === currentGuess[i]);
+
+    if (currentGuess[i] === target[i]) {
+      tiles[i].className = "tile correct";
+      keyButton?.classList.add("correct");
+    } else if (target.includes(currentGuess[i])) {
+      tiles[i].className = "tile present";
+      keyButton?.classList.add("present");
+    } else {
+      tiles[i].className = "tile wrong";
+      keyButton?.classList.add("wrong");
+    }
+  }
+
+  previousContainer.classList.add("active");
+
+  if (currentGuess === target) {
+    gameOver = true;
+    document.getElementById("message").innerText =
+      `🎉 You got it in ${attempts} attempts and ${time} seconds!`;
+
+    if (!best || time < best) {
+      localStorage.setItem("bestTime", time);
+      document.getElementById("bestScore").innerText = time + "s";
+    }
+
+    playAgainBtn.style.display = "inline-block";
+  }
+
+  currentGuess = "";
+  updateCurrentRow();
+}
+
+playAgainBtn.onclick = startGame;
+
+// Keyboard creation
+const layout = [
+  "QWERTYUIOP",
+  "ASDFGHJKL",
+  "ENTERZXCVBNMBACK"
+];
+
+layout.forEach(row => {
+  const rowDiv = document.createElement("div");
+  rowDiv.classList.add("key-row");
+
+  if (row === "ENTERZXCVBNMBACK") {
+    addKey("ENTER", rowDiv, true);
+    "ZXCVBNM".split("").forEach(letter => addKey(letter, rowDiv));
+    addKey("⌫", rowDiv, true);
+  } else {
+    row.split("").forEach(letter => addKey(letter, rowDiv));
+  }
+
+  document.getElementById("keyboard").appendChild(rowDiv);
+});
+
+function addKey(letter, parent, wide=false) {
+  const key = document.createElement("div");
+  key.classList.add("key");
+  if (wide) key.classList.add("wide");
+  key.innerText = letter;
+  key.onclick = () => handleKey(letter);
+  parent.appendChild(key);
+}
+
+function handleKey(key) {
+  if (gameOver) return;
+
+  if (key === "ENTER") submitGuess();
+  else if (key === "⌫") {
+    currentGuess = currentGuess.slice(0, -1);
+    updateCurrentRow();
+  } else if (currentGuess.length < target.length) {
+    currentGuess += key;
+    updateCurrentRow();
+  }
+}
+
+document.addEventListener("keydown", (e) => {
+  if (gameOver) return;
+
+  if (e.key === "Enter") submitGuess();
+  else if (e.key === "Backspace") handleKey("⌫");
+  else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
+});
+
+startGame();
+
+</script>
+
+</body>
+</html>
