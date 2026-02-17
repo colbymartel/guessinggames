@@ -232,171 +232,178 @@ footer{
 <footer>
   © 2026 Guessing Games
 </footer>
+
 <script>
 
-    let nameBank = [];
-    let target = "VINCENT";   // 🔥 Fixed answer
-    let attempts = 0;
-    let seconds = 0;
-    let gameOver = false;
-    
-    const input = document.getElementById("guessInput");
-    const previousContainer = document.getElementById("previousContainer");
-    const hint = document.getElementById("lengthHint");
-    const shareBtn = document.getElementById("shareBtn");
-    const attemptCount = document.getElementById("attemptCount");
-    const timerDisplay = document.getElementById("timer");
-    
-    /* FORMAT TIME */
-    function formatTime(s){
-      const m = Math.floor(s/60);
-      const sec = s%60;
-      return `${m}:${sec.toString().padStart(2,"0")}`;
+let nameBank = [];
+let target = "VINCENT";
+let attempts = 0;
+let seconds = 0;
+let gameOver = false;
+
+const input = document.getElementById("guessInput");
+const previousContainer = document.getElementById("previousContainer");
+const hint = document.getElementById("lengthHint");
+const shareBtn = document.getElementById("shareBtn");
+const attemptCount = document.getElementById("attemptCount");
+const timerDisplay = document.getElementById("timer");
+
+/* DETECT TOUCH DEVICE */
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+/* DISABLE MOBILE KEYBOARD ONLY ON TOUCH DEVICES */
+if(isTouchDevice){
+  input.addEventListener("focus", (e) => {
+    e.preventDefault();
+    e.target.blur();
+  });
+}
+
+/* FORMAT TIME */
+function formatTime(s){
+  const m = Math.floor(s/60);
+  const sec = s%60;
+  return `${m}:${sec.toString().padStart(2,"0")}`;
+}
+
+/* LOAD NAME BANK */
+fetch("names.json")
+  .then(res => res.json())
+  .then(data => {
+    nameBank = data.names;
+  });
+
+/* TIMER */
+setInterval(()=>{
+  if(!gameOver){
+    seconds++;
+    timerDisplay.innerText = formatTime(seconds);
+  }
+},1000);
+
+/* KEYBOARD */
+const layout = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+
+function createKeyboard(){
+  layout.forEach(row=>{
+    const rowDiv=document.createElement("div");
+    rowDiv.className="key-row";
+    row.split("").forEach(l=>addKey(l,rowDiv));
+    document.getElementById("keyboard").appendChild(rowDiv);
+  });
+
+  const bottom=document.createElement("div");
+  bottom.className="key-row";
+  addKey("ENTER",bottom,true);
+  addKey("⌫",bottom,true);
+  document.getElementById("keyboard").appendChild(bottom);
+}
+
+function addKey(letter,parent,wide=false){
+  const key=document.createElement("div");
+  key.className="key";
+  if(wide) key.classList.add("wide");
+  key.innerText=letter;
+  key.onclick=()=>handleKey(letter);
+  parent.appendChild(key);
+}
+
+function handleKey(key){
+  if(gameOver) return;
+
+  if(key==="ENTER") submitGuess();
+  else if(key==="⌫") input.value=input.value.slice(0,-1);
+  else input.value+=key;
+}
+
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter") submitGuess();
+});
+
+/* SUBMIT LOGIC */
+function submitGuess(){
+  const guess=input.value.toUpperCase().trim();
+  if(!guess || gameOver) return;
+
+  if(!nameBank.includes(guess)){
+    hint.innerText = "Sorry, try a different name";
+    input.value="";
+    return;
+  }
+
+  attempts++;
+  attemptCount.innerText = attempts;
+  previousContainer.innerHTML="";
+
+  const letterCounts = {};
+  for(let char of target){
+    letterCounts[char] = (letterCounts[char] || 0) + 1;
+  }
+
+  const result = new Array(guess.length).fill("wrong");
+
+  for(let i=0;i<guess.length;i++){
+    if(guess[i] === target[i]){
+      result[i] = "correct";
+      letterCounts[guess[i]]--;
     }
-    
-    /* LOAD NAME BANK FOR VALIDATION ONLY */
-    fetch("names.json")
-      .then(res => res.json())
-      .then(data => {
-        nameBank = data.names;
-      });
-    
-    /* TIMER */
-    setInterval(()=>{
-      if(!gameOver){
-        seconds++;
-        timerDisplay.innerText = formatTime(seconds);
-      }
-    },1000);
-    
-    /* KEYBOARD */
-    const layout = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
-    
-    function createKeyboard(){
-      layout.forEach(row=>{
-        const rowDiv=document.createElement("div");
-        rowDiv.className="key-row";
-        row.split("").forEach(l=>addKey(l,rowDiv));
-        document.getElementById("keyboard").appendChild(rowDiv);
-      });
-    
-      const bottom=document.createElement("div");
-      bottom.className="key-row";
-      addKey("ENTER",bottom,true);
-      addKey("⌫",bottom,true);
-      document.getElementById("keyboard").appendChild(bottom);
+  }
+
+  for(let i=0;i<guess.length;i++){
+    if(result[i] === "wrong" && letterCounts[guess[i]] > 0){
+      result[i] = "present";
+      letterCounts[guess[i]]--;
     }
-    
-    function addKey(letter,parent,wide=false){
-      const key=document.createElement("div");
-      key.className="key";
-      if(wide) key.classList.add("wide");
-      key.innerText=letter;
-      key.onclick=()=>handleKey(letter);
-      parent.appendChild(key);
-    }
-    
-    function handleKey(key){
-      if(gameOver) return;
-    
-      if(key==="ENTER") submitGuess();
-      else if(key==="⌫") input.value=input.value.slice(0,-1);
-      else input.value+=key;
-    
-      input.focus();
-    }
-    
-    input.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter") submitGuess();
-    });
-    
-    /* SUBMIT WITH DUPLICATE FIX */
-    function submitGuess(){
-      const guess=input.value.toUpperCase().trim();
-      if(!guess || gameOver) return;
-    
-      if(!nameBank.includes(guess)){
-        hint.innerText = "Sorry, try a different name";
-        input.value="";
-        return;
-      }
-    
-      attempts++;
-      attemptCount.innerText = attempts;
-      previousContainer.innerHTML="";
-    
-      const letterCounts = {};
-      for(let char of target){
-        letterCounts[char] = (letterCounts[char] || 0) + 1;
-      }
-    
-      const result = new Array(guess.length).fill("wrong");
-    
-      // First pass (greens)
-      for(let i=0;i<guess.length;i++){
-        if(guess[i] === target[i]){
-          result[i] = "correct";
-          letterCounts[guess[i]]--;
-        }
-      }
-    
-      // Second pass (yellows)
-      for(let i=0;i<guess.length;i++){
-        if(result[i] === "wrong" && letterCounts[guess[i]] > 0){
-          result[i] = "present";
-          letterCounts[guess[i]]--;
-        }
-      }
-    
-      for(let i=0;i<guess.length;i++){
-        const tile=document.createElement("div");
-        tile.className="tile " + result[i];
-        tile.innerText=guess[i];
-        previousContainer.appendChild(tile);
-    
-        updateKeyboard(guess[i]);
-      }
-    
-      if(guess === target){
-        gameOver = true;
-        hint.innerText = "🎉 Congrats! You guessed today's name!";
-        shareBtn.style.opacity="1";
-        shareBtn.style.pointerEvents="auto";
-      } else {
-        if(guess.length < target.length)
-          hint.innerText = `The name is more than ${guess.length} letters.`;
-        else if(guess.length > target.length)
-          hint.innerText = `The name is less than ${guess.length} letters.`;
-        else
-          hint.innerText = `✅ The name has ${target.length} letters.`;
-      }
-    
-      input.value="";
-    }
-    
-    /* KEYBOARD LOGIC */
-    function updateKeyboard(letter){
-      const key=[...document.querySelectorAll(".key")]
-        .find(k=>k.innerText===letter);
-    
-      if(!key) return;
-    
-      if(target.includes(letter)){
-        key.className="key correct";
-      } else {
-        key.className="key wrong";
-      }
-    }
-    
-    shareBtn.addEventListener("click",()=>{
-      const message = `I guessed today's name in ${formatTime(seconds)}! Play at guessinggames.com`;
-      navigator.clipboard.writeText(message);
-      alert("Score copied!");
-    });
-    
-    createKeyboard();
-    input.focus();
-    
-    </script>
-    </body>
+  }
+
+  for(let i=0;i<guess.length;i++){
+    const tile=document.createElement("div");
+    tile.className="tile " + result[i];
+    tile.innerText=guess[i];
+    previousContainer.appendChild(tile);
+
+    updateKeyboard(guess[i]);
+  }
+
+  if(guess === target){
+    gameOver = true;
+    hint.innerText = "🎉 Congrats! You guessed today's name!";
+    shareBtn.style.opacity="1";
+    shareBtn.style.pointerEvents="auto";
+  } else {
+    if(guess.length < target.length)
+      hint.innerText = `The name is more than ${guess.length} letters.`;
+    else if(guess.length > target.length)
+      hint.innerText = `The name is less than ${guess.length} letters.`;
+    else
+      hint.innerText = `✅ The name has ${target.length} letters.`;
+  }
+
+  input.value="";
+}
+
+function updateKeyboard(letter){
+  const key=[...document.querySelectorAll(".key")]
+    .find(k=>k.innerText===letter);
+
+  if(!key) return;
+
+  if(target.includes(letter)){
+    key.className="key correct";
+  } else {
+    key.className="key wrong";
+  }
+}
+
+shareBtn.addEventListener("click",()=>{
+  const message = `I guessed today's name in ${formatTime(seconds)}! Play at guessinggames.com`;
+  navigator.clipboard.writeText(message);
+  alert("Score copied!");
+});
+
+createKeyboard();
+input.focus();
+
+</script>
+</body>
 </html>
