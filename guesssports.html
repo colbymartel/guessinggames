@@ -1,356 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Guess the Athlete | Guessing Games</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(to bottom right, #e7f1f9, #ffffff);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    nav {
-      width: 100%;
-      padding: 15px 30px;
-      background: #1e2b38;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-      box-sizing: border-box;
-    }
+<title>Spell The Singer - Guessing Games</title>
 
-    .nav-links a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
-    }
+<link rel="icon" href="/favicongg.ico">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+<style>
 
-    .clue-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin: 30px 0;
-      width: 80%;
-      max-width: 400px;
-    }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    .clue {
-      padding: 15px;
-      background-color: #315f85;
-      color: white;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 15px;
-      opacity: 1;
-    }
-
-    .clue.locked {
-      opacity: 0.5;
-    }
-
-    .guess-input {
-      padding: 10px;
-      font-size: 1rem;
-      width: 300px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-    }
-
-    .btn-row {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #ffcb05;
-      color: #1e2b38;
-      font-weight: bold;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-
-    #message {
-      font-size: 1.4rem;
-      color: #28a745;
-      margin-top: 20px;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      font-size: 1.1rem;
-      margin-top: 20px;
-      color: #315f85;
-    }
-
-    #play-again {
-      display: none;
-      margin-top: 20px;
-    }
-    .search-bar {
-  padding: 8px 16px 8px 36px;
-  height: 40px;
-  border-radius: 20px;
-  border: none;
-  background: white;
-  color: #315f85;
-  font-size: 0.95rem;
-  background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
-  background-size: 16px;
-  background-repeat: no-repeat;
-  background-position: 12px center;
-  box-shadow: 0 0 2px rgba(0,0,0,0.1);
+body{
+font-family:'Montserrat',sans-serif;
+background:#f4f7fb;
+display:flex;
+flex-direction:column;
+min-height:100vh;
+color:#333;
 }
 
-.search-bar::placeholder {
-  color: #888;
+/* NAV */
+
+nav{
+background:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
 
-  </style>
+nav a{
+margin-right:15px;
+text-decoration:none;
+font-weight:600;
+color:#333;
+}
+
+/* HEADER */
+
+header{
+text-align:center;
+padding:30px;
+background:white;
+box-shadow:0 2px 20px rgba(0,0,0,.1);
+}
+
+header h1{
+font-size:2.4rem;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* MAIN */
+
+.main{
+max-width:900px;
+margin:auto;
+padding:30px;
+width:100%;
+}
+
+.game{
+background:white;
+border-radius:20px;
+padding:40px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+text-align:center;
+}
+
+/* STATS */
+
+.stats{
+background:#f3f7fb;
+padding:12px 20px;
+border-radius:999px;
+display:inline-block;
+font-weight:700;
+margin-bottom:25px;
+}
+
+.divider{margin:0 10px;color:#bbb;}
+
+/* LETTER BOXES */
+
+#blanks{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin:25px 0;
+}
+
+.letter-box{
+width:42px;
+height:42px;
+background:#f3f7fb;
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+font-size:1.2rem;
+border:2px solid #e0e0e0;
+}
+
+/* INPUT */
+
+input{
+margin-top:15px;
+padding:12px;
+border-radius:20px;
+border:2px solid #ddd;
+width:260px;
+font-size:1rem;
+}
+
+/* BUTTON */
+
+button{
+margin-top:12px;
+padding:12px 20px;
+border:none;
+border-radius:20px;
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+font-weight:700;
+cursor:pointer;
+}
+
+button:hover{transform:translateY(-2px)}
+
+#message{
+margin-top:15px;
+font-weight:700;
+font-size:1.1rem;
+}
+
+/* FOOTER */
+
+footer{
+margin-top:auto;
+background:white;
+padding:20px;
+text-align:center;
+}
+
+/* MODAL */
+
+.modal-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(6px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.modal{
+background:white;
+padding:30px;
+border-radius:22px;
+width:90%;
+max-width:500px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.modal h2{
+font-size:1.8rem;
+margin-bottom:10px;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+</style>
 </head>
+
 <body>
-  <nav>
-    <div class="nav-links">
-      <a href="/index.html">Home</a>
-      <a href="/allgames.html">Games</a>
-      <a href="/about.html">About</a>
-    </div>
-    <div class="nav-actions">
-      <input type="text" class="search-bar" placeholder="Search games...">
-      <button class="login-btn">Login</button>
-    </div>
-  </nav>
 
-  <h1>Guess the Mystery Athlete</h1>
-  <div class="stats">
-    <span id="timer">Time Left: 100</span>
-    <span id="highscore">High Score: 0</span>
-    <span id="score">Correct: 0 / 5</span>
-  </div>
+<nav>
+<div>
+<a href="/index.html">Home</a>
+<a href="/allgames.html">Games</a>
+<a href="/about.html">About</a>
+</div>
+</nav>
 
-  <div class="clue-container" id="clueContainer">
-    <div class="clue" id="clue1"></div>
-    <div class="clue locked" id="clue2">🔒</div>
-    <div class="clue locked" id="clue3">🔒</div>
-    <div class="clue locked" id="clue4">🔒</div>
-    <div class="clue locked" id="clue5">🔒</div>
-  </div>
+<header>
+<h1>🎤 Spell The Singer</h1>
+<p>Guess the singer before the timer runs out.</p>
+</header>
 
-  <input type="text" id="guess" class="guess-input" placeholder="Type the athlete's name...">
-  <div class="btn-row" id="buttonRow">
-    <button onclick="submitGuess()">Submit</button>
-    <button onclick="passAthlete()">Pass</button>
-  </div>
+<div class="main">
+<div class="game">
 
-  <button id="play-again" onclick="restartGame()">Play Again</button>
-  <div id="message"></div>
+<div class="stats">
+<span id="timer">Time: 100</span>
+<span class="divider">|</span>
+<span id="score">Correct: 0 / 5</span>
+<span class="divider">|</span>
+<span id="highscore">High Score: 0</span>
+</div>
 
-  <script>
-   const athletes = [
-  {
-    name: 'Stephen Curry',
-    clues: ['🏀 Basketball Player', 'Western Conference', 'Golden State Warriors', 'Point Guard', 'Unanimous MVP']
-  },
-  {
-    name: 'Tom Brady',
-    clues: ['🏈 Football Player', '7 Super Bowl Wins', 'Played for Patriots', 'Quarterback', 'Retired in 2023']
-  },
-  {
-    name: 'Serena Williams',
-    clues: ['🎾 Tennis Legend', '23 Grand Slams', 'Played Doubles with Venus', 'Olympic Gold Medalist', 'GOAT Debate']
-  },
-  {
-    name: 'LeBron James',
-    clues: ['🏀 Basketball Player', 'Los Angeles Lakers', '4 NBA Championships', 'Known as \"The King\"', 'All-Time Scoring Leader']
-  },
-  {
-    name: 'Lionel Messi',
-    clues: ['⚽ Soccer Legend', 'Argentina National Team', 'World Cup Champion', 'Played for Barcelona', '8 Ballon d\'Or']
-  },
-  {
-    name: 'Cristiano Ronaldo',
-    clues: ['⚽ Soccer Superstar', 'Portugal National Team', 'Champions League Legend', 'Played for Real Madrid', '5 Ballon d\'Or']
-  },
-  {
-    name: 'Michael Jordan',
-    clues: ['🏀 Basketball Legend', 'Chicago Bulls', '6 NBA Championships', 'Space Jam Star', 'Wore #23']
-  },
-  {
-    name: 'Tiger Woods',
-    clues: ['🏌️‍♂️ Golf Icon', 'Masters Winner', '15 Major Titles', 'Comeback King', 'Red Shirt on Sundays']
-  },
-  {
-    name: 'Usain Bolt',
-    clues: ['🏃‍♂️ Track Star', 'Fastest Man Alive', '8 Olympic Golds', '100m World Record', 'Lightning Bolt Pose']
-  },
-  {
-    name: 'Simone Biles',
-    clues: ['🤸‍♀️ Gymnast', 'Team USA', 'Most Decorated Gymnast', '4\'8\" Powerhouse', 'Mental Health Advocate']
-  },
-  {
-    name: 'Naomi Osaka',
-    clues: ['🎾 Tennis Star', 'Grand Slam Winner', 'Represents Japan', 'Mental Health Advocate', 'Olympic Competitor']
-  },
-  {
-    name: 'Shaquille O\'Neal',
-    clues: ['🏀 Basketball Giant', 'Played for Lakers & Magic', 'Known as \"Shaq\"', '4-Time NBA Champion', 'Dominant Center']
-  },
-  {
-    name: 'Kobe Bryant',
-    clues: ['🏀 Lakers Legend', '5-Time NBA Champion', 'Black Mamba', '81-Point Game', 'Tragic Helicopter Crash']
-  },
-  {
-    name: 'Floyd Mayweather',
-    clues: ['🥊 Boxing Champion', '50-0 Record', 'Defensive Master', 'Fought Pacquiao & McGregor', 'Nickname \"Money\"']
-  },
-  {
-    name: 'Michael Phelps',
-    clues: ['🏊‍♂️ Swimmer', 'Olympic Legend', 'Most Gold Medals Ever', 'Nickname \"The Fish\"', 'USA Relay Dominator']
-  }
-];
-function shuffleArray(array) {
-  return array.sort(() => 0.5 - Math.random());
+<div id="blanks"></div>
+
+<input id="guessInput" placeholder="Guess the singer">
+
+<br>
+
+<button onclick="submitGuess()">Submit</button>
+
+<div id="message"></div>
+
+</div>
+</div>
+
+<div class="modal-overlay" id="gameOverModal">
+<div class="modal">
+<h2>Game Over</h2>
+<p>Your score:</p>
+<div style="font-weight:700;font-size:1.3rem" id="finalScore"></div>
+<button onclick="restartGame()">Play Again</button>
+</div>
+</div>
+
+<footer>
+© 2026 Guessing Games
+</footer>
+
+<script>
+
+const singers=[
+"Adele","Taylor Swift","Bruno Mars","Ed Sheeran","Lady Gaga","Justin Bieber",
+"Beyonce","Rihanna","Harry Styles","Ariana Grande","Billie Eilish",
+"Sam Smith","Dua Lipa","Shawn Mendes","Camila Cabello","Selena Gomez",
+"Katy Perry","Nicki Minaj","Doja Cat","Post Malone","Olivia Rodrigo",
+"The Weeknd","Drake","Lizzo","Miley Cyrus","Halsey","SZA","Frank Ocean",
+"Charlie Puth","Jennifer Lopez","Kelly Clarkson","Jason Derulo","Zayn Malik",
+"Liam Payne","Louis Tomlinson","Niall Horan","Avril Lavigne","Britney Spears",
+"Mariah Carey","Alicia Keys","John Legend","Elton John","Stevie Wonder",
+"Aretha Franklin","Whitney Houston","Celine Dion","Michael Bublé",
+"Eminem","50 Cent","Kendrick Lamar","Travis Scott","Ice Spice",
+"Flo Rida","Pitbull","Sia","Chris Brown","Lana Del Rey","Lorde",
+"Bad Bunny","Rosalia","J Balvin","Shakira","Ricky Martin",
+"Paul McCartney","Freddie Mercury","David Bowie","George Michael",
+"Elvis Presley","Prince","Billy Joel","Bob Dylan","Phil Collins",
+"Jon Bon Jovi","Sting"
+]
+
+let queue=[]
+let current=""
+let revealed=[]
+let correct=0
+let time=100
+let timer
+let revealTimer
+
+let high = parseInt(localStorage.getItem("spellHigh")) || 0
+document.getElementById("highscore").textContent = "High Score: " + high
+function shuffle(arr){return arr.sort(()=>Math.random()-.5)}
+
+function startGame(){
+correct = 0
+document.getElementById("score").textContent="Correct: 0 / 5"
+queue=shuffle([...singers])
+correct=0
+time=100
+
+document.getElementById("score").textContent="Correct: 0"
+document.getElementById("timer").textContent="Time: 100"
+
+nextSinger()
+
+timer=setInterval(()=>{
+time--
+document.getElementById("timer").textContent="Time: "+time
+if(time<=0)endGame()
+},1000)
+
 }
 
-// Game variables
-let athleteQueue = shuffleArray([...athletes]);
-let currentAthlete;
-let clueIndex = 0;
-let correctCount = 0;
-let timeLeft = 100;
-let timer;
-let clueTimer;
-let highScore = localStorage.getItem('athleteGameHighScore') || 0;
+function renderBoxes(){
 
-document.getElementById("highscore").textContent = `High Score: ${highScore}`;
+const container = document.getElementById("blanks")
+container.innerHTML=""
 
-// Timer
-function startTimer() {
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer').textContent = `Time Left: ${timeLeft}`;
-    if (timeLeft <= 0) endGame(false);
-  }, 1000);
+const words = revealed.join("").split(" ")
+
+words.forEach(word=>{
+
+const row = document.createElement("div")
+row.style.display="flex"
+row.style.justifyContent="center"
+row.style.gap="10px"
+row.style.marginBottom="10px"
+
+word.split("").forEach(letter=>{
+
+const box=document.createElement("div")
+box.className="letter-box"
+box.textContent = letter === "_" ? "" : letter
+
+row.appendChild(box)
+
+})
+
+container.appendChild(row)
+
+})
+
 }
 
-// Load new athlete
-function loadAthlete() {
-  clearTimeout(clueTimer);
+function nextSinger(){
 
-  if (athleteQueue.length === 0) {
-    athleteQueue = shuffleArray([...athletes]);
-  }
+if(queue.length===0)queue=shuffle([...singers])
 
-  currentAthlete = athleteQueue.shift();
-  clueIndex = 0;
+current=queue.shift().toUpperCase()
 
-  document.getElementById('clueContainer').style.display = 'flex';
-  document.getElementById('message').textContent = '';
-  document.getElementById('guess').style.display = 'inline-block';
-  document.getElementById('buttonRow').style.display = 'flex';
-  document.getElementById('play-again').style.display = 'none';
+revealed=current.split("").map(c=>c===" "?" ":"_")
 
-  for (let i = 0; i < 5; i++) {
-    const clueEl = document.getElementById(`clue${i + 1}`);
-    clueEl.textContent = i === 0 ? currentAthlete.clues[0] : '🔒';
-    clueEl.classList.toggle('locked', i !== 0);
-  }
+renderBoxes()
 
-  clueTimer = setTimeout(revealNextClue, 3000);
+let hidden=current.split("").map((c,i)=>c===" "?null:i).filter(i=>i!==null)
+
+clearInterval(revealTimer)
+
+revealTimer=setInterval(()=>{
+
+if(hidden.length===0)return
+
+let r=hidden.splice(Math.floor(Math.random()*hidden.length),1)[0]
+revealed[r]=current[r]
+renderBoxes()
+
+},2000)
+
 }
 
-// Reveal next clue
-function revealNextClue() {
-  clueIndex++;
-  if (clueIndex < 5) {
-    const clueEl = document.getElementById(`clue${clueIndex + 1}`);
-    clueEl.textContent = currentAthlete.clues[clueIndex];
-    clueEl.classList.remove('locked');
-    clueTimer = setTimeout(revealNextClue, 5000);
-  }
+function submitGuess(){
+
+let guess=document.getElementById("guessInput").value.toUpperCase().trim()
+document.getElementById("guessInput").value=""
+
+if(guess===current){
+
+correct++
+document.getElementById("score").textContent="Correct: "+correct+" / 5"
+document.getElementById("message").textContent="✅ Correct!"
+
+setTimeout(()=>{
+document.getElementById("message").textContent=""
+},800)
+
+if(correct===5){
+endGame(true)
+}else{
+nextSinger()
 }
 
-// Handle guess
-function submitGuess() {
-  const inputEl = document.getElementById('guess');
-  const input = inputEl.value.trim().toLowerCase();
-  inputEl.value = '';
+}else{
 
-  if (input === currentAthlete.name.toLowerCase()) {
-    correctCount++;
-    document.getElementById("score").textContent = `Correct: ${correctCount} / 5`;
-    if (correctCount >= 5) {
-      endGame(true);
-    } else {
-      loadAthlete();
-    }
-  } else {
-    document.getElementById('message').textContent = '❌ Try again!';
-  }
+document.getElementById("message").textContent="❌ Try again"
+
+setTimeout(()=>{
+document.getElementById("message").textContent=""
+},1200)
+
 }
 
-// Pass current athlete
-function passAthlete() {
-  loadAthlete();
+}
+function endGame(win){
+
+clearInterval(timer)
+clearInterval(revealTimer)
+
+let score = win ? time : 0
+
+document.getElementById("finalScore").textContent = score
+document.getElementById("gameOverModal").style.display="flex"
+
+if(score > high){
+high = score
+localStorage.setItem("spellHigh", score)
+document.getElementById("highscore").textContent="High Score: "+score
 }
 
-// End game
-function endGame(won) {
-  clearInterval(timer);
-  clearTimeout(clueTimer);
-  document.getElementById('clueContainer').style.display = 'none';
-  document.getElementById('guess').style.display = 'none';
-  document.getElementById('buttonRow').style.display = 'none';
-  document.getElementById('play-again').style.display = 'inline-block';
-
-  const finalMessage = won
-    ? `🎉 Congrats! You won with ${timeLeft} seconds left!`
-    : `💀 Game Over! Final Score: ${correctCount}`;
-  document.getElementById('message').textContent = finalMessage;
-
-  if (won && timeLeft > highScore) {
-    localStorage.setItem('athleteGameHighScore', timeLeft);
-    document.getElementById("highscore").textContent = `High Score: ${timeLeft}`;
-  }
 }
 
-// Restart game
-function restartGame() {
-  correctCount = 0;
-  timeLeft = 100;
-  document.getElementById("score").textContent = `Correct: 0 / 5`;
-  document.getElementById("timer").textContent = `Time Left: 100`;
-  loadAthlete();
-  startTimer();
+function restartGame(){
+
+document.getElementById("gameOverModal").style.display="none"
+startGame()
+
 }
 
-// Start the game
-window.onload = function () {
-  loadAthlete();
-  startTimer();
-};
+document.getElementById("guessInput").addEventListener("keypress",e=>{
+if(e.key==="Enter")submitGuess()
+})
+
+startGame()
+
 </script>
+
 </body>
 </html>

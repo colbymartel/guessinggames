@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Higher Streams - Guessing Games</title>
+
+<link rel="icon" href="/favicongg.ico">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Montserrat',sans-serif;
+background:#f4f7fb;
+display:flex;
+flex-direction:column;
+min-height:100vh;
+color:#333;
+}
+
+nav{
+background:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+nav a{
+margin-right:15px;
+text-decoration:none;
+font-weight:600;
+color:#333;
+}
+
+header{
+text-align:center;
+padding:30px;
+background:white;
+box-shadow:0 2px 20px rgba(0,0,0,.1);
+}
+
+header h1{
+font-size:2.4rem;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.main{
+max-width:900px;
+margin:auto;
+padding:30px;
+width:100%;
+}
+
+.game{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+text-align:center;
+}
+
+.stats{
+background:#f3f7fb;
+padding:12px 20px;
+border-radius:999px;
+display:inline-block;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.divider{margin:0 10px;color:#bbb;}
+
+.hearts{
+font-size:24px;
+margin-top:10px;
+}
+
+.compare{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;
+flex-wrap:wrap;
+margin-top:30px;
+}
+
+.song{
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+padding:25px;
+border-radius:15px;
+width:300px;
+cursor:pointer;
+border:3px solid transparent;
+transition:.2s;
+}
+
+.song:hover{transform:scale(1.03)}
+
+.correct{
+background:#4CAF50;
+color:white;
+border-color:#4CAF50;
+}
+
+.wrong{
+background:#f44336;
+color:white;
+border-color:#f44336;
+}
+
+.streams{
+margin-top:10px;
+font-weight:700;
+}
+
+.or{
+font-weight:700;
+font-size:20px;
+}
+
+.modal-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(6px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.modal{
+background:white;
+padding:30px;
+border-radius:22px;
+width:90%;
+max-width:500px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.modal h2{
+font-size:1.8rem;
+margin-bottom:10px;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+button{
+margin-top:15px;
+padding:12px 20px;
+border:none;
+border-radius:20px;
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+font-weight:700;
+cursor:pointer;
+}
+
+footer{
+margin-top:auto;
+background:white;
+padding:20px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="/index.html">Home</a>
+<a href="/allgames.html">Games</a>
+<a href="/about.html">About</a>
+</div>
+</nav>
+
+<header>
+<h1>🎧 Higher Streams</h1>
+<p>Which song has more Spotify streams?</p>
+</header>
+
+<div class="main">
+
+<div class="game">
+
+<div class="stats">
+<span id="score">Score: 0</span>
+<span class="divider">|</span>
+<span id="highscore">High Score: 0</span>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="compare">
+
+<div class="song" id="left"></div>
+
+<div class="or">OR</div>
+
+<div class="song" id="right"></div>
+
+</div>
+
+</div>
+</div>
+
+<div class="modal-overlay" id="gameOverModal">
+<div class="modal">
+<h2>Game Over</h2>
+<p>Your score:</p>
+<div style="font-weight:700;font-size:1.4rem" id="finalScore"></div>
+<button onclick="restartGame()">Play Again</button>
+</div>
+</div>
+
+<footer>
+© 2026 Guessing Games
+</footer>
+
+<script>
+
+let songs=[]
+let leftSong
+let rightSong
+
+let score=0
+let lives=3
+
+let high=localStorage.getItem("streamsHigh")||0
+document.getElementById("highscore").textContent="High Score: "+high
+
+fetch("songs.json")
+.then(res=>res.json())
+.then(data=>{
+songs=data
+startGame()
+})
+
+function formatStreams(n){
+
+let b=n/1000000000
+return b.toFixed(3)+"B"
+
+}
+
+function updateHearts(){
+
+let html=""
+
+for(let i=0;i<3;i++){
+
+html+=i<lives?"❤️":"🤍"
+
+}
+
+document.getElementById("hearts").innerHTML=html
+
+}
+
+function randomSong(){
+
+return songs[Math.floor(Math.random()*songs.length)]
+
+}
+
+function newRound(){
+
+leftSong=randomSong()
+rightSong=randomSong()
+
+while(leftSong===rightSong){
+rightSong=randomSong()
+}
+
+const left=document.getElementById("left")
+const right=document.getElementById("right")
+
+left.className="song"
+right.className="song"
+
+left.innerHTML=`${leftSong.artist}<br><b>${leftSong.title}</b>`
+right.innerHTML=`${rightSong.artist}<br><b>${rightSong.title}</b>`
+
+}
+
+function select(side){
+
+let chosen=side==="left"?leftSong:rightSong
+let other=side==="left"?rightSong:leftSong
+
+let chosenEl=document.getElementById(side)
+let otherEl=document.getElementById(side==="left"?"right":"left")
+
+if(chosen.streams>=other.streams){
+
+chosenEl.classList.add("correct")
+score++
+
+}else{
+
+chosenEl.classList.add("wrong")
+otherEl.classList.add("correct")
+lives--
+
+}
+
+chosenEl.innerHTML+=`<div class="streams">${formatStreams(chosen.streams)}</div>`
+otherEl.innerHTML+=`<div class="streams">${formatStreams(other.streams)}</div>`
+
+document.getElementById("score").textContent="Score: "+score
+
+updateHearts()
+
+setTimeout(()=>{
+
+if(lives<=0){
+
+endGame()
+
+}else{
+
+newRound()
+
+}
+
+},1500)
+
+}
+
+function endGame(){
+
+document.getElementById("finalScore").textContent=score
+document.getElementById("gameOverModal").style.display="flex"
+
+if(score>high){
+
+localStorage.setItem("streamsHigh",score)
+
+}
+
+}
+
+function restartGame(){
+
+document.getElementById("gameOverModal").style.display="none"
+startGame()
+
+}
+
+function startGame(){
+
+score=0
+lives=3
+
+document.getElementById("score").textContent="Score: 0"
+updateHearts()
+
+newRound()
+
+}
+
+document.getElementById("left").onclick=()=>select("left")
+document.getElementById("right").onclick=()=>select("right")
+
+</script>
+
+</body>
+</html>

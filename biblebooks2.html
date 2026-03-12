@@ -240,14 +240,37 @@ padding-right:5px;
 /* FAVORITE CARD */
 
 .favorite-verse{
+position:relative;
 background:#f3f7fb;
 padding:12px;
 border-radius:12px;
 margin-bottom:10px;
 font-size:.95rem;
 line-height:1.4;
+cursor:grab;
 }
 
+.remove-fav{
+position:absolute;
+top:6px;
+right:8px;
+font-size:14px;
+cursor:pointer;
+font-weight:700;
+color:#888;
+}
+
+.remove-fav:hover{
+color:#e74c3c;
+}
+
+.favorite-verse:active{
+cursor:grabbing;
+}
+
+.sortable-ghost{
+opacity:.4;
+}
 /* SCROLLBAR */
 
 #favoritesList::-webkit-scrollbar{
@@ -303,6 +326,7 @@ opacity:1;
 }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 
 <body>
@@ -396,126 +420,70 @@ Next Verse ➜
 </footer>
 <script>
 
-const VERSES = [
+let VERSES = []
+let BOOKS = []
 
-{book:"Genesis",ref:"Genesis 1:1",text:"In the beginning God created the heavens and the earth."},
-{book:"Genesis",ref:"Genesis 2:7",text:"Then the Lord God formed man from the dust of the ground."},
-{book:"Genesis",ref:"Genesis 9:13",text:"I have set my rainbow in the clouds."},
-{book:"Exodus",ref:"Exodus 20:3",text:"You shall have no other gods before me."},
-{book:"Exodus",ref:"Exodus 20:12",text:"Honor your father and your mother."},
+let streak = 0
+let best = parseInt(localStorage.getItem("bestStreak")) || 0
+let correct = 0
+let lives = 3
+let current = null
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]")
 
-{book:"Leviticus",ref:"Leviticus 19:18",text:"Love your neighbor as yourself."},
-{book:"Numbers",ref:"Numbers 6:24",text:"The Lord bless you and keep you."},
-{book:"Deuteronomy",ref:"Deuteronomy 6:5",text:"Love the Lord your God with all your heart."},
-{book:"Joshua",ref:"Joshua 1:9",text:"Be strong and courageous."},
-{book:"Judges",ref:"Judges 6:12",text:"The Lord is with you, mighty warrior."},
+const verseText = document.getElementById("verseText")
+const choices = document.getElementById("choices")
+const ref = document.getElementById("reference")
+const favBtn = document.getElementById("favBtn")
+const nextBtn = document.getElementById("nextBtn")
 
-{book:"Ruth",ref:"Ruth 1:16",text:"Where you go I will go."},
-{book:"1 Samuel",ref:"1 Samuel 16:7",text:"The Lord looks at the heart."},
-{book:"2 Samuel",ref:"2 Samuel 22:31",text:"As for God, his way is perfect."},
-{book:"1 Kings",ref:"1 Kings 8:61",text:"Let your heart be fully committed to the Lord."},
-{book:"2 Kings",ref:"2 Kings 20:5",text:"I have heard your prayer and seen your tears."},
+async function loadVerses(){
 
-{book:"1 Chronicles",ref:"1 Chronicles 16:34",text:"Give thanks to the Lord, for he is good."},
-{book:"2 Chronicles",ref:"2 Chronicles 7:14",text:"If my people humble themselves and pray."},
-{book:"Ezra",ref:"Ezra 10:4",text:"Rise up; this matter is in your hands."},
-{book:"Nehemiah",ref:"Nehemiah 8:10",text:"The joy of the Lord is your strength."},
-{book:"Esther",ref:"Esther 4:14",text:"Perhaps you were born for such a time as this."},
+const res = await fetch("/verses.json")
+VERSES = await res.json()
 
-{book:"Job",ref:"Job 1:21",text:"The Lord gave and the Lord has taken away."},
-{book:"Job",ref:"Job 19:25",text:"I know that my redeemer lives."},
-{book:"Psalm",ref:"Psalm 23:1",text:"The Lord is my shepherd; I shall not want."},
-{book:"Psalm",ref:"Psalm 27:1",text:"The Lord is my light and my salvation."},
-{book:"Psalm",ref:"Psalm 46:1",text:"God is our refuge and strength."},
+BOOKS = [...new Set(VERSES.map(v => v.book))]
 
-{book:"Psalm",ref:"Psalm 119:105",text:"Your word is a lamp to my feet."},
-{book:"Proverbs",ref:"Proverbs 3:5",text:"Trust in the Lord with all your heart."},
-{book:"Proverbs",ref:"Proverbs 18:10",text:"The name of the Lord is a strong tower."},
-{book:"Ecclesiastes",ref:"Ecclesiastes 3:1",text:"There is a time for everything."},
-{book:"Song of Solomon",ref:"Song of Solomon 2:4",text:"His banner over me is love."},
+nextVerse()
 
-{book:"Isaiah",ref:"Isaiah 9:6",text:"For unto us a child is born."},
-{book:"Isaiah",ref:"Isaiah 40:31",text:"Those who hope in the Lord will renew their strength."},
-{book:"Isaiah",ref:"Isaiah 41:10",text:"Fear not, for I am with you."},
-{book:"Jeremiah",ref:"Jeremiah 29:11",text:"For I know the plans I have for you."},
-{book:"Lamentations",ref:"Lamentations 3:22",text:"His mercies never come to an end."},
+}
 
-{book:"Ezekiel",ref:"Ezekiel 36:26",text:"I will give you a new heart."},
-{book:"Daniel",ref:"Daniel 6:23",text:"He trusted in his God."},
-{book:"Hosea",ref:"Hosea 6:6",text:"I desire mercy, not sacrifice."},
-{book:"Joel",ref:"Joel 2:13",text:"Return to the Lord your God."},
-{book:"Amos",ref:"Amos 5:24",text:"Let justice roll like a river."},
+function shuffle(a){
+return [...a].sort(()=>Math.random()-.5)
+}
 
-{book:"Jonah",ref:"Jonah 2:2",text:"In my distress I called to the Lord."},
-{book:"Micah",ref:"Micah 6:8",text:"Act justly, love mercy, walk humbly."},
-{book:"Habakkuk",ref:"Habakkuk 2:4",text:"The righteous shall live by faith."},
-{book:"Zechariah",ref:"Zechariah 4:6",text:"Not by might nor by power."},
-{book:"Malachi",ref:"Malachi 3:10",text:"Bring the whole tithe into the storehouse."},
+function nextVerse(){
 
-{book:"Matthew",ref:"Matthew 5:14",text:"You are the light of the world."},
-{book:"Matthew",ref:"Matthew 6:33",text:"Seek first the kingdom of God."},
-{book:"Matthew",ref:"Matthew 7:7",text:"Ask and it will be given to you."},
-{book:"Matthew",ref:"Matthew 22:37",text:"Love the Lord your God with all your heart."},
-{book:"Matthew",ref:"Matthew 28:19",text:"Go and make disciples of all nations."},
+ref.textContent=""
+favBtn.style.display="none"
+nextBtn.style.display="none"
 
-{book:"Mark",ref:"Mark 10:27",text:"With God all things are possible."},
-{book:"Luke",ref:"Luke 1:37",text:"Nothing will be impossible with God."},
-{book:"Luke",ref:"Luke 6:31",text:"Do to others as you would have them do to you."},
-{book:"Luke",ref:"Luke 15:7",text:"There will be more joy in heaven."},
-{book:"John",ref:"John 1:1",text:"In the beginning was the Word."},
+let next
+do{
+next = VERSES[Math.floor(Math.random()*VERSES.length)]
+}while(next === current)
 
-{book:"John",ref:"John 3:16",text:"For God so loved the world."},
-{book:"John",ref:"John 8:12",text:"I am the light of the world."},
-{book:"John",ref:"John 11:25",text:"I am the resurrection and the life."},
-{book:"Acts",ref:"Acts 1:8",text:"You will receive power when the Holy Spirit comes."},
-{book:"Acts",ref:"Acts 16:31",text:"Believe in the Lord Jesus."},
+current = next
 
-{book:"Romans",ref:"Romans 1:16",text:"I am not ashamed of the gospel."},
-{book:"Romans",ref:"Romans 5:8",text:"While we were still sinners Christ died for us."},
-{book:"Romans",ref:"Romans 8:28",text:"All things work together for good."},
-{book:"1 Corinthians",ref:"1 Corinthians 10:13",text:"God is faithful."},
-{book:"1 Corinthians",ref:"1 Corinthians 13:4",text:"Love is patient, love is kind."},
+verseText.textContent = current.text
 
-{book:"2 Corinthians",ref:"2 Corinthians 5:17",text:"If anyone is in Christ he is a new creation."},
-{book:"Galatians",ref:"Galatians 5:22",text:"The fruit of the Spirit is love, joy, peace."},
-{book:"Ephesians",ref:"Ephesians 2:8",text:"By grace you have been saved."},
-{book:"Philippians",ref:"Philippians 4:6",text:"Do not be anxious about anything."},
-{book:"Philippians",ref:"Philippians 4:13",text:"I can do all things through Christ."},
+const options = shuffle([
+current.book,
+...shuffle(BOOKS.filter(b => b !== current.book)).slice(0,3)
+])
 
-{book:"Colossians",ref:"Colossians 3:23",text:"Work heartily as for the Lord."},
-{book:"1 Thessalonians",ref:"1 Thessalonians 5:16",text:"Rejoice always."},
-{book:"2 Thessalonians",ref:"2 Thessalonians 3:3",text:"The Lord is faithful."},
-{book:"1 Timothy",ref:"1 Timothy 4:12",text:"Do not let anyone look down on you."},
-{book:"2 Timothy",ref:"2 Timothy 1:7",text:"God gave us a spirit not of fear."},
+choices.innerHTML=""
 
-{book:"Titus",ref:"Titus 3:5",text:"He saved us not because of works."},
-{book:"Hebrews",ref:"Hebrews 11:1",text:"Faith is the assurance of things hoped for."},
-{book:"James",ref:"James 1:5",text:"If any of you lacks wisdom ask God."},
-{book:"1 Peter",ref:"1 Peter 5:7",text:"Cast all your anxiety on him."},
-{book:"2 Peter",ref:"2 Peter 3:9",text:"The Lord is patient with you."},
+options.forEach(book=>{
+const btn=document.createElement("button")
+btn.className="choice"
+btn.textContent=book
+btn.onclick=()=>checkAnswer(book,btn)
+choices.appendChild(btn)
+})
 
-{book:"1 John",ref:"1 John 4:8",text:"God is love."},
-{book:"2 John",ref:"2 John 1:6",text:"Love means walking in obedience."},
-{book:"3 John",ref:"3 John 1:4",text:"I have no greater joy."},
-{book:"Jude",ref:"Jude 1:24",text:"He is able to keep you from stumbling."},
-{book:"Revelation",ref:"Revelation 3:20",text:"I stand at the door and knock."},
-{book:"Revelation",ref:"Revelation 21:4",text:"He will wipe every tear from their eyes."}
+}
 
-];
-const BOOKS = [...new Set(VERSES.map(v=>v.book))]
-
-let streak=0
-let best=parseInt(localStorage.getItem("bestStreak"))||0
-let correct=0
-let lives=3
-let current=null
-let favorites=JSON.parse(localStorage.getItem("favorites")||"[]")
-
-const verseText=document.getElementById("verseText")
-const choices=document.getElementById("choices")
-const ref=document.getElementById("reference")
-const favBtn=document.getElementById("favBtn")
-const nextBtn=document.getElementById("nextBtn")
+loadVerses()
 
 function shuffle(a){
 return [...a].sort(()=>Math.random()-.5)
@@ -654,8 +622,10 @@ favorites.forEach(v=>{
 
 const div=document.createElement("div")
 div.className="favorite-verse"
+div.dataset.ref=v.ref
 
 div.innerHTML=`
+<span class="remove-fav" onclick="removeFavorite('${v.ref}')">✕</span>
 <strong>${v.ref}</strong><br>
 ${v.text}
 `
@@ -668,7 +638,31 @@ list.appendChild(div)
 
 modal.style.display="flex"
 
+new Sortable(list,{
+animation:150,
+
+onEnd:function(){
+
+const newOrder=[]
+
+document.querySelectorAll("#favoritesList .favorite-verse").forEach(card=>{
+
+const verse=favorites.find(v=>v.ref===card.dataset.ref)
+if(verse) newOrder.push(verse)
+
+})
+
+favorites=newOrder
+
+localStorage.setItem("favorites",JSON.stringify(favorites))
+
 }
+
+})
+
+}
+
+
 function closeFavorites(){
 document.getElementById("favoritesModal").style.display="none"
 }
@@ -677,6 +671,16 @@ const modal=document.getElementById("favoritesModal")
 if(e.target===modal){
 modal.style.display="none"
 }
+}
+
+function removeFavorite(ref){
+
+favorites = favorites.filter(v => v.ref !== ref)
+
+localStorage.setItem("favorites",JSON.stringify(favorites))
+
+openFavorites()
+
 }
 updateHUD()
 nextVerse()
