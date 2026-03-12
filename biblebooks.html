@@ -9,14 +9,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+  height: 100%;
+}
     body {
       font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
       color: #333;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
+    body {
+  background: #f4f7fb;
+}
+
+.main-content {
+  background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
+}
 
     /* Nav */
     nav {
@@ -281,10 +290,11 @@
     }
     .btn:active { transform: translateY(1px); }
     .btn-primary {
-      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
-      color: white;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.14);
-    }
+  background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.14);
+}
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 22px rgba(0,0,0,0.18); }
     .btn-ghost {
       background: #f3f7fb;
@@ -457,20 +467,15 @@
         </div>
 
         <div class="feedback" id="feedback"></div>
-
         <div class="mini-row">
-          <div class="small-note" id="lastAnswerNote" style="display:none;"></div>
+          <button class="btn btn-ghost" id="resetBtn">
+            <i class="fas fa-redo"></i> Reset Run
+          </button>
         </div>
-      </div>
-
-      <div class="mini-row">
-        <button class="btn btn-ghost" id="resetBtn">
-          <i class="fas fa-redo"></i> Reset Run
-        </button>
-        <div class="small-note">Goal: don’t break the chain. 🔥</div>
-      </div>
-    </div>
-  </div>
+        
+        </div> <!-- closes verse-card -->
+        </div> <!-- closes game-wrap -->
+        </div> <!-- closes main-content -->
 
   <!-- Game Over Modal -->
   <div class="modal-overlay" id="modalOverlay">
@@ -595,7 +600,6 @@
     const elVerseText = document.getElementById("verseText");
     const elGuess = document.getElementById("guessInput");
     const elFeedback = document.getElementById("feedback");
-    const elLastAnswerNote = document.getElementById("lastAnswerNote");
 
     const hearts = [document.getElementById("h1"), document.getElementById("h2"), document.getElementById("h3")];
 
@@ -703,8 +707,6 @@
       elFeedback.style.display = "none";
       elFeedback.textContent = "";
       elFeedback.className = "feedback";
-      elLastAnswerNote.style.display = "none";
-      elLastAnswerNote.textContent = "";
     }
 
     function nextVerse() {
@@ -751,8 +753,11 @@
     }
 
     // ---- Game Actions ----
+
     function submitGuess() {
-      if (!current) return;
+  if (!current) return;
+
+  showSuggestions([]);
 
       const typed = elGuess.value.trim();
       if (!typed) {
@@ -777,9 +782,7 @@
         }
 
         updateHUD();
-        setFeedback("good", `✅ Correct! That verse is from ${correctBook}. (Streak +1)`);
-        elLastAnswerNote.style.display = "block";
-        elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+        setFeedback("good", `✅ Correct! That verse is from ${correctBook}.`);
 
         setTimeout(nextVerse, 850);
       } else {
@@ -793,9 +796,7 @@
           return;
         }
 
-        setFeedback("bad", `❌ Not quite. The answer was ${correctBook}. Streak reset. (${lives} lives left)`);
-        elLastAnswerNote.style.display = "block";
-        elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+        setFeedback("bad", `❌ Not quite. The answer was ${correctBook}.`);
 
         setTimeout(nextVerse, 950);
       }
@@ -805,9 +806,7 @@
       if (!current) return;
       streak = 0;
       updateHUD();
-      setFeedback("bad", `⏭️ Skipped. The answer was ${current.book}. Streak reset.`);
-      elLastAnswerNote.style.display = "block";
-      elLastAnswerNote.textContent = `Reference: ${current.ref}`;
+      setFeedback("bad", `⏭️ Skipped. The answer was ${current.book}.`);
       setTimeout(nextVerse, 900);
     }
 

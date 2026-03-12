@@ -187,6 +187,42 @@ footer{
   font-size:14px;
   font-weight:600;
 }
+
+/* =========================
+   MOBILE ONLY ADJUSTMENTS
+========================= */
+@media (max-width: 768px) {
+
+  /* Move game slightly lower */
+  .main-wrapper{
+    padding-top:80px;
+  }
+
+  /* Make keyboard closer to footer but safe from mobile search bar */
+  .keyboard{
+    margin:20px auto 40px;
+    padding:12px 12px 110px;
+  }
+
+  /* Keys slightly narrower but taller */
+  .key{
+    min-width:30px;
+    padding:18px 6px;   /* taller */
+    font-size:14px;
+    border-radius:10px;
+  }
+
+  .key.wide{
+    min-width:55px;
+  }
+
+  /* Keep share button under congrats nicely spaced */
+  .share-btn{
+    margin-top:14px;
+  }
+
+}
+
 </style>
 </head>
 <body>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bible Verse Game - Guessing Games</title>
+
+<link rel="icon" href="/favicongg.ico">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:'Montserrat',sans-serif;
+background:#f4f7fb;
+display:flex;
+flex-direction:column;
+min-height:100vh;
+color:#333;
+}
+
+nav{
+background:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+nav a{
+margin-right:15px;
+text-decoration:none;
+font-weight:600;
+color:#333;
+}
+
+header{
+text-align:center;
+padding:30px;
+background:white;
+box-shadow:0 2px 20px rgba(0,0,0,.1);
+}
+
+header h1{
+font-size:2.4rem;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.main{
+max-width:900px;
+margin:auto;
+padding:30px;
+width:100%;
+}
+
+.game{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.top{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:20px;
+align-items:center;
+}
+
+.pill{
+background:#f3f7fb;
+padding:10px 14px;
+border-radius:999px;
+font-weight:700;
+}
+
+.heart{
+font-size:18px;
+margin-right:4px;
+}
+
+.verse-card{
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+padding:25px;
+border-radius:18px;
+margin-bottom:20px;
+}
+
+.verse-text{
+font-size:1.25rem;
+line-height:1.6;
+min-height:60px;
+}
+
+.choices{
+display:grid;
+gap:10px;
+margin-top:15px;
+}
+
+.choice{
+padding:14px;
+border-radius:12px;
+border:none;
+background:white;
+font-weight:700;
+cursor:pointer;
+}
+
+.choice:hover{
+transform:translateY(-2px);
+}
+
+.correct{
+background:#e9fff1;
+border:2px solid #2ecc71;
+}
+
+.wrong{
+background:#ffecec;
+border:2px solid #e74c3c;
+}
+
+.reference{
+margin-top:10px;
+font-weight:700;
+}
+
+.after{
+margin-top:12px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+button{
+cursor:pointer;
+}
+
+.fav-btn{
+background:#f3f7fb;
+border:2px solid #3b7bbf;
+padding:12px 18px;
+border-radius:12px;
+font-weight:700;
+}
+
+#nextBtn{
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+border:none;
+}
+
+footer{
+margin-top:auto;
+background:white;
+padding:20px;
+text-align:center;
+}
+/* OVERLAY */
+
+.modal-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(6px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+animation:fadeIn .25s ease;
+}
+
+/* MODAL CARD */
+
+.modal{
+background:white;
+padding:30px;
+border-radius:22px;
+width:90%;
+max-width:520px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+animation:modalPop .25s ease;
+}
+
+/* TITLE */
+
+.modal h2{
+font-size:1.8rem;
+margin-bottom:8px;
+background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* TEXT */
+
+.modal p{
+opacity:.75;
+margin-bottom:20px;
+}
+
+/* BUTTONS */
+
+.modal button{
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+border:none;
+padding:12px 22px;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+transition:.2s;
+}
+
+.modal button:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+/* FAVORITES LIST */
+
+#favoritesList{
+text-align:left;
+max-height:320px;
+overflow-y:auto;
+margin-top:10px;
+padding-right:5px;
+}
+
+/* FAVORITE CARD */
+
+.favorite-verse{
+background:#f3f7fb;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+font-size:.95rem;
+line-height:1.4;
+}
+
+/* SCROLLBAR */
+
+#favoritesList::-webkit-scrollbar{
+width:6px;
+}
+
+#favoritesList::-webkit-scrollbar-thumb{
+background:#c8d5e8;
+border-radius:10px;
+}
+/* FAVORITES BUTTON */
+
+.favorites-btn{
+background:white;
+border:2px solid #3b7bbf;
+color:#2a5a8a;
+padding:10px 18px;
+border-radius:999px;
+font-weight:700;
+cursor:pointer;
+transition:.2s;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.favorites-btn:hover{
+background:#3b7bbf;
+color:white;
+transform:translateY(-2px);
+box-shadow:0 6px 15px rgba(0,0,0,.2);
+}
+
+.favorites-btn:active{
+transform:scale(.96);
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+@keyframes modalPop{
+from{
+transform:scale(.9);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="/index.html">Home</a>
+<a href="/allgames.html">Games</a>
+<a href="/about.html">About</a>
+</div>
+</nav>
+
+<header>
+<h1>📖 Guess the Bible Book</h1>
+<p>Read the verse and guess which book it comes from.</p>
+</header>
+
+<div class="main">
+
+<div class="game">
+
+<div class="top">
+
+<div class="pill">🔥 Streak: <span id="streak">0</span></div>
+<div class="pill">🏆 Best: <span id="best">0</span></div>
+<div class="pill">✔ Correct: <span id="correct">0</span></div>
+
+<div class="pill">
+<span class="heart" id="h1">❤️</span>
+<span class="heart" id="h2">❤️</span>
+<span class="heart" id="h3">❤️</span>
+</div>
+
+<button class="favorites-btn" onclick="openFavorites()">⭐ Favorites</button>
+</div>
+
+<div class="verse-card">
+
+<div class="verse-text" id="verseText"></div>
+
+<div class="choices" id="choices"></div>
+
+<div class="reference" id="reference"></div>
+
+<div class="after">
+
+<button id="favBtn" class="fav-btn" style="display:none">
+⭐ Save Verse
+</button>
+
+<button id="nextBtn" class="fav-btn" style="display:none">
+Next Verse ➜
+</button>
+
+</div>
+
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="favoritesModal">
+    <div class="modal">
+    
+    <h2>⭐ Favorite Verses</h2>
+    
+    <div id="favoritesList"></div>
+    
+    <br>
+    
+    <button onclick="closeFavorites()">Close</button>
+    
+    </div>
+    </div>
+    <div class="modal-overlay" id="gameOverModal">
+        <div class="modal">
+        
+        <h2>Game Over</h2>
+        
+        <p>Your streak ended.</p>
+        
+        <div style="margin:15px 0;font-weight:700;">
+        🔥 Streak: <span id="finalStreak"></span><br>
+        ✔ Correct: <span id="finalCorrect"></span>
+        </div>
+        
+        <button onclick="restart()">Play Again</button>
+        
+        </div>
+        </div>
+<footer>
+© 2026 Guessing Games
+</footer>
+<script>
+
+const VERSES = [
+
+{book:"Genesis",ref:"Genesis 1:1",text:"In the beginning God created the heavens and the earth."},
+{book:"Genesis",ref:"Genesis 2:7",text:"Then the Lord God formed man from the dust of the ground."},
+{book:"Genesis",ref:"Genesis 9:13",text:"I have set my rainbow in the clouds."},
+{book:"Exodus",ref:"Exodus 20:3",text:"You shall have no other gods before me."},
+{book:"Exodus",ref:"Exodus 20:12",text:"Honor your father and your mother."},
+
+{book:"Leviticus",ref:"Leviticus 19:18",text:"Love your neighbor as yourself."},
+{book:"Numbers",ref:"Numbers 6:24",text:"The Lord bless you and keep you."},
+{book:"Deuteronomy",ref:"Deuteronomy 6:5",text:"Love the Lord your God with all your heart."},
+{book:"Joshua",ref:"Joshua 1:9",text:"Be strong and courageous."},
+{book:"Judges",ref:"Judges 6:12",text:"The Lord is with you, mighty warrior."},
+
+{book:"Ruth",ref:"Ruth 1:16",text:"Where you go I will go."},
+{book:"1 Samuel",ref:"1 Samuel 16:7",text:"The Lord looks at the heart."},
+{book:"2 Samuel",ref:"2 Samuel 22:31",text:"As for God, his way is perfect."},
+{book:"1 Kings",ref:"1 Kings 8:61",text:"Let your heart be fully committed to the Lord."},
+{book:"2 Kings",ref:"2 Kings 20:5",text:"I have heard your prayer and seen your tears."},
+
+{book:"1 Chronicles",ref:"1 Chronicles 16:34",text:"Give thanks to the Lord, for he is good."},
+{book:"2 Chronicles",ref:"2 Chronicles 7:14",text:"If my people humble themselves and pray."},
+{book:"Ezra",ref:"Ezra 10:4",text:"Rise up; this matter is in your hands."},
+{book:"Nehemiah",ref:"Nehemiah 8:10",text:"The joy of the Lord is your strength."},
+{book:"Esther",ref:"Esther 4:14",text:"Perhaps you were born for such a time as this."},
+
+{book:"Job",ref:"Job 1:21",text:"The Lord gave and the Lord has taken away."},
+{book:"Job",ref:"Job 19:25",text:"I know that my redeemer lives."},
+{book:"Psalm",ref:"Psalm 23:1",text:"The Lord is my shepherd; I shall not want."},
+{book:"Psalm",ref:"Psalm 27:1",text:"The Lord is my light and my salvation."},
+{book:"Psalm",ref:"Psalm 46:1",text:"God is our refuge and strength."},
+
+{book:"Psalm",ref:"Psalm 119:105",text:"Your word is a lamp to my feet."},
+{book:"Proverbs",ref:"Proverbs 3:5",text:"Trust in the Lord with all your heart."},
+{book:"Proverbs",ref:"Proverbs 18:10",text:"The name of the Lord is a strong tower."},
+{book:"Ecclesiastes",ref:"Ecclesiastes 3:1",text:"There is a time for everything."},
+{book:"Song of Solomon",ref:"Song of Solomon 2:4",text:"His banner over me is love."},
+
+{book:"Isaiah",ref:"Isaiah 9:6",text:"For unto us a child is born."},
+{book:"Isaiah",ref:"Isaiah 40:31",text:"Those who hope in the Lord will renew their strength."},
+{book:"Isaiah",ref:"Isaiah 41:10",text:"Fear not, for I am with you."},
+{book:"Jeremiah",ref:"Jeremiah 29:11",text:"For I know the plans I have for you."},
+{book:"Lamentations",ref:"Lamentations 3:22",text:"His mercies never come to an end."},
+
+{book:"Ezekiel",ref:"Ezekiel 36:26",text:"I will give you a new heart."},
+{book:"Daniel",ref:"Daniel 6:23",text:"He trusted in his God."},
+{book:"Hosea",ref:"Hosea 6:6",text:"I desire mercy, not sacrifice."},
+{book:"Joel",ref:"Joel 2:13",text:"Return to the Lord your God."},
+{book:"Amos",ref:"Amos 5:24",text:"Let justice roll like a river."},
+
+{book:"Jonah",ref:"Jonah 2:2",text:"In my distress I called to the Lord."},
+{book:"Micah",ref:"Micah 6:8",text:"Act justly, love mercy, walk humbly."},
+{book:"Habakkuk",ref:"Habakkuk 2:4",text:"The righteous shall live by faith."},
+{book:"Zechariah",ref:"Zechariah 4:6",text:"Not by might nor by power."},
+{book:"Malachi",ref:"Malachi 3:10",text:"Bring the whole tithe into the storehouse."},
+
+{book:"Matthew",ref:"Matthew 5:14",text:"You are the light of the world."},
+{book:"Matthew",ref:"Matthew 6:33",text:"Seek first the kingdom of God."},
+{book:"Matthew",ref:"Matthew 7:7",text:"Ask and it will be given to you."},
+{book:"Matthew",ref:"Matthew 22:37",text:"Love the Lord your God with all your heart."},
+{book:"Matthew",ref:"Matthew 28:19",text:"Go and make disciples of all nations."},
+
+{book:"Mark",ref:"Mark 10:27",text:"With God all things are possible."},
+{book:"Luke",ref:"Luke 1:37",text:"Nothing will be impossible with God."},
+{book:"Luke",ref:"Luke 6:31",text:"Do to others as you would have them do to you."},
+{book:"Luke",ref:"Luke 15:7",text:"There will be more joy in heaven."},
+{book:"John",ref:"John 1:1",text:"In the beginning was the Word."},
+
+{book:"John",ref:"John 3:16",text:"For God so loved the world."},
+{book:"John",ref:"John 8:12",text:"I am the light of the world."},
+{book:"John",ref:"John 11:25",text:"I am the resurrection and the life."},
+{book:"Acts",ref:"Acts 1:8",text:"You will receive power when the Holy Spirit comes."},
+{book:"Acts",ref:"Acts 16:31",text:"Believe in the Lord Jesus."},
+
+{book:"Romans",ref:"Romans 1:16",text:"I am not ashamed of the gospel."},
+{book:"Romans",ref:"Romans 5:8",text:"While we were still sinners Christ died for us."},
+{book:"Romans",ref:"Romans 8:28",text:"All things work together for good."},
+{book:"1 Corinthians",ref:"1 Corinthians 10:13",text:"God is faithful."},
+{book:"1 Corinthians",ref:"1 Corinthians 13:4",text:"Love is patient, love is kind."},
+
+{book:"2 Corinthians",ref:"2 Corinthians 5:17",text:"If anyone is in Christ he is a new creation."},
+{book:"Galatians",ref:"Galatians 5:22",text:"The fruit of the Spirit is love, joy, peace."},
+{book:"Ephesians",ref:"Ephesians 2:8",text:"By grace you have been saved."},
+{book:"Philippians",ref:"Philippians 4:6",text:"Do not be anxious about anything."},
+{book:"Philippians",ref:"Philippians 4:13",text:"I can do all things through Christ."},
+
+{book:"Colossians",ref:"Colossians 3:23",text:"Work heartily as for the Lord."},
+{book:"1 Thessalonians",ref:"1 Thessalonians 5:16",text:"Rejoice always."},
+{book:"2 Thessalonians",ref:"2 Thessalonians 3:3",text:"The Lord is faithful."},
+{book:"1 Timothy",ref:"1 Timothy 4:12",text:"Do not let anyone look down on you."},
+{book:"2 Timothy",ref:"2 Timothy 1:7",text:"God gave us a spirit not of fear."},
+
+{book:"Titus",ref:"Titus 3:5",text:"He saved us not because of works."},
+{book:"Hebrews",ref:"Hebrews 11:1",text:"Faith is the assurance of things hoped for."},
+{book:"James",ref:"James 1:5",text:"If any of you lacks wisdom ask God."},
+{book:"1 Peter",ref:"1 Peter 5:7",text:"Cast all your anxiety on him."},
+{book:"2 Peter",ref:"2 Peter 3:9",text:"The Lord is patient with you."},
+
+{book:"1 John",ref:"1 John 4:8",text:"God is love."},
+{book:"2 John",ref:"2 John 1:6",text:"Love means walking in obedience."},
+{book:"3 John",ref:"3 John 1:4",text:"I have no greater joy."},
+{book:"Jude",ref:"Jude 1:24",text:"He is able to keep you from stumbling."},
+{book:"Revelation",ref:"Revelation 3:20",text:"I stand at the door and knock."},
+{book:"Revelation",ref:"Revelation 21:4",text:"He will wipe every tear from their eyes."}
+
+];
+const BOOKS = [...new Set(VERSES.map(v=>v.book))]
+
+let streak=0
+let best=parseInt(localStorage.getItem("bestStreak"))||0
+let correct=0
+let lives=3
+let current=null
+let favorites=JSON.parse(localStorage.getItem("favorites")||"[]")
+
+const verseText=document.getElementById("verseText")
+const choices=document.getElementById("choices")
+const ref=document.getElementById("reference")
+const favBtn=document.getElementById("favBtn")
+const nextBtn=document.getElementById("nextBtn")
+
+function shuffle(a){
+return [...a].sort(()=>Math.random()-.5)
+}
+
+function nextVerse(){
+
+ref.textContent=""
+favBtn.style.display="none"
+nextBtn.style.display="none"
+
+let next
+do{
+next=VERSES[Math.floor(Math.random()*VERSES.length)]
+}while(next===current)
+
+current=next
+
+verseText.textContent=current.text
+
+const options=shuffle([
+current.book,
+...shuffle(BOOKS.filter(b=>b!==current.book)).slice(0,3)
+])
+
+choices.innerHTML=""
+
+options.forEach(book=>{
+const btn=document.createElement("button")
+btn.className="choice"
+btn.textContent=book
+btn.onclick=()=>checkAnswer(book,btn)
+choices.appendChild(btn)
+})
+
+}
+
+function checkAnswer(book,btn){
+
+[...choices.children].forEach(b=>b.disabled=true)
+
+if(book===current.book){
+
+btn.classList.add("correct")
+streak++
+correct++
+
+if(streak>best){
+best=streak
+localStorage.setItem("bestStreak",best)
+}
+
+}else{
+
+btn.classList.add("wrong")
+streak=0
+lives--
+
+[...choices.children].forEach(b=>{
+if(b.textContent===current.book){
+b.classList.add("correct")
+}
+})
+
+if(lives<=0){
+
+document.getElementById("finalStreak").textContent=streak
+document.getElementById("finalCorrect").textContent=correct
+
+document.getElementById("gameOverModal").style.display="flex"
+
+}
+
+}
+
+updateHUD()
+
+ref.textContent=current.ref
+
+favBtn.style.display="inline-block"
+nextBtn.style.display="inline-block"
+
+}
+
+function updateHUD(){
+
+document.getElementById("streak").textContent=streak
+document.getElementById("best").textContent=best
+document.getElementById("correct").textContent=correct
+
+const hearts=["h1","h2","h3"]
+
+hearts.forEach((id,i)=>{
+document.getElementById(id).style.opacity=i<lives?1:.3
+})
+
+}
+function restart(){
+
+document.getElementById("gameOverModal").style.display="none"
+
+lives=3
+streak=0
+correct=0
+
+updateHUD()
+nextVerse()
+
+}
+
+function saveFavorite(v){
+
+if(!favorites.some(f=>f.ref===v.ref)){
+favorites.push(v)
+localStorage.setItem("favorites",JSON.stringify(favorites))
+favBtn.textContent="⭐ Saved!"
+}
+
+}
+
+favBtn.onclick=()=>saveFavorite(current)
+nextBtn.onclick=nextVerse
+
+function openFavorites(){
+
+const modal=document.getElementById("favoritesModal")
+const list=document.getElementById("favoritesList")
+
+list.innerHTML=""
+
+if(favorites.length===0){
+list.innerHTML="<p>No favorite verses yet.</p>"
+}else{
+
+favorites.forEach(v=>{
+
+const div=document.createElement("div")
+div.className="favorite-verse"
+
+div.innerHTML=`
+<strong>${v.ref}</strong><br>
+${v.text}
+`
+
+list.appendChild(div)
+
+})
+
+}
+
+modal.style.display="flex"
+
+}
+function closeFavorites(){
+document.getElementById("favoritesModal").style.display="none"
+}
+window.onclick=function(e){
+const modal=document.getElementById("favoritesModal")
+if(e.target===modal){
+modal.style.display="none"
+}
+}
+updateHUD()
+nextVerse()
+
+</script>
+
+</body>
+</html>
