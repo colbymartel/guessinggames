@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Name of the Day</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --blue:#2a5a8a;
+  --bg:#f4f7fb;
+  --surface:#ffffff;
+  --border:#e6e8ef;
+  --green:#4CAF50;
+  --yellow:#FFD54F;
+  --red:#E53935;
+}
+
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:var(--bg);
+}
+
+/* NAV */
+nav{
+  background:white;
+  border-bottom:1px solid var(--border);
+  padding:12px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nav-left a{
+  margin-right:16px;
+  text-decoration:none;
+  color:#333;
+  font-weight:700;
+}
+
+.nav-right{
+  display:flex;
+  gap:16px;
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* GAME */
+.main{
+  display:flex;
+  justify-content:center;
+  padding:30px 20px;
+}
+
+.game{
+  max-width:500px;
+  width:100%;
+  text-align:center;
+}
+
+h1{color:var(--blue);}
+
+/* HUD */
+.hud{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  margin:15px 0;
+}
+
+.stat{
+  font-weight:700;
+}
+
+.stat-value{
+  color:var(--blue);
+  font-size:20px;
+}
+
+/* TILES */
+.previous{
+  height:70px;
+  margin:15px auto;
+  display:flex;
+  justify-content:center;
+  gap:6px;
+}
+
+.tile{
+  width:40px;
+  height:50px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+}
+
+.correct{background:var(--green);color:white;}
+.present{background:var(--yellow);}
+.wrong{background:var(--red);color:white;}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:2px solid var(--border);
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+}
+
+input:focus{
+  border-color:var(--blue);
+}
+
+/* BUTTONS */
+button{
+  margin-top:10px;
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.hint-btn{background:#eee;}
+.share-btn{
+  background:var(--blue);
+  color:white;
+  display:none;
+}
+
+/* KEYBOARD */
+.keyboard{
+  margin-top:20px;
+}
+.key-row{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  margin-bottom:6px;
+}
+.key{
+  padding:12px;
+  min-width:36px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:white;
+  cursor:pointer;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.hidden{display:none;}
+
+.modal-box{
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  max-width:400px;
+  width:90%;
+  text-align:center;
+}
+
+.close{
+  float:right;
+  cursor:pointer;
+  font-size:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="#">Home</a>
+    <a href="#">Games</a>
+  </div>
+  <div class="nav-right">
+    <div id="infoBtn">❓</div>
+    <div id="statsBtn">📊</div>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="game">
+
+    <h1>🎤 Name of the Day</h1>
+
+    <div class="hud">
+      <div class="stat">Attempts<div id="attempts" class="stat-value">0</div></div>
+      <div class="stat">Time<div id="time" class="stat-value">0:00</div></div>
+    </div>
+
+    <div id="previous" class="previous"></div>
+
+    <input id="input" placeholder="Type a name...">
+
+    <div id="hintText"></div>
+
+    <button id="hintBtn" class="hint-btn">Reveal Photo Hint</button>
+    <button id="shareBtn" class="share-btn">Share Score</button>
+
+    <div id="keyboard" class="keyboard"></div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <span id="closeModal" class="close">&times;</span>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+
+let target = "VINCENT";
+let attempts = 0;
+let seconds = 0;
+let gameOver = false;
+
+const input = document.getElementById("input");
+const previous = document.getElementById("previous");
+const hintText = document.getElementById("hintText");
+const attemptsEl = document.getElementById("attempts");
+const timeEl = document.getElementById("time");
+const shareBtn = document.getElementById("shareBtn");
+
+/* TIMER */
+setInterval(()=>{
+  if(!gameOver){
+    seconds++;
+    const m=Math.floor(seconds/60);
+    const s=seconds%60;
+    timeEl.innerText=`${m}:${s.toString().padStart(2,"0")}`;
+  }
+},1000);
+
+/* KEYBOARD */
+const layout=["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+layout.forEach(row=>{
+  const rowDiv=document.createElement("div");
+  rowDiv.className="key-row";
+  row.split("").forEach(l=>{
+    const key=document.createElement("div");
+    key.className="key";
+    key.innerText=l;
+    key.onclick=()=>handleKey(l);
+    rowDiv.appendChild(key);
+  });
+  document.getElementById("keyboard").appendChild(rowDiv);
+});
+
+function handleKey(k){
+  if(gameOver) return;
+  input.value+=k;
+}
+
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter") submitGuess();
+});
+
+/* GUESS */
+function submitGuess(){
+  const guess=input.value.toUpperCase();
+  if(!guess) return;
+
+  attempts++;
+  attemptsEl.innerText=attempts;
+  previous.innerHTML="";
+
+  for(let i=0;i<guess.length;i++){
+    const tile=document.createElement("div");
+    tile.className="tile";
+
+    if(guess[i]===target[i]) tile.classList.add("correct");
+    else if(target.includes(guess[i])) tile.classList.add("present");
+    else tile.classList.add("wrong");
+
+    tile.innerText=guess[i];
+    previous.appendChild(tile);
+  }
+
+  if(guess===target){
+    gameOver=true;
+    hintText.innerText="🎉 You got it!";
+    shareBtn.style.display="block";
+  }
+
+  input.value="";
+}
+
+/* HINT */
+document.getElementById("hintBtn").onclick=()=>{
+  if(attempts<3){
+    hintText.innerText="Unlock after 3 guesses";
+    return;
+  }
+  openModal(`
+    <h2>Photo Hint 👀</h2>
+    <img src="person.jpg" style="width:100%; border-radius:12px;">
+  `);
+};
+
+/* INFO */
+document.getElementById("infoBtn").onclick=()=>{
+  openModal(`
+    <h2>How to Play</h2>
+    <p>Guess the name in as few tries as possible.</p>
+    <p>Green = correct, Yellow = wrong spot</p>
+  `);
+};
+
+/* STATS */
+document.getElementById("statsBtn").onclick=()=>{
+  openModal(`
+    <h2>Your Stats</h2>
+    <p>Games Played: 10</p>
+    <p>Win %: 70%</p>
+    <p>Streak: 4</p>
+  `);
+};
+
+/* MODAL */
+const modal=document.getElementById("modal");
+const modalContent=document.getElementById("modalContent");
+
+function openModal(html){
+  modal.classList.remove("hidden");
+  modalContent.innerHTML=html;
+}
+
+document.getElementById("closeModal").onclick=()=>{
+  modal.classList.add("hidden");
+};
+
+modal.onclick=(e)=>{
+  if(e.target===modal) modal.classList.add("hidden");
+};
+
+/* SHARE */
+shareBtn.onclick=()=>{
+  const text=`I guessed today's name in ${seconds}s! guessinggames.com`;
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+};
+
+</script>
+
+</body>
+</html>

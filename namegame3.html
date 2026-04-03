@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Name of the Day</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --blue-700:#2a5a8a;
+  --bg:#f4f7fb;
+  --surface:#ffffff;
+  --border:#e6e8ef;
+  --green:#4CAF50;
+  --yellow:#FFD54F;
+  --red:#E53935;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:var(--bg);
+  color:#333;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+/* NAV */
+nav{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:12px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-links a{
+  text-decoration:none;
+  color:#333;
+  font-weight:700;
+  margin-right:18px;
+}
+
+/* CENTER */
+.main-wrapper{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px 20px;
+}
+
+.game{
+  width:100%;
+  max-width:600px;
+  text-align:center;
+}
+
+h1{
+  color:var(--blue-700);
+  margin-bottom:10px;
+}
+
+/* HUD */
+.hud{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  margin:20px 0;
+  font-weight:700;
+}
+.stat-value{
+  font-size:20px;
+  color:var(--blue-700);
+}
+
+/* PREVIOUS ROW */
+.previous-container{
+  height:70px;
+  width:420px;
+  max-width:100%;
+  margin:20px auto;
+  padding:12px;
+  border-radius:16px;
+  background:white;
+  border:1px solid var(--border);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+}
+
+/* TILES */
+.tile{
+  width:42px;
+  height:50px;
+  border-radius:10px;
+  background:var(--blue-700); /* 👈 same as title */
+  border:1px solid var(--blue-700);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:18px;
+  color:white; /* 👈 ensures visibility */
+}
+.correct{background:var(--green);color:white;}
+.present{background:var(--yellow);color:black;}
+.wrong{background:var(--red);color:white;}
+
+/* INPUT */
+.input-wrap{
+  margin:20px auto;
+  max-width:420px;
+}
+input{
+  width:100%;
+  padding:16px;
+  font-size:20px;
+  border-radius:14px;
+  border:2px solid var(--border);
+  text-align:center;
+  font-weight:700;
+  outline:none;
+}
+input:focus{
+  border-color:var(--blue-700);
+}
+
+/* MESSAGE */
+.length-hint{
+  min-height:22px;
+  margin-top:14px;
+  margin-bottom:10px; /* 👈 adds balance */
+  font-size:14px;
+  font-weight:700;
+  color:var(--blue-700);
+  text-align:center;
+}
+
+/* KEYBOARD */
+.keyboard{
+  max-width:520px;
+  margin:20px auto;
+}
+.key-row{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  margin-bottom:6px;
+}
+.key{
+  padding:10px;
+  min-width:75px; /* was 36px → wider */
+  border-radius:8px;
+  background:white;
+  border:1px solid var(--border);
+  font-weight:700;
+  cursor:pointer;
+  user-select:none;
+}
+.key.wide{
+  min-width:80px; /* slightly bigger too */
+}.key.correct{background:var(--green);color:white;}
+.key.wrong{background:var(--red);color:white;}
+
+/* SHARE */
+.share-btn{
+  margin-top:20px;
+  background:var(--blue-700);
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
+}
+
+footer{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  text-align:center;
+  padding:16px;
+  font-size:14px;
+  font-weight:600;
+}
+
+/* =========================
+   MOBILE ONLY ADJUSTMENTS
+========================= */
+@media (max-width: 768px) {
+
+  /* Move game slightly lower */
+  .main-wrapper{
+    padding-top:80px;
+  }
+
+  /* Make keyboard closer to footer but safe from mobile search bar */
+  .keyboard{
+    margin:20px auto 40px;
+    padding:12px 12px 110px;
+  }
+
+  /* Keys slightly narrower but taller */
+  .key{
+    min-width:35px;
+    padding:18px 6px;   /* taller */
+    font-size:14px;
+    border-radius:10px;
+  }
+
+  .key.wide{
+    min-width:55px;
+  }
+
+  /* Keep share button under congrats nicely spaced */
+  .share-btn{
+    margin-top:14px;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/games">Games</a>
+    <a href="/about">About</a>
+  </div>
+</nav>
+
+<div class="main-wrapper">
+  <div class="game">
+
+    <h1>🎤 Name of the Day</h1>
+
+    <div class="hud">
+      <div>
+        Attempts
+        <div id="attemptCount" class="stat-value">0</div>
+      </div>
+      <div>
+        Time
+        <div id="timer" class="stat-value">0:00</div>
+      </div>
+    </div>
+
+    <div id="previousContainer" class="previous-container"></div>
+
+    <div class="input-wrap">
+      <input id="guessInput" placeholder="Type a name..." autocomplete="off"/>
+      <div id="lengthHint" class="length-hint"></div>
+    </div>
+
+    <div id="keyboard" class="keyboard"></div>
+
+    <button id="shareBtn" class="share-btn">Share Score</button>
+
+  </div>
+</div>
+
+<footer>
+  © 2026 Guessing Games
+</footer>
+
+<script>
+
+    let nameBank = [];
+    let target = "JESUS"; // ✅ ANSWER SET HERE
+    let attempts = 0;
+    let seconds = 0;
+    let gameOver = false;
+    
+    const input = document.getElementById("guessInput");
+    const previousContainer = document.getElementById("previousContainer");
+    const hint = document.getElementById("lengthHint");
+    const shareBtn = document.getElementById("shareBtn");
+    const attemptCount = document.getElementById("attemptCount");
+    const timerDisplay = document.getElementById("timer");
+    
+    /* FORMAT TIME */
+    function formatTime(s){
+      const m = Math.floor(s/60);
+      const sec = s%60;
+      return `${m}:${sec.toString().padStart(2,"0")}`;
+    }
+    
+    /* TIMER */
+    setInterval(()=>{
+      if(!gameOver){
+        seconds++;
+        timerDisplay.innerText = formatTime(seconds);
+      }
+    },1000);
+    
+    /* LOAD NAME BANK */
+    fetch("names.json")
+      .then(res => res.json())
+      .then(data => {
+        nameBank = data.names;
+      });
+    
+    /* KEYBOARD */
+    const layout = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+    
+    function createKeyboard(){
+      layout.forEach(row=>{
+        const rowDiv=document.createElement("div");
+        rowDiv.className="key-row";
+        row.split("").forEach(l=>addKey(l,rowDiv));
+        document.getElementById("keyboard").appendChild(rowDiv);
+      });
+    
+      const bottom=document.createElement("div");
+      bottom.className="key-row";
+      addKey("ENTER",bottom,true);
+      addKey("⌫",bottom,true);
+      document.getElementById("keyboard").appendChild(bottom);
+    }
+    
+    function addKey(letter,parent,wide=false){
+      const key=document.createElement("div");
+      key.className="key";
+      if(wide) key.classList.add("wide");
+      key.innerText=letter;
+      key.onclick=()=>handleKey(letter);
+      parent.appendChild(key);
+    }
+    
+    function handleKey(key){
+      if(gameOver) return;
+    
+      if(key==="ENTER") submitGuess();
+      else if(key==="⌫") input.value=input.value.slice(0,-1);
+      else if(input.value.length < 5) input.value+=key; // ✅ LIMIT INPUT TO 5
+    }
+    
+    input.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter") submitGuess();
+    });
+    
+    /* RENDER EMPTY TILES */
+    function renderEmptyTiles(){
+      previousContainer.innerHTML = "";
+      for(let i=0;i<5;i++){
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        previousContainer.appendChild(tile);
+      }
+    }
+    
+    /* SUBMIT */
+    function submitGuess(){
+      const guess=input.value.toUpperCase().trim();
+    
+      if(!guess || gameOver) return;
+    
+      if(guess.length !== 5){
+        hint.innerText = "Name must be 5 letters";
+        return;
+      }
+    
+
+      attempts++;
+      attemptCount.innerText = attempts;
+    
+      previousContainer.innerHTML="";
+    
+      const letterCounts = {};
+      for(let char of target){
+        letterCounts[char] = (letterCounts[char] || 0) + 1;
+      }
+    
+      const result = new Array(5).fill("wrong");
+    
+      // correct positions
+      for(let i=0;i<5;i++){
+        if(guess[i] === target[i]){
+          result[i] = "correct";
+          letterCounts[guess[i]]--;
+        }
+      }
+    
+      // present positions
+      for(let i=0;i<5;i++){
+        if(result[i] === "wrong" && letterCounts[guess[i]] > 0){
+          result[i] = "present";
+          letterCounts[guess[i]]--;
+        }
+      }
+    
+      // render tiles
+      for(let i=0;i<5;i++){
+        const tile=document.createElement("div");
+        tile.className="tile " + result[i];
+        tile.innerText=guess[i];
+        previousContainer.appendChild(tile);
+    
+        updateKeyboard(guess[i], result[i]);
+      }
+    
+      if(guess === target){
+        gameOver = true;
+        hint.innerText = "🎉 Happy Easter!";
+        shareBtn.style.opacity="1";
+        shareBtn.style.pointerEvents="auto";
+      } else {
+        hint.innerText = "Keep going...";
+      }
+    
+      input.value="";
+    }
+    
+    /* KEYBOARD COLOR LOGIC */
+    function updateKeyboard(letter, status){
+      const key=[...document.querySelectorAll(".key")]
+        .find(k=>k.innerText===letter);
+    
+      if(!key) return;
+    
+      if(status === "correct"){
+        key.className="key correct";
+      } else if(status === "present"){
+        if(!key.classList.contains("correct"))
+          key.style.background = "#FFD54F";
+      } else {
+        if(!key.classList.contains("correct"))
+          key.className="key wrong";
+      }
+    }
+    
+    /* SHARE */
+    shareBtn.addEventListener("click",()=>{
+      const message = `I guessed today's name in ${formatTime(seconds)}! Play at guessinggames.com`;
+      navigator.clipboard.writeText(message);
+      alert("Score copied!");
+    });
+    
+    /* INIT */
+    createKeyboard();
+    renderEmptyTiles();
+    input.focus();
+    
+    </script>
+</body>
+</html>

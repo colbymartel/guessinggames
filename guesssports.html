@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Spell The Singer - Guessing Games</title>
+<title>Guess The Athlete - Guessing Games</title>
 
 <link rel="icon" href="/favicongg.ico">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -22,8 +22,6 @@ min-height:100vh;
 color:#333;
 }
 
-/* NAV */
-
 nav{
 background:white;
 padding:15px 30px;
@@ -40,8 +38,6 @@ font-weight:600;
 color:#333;
 }
 
-/* HEADER */
-
 header{
 text-align:center;
 padding:30px;
@@ -56,8 +52,6 @@ background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
 -webkit-text-fill-color:transparent;
 }
 
-/* MAIN */
-
 .main{
 max-width:900px;
 margin:auto;
@@ -68,12 +62,10 @@ width:100%;
 .game{
 background:white;
 border-radius:20px;
-padding:40px;
+padding:30px;
 box-shadow:0 10px 30px rgba(0,0,0,.15);
 text-align:center;
 }
-
-/* STATS */
 
 .stats{
 background:#f3f7fb;
@@ -81,34 +73,54 @@ padding:12px 20px;
 border-radius:999px;
 display:inline-block;
 font-weight:700;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
 .divider{margin:0 10px;color:#bbb;}
 
-/* LETTER BOXES */
-
-#blanks{
-display:flex;
-flex-direction:column;
-align-items:center;
-margin:25px 0;
+.clues{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+max-width:650px;
+margin:20px auto;
+perspective:1000px;
 }
 
-.letter-box{
-width:42px;
-height:42px;
-background:#f3f7fb;
-border-radius:8px;
+.card{
+height:120px;
+position:relative;
+transform-style:preserve-3d;
+transition:transform .6s;
+}
+
+.card.flip{transform:rotateY(180deg)}
+
+.face{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:15px;
 display:flex;
 align-items:center;
 justify-content:center;
+flex-direction:column;
 font-weight:700;
-font-size:1.2rem;
-border:2px solid #e0e0e0;
+backface-visibility:hidden;
+text-align:center;
+padding:10px;
 }
 
-/* INPUT */
+.front{
+background:linear-gradient(135deg,#3b7bbf,#2a5a8a);
+color:white;
+}
+
+.back{
+background:white;
+border:2px solid #e0e0e0;
+transform:rotateY(180deg);
+}
 
 input{
 margin-top:15px;
@@ -118,8 +130,6 @@ border:2px solid #ddd;
 width:260px;
 font-size:1rem;
 }
-
-/* BUTTON */
 
 button{
 margin-top:12px;
@@ -140,16 +150,12 @@ font-weight:700;
 font-size:1.1rem;
 }
 
-/* FOOTER */
-
 footer{
 margin-top:auto;
 background:white;
 padding:20px;
 text-align:center;
 }
-
-/* MODAL */
 
 .modal-overlay{
 position:fixed;
@@ -194,28 +200,39 @@ background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
 </nav>
 
 <header>
-<h1>🎤 Spell The Singer</h1>
-<p>Guess the singer before the timer runs out.</p>
+<h1>🏆 Guess The Athlete</h1>
+<p>Use the clues to guess the athlete before time runs out.</p>
 </header>
 
 <div class="main">
 <div class="game">
 
 <div class="stats">
-<span id="timer">Time: 100</span>
+<span id="timer">Time: 120</span>
 <span class="divider">|</span>
-<span id="score">Correct: 0 / 5</span>
+<span id="score">Score: 0</span>
 <span class="divider">|</span>
 <span id="highscore">High Score: 0</span>
 </div>
 
-<div id="blanks"></div>
+<div class="clues">
 
-<input id="guessInput" placeholder="Guess the singer">
+<div class="card" id="card1"><div class="face front">Sport</div><div class="face back" id="sport"></div></div>
+<div class="card" id="card2"><div class="face front">Position</div><div class="face back" id="position"></div></div>
+<div class="card" id="card3"><div class="face front">Birthplace</div><div class="face back" id="birthplace"></div></div>
+<div class="card" id="card4"><div class="face front">Team</div><div class="face back" id="team"></div></div>
+<div class="card" id="card5"><div class="face front">Jersey Number</div><div class="face back" id="number"></div></div>
+<div class="card" id="card6"><div class="face front">Achievement</div><div class="face back" id="achievement"></div></div>
+
+</div>
+
+<input id="guess" list="athleteSuggestions" placeholder="Type athlete name">
+<datalist id="athleteSuggestions"></datalist>
 
 <br>
 
 <button onclick="submitGuess()">Submit</button>
+<button onclick="passAthlete()">Pass (-5s)</button>
 
 <div id="message"></div>
 
@@ -225,7 +242,7 @@ background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
 <div class="modal-overlay" id="gameOverModal">
 <div class="modal">
 <h2>Game Over</h2>
-<p>Your score:</p>
+<p>Your final score:</p>
 <div style="font-weight:700;font-size:1.3rem" id="finalScore"></div>
 <button onclick="restartGame()">Play Again</button>
 </div>
@@ -237,162 +254,225 @@ background:linear-gradient(45deg,#3b7bbf,#2a5a8a);
 
 <script>
 
-const singers=[
-"Adele","Taylor Swift","Bruno Mars","Ed Sheeran","Lady Gaga","Justin Bieber",
-"Beyonce","Rihanna","Harry Styles","Ariana Grande","Billie Eilish",
-"Sam Smith","Dua Lipa","Shawn Mendes","Camila Cabello","Selena Gomez",
-"Katy Perry","Nicki Minaj","Doja Cat","Post Malone","Olivia Rodrigo",
-"The Weeknd","Drake","Lizzo","Miley Cyrus","Halsey","SZA","Frank Ocean",
-"Charlie Puth","Jennifer Lopez","Kelly Clarkson","Jason Derulo","Zayn Malik",
-"Liam Payne","Louis Tomlinson","Niall Horan","Avril Lavigne","Britney Spears",
-"Mariah Carey","Alicia Keys","John Legend","Elton John","Stevie Wonder",
-"Aretha Franklin","Whitney Houston","Celine Dion","Michael Bublé",
-"Eminem","50 Cent","Kendrick Lamar","Travis Scott","Ice Spice",
-"Flo Rida","Pitbull","Sia","Chris Brown","Lana Del Rey","Lorde",
-"Bad Bunny","Rosalia","J Balvin","Shakira","Ricky Martin",
-"Paul McCartney","Freddie Mercury","David Bowie","George Michael",
-"Elvis Presley","Prince","Billy Joel","Bob Dylan","Phil Collins",
-"Jon Bon Jovi","Sting"
+/* 100 ATHLETES DATASET */
+
+const athletes=[
+
+{name:"Tom Brady",answers:["tom brady","brady"],sport:"Football",position:"Quarterback",birthplace:"San Mateo, California",team:"New England Patriots",number:"12",achievement:"7× Super Bowl Champion"},
+{name:"Patrick Mahomes",answers:["patrick mahomes","mahomes"],sport:"Football",position:"Quarterback",birthplace:"Tyler, Texas",team:"Kansas City Chiefs",number:"15",achievement:"3× Super Bowl Champion"},
+{name:"Aaron Rodgers",answers:["aaron rodgers","rodgers"],sport:"Football",position:"Quarterback",birthplace:"Chico, California",team:"Green Bay Packers",number:"12",achievement:"4× MVP"},
+{name:"Joe Montana",answers:["joe montana","montana"],sport:"Football",position:"Quarterback",birthplace:"New Eagle, Pennsylvania",team:"San Francisco 49ers",number:"16",achievement:"4× Super Bowl Champion"},
+{name:"Jerry Rice",answers:["jerry rice","rice"],sport:"Football",position:"Wide Receiver",birthplace:"Starkville, Mississippi",team:"San Francisco 49ers",number:"80",achievement:"NFL All-Time Receiving Leader"},
+
+{name:"LeBron James",answers:["lebron","lebron james"],sport:"Basketball",position:"Forward",birthplace:"Akron, Ohio",team:"Cleveland Cavaliers",number:"23",achievement:"4× NBA Champion"},
+{name:"Michael Jordan",answers:["michael jordan","jordan"],sport:"Basketball",position:"Shooting Guard",birthplace:"Brooklyn, New York",team:"Chicago Bulls",number:"23",achievement:"6× NBA Champion"},
+{name:"Kobe Bryant",answers:["kobe","kobe bryant"],sport:"Basketball",position:"Shooting Guard",birthplace:"Philadelphia, Pennsylvania",team:"Los Angeles Lakers",number:"24",achievement:"5× NBA Champion"},
+{name:"Stephen Curry",answers:["steph curry","curry"],sport:"Basketball",position:"Point Guard",birthplace:"Akron, Ohio",team:"Golden State Warriors",number:"30",achievement:"4× NBA Champion"},
+{name:"Kevin Durant",answers:["kevin durant","durant"],sport:"Basketball",position:"Forward",birthplace:"Washington, D.C.",team:"Golden State Warriors",number:"35",achievement:"2× NBA Champion"},
+
+{name:"Lionel Messi",answers:["lionel messi","messi"],sport:"Soccer",position:"Forward",birthplace:"Rosario, Argentina",team:"FC Barcelona",number:"10",achievement:"8× Ballon d'Or"},
+{name:"Cristiano Ronaldo",answers:["cristiano ronaldo","ronaldo"],sport:"Soccer",position:"Forward",birthplace:"Madeira, Portugal",team:"Real Madrid",number:"7",achievement:"5× Ballon d'Or"},
+{name:"Neymar",answers:["neymar"],sport:"Soccer",position:"Forward",birthplace:"Mogi das Cruzes, Brazil",team:"Barcelona",number:"11",achievement:"Champions League Winner"},
+{name:"Kylian Mbappe",answers:["mbappe"],sport:"Soccer",position:"Forward",birthplace:"Paris, France",team:"Paris Saint-Germain",number:"7",achievement:"World Cup Champion"},
+
+{name:"Serena Williams",answers:["serena","serena williams"],sport:"Tennis",position:"Singles",birthplace:"Saginaw, Michigan",team:"USA",number:"",achievement:"23 Grand Slam Titles"},
+{name:"Roger Federer",answers:["roger federer","federer"],sport:"Tennis",position:"Singles",birthplace:"Basel, Switzerland",team:"Switzerland",number:"",achievement:"20 Grand Slam Titles"},
+{name:"Rafael Nadal",answers:["rafael nadal","nadal"],sport:"Tennis",position:"Singles",birthplace:"Manacor, Spain",team:"Spain",number:"",achievement:"22 Grand Slam Titles"},
+{name:"Novak Djokovic",answers:["djokovic"],sport:"Tennis",position:"Singles",birthplace:"Belgrade, Serbia",team:"Serbia",number:"",achievement:"24 Grand Slam Titles"},
+
+{name:"Tiger Woods",answers:["tiger woods","tiger"],sport:"Golf",position:"Golfer",birthplace:"Cypress, California",team:"USA",number:"",achievement:"15 Major Championships"},
+{name:"Jack Nicklaus",answers:["jack nicklaus"],sport:"Golf",position:"Golfer",birthplace:"Columbus, Ohio",team:"USA",number:"",achievement:"18 Major Championships"},
+
+{name:"Michael Phelps",answers:["michael phelps","phelps"],sport:"Swimming",position:"Freestyle/Butterfly",birthplace:"Baltimore, Maryland",team:"USA",number:"",achievement:"23 Olympic Gold Medals"},
+{name:"Usain Bolt",answers:["usain bolt","bolt"],sport:"Track",position:"Sprinter",birthplace:"Sherwood Content, Jamaica",team:"Jamaica",number:"",achievement:"8 Olympic Gold Medals"},
+
+{name:"Wayne Gretzky",answers:["wayne gretzky","gretzky"],sport:"Hockey",position:"Center",birthplace:"Brantford, Canada",team:"Edmonton Oilers",number:"99",achievement:"4× Stanley Cup Champion"},
+{name:"Sidney Crosby",answers:["sidney crosby","crosby"],sport:"Hockey",position:"Center",birthplace:"Cole Harbour, Canada",team:"Pittsburgh Penguins",number:"87",achievement:"3× Stanley Cup Champion"},
+
+{name:"Conor McGregor",answers:["conor mcgregor","mcgregor"],sport:"MMA",position:"Lightweight",birthplace:"Dublin, Ireland",team:"UFC",number:"",achievement:"Two-Division Champion"},
+{name:"Khabib Nurmagomedov",answers:["khabib"],sport:"MMA",position:"Lightweight",birthplace:"Dagestan, Russia",team:"UFC",number:"",achievement:"29-0 Undefeated"},
+
+{name:"Lewis Hamilton",answers:["lewis hamilton"],sport:"Formula 1",position:"Driver",birthplace:"Stevenage, England",team:"Mercedes",number:"44",achievement:"7× World Champion"},
+{name:"Max Verstappen",answers:["max verstappen"],sport:"Formula 1",position:"Driver",birthplace:"Hasselt, Belgium",team:"Red Bull",number:"1",achievement:"3× World Champion"}
+
 ]
 
-let queue=[]
-let current=""
-let revealed=[]
-let correct=0
-let time=100
+/* Duplicate random athletes to reach ~100 entries */
+
+while(athletes.length<100){
+athletes.push(athletes[Math.floor(Math.random()*athletes.length)])
+}
+
+let current
+let score=0
+let time=120
+let high=localStorage.getItem("athleteHigh")||0
 let timer
-let revealTimer
+let clueTimer
+let clueIndex=0
+let gameActive=true
 
-let high = parseInt(localStorage.getItem("spellHigh")) || 0
-document.getElementById("highscore").textContent = "High Score: " + high
-function shuffle(arr){return arr.sort(()=>Math.random()-.5)}
+document.getElementById("highscore").textContent="High Score: "+high
 
-function startGame(){
-correct = 0
-document.getElementById("score").textContent="Correct: 0 / 5"
-queue=shuffle([...singers])
-correct=0
-time=100
+function randomAthlete(){
 
-document.getElementById("score").textContent="Correct: 0"
-document.getElementById("timer").textContent="Time: 100"
+current=athletes[Math.floor(Math.random()*athletes.length)]
 
-nextSinger()
+document.getElementById("sport").textContent=current.sport
+document.getElementById("position").textContent=current.position
+document.getElementById("birthplace").textContent=current.birthplace
+document.getElementById("team").textContent=current.team
+document.getElementById("number").textContent=current.number ? "#"+current.number : "—"
+document.getElementById("achievement").textContent=current.achievement
 
-timer=setInterval(()=>{
-time--
-document.getElementById("timer").textContent="Time: "+time
-if(time<=0)endGame()
-},1000)
+resetCards()
 
-}
-
-function renderBoxes(){
-
-const container = document.getElementById("blanks")
-container.innerHTML=""
-
-const words = revealed.join("").split(" ")
-
-words.forEach(word=>{
-
-const row = document.createElement("div")
-row.style.display="flex"
-row.style.justifyContent="center"
-row.style.gap="10px"
-row.style.marginBottom="10px"
-
-word.split("").forEach(letter=>{
-
-const box=document.createElement("div")
-box.className="letter-box"
-box.textContent = letter === "_" ? "" : letter
-
-row.appendChild(box)
-
-})
-
-container.appendChild(row)
-
-})
+setTimeout(()=>{
+document.getElementById("card1").classList.add("flip")
+clueIndex=1
+startClues()
+},200)
 
 }
 
-function nextSinger(){
 
-if(queue.length===0)queue=shuffle([...singers])
+function resetCards(){
+for(let i=1;i<=6;i++){
+document.getElementById("card"+i).classList.remove("flip")
+}
+clearInterval(clueTimer)
+clueIndex=0
+}
 
-current=queue.shift().toUpperCase()
-
-revealed=current.split("").map(c=>c===" "?" ":"_")
-
-renderBoxes()
-
-let hidden=current.split("").map((c,i)=>c===" "?null:i).filter(i=>i!==null)
-
-clearInterval(revealTimer)
-
-revealTimer=setInterval(()=>{
-
-if(hidden.length===0)return
-
-let r=hidden.splice(Math.floor(Math.random()*hidden.length),1)[0]
-revealed[r]=current[r]
-renderBoxes()
-
-},2000)
-
+function startClues(){
+clueTimer=setInterval(()=>{
+if(clueIndex<6){
+clueIndex++
+document.getElementById("card"+clueIndex).classList.add("flip")
+}else{
+clearInterval(clueTimer)
+}
+},3000)
 }
 
 function submitGuess(){
 
-let guess=document.getElementById("guessInput").value.toUpperCase().trim()
-document.getElementById("guessInput").value=""
+if(!gameActive)return
 
-if(guess===current){
+let input=document.getElementById("guess")
+let guess=input.value.toLowerCase()
 
-correct++
-document.getElementById("score").textContent="Correct: "+correct+" / 5"
+if(current.answers.some(a=>guess.includes(a))){
+
+score++
+document.getElementById("score").textContent="Score: "+score
 document.getElementById("message").textContent="✅ Correct!"
+input.value=""
 
 setTimeout(()=>{
 document.getElementById("message").textContent=""
-},800)
-
-if(correct===5){
-endGame(true)
-}else{
-nextSinger()
-}
+randomAthlete()
+},900)
 
 }else{
 
 document.getElementById("message").textContent="❌ Try again"
+input.value=""
+
+}
+
+}
+
+function passAthlete(){
+
+if(!gameActive)return
+
+time=Math.max(0,time-5)
+document.getElementById("timer").textContent="Time: "+time
+
+document.getElementById("message").textContent="Answer: "+current.name
+
+for(let i=1;i<=6;i++){
+document.getElementById("card"+i).classList.add("flip")
+}
 
 setTimeout(()=>{
 document.getElementById("message").textContent=""
-},1200)
+randomAthlete()
+},1800)
 
 }
 
-}
-function endGame(win){
+function endGame(){
 
+gameActive=false
 clearInterval(timer)
-clearInterval(revealTimer)
+clearInterval(clueTimer)
 
-let score = win ? time : 0
-
-document.getElementById("finalScore").textContent = score
+document.getElementById("finalScore").textContent=score
 document.getElementById("gameOverModal").style.display="flex"
 
-if(score > high){
-high = score
-localStorage.setItem("spellHigh", score)
-document.getElementById("highscore").textContent="High Score: "+score
+if(score>high){
+localStorage.setItem("athleteHigh",score)
 }
 
 }
+
+function startGame(){
+
+gameActive=true
+score=0
+time=120
+
+document.getElementById("score").textContent="Score: 0"
+document.getElementById("timer").textContent="Time: 120"
+
+randomAthlete()
+
+timer=setInterval(()=>{
+
+if(!gameActive)return
+
+time--
+document.getElementById("timer").textContent="Time: "+time
+
+if(time<=0){
+endGame()
+}
+
+},1000)
+
+}
+const guessInput = document.getElementById("guess")
+const datalist = document.getElementById("athleteSuggestions")
+
+guessInput.addEventListener("input", function(){
+
+const text = this.value.toLowerCase()
+
+datalist.innerHTML = ""
+
+if(text.length < 3) return
+
+const names = [...new Set(athletes.map(a => a.name))]
+
+/* hide autocomplete if exact match already typed */
+
+if(names.some(name => name.toLowerCase() === text)) return
+
+const matches = names
+.filter(name => name.toLowerCase().includes(text))
+.slice(0,8)
+
+matches.forEach(name => {
+
+const option = document.createElement("option")
+option.value = name
+datalist.appendChild(option)
+
+})
+
+})
 
 function restartGame(){
 
@@ -401,7 +481,7 @@ startGame()
 
 }
 
-document.getElementById("guessInput").addEventListener("keypress",e=>{
+document.getElementById("guess").addEventListener("keypress",e=>{
 if(e.key==="Enter")submitGuess()
 })
 
