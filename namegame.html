@@ -307,6 +307,12 @@ fetch("names.json")
   .then(res => res.json())
   .then(data => {
     nameBank = data.names;
+
+    // 🔥 pick random name
+    const randomIndex = Math.floor(Math.random() * nameBank.length);
+    target = nameBank[randomIndex].toUpperCase();
+
+    console.log("TARGET:", target); // (optional for testing)
   });
 
 /* TIMER */
