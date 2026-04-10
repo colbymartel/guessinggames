@@ -3,400 +3,454 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Books of the Bible - Guessing Games</title>
+  <title>Books of the Bible — Guessing Games</title>
   <link rel="icon" href="/favicongg.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-  height: 100%;
-}
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --border: #e2e0db;
+      --border-strong: #c8c5be;
+      --accent: #2357a4;
+      --accent-dim: #eef2fa;
+      --text: #1a1a18;
+      --muted: #7a786f;
+      --green-bg: #edfaf3;
+      --green-text: #1a6640;
+      --green-border: #b6e8ce;
+      --red-bg: #fdeeed;
+      --red-text: #8b2a2a;
+      --red-border: #f2c0bc;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
     body {
-      font-family: 'Montserrat', sans-serif;
-      color: #333;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
     }
-    body {
-  background: #f4f7fb;
-}
 
-.main-content {
-  background: linear-gradient(135deg, #3b7bbf 0%, #2a5a8a 100%);
-}
-
-    /* Nav */
+    /* ── NAV ── */
     nav {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
-      padding: 15px 30px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 56px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #333;
-      flex-wrap: wrap;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 10;
     }
+    .nav-links { display: flex; gap: 4px; }
     .nav-links a {
-      color: #333;
-      margin: 0 15px;
+      color: var(--muted);
       text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: color 0.3s;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: color .15s, background .15s;
+      letter-spacing: .01em;
     }
-    .nav-links a:hover { color: #3b7bbf; }
-    .nav-actions { display: flex; align-items: center; gap: 15px; }
-    .search-bar {
-      padding: 8px 16px 8px 36px;
-      height: 40px;
-      border-radius: 20px;
-      border: 2px solid #e0e0e0;
-      background: white;
-      color: #333;
-      font-size: 0.95rem;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
-      background-size: 16px;
-      background-repeat: no-repeat;
-      background-position: 12px center;
-      transition: border-color 0.3s;
+    .nav-links a:hover { color: var(--text); background: var(--bg); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-search {
+      height: 34px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 13px;
+      outline: none;
+      width: 180px;
+      transition: border-color .15s, width .25s;
     }
-    .search-bar:focus { outline: none; border-color: #3b7bbf; }
-    .login-btn {
-      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
-      color: white;
+    .nav-search:focus { border-color: var(--accent); width: 220px; }
+    .nav-search::placeholder { color: var(--muted); }
+    .nav-login {
+      height: 34px;
+      padding: 0 16px;
+      background: var(--text);
+      color: #fff;
       border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-weight: 600;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s;
-      font-size: 0.9rem;
-      white-space: nowrap;
+      transition: opacity .15s;
     }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 123, 191, 0.3); }
+    .nav-login:hover { opacity: .8; }
 
+    /* ── HEADER ── */
     header {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      color: #333;
-      padding: 34px 30px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 32px 36px;
       text-align: center;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
     }
     header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-      background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 700;
-    }
-    header p {
-      font-size: 1.15rem;
-      color: #666;
+      font-family: var(--serif);
+      font-size: 2.6rem;
       font-weight: 400;
-      max-width: 900px;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -.01em;
+      line-height: 1.1;
+    }
+    header h1 em { color: var(--accent); font-style: italic; }
+    header p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 480px;
       margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 400;
     }
 
-    .main-content {
+    /* ── MAIN ── */
+    .main {
       flex: 1;
-      padding: 40px 30px;
-      max-width: 1200px;
+      padding: 32px 24px;
+      max-width: 680px;
       margin: 0 auto;
       width: 100%;
     }
 
-    .game-wrap {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 28px;
-      border: 2px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .top-row {
+    /* ── HUD ── */
+    .hud {
       display: flex;
-      gap: 16px;
-      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 18px;
     }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #f3f7fb;
-      border: 1px solid rgba(0,0,0,0.06);
-      font-weight: 700;
-      color: #234d7d;
-    }
-    .pill i { color: #3b7bbf; }
-
-    .lives {
+    .stat-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 10px 14px;
+      padding: 6px 12px;
       border-radius: 999px;
-      background: #fff6f6;
-      border: 1px solid rgba(0,0,0,0.06);
-      font-weight: 700;
-      color: #8a2a2a;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: .01em;
     }
-    .heart {
-      width: 12px;
-      height: 12px;
-      display: inline-block;
-      transform: rotate(45deg);
-      background: #e74c3c;
-      position: relative;
-      border-radius: 2px;
-      box-shadow: 0 1px 4px rgba(231, 76, 60, 0.25);
-    }
-    .heart:before, .heart:after {
-      content: "";
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: #e74c3c;
+    .stat-chip strong { color: var(--text); font-weight: 600; }
+    .stat-chip .dot {
+      width: 6px; height: 6px;
       border-radius: 50%;
+      background: var(--accent);
+      opacity: .5;
     }
-    .heart:before { left: -6px; top: 0; }
-    .heart:after { left: 0; top: -6px; }
-    .heart.off, .heart.off:before, .heart.off:after { background: #c7c7c7; box-shadow: none; }
+    .stat-chip.fire .dot { background: #e85d00; }
+    .stat-chip.trophy .dot { background: #c49600; }
+    .stat-chip.check .dot { background: #1a9952; }
 
-    .verse-card {
-      background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
-      border-radius: 18px;
-      padding: 22px;
-      color: white;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-      border: 2px solid rgba(255,255,255,0.65);
-      margin-bottom: 18px;
-    }
-    .verse-tag {
+    .lives-chip {
+      margin-left: auto;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.16);
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 8px 12px;
+      gap: 6px;
+      padding: 6px 14px;
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .heart {
+      font-size: 14px;
+      line-height: 1;
+      transition: filter .2s;
+    }
+    .heart.off { filter: grayscale(1); opacity: .3; }
+
+    /* ── VERSE CARD ── */
+    .verse-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .verse-header {
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+    }
+    .verse-header span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .verse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: .6;
+    }
+    .verse-body {
+      padding: 24px 24px 20px;
     }
     .verse-text {
-      font-size: 1.25rem;
+      font-family: var(--serif);
+      font-size: 1.2rem;
       line-height: 1.75;
-      font-weight: 600;
-      letter-spacing: 0.1px;
+      color: var(--text);
+      font-weight: 400;
+      font-style: italic;
     }
 
+    /* ── INPUT AREA ── */
+    .input-area {
+      padding: 16px 20px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
     .input-row {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 8px;
       align-items: center;
-      margin-top: 14px;
     }
-
-    /* Autocomplete wrapper */
-    .autocomplete {
-      position: relative;
-      flex: 1;
-      min-width: 240px;
+    .input-btns {
+      display: flex;
+      gap: 8px;
     }
-
+    .input-btns .btn { flex: 1; justify-content: center; }
+    .autocomplete { position: relative; width: 100%; }
     .guess-input {
       width: 100%;
-      padding: 12px 14px;
-      height: 48px;
-      border-radius: 14px;
-      border: 2px solid #e0e0e0;
-      font-size: 1rem;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
       outline: none;
-      transition: border-color 0.25s, box-shadow 0.25s;
+      transition: border-color .15s, box-shadow .15s;
     }
     .guess-input:focus {
-      border-color: #3b7bbf;
-      box-shadow: 0 6px 18px rgba(59,123,191,0.18);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(35,87,164,.1);
+      background: var(--surface);
     }
+    .guess-input::placeholder { color: var(--muted); }
 
-    /* Suggestions dropdown */
     .suggest-box {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: 54px;
-      background: rgba(255,255,255,0.98);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 14px;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+      left: 0; right: 0;
+      top: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
       overflow: hidden;
-      max-height: 260px;
+      max-height: 240px;
       overflow-y: auto;
       display: none;
       z-index: 20;
     }
     .suggest-item {
-      padding: 10px 12px;
+      padding: 9px 14px;
       cursor: pointer;
-      font-weight: 700;
-      color: #234d7d;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: background .1s;
     }
-    .suggest-item:hover,
-    .suggest-item.active {
-      background: #f3f7fb;
-    }
-    .suggest-muted {
-      font-weight: 600;
-      opacity: 0.7;
-      font-size: 0.9rem;
-    }
+    .suggest-item:hover, .suggest-item.active { background: var(--bg); }
+    .suggest-hint { font-size: 11px; color: var(--muted); font-weight: 400; }
 
     .btn {
-      height: 48px;
+      height: 42px;
       padding: 0 18px;
-      border-radius: 14px;
-      border: none;
-      font-weight: 800;
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-      font-size: 0.98rem;
+      border: 1px solid var(--border);
+      transition: all .15s;
+      white-space: nowrap;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      user-select: none;
-      white-space: nowrap;
+      gap: 7px;
     }
-    .btn:active { transform: translateY(1px); }
+    .btn:active { transform: scale(.98); }
     .btn-primary {
-  background: linear-gradient(135deg, #3b7bbf, #2a5a8a);
-  color: white;
-  border: 2px solid white;
-  box-shadow: 0 10px 18px rgba(0,0,0,0.14);
-}
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 22px rgba(0,0,0,0.18); }
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { background: #1c4a8a; border-color: #1c4a8a; }
     .btn-ghost {
-      background: #f3f7fb;
-      color: #234d7d;
-      border: 2px solid rgba(35,77,125,0.12);
+      background: var(--surface);
+      color: var(--muted);
     }
-    .btn-ghost:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.10); }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); }
 
+    /* ── FEEDBACK ── */
     .feedback {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(0,0,0,0.06);
-      background: #f7fbff;
-      color: #234d7d;
-      font-weight: 700;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
       display: none;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
     }
-    .feedback.good { background: #f2fff6; color: #1e6b3d; }
-    .feedback.bad  { background: #fff2f2; color: #8a2a2a; }
+    .feedback.good {
+      background: var(--green-bg);
+      color: var(--green-text);
+      border-color: var(--green-border);
+    }
+    .feedback.bad {
+      background: var(--red-bg);
+      color: var(--red-text);
+      border-color: var(--red-border);
+    }
 
-    .mini-row {
+    /* ── BOTTOM ROW ── */
+    .bottom-row {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: flex-end;
+      padding: 0 4px;
     }
-    .small-note { color: #666; font-weight: 600; font-size: 0.95rem; }
 
-    /* Modal */
+    /* ── MODAL ── */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.55);
+      background: rgba(26,26,24,.5);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 18px;
+      padding: 20px;
       z-index: 999;
+      backdrop-filter: blur(4px);
     }
     .modal {
-      width: min(560px, 96vw);
-      background: rgba(255,255,255,0.98);
+      width: min(480px, 96vw);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 22px;
-      border: 2px solid rgba(255,255,255,0.8);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      padding: 32px;
       text-align: center;
+    }
+    .modal-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      line-height: 1;
     }
     .modal h2 {
-      font-size: 1.9rem;
-      margin-bottom: 8px;
-      background: linear-gradient(45deg, #3b7bbf, #2a5a8a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 900;
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 6px;
     }
-    .modal p { color: #555; font-weight: 600; line-height: 1.6; margin-bottom: 14px; }
-    .modal .stats-grid {
+    .modal-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 10px;
-      margin: 14px 0 18px;
-    }
-    .stat-box {
-      background: #f3f7fb;
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 16px;
-      padding: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 24px;
       text-align: left;
     }
-    .stat-box .k { font-size: 0.9rem; color: #666; font-weight: 700; }
-    .stat-box .v { font-size: 1.4rem; color: #234d7d; font-weight: 900; margin-top: 2px; }
-    .modal .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-
-    footer {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
-      color: #333;
-      text-align: center;
-      padding: 20px;
-      margin-top: auto;
-      border-top: 1px solid rgba(0,0,0,0.1);
+    .stat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
     }
-    footer a { color: #3b7bbf; text-decoration: none; margin: 0 10px; font-weight: 600; }
-    footer a:hover { text-decoration: underline; }
+    .stat-box .k {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+    .stat-box .v {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
 
-    @media (max-width: 768px) {
-      header h1 { font-size: 2.2rem; }
-      header p { font-size: 1.05rem; }
-      .verse-text { font-size: 1.1rem; }
-      .modal .stats-grid { grid-template-columns: 1fr; }
-      nav { padding: 14px 16px; }
-      .nav-links a { margin: 0 10px; }
-      .main-content { padding: 26px 16px; }
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-search { width: 120px; }
+      .nav-search:focus { width: 150px; }
+      header { padding: 28px 20px 24px; }
+      header h1 { font-size: 2rem; }
+      .main { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
+
   <nav>
     <div class="nav-links">
       <a href="/index.html">Home</a>
@@ -404,85 +458,80 @@
       <a href="/about.html">About</a>
     </div>
     <div class="nav-actions">
-      <input type="text" class="search-bar" placeholder="Search games...">
-      <button class="login-btn">Login</button>
+      <input type="text" class="nav-search" placeholder="Search games…">
+      <button class="nav-login">Login</button>
     </div>
   </nav>
 
   <header>
-    <h1>📚 Books of the Bible</h1>
-    <p>You’ll see a verse. Your job: guess which <b>book</b> it’s from. Keep your <b>streak</b> alive — you get <b>3 lives</b>. Miss 3 times and you’re out.</p>
+    <h1>Books of the <em>Bible</em></h1>
+    <p>A verse appears. You guess the book. Stay alive — you've got 3 lives before it's game over.</p>
   </header>
 
-  <div class="main-content">
-    <div class="game-wrap">
-      <div class="top-row">
-        <div class="pill" title="Your current streak">
-          <i class="fas fa-fire"></i>
-          Streak: <span id="streak">0</span>
-        </div>
-        <div class="pill" title="Your best streak (saved)">
-          <i class="fas fa-trophy"></i>
-          Best: <span id="bestStreak">0</span>
-        </div>
-        <div class="pill" title="Total correct this run">
-          <i class="fas fa-check-circle"></i>
-          Correct: <span id="correct">0</span>
-        </div>
-        <div class="lives" title="You have 3 lives">
-          Lives:
-          <span class="heart" id="h1"></span>
-          <span class="heart" id="h2"></span>
-          <span class="heart" id="h3"></span>
-        </div>
+  <div class="main">
+
+    <div class="hud">
+      <div class="stat-chip fire">
+        <span class="dot"></span>
+        Streak <strong id="streak">0</strong>
       </div>
+      <div class="stat-chip trophy">
+        <span class="dot"></span>
+        Best <strong id="bestStreak">0</strong>
+      </div>
+      <div class="stat-chip check">
+        <span class="dot"></span>
+        Correct <strong id="correct">0</strong>
+      </div>
+      <div class="lives-chip">
+        <span class="heart" id="h1">♥</span>
+        <span class="heart" id="h2">♥</span>
+        <span class="heart" id="h3">♥</span>
+      </div>
+    </div>
 
-      <div class="verse-card">
-        <div class="verse-tag">
-          <i class="fas fa-scroll"></i>
-          Guess the book
-        </div>
-
+    <div class="verse-card">
+      <div class="verse-header">
+        <div class="verse-dot"></div>
+        <span>Guess the book</span>
+      </div>
+      <div class="verse-body">
         <div class="verse-text" id="verseText">Loading verse…</div>
-
+      </div>
+      <div class="input-area">
         <div class="input-row">
           <div class="autocomplete">
             <input
               id="guessInput"
               class="guess-input"
               type="text"
-              placeholder="Type a Bible book (e.g., Genesis, John, Romans, etc.)"
+              placeholder="Genesis, John, Romans…"
               autocomplete="off"
               spellcheck="false"
             />
             <div id="suggestBox" class="suggest-box"></div>
           </div>
-
-          <button class="btn btn-primary" id="submitBtn">
-            <i class="fas fa-paper-plane"></i> Submit
-          </button>
-          <button class="btn btn-ghost" id="skipBtn" title="Skip (streak resets)">
-            <i class="fas fa-forward"></i> Skip
-          </button>
         </div>
-
+        <div class="input-btns">
+          <button class="btn btn-primary" id="submitBtn">Submit</button>
+          <button class="btn btn-ghost" id="skipBtn">Skip</button>
+        </div>
         <div class="feedback" id="feedback"></div>
-        <div class="mini-row">
-          <button class="btn btn-ghost" id="resetBtn">
-            <i class="fas fa-redo"></i> Reset Run
-          </button>
-        </div>
-        
-        </div> <!-- closes verse-card -->
-        </div> <!-- closes game-wrap -->
-        </div> <!-- closes main-content -->
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <button class="btn btn-ghost" id="resetBtn">Reset run</button>
+    </div>
+
+  </div>
 
   <!-- Game Over Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
+      <div class="modal-icon">📖</div>
       <h2>Game Over</h2>
-      <p id="gameOverMsg">You’re out of lives.</p>
-
+      <p class="modal-sub" id="gameOverMsg">You're out of lives.</p>
       <div class="stats-grid">
         <div class="stat-box">
           <div class="k">Run streak</div>
@@ -493,78 +542,35 @@
           <div class="v" id="mBest">0</div>
         </div>
         <div class="stat-box">
-          <div class="k">Correct answers</div>
+          <div class="k">Correct</div>
           <div class="v" id="mCorrect">0</div>
         </div>
         <div class="stat-box">
-          <div class="k">Last verse answer</div>
-          <div class="v" id="mLast">—</div>
+          <div class="k">Answer was</div>
+          <div class="v" id="mLast" style="font-size:1rem">—</div>
         </div>
       </div>
-
       <div class="modal-actions">
-        <button class="btn btn-primary" id="playAgainBtn">
-          <i class="fas fa-play"></i> Play Again
-        </button>
-        <button class="btn btn-ghost" id="closeModalBtn">
-          <i class="fas fa-times"></i> Close
-        </button>
+        <button class="btn btn-primary" id="playAgainBtn">Play again</button>
+        <button class="btn btn-ghost" id="closeModalBtn">Close</button>
       </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2024 Guessing Games |
-    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
-    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
-    <a href="https://www.tiktok.com/@ColbyMartel">TikTok</a>
+    <span class="footer-copy">© 2024 Guessing Games</span>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/colbymartel19/">Instagram</a>
+      <a href="https://www.youtube.com/ColbyMartel">YouTube</a>
+      <a href="https://www.tiktok.com/@ColbyMartel">TikTok</a>
+    </div>
   </footer>
 
   <script>
-    // ---- Canonical Books ----
-    const BOOKS = [
-      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
-      "Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings",
-      "1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms",
-      "Proverbs","Ecclesiastes","Song of Songs","Isaiah","Jeremiah","Lamentations",
-      "Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum",
-      "Habakkuk","Zephaniah","Haggai","Zechariah","Malachi",
-      "Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians",
-      "Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians",
-      "1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter",
-      "1 John","2 John","3 John","Jude","Revelation"
-    ];
+    const BOOKS = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Songs","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
 
-    // Optional aliases users might type
-    const ALIASES = new Map([
-      ["psalm", "Psalms"],
-      ["psalms", "Psalms"],
-      ["song of solomon", "Song of Songs"],
-      ["song of songs", "Song of Songs"],
-      ["canticles", "Song of Songs"],
-      ["revelations", "Revelation"],
-      ["rev", "Revelation"],
-      ["gen", "Genesis"],
-      ["ex", "Exodus"],
-      ["lev", "Leviticus"],
-      ["num", "Numbers"],
-      ["deut", "Deuteronomy"],
-      ["1 cor", "1 Corinthians"],
-      ["2 cor", "2 Corinthians"],
-      ["1 sam", "1 Samuel"],
-      ["2 sam", "2 Samuel"],
-      ["1 thess", "1 Thessalonians"],
-      ["2 thess", "2 Thessalonians"],
-      ["1 tim", "1 Timothy"],
-      ["2 tim", "2 Timothy"],
-      ["1 pet", "1 Peter"],
-      ["2 pet", "2 Peter"],
-      ["1 john", "1 John"],
-      ["2 john", "2 John"],
-      ["3 john", "3 John"]
-    ]);
+    const ALIASES = new Map([["psalm","Psalms"],["psalms","Psalms"],["song of solomon","Song of Songs"],["song of songs","Song of Songs"],["canticles","Song of Songs"],["revelations","Revelation"],["rev","Revelation"],["gen","Genesis"],["ex","Exodus"],["lev","Leviticus"],["num","Numbers"],["deut","Deuteronomy"],["1 cor","1 Corinthians"],["2 cor","2 Corinthians"],["1 sam","1 Samuel"],["2 sam","2 Samuel"],["1 thess","1 Thessalonians"],["2 thess","2 Thessalonians"],["1 tim","1 Timothy"],["2 tim","2 Timothy"],["1 pet","1 Peter"],["2 pet","2 Peter"],["1 john","1 John"],["2 john","2 John"],["3 john","3 John"]]);
 
-    // ---- Verse pool (sample set) ----
     const VERSES = [
       { book: "John", ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." },
       { book: "Psalms", ref: "Psalm 23:1", text: "The Lord is my shepherd; I shall not want." },
@@ -584,45 +590,27 @@
       { book: "Hebrews", ref: "Hebrews 11:1", text: "Now faith is the substance of things hoped for, the evidence of things not seen." }
     ];
 
-    // ---- State ----
     let streak = 0;
     let bestStreak = Number(localStorage.getItem("bibleBooks_bestStreak") || 0);
     let correct = 0;
     let lives = 3;
-
     let current = null;
     let lastIdx = -1;
+    let currentSuggestions = [];
+    let activeSuggestionIndex = -1;
 
-    // ---- Elements ----
     const elStreak = document.getElementById("streak");
     const elBest = document.getElementById("bestStreak");
     const elCorrect = document.getElementById("correct");
     const elVerseText = document.getElementById("verseText");
     const elGuess = document.getElementById("guessInput");
     const elFeedback = document.getElementById("feedback");
-
     const hearts = [document.getElementById("h1"), document.getElementById("h2"), document.getElementById("h3")];
-
     const modalOverlay = document.getElementById("modalOverlay");
-    const mStreak = document.getElementById("mStreak");
-    const mBest = document.getElementById("mBest");
-    const mCorrect = document.getElementById("mCorrect");
-    const mLast = document.getElementById("mLast");
-    const gameOverMsg = document.getElementById("gameOverMsg");
-
     const suggestBox = document.getElementById("suggestBox");
 
-    // Autocomplete state
-    let currentSuggestions = [];
-    let activeSuggestionIndex = -1;
-
-    // ---- Helpers ----
     function canon(s) {
-      return (s || "")
-        .toLowerCase()
-        .replace(/\./g, "")
-        .replace(/\s+/g, " ")
-        .trim();
+      return (s || "").toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
     }
 
     function normalizeBookInput(val) {
@@ -637,260 +625,125 @@
     function getSuggestions(query) {
       const q = canon(query);
       if (!q) return [];
-      return BOOKS.filter(b => canon(b).startsWith(q)).slice(0, 8);
+      return BOOKS.filter(b => canon(b).startsWith(q)).slice(0, 7);
     }
 
     function showSuggestions(list) {
       currentSuggestions = list;
       activeSuggestionIndex = -1;
-
-      if (!list.length) {
-        suggestBox.style.display = "none";
-        suggestBox.innerHTML = "";
-        return;
-      }
-
-      suggestBox.innerHTML = list.map((b, i) => {
-        const hint = (i === 0) ? "Enter to submit" : "Click";
-        return `
-          <div class="suggest-item" data-index="${i}">
-            <span>${b}</span>
-            <span class="suggest-muted">${hint}</span>
-          </div>
-        `;
-      }).join("");
-
+      if (!list.length) { suggestBox.style.display = "none"; suggestBox.innerHTML = ""; return; }
+      suggestBox.innerHTML = list.map((b, i) => `<div class="suggest-item" data-index="${i}"><span>${b}</span><span class="suggest-hint">${i === 0 ? "enter" : ""}</span></div>`).join("");
       suggestBox.style.display = "block";
     }
 
     function setActiveSuggestion(i) {
-      const items = [...suggestBox.querySelectorAll(".suggest-item")];
-      items.forEach(x => x.classList.remove("active"));
-      if (i >= 0 && i < items.length) {
-        items[i].classList.add("active");
-        activeSuggestionIndex = i;
-      } else {
-        activeSuggestionIndex = -1;
-      }
+      [...suggestBox.querySelectorAll(".suggest-item")].forEach(x => x.classList.remove("active"));
+      if (i >= 0 && i < currentSuggestions.length) { suggestBox.querySelectorAll(".suggest-item")[i].classList.add("active"); activeSuggestionIndex = i; }
+      else activeSuggestionIndex = -1;
     }
 
     function acceptSuggestion(index = 0) {
       if (!currentSuggestions.length) return false;
-      const chosen = currentSuggestions[Math.max(0, Math.min(index, currentSuggestions.length - 1))];
-      elGuess.value = chosen;
-      suggestBox.style.display = "none";
-      suggestBox.innerHTML = "";
-      currentSuggestions = [];
-      activeSuggestionIndex = -1;
-      return true;
+      elGuess.value = currentSuggestions[Math.max(0, Math.min(index, currentSuggestions.length - 1))];
+      showSuggestions([]); return true;
     }
 
     function updateHUD() {
-      elStreak.textContent = String(streak);
-      elBest.textContent = String(bestStreak);
-      elCorrect.textContent = String(correct);
-
-      hearts.forEach((h, idx) => {
-        const alive = idx < lives;
-        h.classList.toggle("off", !alive);
-      });
+      elStreak.textContent = streak;
+      elBest.textContent = bestStreak;
+      elCorrect.textContent = correct;
+      hearts.forEach((h, i) => h.classList.toggle("off", i >= lives));
     }
 
     function setFeedback(type, msg) {
-      elFeedback.className = "feedback";
-      elFeedback.classList.add(type);
+      elFeedback.className = "feedback " + type;
       elFeedback.textContent = msg;
       elFeedback.style.display = "block";
     }
 
     function clearFeedback() {
       elFeedback.style.display = "none";
-      elFeedback.textContent = "";
       elFeedback.className = "feedback";
     }
 
     function nextVerse() {
-      clearFeedback();
-      elGuess.value = "";
-      showSuggestions([]);
-      elGuess.focus();
-
-      if (!VERSES.length) {
-        elVerseText.textContent = "No verses loaded.";
-        return;
-      }
-
-      // pick a random verse; avoid immediate repeats when possible
+      clearFeedback(); elGuess.value = ""; showSuggestions([]); elGuess.focus();
       let idx = Math.floor(Math.random() * VERSES.length);
-      if (VERSES.length > 1 && idx === lastIdx) {
-        idx = (idx + 1) % VERSES.length;
-      }
-      lastIdx = idx;
-
-      current = VERSES[idx];
-      elVerseText.textContent = `“${current.text}”`;
+      if (VERSES.length > 1 && idx === lastIdx) idx = (idx + 1) % VERSES.length;
+      lastIdx = idx; current = VERSES[idx];
+      elVerseText.textContent = `"${current.text}"`;
     }
 
-    function endGame(reasonText) {
+    function endGame(msg) {
       modalOverlay.style.display = "flex";
-      gameOverMsg.textContent = reasonText || "You’re out of lives.";
-      mStreak.textContent = String(streak);
-      mBest.textContent = String(bestStreak);
-      mCorrect.textContent = String(correct);
-      mLast.textContent = current ? `${current.book} (${current.ref})` : "—";
+      document.getElementById("gameOverMsg").textContent = msg || "You're out of lives.";
+      document.getElementById("mStreak").textContent = streak;
+      document.getElementById("mBest").textContent = bestStreak;
+      document.getElementById("mCorrect").textContent = correct;
+      document.getElementById("mLast").textContent = current ? `${current.book}` : "—";
     }
 
-    function closeModal() {
-      modalOverlay.style.display = "none";
-    }
+    function closeModal() { modalOverlay.style.display = "none"; }
 
-    function hardResetRun() {
-      streak = 0;
-      correct = 0;
-      lives = 3;
-      updateHUD();
-      nextVerse();
-    }
-
-    // ---- Game Actions ----
+    function hardReset() { streak = 0; correct = 0; lives = 3; updateHUD(); nextVerse(); }
 
     function submitGuess() {
-  if (!current) return;
-
-  showSuggestions([]);
-
+      if (!current) return;
+      showSuggestions([]);
       const typed = elGuess.value.trim();
-      if (!typed) {
-        setFeedback("bad", "Type a book name first (e.g., “gen”, “john”, “romans”).");
-        return;
-      }
-
+      if (!typed) { setFeedback("bad", "Type a book name first."); return; }
       const normalized = normalizeBookInput(typed);
-      const correctBook = current.book;
-
-      const isCorrect =
-        typeof normalized === "string" &&
-        canon(normalized) === canon(correctBook);
-
+      const isCorrect = typeof normalized === "string" && canon(normalized) === canon(current.book);
       if (isCorrect) {
-        streak += 1;
-        correct += 1;
-
-        if (streak > bestStreak) {
-          bestStreak = streak;
-          localStorage.setItem("bibleBooks_bestStreak", String(bestStreak));
-        }
-
+        streak++; correct++;
+        if (streak > bestStreak) { bestStreak = streak; localStorage.setItem("bibleBooks_bestStreak", String(bestStreak)); }
         updateHUD();
-        setFeedback("good", `✅ Correct! That verse is from ${correctBook}.`);
-
+        setFeedback("good", `✓ Correct! That's from ${current.book}.`);
         setTimeout(nextVerse, 850);
       } else {
-        lives -= 1;
-        streak = 0;
-        updateHUD();
-
-        if (lives <= 0) {
-          setFeedback("bad", `❌ Wrong. The answer was ${correctBook}.`);
-          endGame(`❌ Wrong answer — you used your last life. The verse was from ${correctBook} (${current.ref}).`);
-          return;
-        }
-
-        setFeedback("bad", `❌ Not quite. The answer was ${correctBook}.`);
-
+        lives--; streak = 0; updateHUD();
+        if (lives <= 0) { setFeedback("bad", `✗ Wrong. The answer was ${current.book}.`); endGame(`The verse was from ${current.book} (${current.ref}).`); return; }
+        setFeedback("bad", `✗ Not quite — that was from ${current.book}.`);
         setTimeout(nextVerse, 950);
       }
     }
 
     function skipVerse() {
       if (!current) return;
-      streak = 0;
-      updateHUD();
-      setFeedback("bad", `⏭️ Skipped. The answer was ${current.book}.`);
+      streak = 0; updateHUD();
+      setFeedback("bad", `Skipped. The answer was ${current.book}.`);
       setTimeout(nextVerse, 900);
     }
 
-    // ---- Buttons ----
     document.getElementById("submitBtn").addEventListener("click", submitGuess);
     document.getElementById("skipBtn").addEventListener("click", skipVerse);
-    document.getElementById("resetBtn").addEventListener("click", hardResetRun);
-
-    document.getElementById("playAgainBtn").addEventListener("click", () => {
-      closeModal();
-      hardResetRun();
-    });
+    document.getElementById("resetBtn").addEventListener("click", hardReset);
+    document.getElementById("playAgainBtn").addEventListener("click", () => { closeModal(); hardReset(); });
     document.getElementById("closeModalBtn").addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", (e) => {
-      if (e.target === modalOverlay) closeModal();
-    });
+    modalOverlay.addEventListener("click", e => { if (e.target === modalOverlay) closeModal(); });
 
-    // ---- Autocomplete wiring ----
-    elGuess.addEventListener("input", () => {
-      const list = getSuggestions(elGuess.value);
-      showSuggestions(list);
-    });
-
-    elGuess.addEventListener("keydown", (e) => {
-      const boxOpen = suggestBox.style.display === "block";
-      const typed = elGuess.value.trim();
-
-      if (boxOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
-        e.preventDefault();
-        const max = currentSuggestions.length - 1;
-        if (e.key === "ArrowDown") {
-          const next = (activeSuggestionIndex < max) ? activeSuggestionIndex + 1 : 0;
-          setActiveSuggestion(next);
-        } else {
-          const prev = (activeSuggestionIndex > 0) ? activeSuggestionIndex - 1 : max;
-          setActiveSuggestion(prev);
-        }
-        return;
-      }
-
-      if (e.key === "Tab" && boxOpen) {
-        e.preventDefault();
-        const idx = activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0;
-        acceptSuggestion(idx);
-        return;
-      }
-
+    elGuess.addEventListener("input", () => showSuggestions(getSuggestions(elGuess.value)));
+    elGuess.addEventListener("keydown", e => {
+      const open = suggestBox.style.display === "block";
+      if (open && e.key === "ArrowDown") { e.preventDefault(); setActiveSuggestion(activeSuggestionIndex < currentSuggestions.length - 1 ? activeSuggestionIndex + 1 : 0); return; }
+      if (open && e.key === "ArrowUp") { e.preventDefault(); setActiveSuggestion(activeSuggestionIndex > 0 ? activeSuggestionIndex - 1 : currentSuggestions.length - 1); return; }
+      if (open && e.key === "Tab") { e.preventDefault(); acceptSuggestion(activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0); return; }
       if (e.key === "Enter") {
         e.preventDefault();
-
-        // If not exact and suggestions exist, autocomplete to best (or highlighted) first
-        const exactMatch = BOOKS.some(b => canon(b) === canon(typed)) || ALIASES.has(canon(typed));
-        if (!exactMatch && currentSuggestions.length) {
-          const idx = activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0;
-          acceptSuggestion(idx);
-        } else if (ALIASES.has(canon(typed))) {
-          // If user typed an alias like "gen" and there is no dropdown, convert to canonical
-          elGuess.value = ALIASES.get(canon(typed));
-        }
-
-        submitGuess();
-        return;
+        const typed = elGuess.value.trim();
+        const exact = BOOKS.some(b => canon(b) === canon(typed)) || ALIASES.has(canon(typed));
+        if (!exact && currentSuggestions.length) acceptSuggestion(activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0);
+        else if (ALIASES.has(canon(typed))) elGuess.value = ALIASES.get(canon(typed));
+        submitGuess(); return;
       }
-
-      if (e.key === "Escape") {
-        showSuggestions([]);
-      }
+      if (e.key === "Escape") showSuggestions([]);
     });
-
-    // Click suggestion => fill + submit
-    suggestBox.addEventListener("mousedown", (e) => {
-      const item = e.target.closest(".suggest-item");
-      if (!item) return;
-      const idx = Number(item.getAttribute("data-index"));
-      acceptSuggestion(idx);
-      submitGuess();
+    suggestBox.addEventListener("mousedown", e => {
+      const item = e.target.closest(".suggest-item"); if (!item) return;
+      acceptSuggestion(Number(item.getAttribute("data-index"))); submitGuess();
     });
+    elGuess.addEventListener("blur", () => setTimeout(() => showSuggestions([]), 120));
 
-    // Hide suggestions on blur (delay for click)
-    elGuess.addEventListener("blur", () => {
-      setTimeout(() => showSuggestions([]), 120);
-    });
-
-    // ---- Init ----
     updateHUD();
     nextVerse();
   </script>
