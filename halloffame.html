@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Hall of Fame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg-2:#0a1730;
+      --panel:#0d1627;
+      --panel-2:#101c33;
+      --line:rgba(255,255,255,.18);
+      --line-strong:rgba(255,255,255,.32);
+      --text:#f6f8fc;
+      --muted:#aeb9cc;
+      --blue:#4f7ea1;
+      --blue-dark:#224664;
+      --gold:#f4e54a;
+      --gold-soft:#fff17a;
+      --shadow:0 20px 50px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Montserrat',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(79,126,161,.18), transparent 30%),
+        linear-gradient(180deg, #04070d 0%, #07111f 28%, #09152a 100%);
+      min-height:100vh;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    .site-shell{
+      max-width:1600px;
+      margin:0 auto;
+      padding:0 20px 48px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:20px 0 10px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:260px;
+    }
+
+    .brand-badge{
+      width:62px;
+      height:62px;
+      border-radius:18px;
+      background:linear-gradient(145deg, var(--blue), var(--blue-dark));
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;
+      place-items:center;
+      box-shadow:var(--shadow);
+      font-size:1.7rem;
+      color:white;
+    }
+
+    .brand-text{
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .brand-text .small{
+      display:block;
+      font-size:.92rem;
+      color:var(--muted);
+      letter-spacing:.08em;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+
+    .brand-text .big{
+      font-size:2rem;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      flex:1;
+      justify-content:center;
+      color:#eef4ff;
+      font-weight:700;
+    }
+
+    .nav a{
+      opacity:.9;
+      transition:.15s ease;
+    }
+
+    .nav a:hover{opacity:1;color:var(--gold-soft)}
+
+    .nav .caret{
+      font-size:.72rem;
+      margin-left:5px;
+      opacity:.8;
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .ticket-btn,
+    .ghost-btn{
+      border-radius:16px;
+      border:1px solid var(--line-strong);
+      background:transparent;
+      color:var(--text);
+      padding:13px 18px;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+
+    .ticket-btn{
+      border-color:rgba(244,229,74,.8);
+      color:var(--gold);
+      box-shadow:inset 0 0 0 1px rgba(244,229,74,.18);
+    }
+
+    .ghost-btn{
+      width:50px;
+      height:50px;
+      display:grid;
+      place-items:center;
+      padding:0;
+    }
+
+    .hero{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:24px;
+      padding:28px 0 16px;
+    }
+
+    .hero-copy h1{
+      margin:0;
+      font-size:clamp(2.3rem,4vw,4.8rem);
+      line-height:.95;
+      letter-spacing:-.05em;
+      max-width:760px;
+    }
+
+    .hero-copy p{
+      margin:14px 0 0;
+      max-width:720px;
+      color:var(--muted);
+      font-size:1.02rem;
+      font-weight:600;
+      line-height:1.55;
+    }
+
+    .hero-stats{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .stat-pill{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:12px 16px;
+      color:#dfe7f4;
+      font-weight:700;
+      backdrop-filter:blur(10px);
+    }
+
+    .toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin:16px 0 30px;
+      flex-wrap:wrap;
+    }
+
+    .toggle-wrap,
+    .search-wrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .toggle{
+      display:inline-flex;
+      padding:4px;
+      border:1px solid var(--line-strong);
+      border-radius:18px;
+      background:rgba(255,255,255,.02);
+      box-shadow:var(--shadow);
+    }
+
+    .toggle button{
+      border:0;
+      background:transparent;
+      color:var(--text);
+      padding:14px 24px;
+      min-width:120px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .toggle .active{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .search-wrap input{
+      width:min(340px, 72vw);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:white;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:600;
+      outline:none;
+    }
+
+    .search-wrap input::placeholder{color:#91a0b7}
+
+    .year-strip{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(220px, 1fr));
+      gap:22px;
+      margin-bottom:24px;
+    }
+
+    .year-card{
+      border:2px solid rgba(255,255,255,.26);
+      border-radius:24px;
+      min-height:92px;
+      padding:0 26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-weight:800;
+      font-size:clamp(1.35rem, 1.7vw, 2rem);
+      letter-spacing:-.04em;
+      color:white;
+      box-shadow:0 16px 40px rgba(0,0,0,.28);
+    }
+
+    .year-card span{color:var(--gold)}
+
+    .year-card.active{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(79,126,161,.95), 0 18px 40px rgba(0,0,0,.32);
+    }
+
+    .year-card .year-icon{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--gold);
+      color:#111;
+      font-size:1rem;
+      flex-shrink:0;
+    }
+
+    .hall-grid{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(220px, 1fr));
+      gap:26px;
+    }
+
+    .inductee-card{
+      background:linear-gradient(180deg, rgba(0,0,0,.3), rgba(0,0,0,.4));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:28px;
+      padding:14px 14px 22px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .inductee-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:28px;
+      padding:1px;
+      background:linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.06));
+      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      pointer-events:none;
+    }
+
+    .portrait{
+      aspect-ratio:1/1;
+      border-radius:22px;
+      overflow:hidden;
+      background:linear-gradient(135deg, #1b2d47, #0d1627);
+      position:relative;
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:18px;
+    }
+
+    .portrait img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .portrait-fallback{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-size:3rem;
+      color:#d6e6f4;
+      background:
+        radial-gradient(circle at top, rgba(244,229,74,.18), transparent 30%),
+        linear-gradient(145deg, #19304f, #0b1323 60%);
+    }
+
+    .inductee-card h3{
+      margin:0 0 10px;
+      font-size:1.55rem;
+      line-height:1.1;
+      text-align:center;
+      letter-spacing:-.03em;
+    }
+
+    .inductee-card p{
+      margin:0;
+      text-align:center;
+      color:#d8e2f0;
+      font-weight:600;
+      line-height:1.45;
+      min-height:48px;
+    }
+
+    .tag{
+      width:max-content;
+      margin:14px auto 0;
+      border:1px solid rgba(255,255,255,.3);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.78rem;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      color:#dfe8f4;
+      font-weight:800;
+      background:rgba(255,255,255,.02);
+    }
+
+    .footer-note{
+      margin-top:30px;
+      color:#8fa0b7;
+      text-align:center;
+      font-weight:600;
+    }
+
+    @media (max-width: 1320px){
+      .year-strip{grid-template-columns:repeat(2, minmax(260px, 1fr));}
+      .hall-grid{grid-template-columns:repeat(3, minmax(220px, 1fr));}
+      .nav{gap:20px;font-size:.95rem}
+    }
+
+    @media (max-width: 900px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      .nav{justify-content:flex-start;flex-wrap:wrap}
+      .actions{width:100%}
+      .hero{flex-direction:column;align-items:flex-start}
+      .hero-stats{justify-content:flex-start}
+      .hall-grid{grid-template-columns:repeat(2, minmax(190px, 1fr));}
+    }
+
+    @media (max-width: 640px){
+      .site-shell{padding:0 14px 28px}
+      .brand{min-width:auto}
+      .brand-badge{width:52px;height:52px;border-radius:15px}
+      .brand-text .big{font-size:1.4rem}
+      .ticket-btn{padding:12px 15px}
+      .ghost-btn{width:46px;height:46px}
+      .toggle button{min-width:0;padding:12px 16px}
+      .search-wrap{width:100%}
+      .search-wrap input{width:100%}
+      .year-strip{grid-template-columns:1fr;gap:16px}
+      .year-card{min-height:78px;padding:0 18px;font-size:1.25rem}
+      .hall-grid{grid-template-columns:1fr;gap:18px}
+      .inductee-card h3{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#">
+        <div class="brand-badge"><i class="fa-solid fa-id-badge"></i></div>
+        <div class="brand-text">
+          <span class="small">GuessingGames.com</span>
+          <span class="big">Name Hall of Fame</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#">Inductees <span class="caret">▼</span></a>
+        <a href="#">Categories <span class="caret">▼</span></a>
+        <a href="#">Play <span class="caret">▼</span></a>
+        <a href="#">Leaderboard <span class="caret">▼</span></a>
+      </nav>
+
+      <div class="actions">
+        <button class="ticket-btn">PLAY THIS WEEK’S NAME →</button>
+        <button class="ghost-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Legendary names. One hall. New inductees every week.</h1>
+        <p>A clean, modern Name Hall of Fame page inspired by museum-style archives and award-class reveals, but styled for GuessingGames.com with your blue brand palette and a more game-show feel.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill">42 Inductees</div>
+        <div class="stat-pill">4 Classes</div>
+        <div class="stat-pill">Updated Weekly</div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Filters and tools">
+      <div class="toggle-wrap">
+        <div class="toggle">
+          <button>By Name</button>
+          <button class="active">By Class</button>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input type="text" placeholder="Search an inducted name..." />
+      </div>
+    </section>
+
+    <section class="year-strip" aria-label="Hall of fame classes">
+      <div class="year-card active">CLASS OF <span>2026</span> <div class="year-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div></div>
+      <div class="year-card">CLASS OF <span>2025</span></div>
+      <div class="year-card">CLASS OF <span>2024</span></div>
+      <div class="year-card">CLASS OF <span>2023</span></div>
+    </section>
+
+    <section class="hall-grid" aria-label="Inducted names list">
+      <article class="inductee-card">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" alt="Portrait placeholder for Miles" />
+        </div>
+        <h3>Miles</h3>
+        <p>Clean, memorable, effortlessly cool. A first-ballot kind of name.</p>
+        <div class="tag">Class Favorite</div>
+      </article>
+
+      <article class="inductee-card">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80" alt="Portrait placeholder for Sienna" />
+        </div>
+        <h3>Sienna</h3>
+        <p>Warm, stylish, and modern with just enough uniqueness to stand out.</p>
+        <div class="tag">Elegant Pick</div>
+      </article>
+
+      <article class="inductee-card">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80" alt="Portrait placeholder for Zion" />
+        </div>
+        <h3>Zion</h3>
+        <p>Bold and high-impact. The kind of name that instantly feels iconic.</p>
+        <div class="tag">Power Name</div>
+      </article>
+
+      <article class="inductee-card">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=900&q=80" alt="Portrait placeholder for Daphne" />
+        </div>
+        <h3>Daphne</h3>
+        <p>Vintage energy with current appeal. Distinct without trying too hard.</p>
+        <div class="tag">Rising Legend</div>
+      </article>
+
+      <article class="inductee-card">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80" alt="Portrait placeholder for Atlas" />
+        </div>
+        <h3>Atlas</h3>
+        <p>Big presence, memorable sound, and great visual branding potential.</p>
+        <div class="tag">Fan Vote Winner</div>
+      </article>
+    </section>
+
+    <p class="footer-note">Swap the sample names and images with your real weekly inductees and connect the class buttons to filtered views or separate pages.</p>
+  </div>
+</body>
+</html>
