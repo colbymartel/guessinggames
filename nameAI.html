@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Can Colby Guess Your Name?</title>
+  <style>
+    :root {
+      --bg1: #061736;
+      --bg2: #0b3b91;
+      --blue: #38bdf8;
+      --blue2: #2563eb;
+      --green: #22c55e;
+      --red: #fb7185;
+      --yellow: #facc15;
+      --text: #f8fafc;
+      --muted: #b8c7e6;
+      --card: rgba(255, 255, 255, 0.1);
+      --stroke: rgba(255, 255, 255, 0.18);
+      --shadow: rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(56, 189, 248, 0.42), transparent 28%),
+        radial-gradient(circle at 88% 22%, rgba(37, 99, 235, 0.42), transparent 34%),
+        radial-gradient(circle at 48% 92%, rgba(34, 197, 94, 0.22), transparent 28%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle, black, transparent 78%);
+      pointer-events: none;
+    }
+
+    .app {
+      width: min(100%, 980px);
+      position: relative;
+    }
+
+    .glow {
+      position: absolute;
+      inset: -2px;
+      border-radius: 36px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.9), rgba(34,197,94,0.4), rgba(250,204,21,0.45), rgba(56,189,248,0.7));
+      filter: blur(18px);
+      opacity: 0.48;
+      z-index: -1;
+    }
+
+    .shell {
+      background: rgba(7, 18, 44, 0.72);
+      backdrop-filter: blur(22px);
+      border: 1px solid var(--stroke);
+      border-radius: 34px;
+      box-shadow: 0 28px 80px var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--stroke);
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, #38bdf8, #2563eb 55%, #0f172a);
+      box-shadow: 0 12px 35px rgba(56, 189, 248, 0.32);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 1000;
+      letter-spacing: -0.08em;
+      transform: rotate(-4deg);
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 54px);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+    }
+
+    .tag {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 13px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid var(--stroke);
+      text-align: center;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .stat-value {
+      margin-top: 3px;
+      font-size: 27px;
+      line-height: 1;
+      color: white;
+      font-weight: 1000;
+      letter-spacing: -0.04em;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 18px;
+      padding: 22px;
+    }
+
+    .game-card,
+    .side-card {
+      border-radius: 28px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.085);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .game-card {
+      min-height: 470px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::after {
+      content: "?";
+      position: absolute;
+      right: -18px;
+      bottom: -75px;
+      font-size: 300px;
+      font-weight: 1000;
+      color: rgba(255,255,255,0.035);
+      pointer-events: none;
+    }
+
+    .phase {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      color: #dff7ff;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 1000;
+      background: rgba(56,189,248,0.13);
+      border: 1px solid rgba(56,189,248,0.26);
+      border-radius: 999px;
+      padding: 9px 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--green);
+      box-shadow: 0 0 18px var(--green);
+    }
+
+    .question {
+      margin: 22px 0 12px;
+      font-size: clamp(32px, 6vw, 64px);
+      line-height: 0.96;
+      letter-spacing: -0.065em;
+      font-weight: 1000;
+      max-width: 680px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+      max-width: 620px;
+      margin: 0 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 16px 24px;
+      color: white;
+      font-size: 17px;
+      font-weight: 1000;
+      letter-spacing: -0.02em;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.25);
+    }
+
+    button:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.06);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .yes {
+      background: linear-gradient(135deg, #22c55e, #15803d);
+    }
+
+    .no {
+      background: linear-gradient(135deg, #fb7185, #be123c);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid var(--stroke);
+    }
+
+    .guess {
+      color: var(--yellow);
+      text-shadow: 0 0 32px rgba(250, 204, 21, 0.25);
+      display: inline-block;
+    }
+
+    .side-card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .panel {
+      border-radius: 22px;
+      background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(255,255,255,0.11);
+      padding: 16px;
+    }
+
+    .panel h2 {
+      margin: 0 0 11px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #dbeafe;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.09);
+      color: white;
+      border-radius: 14px;
+      padding: 12px 13px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.42);
+    }
+
+    select option {
+      color: #111827;
+    }
+
+    .tiny {
+      margin: 8px 0 0;
+      color: rgba(226,232,240,0.72);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .log {
+      display: grid;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .log-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      color: #e5efff;
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 1000;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .pill.y {
+      background: rgba(34,197,94,0.9);
+    }
+
+    .pill.n {
+      background: rgba(251,113,133,0.9);
+    }
+
+    .pill.g {
+      background: rgba(250,204,21,0.9);
+      color: #1f2937;
+    }
+
+    .thinking {
+      animation: pulse 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.58; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .game-card {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 12px;
+      }
+
+      .hero,
+      .main,
+      .game-card {
+        padding: 16px;
+      }
+
+      .logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+      }
+
+      .controls button {
+        width: 100%;
+      }
+
+      .question {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="glow"></div>
+
+    <section class="shell">
+      <header class="hero">
+        <div class="brand">
+          <div class="logo">C</div>
+          <div>
+            <h1>Can Colby Guess Your Name?</h1>
+            <div class="tag">Think of any name. Answer yes/no. AI Colby keeps going until he gets it.</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Time</div>
+            <div class="stat-value" id="timer">0.0s</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Questions</div>
+            <div class="stat-value" id="questionCount">0</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="main">
+        <article class="game-card">
+          <div>
+            <div class="phase" id="phase"><span class="dot"></span> Ready</div>
+            <h2 class="question" id="question">Think of a name.</h2>
+            <p class="hint" id="hint">Paste your API key, hit start, and I’ll ask the fastest yes/no questions I can.</p>
+          </div>
+
+          <div class="controls" id="controls">
+            <button class="primary" onclick="startGame()">Start Round</button>
+          </div>
+        </article>
+
+        <aside class="side-card">
+          <div class="panel">
+            <h2>AI setup</h2>
+
+            <div class="field">
+              <label for="apiKey">OpenAI API key</label>
+              <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off" />
+            </div>
+
+            <div class="field">
+              <label for="model">Model</label>
+              <input id="model" value="gpt-4.1-mini" />
+            </div>
+
+            <p class="tiny">
+              For filming/local testing only. Don’t publish a browser app with your API key inside it. For a real public site, put the API call on your server.
+            </p>
+          </div>
+
+          <div class="panel">
+            <h2>This round</h2>
+            <div class="log" id="log">
+              <div class="log-row">
+                <span>No clues yet.</span>
+                <span class="pill g">—</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const timerEl = document.getElementById("timer");
+    const countEl = document.getElementById("questionCount");
+    const phaseEl = document.getElementById("phase");
+    const questionEl = document.getElementById("question");
+    const hintEl = document.getElementById("hint");
+    const controlsEl = document.getElementById("controls");
+    const logEl = document.getElementById("log");
+    const apiKeyEl = document.getElementById("apiKey");
+    const modelEl = document.getElementById("model");
+
+    let startedAt = null;
+    let timerInterval = null;
+    let questionCount = 0;
+    let currentQuestion = "";
+    let lastGuess = "";
+    let history = [];
+    let isWaiting = false;
+
+    const fallbackQuestions = [
+      "Is it usually a girl's name?",
+      "Is it usually a boy's name?",
+      "Does it start with a vowel?",
+      "Is it 5 letters or fewer?",
+      "Does it end in A?",
+      "Is it a very common name?",
+      "Does it start with A, E, J, L, M, or S?",
+      "Does it feel modern or trendy?",
+      "Is it a name from the Bible?",
+      "Would a celebrity have this name?"
+    ];
+
+    const fallbackGuesses = [
+      "Olivia", "Emma", "Ava", "Sophia", "Mia", "Charlotte", "Amelia", "Harper",
+      "Luna", "Grace", "Lily", "Amina", "Sofia", "Liam", "Noah", "Oliver",
+      "Elijah", "James", "William", "Benjamin", "Lucas", "Mason", "Ethan",
+      "Alexander", "Henry", "Jacob", "Michael", "Daniel", "Leo", "Mateo"
+    ];
+
+    function startGame() {
+      startedAt = Date.now();
+      questionCount = 0;
+      currentQuestion = "";
+      lastGuess = "";
+      history = [];
+      isWaiting = false;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+      updateTimer();
+      updateCount();
+      renderLog();
+
+      phaseEl.innerHTML = '<span class="dot"></span> Colby is thinking';
+      questionEl.textContent = "Okay. Lock in a name.";
+      hintEl.textContent = "Don’t say it out loud. Just answer yes or no.";
+      controlsEl.innerHTML = `
+        <button class="primary" onclick="nextMove()">I’m Thinking Of One</button>
+      `;
+    }
+
+    function updateTimer() {
+      if (!startedAt) return;
+      timerEl.textContent = ((Date.now() - startedAt) / 1000).toFixed(1) + "s";
+    }
+
+    function updateCount() {
+      countEl.textContent = questionCount;
+    }
+
+    function setWaiting(waiting) {
+      isWaiting = waiting;
+      if (waiting) {
+        phaseEl.classList.add("thinking");
+        controlsEl.innerHTML = `
+          <button class="secondary" disabled>Thinking...</button>
+        `;
+      } else {
+        phaseEl.classList.remove("thinking");
+      }
+    }
+
+    function renderLog() {
+      if (history.length === 0) {
+        logEl.innerHTML = `
+          <div class="log-row">
+            <span>No clues yet.</span>
+            <span class="pill g">—</span>
+          </div>
+        `;
+        return;
+      }
+
+      logEl.innerHTML = history.map(item => {
+        let pillClass = item.answer === "Yes" ? "y" : item.answer === "No" ? "n" : "g";
+        return `
+          <div class="log-row">
+            <span>${escapeHTML(item.prompt)}</span>
+            <span class="pill ${pillClass}">${escapeHTML(item.answer)}</span>
+          </div>
+        `;
+      }).join("");
+
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function showQuestion(text) {
+      currentQuestion = text;
+      phaseEl.innerHTML = '<span class="dot"></span> Question';
+      questionEl.textContent = text;
+      hintEl.textContent = "Answer based on the name you’re thinking of.";
+      controlsEl.innerHTML = `
+        <button class="yes" onclick="answerYesNo('Yes')">Yes</button>
+        <button class="no" onclick="answerYesNo('No')">No</button>
+      `;
+    }
+
+    function showGuess(name) {
+      lastGuess = name;
+      phaseEl.innerHTML = '<span class="dot"></span> Final guess?';
+      questionEl.innerHTML = `Is your name <span class="guess">${escapeHTML(name)}</span>?`;
+      hintEl.textContent = "If I’m wrong, hit no. I’ll keep asking. No giving up.";
+      controlsEl.innerHTML = `
+        <button class="yes" onclick="correctGuess()">Yes</button>
+        <button class="no" onclick="wrongGuess()">No</button>
+      `;
+    }
+
+    function correctGuess() {
+      clearInterval(timerInterval);
+      history.push({ prompt: "Final guess: " + lastGuess, answer: "Correct" });
+      renderLog();
+
+      phaseEl.innerHTML = '<span class="dot"></span> Let’s go';
+      questionEl.textContent = "Colby guessed it.";
+      hintEl.textContent = `Final score: ${questionCount} questions in ${timerEl.textContent}.`;
+      controlsEl.innerHTML = `
+        <button class="primary" onclick="startGame()">Play Again</button>
+      `;
+    }
+
+    function wrongGuess() {
+      history.push({ prompt: "Was it " + lastGuess + "?", answer: "No" });
+      renderLog();
+      nextMove("My last guess was wrong. Do not repeat that guess. Keep going until correct.");
+    }
+
+    function answerYesNo(answer) {
+      questionCount++;
+      updateCount();
+      history.push({ prompt: currentQuestion, answer });
+      renderLog();
+      nextMove();
+    }
+
+    async function nextMove(extraInstruction = "") {
+      if (isWaiting) return;
+
+      const key = apiKeyEl.value.trim();
+      const model = modelEl.value.trim() || "gpt-4.1-mini";
+
+      setWaiting(true);
+
+      try {
+        let move;
+
+        if (key) {
+          move = await getAIMove(key, model, extraInstruction);
+        } else {
+          move = getFallbackMove(extraInstruction);
+        }
+
+        setWaiting(false);
+
+        if (!move || !move.type || !move.text) {
+          move = getFallbackMove(extraInstruction);
+        }
+
+        if (move.type === "guess") {
+          showGuess(cleanName(move.text));
+        } else {
+          showQuestion(cleanQuestion(move.text));
+        }
+      } catch (error) {
+        setWaiting(false);
+        console.error(error);
+        const move = getFallbackMove(extraInstruction);
+        if (move.type === "guess") showGuess(cleanName(move.text));
+        else showQuestion(cleanQuestion(move.text));
+      }
+    }
+
+    async function getAIMove(apiKey, model, extraInstruction) {
+      const previous = history.map((h, i) => `${i + 1}. ${h.prompt} → ${h.answer}`).join("\n") || "No clues yet.";
+
+      const prompt = `
+You are "AI Colby" in a fast YouTube guessing game.
+
+The player is thinking of ANY first name.
+You must identify it using only yes/no questions and guesses.
+Never give up.
+If a guess is wrong, keep asking new questions.
+Do not repeat questions.
+Do not repeat wrong guesses.
+Use all previous answers.
+Ask high-information questions that narrow names quickly.
+After enough clues, make a guess.
+You can guess uncommon, international, old, modern, biblical, celebrity, nature, and nickname names.
+
+Return ONLY valid JSON with one of these:
+{"type":"question","text":"Does it start with a vowel?"}
+{"type":"guess","text":"Sophia"}
+
+Rules:
+- type must be "question" or "guess"
+- A question must be answerable with yes/no
+- A guess should be only the name
+- No markdown
+- No explanation
+
+Previous clues:
+${previous}
+
+Extra instruction:
+${extraInstruction || "None"}
+
+What is your next best move?`;
+
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey
+        },
+        body: JSON.stringify({
+          model,
+          input: prompt,
+          temperature: 0.35,
+          max_output_tokens: 120
+        })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text);
+      }
+
+      const data = await response.json();
+      const output = extractText(data);
+      return parseMove(output);
+    }
+
+    function extractText(data) {
+      if (typeof data.output_text === "string") return data.output_text;
+
+      try {
+        return data.output
+          .flatMap(item => item.content || [])
+          .map(part => part.text || "")
+          .join("")
+          .trim();
+      } catch {
+        return "";
+      }
+    }
+
+    function parseMove(text) {
+      if (!text) return null;
+
+      let cleaned = text.trim()
+        .replace(/^```json/i, "")
+        .replace(/^```/i, "")
+        .replace(/```$/i, "")
+        .trim();
+
+      try {
+        const parsed = JSON.parse(cleaned);
+        if (parsed.type && parsed.text) return parsed;
+      } catch {}
+
+      const lower = cleaned.toLowerCase();
+
+      if (lower.includes('"guess"') || lower.startsWith("guess:") || lower.startsWith("my guess")) {
+        return { type: "guess", text: cleaned.replace(/guess:|my guess is|is it|\\?/gi, "").trim() };
+      }
+
+      return { type: "question", text: cleaned };
+    }
+
+    function getFallbackMove(extraInstruction) {
+      const wrongGuesses = history
+        .filter(h => h.prompt.startsWith("Was it ") && h.answer === "No")
+        .map(h => h.prompt.replace("Was it ", "").replace("?", "").trim());
+
+      const asked = history.map(h => h.prompt);
+
+      if (extraInstruction || questionCount >= 6 || asked.length % 4 === 3) {
+        const guess = fallbackGuesses.find(name => !wrongGuesses.includes(name)) || "Alex";
+        return { type: "guess", text: guess };
+      }
+
+      const q = fallbackQuestions.find(question => !asked.includes(question)) || "Does it have more than 5 letters?";
+      return { type: "question", text: q };
+    }
+
+    function cleanQuestion(text) {
+      let q = String(text || "").trim();
+      q = q.replace(/^question:\s*/i, "");
+      if (!q.endsWith("?")) q += "?";
+      return q;
+    }
+
+    function cleanName(text) {
+      return String(text || "")
+        .replace(/^guess:\s*/i, "")
+        .replace(/^is it\s+/i, "")
+        .replace(/[?."']/g, "")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .join(" ");
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>

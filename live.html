@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Book the ultimate music guessing game show experience - Guess The Singer!" />
+  <title>Guess The Singer: Live Show</title>
+  <style>
+    :root {
+      --brand: #4f86b3;
+      --brand-dark: #376f9c;
+      --bg: #f6f9fc;
+      --ink: #172331;
+      --muted: #66788a;
+      --line: #dbe6ef;
+      --soft: #edf4fa;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-btn {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: var(--white);
+    }
+
+    .hero {
+      display: grid;
+      gap: 18px;
+      padding: 64px 0 34px;
+      text-align: center;
+      justify-items: center;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 1040px;
+      font-size: clamp(48px, 9vw, 108px);
+      line-height: 0.9;
+      letter-spacing: -0.085em;
+      font-weight: 880;
+    }
+
+    .subhead {
+      margin: 0;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.5;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: var(--brand);
+    }
+
+    .button.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: white;
+      box-shadow: 0 14px 28px rgba(79, 134, 179, 0.18);
+    }
+
+    .button.primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .button.secondary {
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(23, 35, 49, 0.05);
+    }
+
+    .section {
+      padding: 22px 0;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 10px;
+      margin: 34px 0 18px;
+      text-align: center;
+      justify-items: center;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(36px, 5vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+      font-weight: 860;
+    }
+
+    .section-copy {
+      max-width: 660px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .hero-gallery {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      min-height: 420px;
+      margin-top: 14px;
+      background: var(--soft);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 150px;
+      gap: 10px;
+      width: 240%;
+      animation: scrollGallery 70s linear infinite;
+    }
+
+    .hero-grid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+      opacity: 0.56;
+      filter: saturate(0.85);
+    }
+
+    .hero-gallery::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(246,249,252,0.10), rgba(23,35,49,0.28));
+      pointer-events: none;
+    }
+
+    @keyframes scrollGallery {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .package {
+      padding: 26px;
+      display: grid;
+      gap: 18px;
+      min-height: 360px;
+    }
+
+    .package.featured {
+      border-color: rgba(79, 134, 179, 0.42);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(79, 134, 179, 0.16), transparent 42%),
+        var(--white);
+    }
+
+    .package-top {
+      display: grid;
+      gap: 10px;
+    }
+
+    .tag {
+      width: fit-content;
+      color: var(--brand-dark);
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .package h3,
+    .step h3,
+    .testimonial h3 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 850;
+    }
+
+    .features {
+      display: grid;
+      gap: 0;
+    }
+
+    .feature {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .feature:last-child {
+      border-bottom: 0;
+    }
+
+    .feature strong {
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .step {
+      min-height: 260px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: var(--brand-dark);
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .step p,
+    .testimonial p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .host {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 26px;
+      margin-top: 18px;
+    }
+
+    .host img {
+      width: 150px;
+      height: 150px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      background: var(--soft);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 850;
+    }
+
+    .stat-label {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .testimonial {
+      min-height: 170px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+    .testimonial p {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+
+    .gallery-wrap {
+      margin-top: 18px;
+      padding: 14px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 16px;
+      background: var(--soft);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 42px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    @media (max-width: 980px) {
+      .packages,
+      .steps,
+      .testimonials,
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .host {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 22px 16px 44px;
+      }
+
+      nav {
+        align-items: flex-start;
+      }
+
+      .links {
+        display: none;
+      }
+
+      .hero {
+        padding: 48px 0 28px;
+        text-align: left;
+        justify-items: start;
+      }
+
+      .button-row {
+        justify-content: flex-start;
+      }
+
+      .hero-gallery {
+        min-height: 300px;
+      }
+
+      .packages,
+      .steps,
+      .testimonials,
+      .stats,
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .package,
+      .step,
+      .host {
+        padding: 24px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav>
+      <a class="logo" href="index.html">Guessing Games</a>
+
+      <div class="links">
+        <a href="index.html">Games</a>
+        <a href="halloffame.html">Hall of Fame</a>
+        <a href="live.html">Live Shows</a>
+        <a href="about.html">About</a>
+        <a class="nav-btn" href="booking-form.html">Book a Show</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="eyebrow">Live Shows</div>
+      <h1>Guess The Singer Live</h1>
+      <p class="subhead">A high-energy campus game show where students compete in real time to guess mystery singers, spin the wheel, and win cash prizes.</p>
+
+      <div class="button-row">
+        <a class="button primary" href="booking-form.html">Book the Experience</a>
+        <a class="button secondary" href="https://www.youtube.com/watch?v=Ayw4ghT7fJU" target="_blank" rel="noreferrer">Watch Trailer</a>
+      </div>
+    </section>
+    <section class="section">
+        <div class="section-head">
+          <div class="eyebrow">Gallery</div>
+        </div>
+  
+        <div class="panel gallery-wrap">
+          <div class="gallery">
+            <img src="images/Gallery1.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery2.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery3.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery4.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery5.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery6.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery7.jpg" alt="Guess The Singer Event" loading="lazy">
+            <img src="images/Gallery8.jpg" alt="Guess The Singer Event" loading="lazy">
+          </div>
+        </div>
+      </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Packages</div>
+        <h2 class="section-title">Event packages</h2>
+        <p class="section-copy">Pick the live show package that best fits your campus, budget, and audience size.</p>
+      </div>
+
+      <div class="packages">
+        <article class="panel package">
+          <div class="package-top">
+            <h3>Essential</h3>
+          </div>
+          <div class="features">
+            <div class="feature"><span>Show Duration</span><strong>1 hour</strong></div>
+            <div class="feature"><span>Virtual Prize Wheel</span><strong>Included</strong></div>
+            <div class="feature"><span>Recap Video</span><strong>No</strong></div>
+            <div class="feature"><span>Marketing Materials</span><strong>Included</strong></div>
+            <div class="feature"><span>Guaranteed Prize Money</span><strong>$500</strong></div>
+          </div>
+        </article>
+
+        <article class="panel package featured">
+          <div class="package-top">
+            <h3>Pro</h3>
+          </div>
+          <div class="features">
+            <div class="feature"><span>Show Duration</span><strong>Up to 1.5 hours</strong></div>
+            <div class="feature"><span>Physical Prize Wheel</span><strong>Included</strong></div>
+            <div class="feature"><span>Recap Video</span><strong>No</strong></div>
+            <div class="feature"><span>Marketing Materials</span><strong>Included</strong></div>
+            <div class="feature"><span>Guaranteed Prize Money</span><strong>$1,000</strong></div>
+          </div>
+        </article>
+
+        <article class="panel package">
+          <div class="package-top">
+            <h3>Platinum</h3>
+          </div>
+          <div class="features">
+            <div class="feature"><span>Show Duration</span><strong>Up to 2 hours</strong></div>
+            <div class="feature"><span>Physical Prize Wheel</span><strong>Included</strong></div>
+            <div class="feature"><span>Recap Video</span><strong>Included</strong></div>
+            <div class="feature"><span>Marketing Materials</span><strong>Included</strong></div>
+            <div class="feature"><span>Guaranteed Prize Money</span><strong>$2,000</strong></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="button-row" style="margin-top: 24px;">
+        <a class="button primary" href="booking-form.html">Learn more about this experience</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">How it works</div>
+        <h2 class="section-title">The game show flow</h2>
+      </div>
+
+      <div class="steps">
+        <article class="panel step">
+          <div class="step-number">1</div>
+          <div>
+            <h3>Join the game</h3>
+            <p>Students are selected to compete through audience moments, trivia, and live challenges.</p>
+          </div>
+        </article>
+
+        <article class="panel step">
+          <div class="step-number">2</div>
+          <div>
+            <h3>Spin the wheel</h3>
+            <p>Unlock clues, win bonus prizes, or risk elimination by spinning the Wheel of Fate.</p>
+          </div>
+        </article>
+
+        <article class="panel step">
+          <div class="step-number">3</div>
+          <div>
+            <h3>Win big</h3>
+            <p>The first player to guess the mystery singer can win cash prizes up to $5,000.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="panel host">
+        <a href="https://colbymartel.com" target="_blank" rel="noreferrer">
+          <img src="images/colbypfp.jpg" alt="Colby Martel">
+        </a>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">1.1M+</span>
+            <span class="stat-label">YouTube subscribers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">750K+</span>
+            <span class="stat-label">TikTok followers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">1.1B+</span>
+            <span class="stat-label">Total views</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">27+</span>
+            <span class="stat-label">Colleges visited</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Testimonials</div>
+        <h2 class="section-title">What students are saying</h2>
+      </div>
+
+      <div class="testimonials">
+        <article class="panel testimonial"><p>“Very entertaining and interactive. I loved the twists!”</p></article>
+        <article class="panel testimonial"><p>“The possibility of winning prizes was amazing!”</p></article>
+        <article class="panel testimonial"><p>“The crowd work and audience participation was incredible!”</p></article>
+        <article class="panel testimonial"><p>“I liked playing, and I liked the podiums with the tablets too!”</p></article>
+        <article class="panel testimonial"><p>“Colby Martel is an amazing host!”</p></article>
+        <article class="panel testimonial"><p>“Spinning the wheel was the highlight!”</p></article>
+      </div>
+    </section>
+
+
+
+    <footer>
+      <span>Guess The Singer</span>
+      <span>© 2026 Guessing Games. All rights reserved.</span>
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const heroGrid = document.getElementById("heroGrid");
+      const galleryImages = [
+        "images/Gallery1.jpg", "images/Gallery2.jpg", "images/Gallery3.jpg", "images/Gallery4.jpg",
+        "images/Gallery5.jpg", "images/Gallery6.jpg", "images/Gallery7.jpg", "images/Gallery8.jpg",
+        "images/Gallery9.jpg", "images/Gallery10.jpg", "images/Gallery11.jpg", "images/Gallery12.jpg",
+        "images/Gallery13.jpg", "images/Gallery14.jpg", "images/Gallery15.jpg", "images/Gallery16.jpg",
+        "images/Gallery17.jpg", "images/Gallery18.jpg", "images/Gallery19.jpg"
+      ];
+
+      [...galleryImages, ...galleryImages, ...galleryImages].forEach((src, index) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "";        img.loading = "lazy";
+        heroGrid.appendChild(img);
+      });
+    });
+  </script>
+</body>
+</html>

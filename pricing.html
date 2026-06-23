@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GuessingGames.com Pricing</title>
+  <style>
+    :root {
+      --bg: #eef3f8;
+      --ink: #111827;
+      --muted: #4b5565;
+      --line: #d8e1ea;
+      --blue: #064f78;
+      --white: #ffffff;
+      --soft: #f7fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: min(100%, 1380px);
+      margin: 0 auto;
+      padding: 28px 48px 72px;
+    }
+
+    nav {
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      border-top: 1px solid rgba(6, 79, 120, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+      text-transform: uppercase;
+      color: #0b1220;
+      text-decoration: none;
+    }
+
+    .links {
+      display: flex;
+      gap: 42px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .actions {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 650;
+    }
+
+    .nav-btn {
+      background: var(--blue);
+      color: white;
+      padding: 12px 22px;
+      border-radius: 999px;
+      box-shadow: 0 8px 18px rgba(6, 79, 120, 0.14);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 88px 0 58px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1.5px;
+      background: var(--blue);
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 820px;
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -0.065em;
+      font-weight: 850;
+    }
+
+    .subhead {
+      margin: 26px auto 0;
+      max-width: 660px;
+      color: var(--muted);
+      font-size: clamp(19px, 2vw, 25px);
+      line-height: 1.45;
+      font-weight: 450;
+      letter-spacing: -0.015em;
+    }
+
+    .pricing {
+      padding: 18px 0 56px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid #d3dee9;
+      border-radius: 28px;
+      padding: 28px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 28px rgba(25, 52, 80, 0.07);
+    }
+
+    .card.pro {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+      box-shadow: 0 18px 36px rgba(6, 79, 120, 0.18);
+    }
+
+    .label {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .pro .label {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1;
+      letter-spacing: -0.055em;
+      font-weight: 820;
+    }
+
+    .price {
+      margin: 20px 0 14px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .price strong {
+      font-size: 48px;
+      line-height: 1;
+      letter-spacing: -0.065em;
+      font-weight: 850;
+    }
+
+    .price span {
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .pro .price span,
+    .pro .desc,
+    .pro li {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.45;
+      font-weight: 450;
+      min-height: 74px;
+      margin: 0 0 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 28px;
+      display: grid;
+      gap: 12px;
+    }
+
+    li {
+      color: #4b5565;
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 550;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    li::before {
+      content: "✓";
+      color: var(--blue);
+      font-weight: 850;
+      margin-top: -1px;
+    }
+
+    .pro li::before {
+      color: white;
+    }
+
+    .button {
+      margin-top: auto;
+      min-height: 52px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      background: #edf3f8;
+      border: 1px solid #d3dee9;
+      color: #111827;
+    }
+
+    .pro .button {
+      background: white;
+      color: var(--blue);
+      border-color: white;
+    }
+
+    .live-strip {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid #d3dee9;
+      border-radius: 28px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 0 10px 24px rgba(25, 52, 80, 0.06);
+    }
+
+    .live-strip h2 {
+      margin: 0;
+      font-size: 31px;
+      letter-spacing: -0.055em;
+      font-weight: 820;
+    }
+
+    .live-strip p {
+      margin: 10px 0 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .live-price {
+      text-align: right;
+    }
+
+    .live-price strong {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -0.065em;
+    }
+
+    .live-price span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .notes {
+      padding-top: 46px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 34px;
+    }
+
+    .note {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .note strong {
+      display: block;
+      font-size: 23px;
+      letter-spacing: -0.04em;
+      margin-bottom: 7px;
+    }
+
+    .note span {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        padding: 20px 22px 56px;
+      }
+
+      nav {
+        grid-template-columns: 1fr auto;
+      }
+
+      .links {
+        display: none;
+      }
+
+      .actions a:first-child {
+        display: none;
+      }
+
+      .hero {
+        padding: 68px 0 46px;
+      }
+
+      .grid,
+      .notes,
+      .live-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: auto;
+      }
+
+      .live-price {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .logo {
+        font-size: 22px;
+      }
+
+      .actions {
+        font-size: 15px;
+      }
+
+      .nav-btn {
+        padding: 11px 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav>
+      <a class="logo" href="#">Guessing<br />Games</a>
+
+      <div class="links">
+        <a href="#pricing">Pricing</a>
+        <a href="#games">Games</a>
+        <a href="#live">Live</a>
+      </div>
+
+      <div class="actions">
+        <a href="#">Log in</a>
+        <a class="nav-btn" href="#pricing">Get Started</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="eyebrow">Pricing</div>
+
+      <h1>Simple plans for GuessingGames.com.</h1>
+
+      <p class="subhead">
+        Play daily games for free, upgrade for unlimited access, or create private rooms with friends.
+      </p>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="grid">
+        <article class="card">
+          <div class="label">Free</div>
+          <h2>Daily games</h2>
+
+          <div class="price">
+            <strong>$0</strong>
+            <span>/mo</span>
+          </div>
+
+          <p class="desc">
+            For casual players who want to try the games and join public challenges.
+          </p>
+
+          <ul>
+            <li>Play daily guessing games</li>
+            <li>Basic leaderboard</li>
+            <li>Limited AI name guesses</li>
+            <li>Join public challenges</li>
+            <li>Share score cards</li>
+          </ul>
+
+          <a class="button" href="#">Start free</a>
+        </article>
+
+        <article class="card pro">
+          <div class="label">Pro</div>
+          <h2>Unlimited play</h2>
+
+          <div class="price">
+            <strong>$5</strong>
+            <span>/mo</span>
+          </div>
+
+          <p class="desc">
+            For regular players who want more games, more history, and members-only features.
+          </p>
+
+          <ul>
+            <li>Unlimited daily games</li>
+            <li>Full leaderboard history</li>
+            <li>Custom profile badge</li>
+            <li>Members-only games</li>
+            <li>Early access to new games</li>
+            <li>Submit questions and names for videos</li>
+            <li>Founding Player badge</li>
+          </ul>
+
+          <a class="button" href="#">Go Pro</a>
+        </article>
+
+        <article class="card">
+          <div class="label">Premium</div>
+          <h2>Private rooms</h2>
+
+          <div class="price">
+            <strong>$15</strong>
+            <span>/mo</span>
+          </div>
+
+          <p class="desc">
+            For players who want custom rooms, advanced stats, and priority community features.
+          </p>
+
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Create private games with friends</li>
+            <li>Custom rooms</li>
+            <li>Advanced stats, streaks, and rank</li>
+            <li>Vote on future video ideas</li>
+            <li>Priority name submissions</li>
+            <li>Name in Hall of Fame</li>
+          </ul>
+
+          <a class="button" href="#">Upgrade</a>
+        </article>
+
+        <article class="card" id="live">
+          <div class="label">Live</div>
+          <h2>1:1 game</h2>
+
+          <div class="price">
+            <strong>$100</strong>
+            <span>flat</span>
+          </div>
+
+          <p class="desc">
+            A private 15-minute virtual guessing game with Colby.
+          </p>
+
+          <ul>
+            <li>Live name guessing game</li>
+            <li>Birthday or favorite thing challenge</li>
+            <li>Play against Colby</li>
+            <li>Custom friend or birthday game</li>
+            <li>Good for fans, gifts, and groups</li>
+          </ul>
+
+          <a class="button" href="#">Book</a>
+        </article>
+      </div>
+
+      <div class="live-strip">
+        <div>
+          <h2>Live 1:1 guessing game</h2>
+          <p>
+            Book a private 15-minute virtual game with Colby. Simple, limited, and separate from the monthly plans.
+          </p>
+        </div>
+
+        <div class="live-price">
+          <strong>$100</strong>
+          <span>one-time</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes" id="games">
+      <div class="note">
+        <strong>Name games</strong>
+        <span>Name guessing, AI name guessing, and real-or-fake name formats.</span>
+      </div>
+
+      <div class="note">
+        <strong>Leaderboards</strong>
+        <span>Track scores, streaks, rankings, and daily challenge history.</span>
+      </div>
+
+      <div class="note">
+        <strong>Private rooms</strong>
+        <span>Create custom games and play with friends through Premium.</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

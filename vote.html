@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Hall of Fame</title>
+  <style>
+    :root {
+      --brand: #4f86b3;
+      --brand-dark: #376f9c;
+      --bg: #f6f9fc;
+      --ink: #172331;
+      --muted: #66788a;
+      --line: #dbe6ef;
+      --soft: #edf4fa;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: var(--white);
+    }
+
+    .hero {
+      display: grid;
+      gap: 16px;
+      padding: 56px 0 18px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(44px, 8vw, 88px);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+      font-weight: 850;
+    }
+
+    .subhead {
+      margin: 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+
+    .vote-panel {
+  max-width: 1180px;
+  padding: 24px;
+  margin: 0 auto 0;
+}
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .option {
+      min-height: 318px;
+      padding: 12px 12px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: center;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 16px 34px rgba(23, 35, 49, 0.08);
+      transform: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+    }
+
+    .option:nth-child(2) {
+      --tilt: 0deg;
+    }
+
+    .option:nth-child(3) {
+      --tilt: 0deg;
+    }
+
+    .option:nth-child(4) {
+      --tilt: 0deg;
+    }
+
+    .option:hover,
+    .option.selected {
+      border-color: var(--brand);
+      box-shadow: 0 20px 44px rgba(79, 134, 179, 0.16);
+      transform: translateY(-3px);
+    }
+
+    .option.selected {
+      background:
+        linear-gradient(180deg, rgba(79, 134, 179, 0.10), rgba(255,255,255,1) 45%),
+        var(--white);
+      border-color: var(--brand);
+    }
+
+    .option.selected .option-image {
+      outline: 3px solid var(--brand);
+      outline-offset: 0;
+    }
+
+    .option.selected .option-name {
+      color: var(--brand-dark);
+    }
+
+    .option:disabled {
+      color: var(--ink);
+      cursor: default;
+      opacity: 1;
+    }
+
+    .option-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+  height: auto;
+  border-radius: 5px;
+  overflow: hidden;
+  display: block;
+  background: var(--soft);
+}
+
+.option-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+    .option-image::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 4px;
+    }
+
+    .option-copy {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      padding: 0 6px;
+    }
+
+    .option-name {
+      font-size: 32px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 820;
+    }
+
+    .option-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .vote-button {
+      width: 100%;
+      border-radius: 999px;
+      font-weight: 750;
+      transition: opacity 0.16s ease, background 0.16s ease;
+    }
+
+    .vote-button {
+      margin-top: 16px;
+      min-height: 54px;
+      border: 0;
+      background: var(--brand);
+      color: white;
+      font-size: 17px;
+    }
+
+    .vote-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 14px;
+      padding: 0 14px;
+      outline: none;
+      color: var(--ink);
+    }
+
+    input:focus {
+      border-color: var(--brand);
+    }
+
+    .message {
+      display: none;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--brand-dark);
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 650;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 22px 16px 44px;
+      }
+
+      nav {
+        align-items: flex-start;
+      }
+
+      .links {
+        display: none;
+      }
+
+      .hero {
+        padding: 42px 0 16px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .option {
+        min-height: 292px;
+      }
+
+      .option-image {
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav>
+      <a class="logo" href="#">Guessing Games</a>
+
+      <div class="links">
+        <a href="index.html">Games</a>
+        <a href="halloffame.html">Hall of Fame</a>
+        <a href="live.html">Live Shows</a>
+        <a href="about.html">About</a>
+        <a class="nav-btn" href="#">Sign in</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="eyebrow">Week 1</div>
+      <h1>Name Hall of Fame</h1>
+      <p class="subhead">Vote for one finalist to enter the Name Hall of Fame.</p>
+    </section>
+
+    <section>
+      <div class="panel vote-panel">
+        <div class="options" id="options"></div>
+
+        <button class="vote-button" id="voteButton" disabled>Choose a name</button>
+
+        <div class="message" id="message"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const weeklyNames = [
+      {
+        name: "Frog",
+        image: "images/frog.png",
+      },
+      {
+        name: "Gengyzkhan",
+        image: "images/gengyzkhan.jpg",
+      },
+      {
+        name: "J",
+        image: "images/j.jpg",
+      },
+      {
+        name: "Naruto",
+        image: "images/naruto.jpg",
+      }
+    ];
+
+    const STORAGE_KEY = "gg_weekly_name_vote_week_1_round_1_multi_v1";
+    const WRITE_KEY = "gg_weekly_write_ins_week_1_round_1_v2";
+
+    let selectedName = null;
+
+    const optionsEl = document.getElementById("options");
+    const voteButton = document.getElementById("voteButton");
+    const messageEl = document.getElementById("message");
+
+    function getState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          return {
+            ...parsed,
+            names: parsed.names.map(item => ({
+              ...(weeklyNames.find(name => name.name === item.name) || {}),
+              ...item
+            }))
+          };
+        } catch {}
+      }
+
+      return {
+        hasVoted: false,
+        selected: null,
+        names: weeklyNames
+      };
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getWriteIns() {
+      const saved = localStorage.getItem(WRITE_KEY);
+
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {}
+      }
+
+      return [];
+    }
+
+    function saveWriteIns(writeIns) {
+      localStorage.setItem(WRITE_KEY, JSON.stringify(writeIns));
+    }
+
+    function renderOptions() {
+  const state = getState();
+
+  optionsEl.innerHTML = state.names.map(item => {
+    const selected = selectedName === item.name;
+    return `
+      <button class="option ${selected ? "selected" : ""}" onclick="selectName('${escapeAttr(item.name)}')">
+        <span class="option-image">
+          <img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name)}" />
+        </span>
+        <span class="option-copy">
+          <span class="option-name">${escapeHTML(item.name)}</span>
+        </span>
+      </button>
+    `;
+  }).join("");
+
+  voteButton.disabled = !selectedName;
+  voteButton.textContent = selectedName ? "Vote for " + selectedName : "Choose a name";
+}
+    function selectName(name) {
+      selectedName = name;
+      voteButton.disabled = false;
+      voteButton.textContent = "Vote for " + name;
+      messageEl.classList.remove("show");
+      renderOptions();
+    }
+
+    voteButton.addEventListener("click", async () => {
+      const state = getState();
+
+      if (!selectedName) return;
+
+      const updatedNames = state.names.map(item => {
+        if (item.name === selectedName) {
+          return { ...item, votes: (item.votes || 0) + 1 };
+        }
+
+        return item;
+      });
+
+      const voteHistory = Array.isArray(state.voteHistory) ? state.voteHistory : [];
+
+      const votePayload = {
+        week: 1,
+        round: 1,
+        selected: selectedName,
+        ballot: state.names.map(item => item.name),
+        submittedAtLocal: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        page: window.location.pathname
+      };
+
+      saveState({
+        hasVoted: false,
+        selected: selectedName,
+        names: updatedNames,
+        voteHistory: [
+          ...voteHistory,
+          votePayload
+        ]
+      });
+
+      try {
+        voteButton.disabled = true;
+        voteButton.textContent = "Submitting...";
+        if (window.recordNameHallVote) {
+          await window.recordNameHallVote(votePayload);
+        }
+      } catch (error) {
+        console.error("Firebase vote save failed:", error);
+      }
+
+      window.location.href = "nextballot.html";
+    });
+
+    function showMessage(element, text) {
+      element.textContent = text;
+      element.classList.add("show");
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeAttr(str) {
+      return String(str).replaceAll("'", "\\'");
+    }
+
+    renderOptions();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      doc,
+      setDoc,
+      increment,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    function safeFieldName(value) {
+      return String(value)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "unknown";
+    }
+
+    window.recordNameHallVote = async function(votePayload) {
+      const selectedKey = safeFieldName(votePayload.selected);
+
+      await addDoc(collection(db, "name-hall-of-fame-votes"), {
+        ...votePayload,
+        createdAt: serverTimestamp()
+      });
+
+      await setDoc(
+        doc(db, "name-hall-of-fame-results", "week-1-round-1"),
+        {
+          week: 1,
+          round: 1,
+          totalVotes: increment(1),
+          [`votes.${selectedKey}`]: increment(1),
+          lastVoteAt: serverTimestamp()
+        },
+        { merge: true }
+      );
+    };
+  </script>
+
+</body>
+</html>

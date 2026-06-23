@@ -3,201 +3,680 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Colby Martel | Guessing Games</title>
-  <link rel="icon" href="/favicongg.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <title>About Colby Martel</title>
   <style>
+    :root {
+      --brand: #4f86b3;
+      --brand-dark: #376f9c;
+      --bg: #f6f9fc;
+      --ink: #172331;
+      --muted: #66788a;
+      --line: #dbe6ef;
+      --soft: #edf4fa;
+      --white: #ffffff;
+    }
+
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
-      color: #333;
-      display: flex;
-      flex-direction: column;
+      margin: 0;
       min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      padding: 28px 24px 56px;
     }
 
     nav {
-      background: #1e2b38;
-      padding: 15px 30px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      color: white;
-      flex-wrap: wrap;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .nav-links a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
+    .logo {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      font-weight: 800;
     }
 
-    .nav-links a:hover {
-      color: #ffcb05;
-    }
-
-    .nav-actions {
+    .links {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
     }
 
-    .search-bar {
-      padding: 8px 16px 8px 36px;
-      height: 40px;
-      border-radius: 20px;
-      border: none;
-      background: white;
-      color: #315f85;
-      font-size: 0.95rem;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
-      background-size: 16px;
-      background-repeat: no-repeat;
-      background-position: 12px center;
+    .links a:hover {
+      color: var(--ink);
     }
 
-    .search-bar::placeholder {
-      color: #888;
+    .nav-btn {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: var(--white);
     }
 
-    .login-btn {
-      background-color: #ffcb05;
-      border: none;
-      padding: 8px 16px;
-      height: 40px;
-      border-radius: 20px;
-      font-weight: bold;
-      color: #1e2b38;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      font-size: 0.95rem;
+    .hero {
+      display: grid;
+      gap: 18px;
+      padding: 64px 0 38px;
+      text-align: center;
+      justify-items: center;
     }
 
-    .login-btn:hover {
-      background-color: #e6b800;
-      transform: translateY(-1px);
+    .eyebrow {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    header {
-      background: #315f85;
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(48px, 9vw, 112px);
+      line-height: 0.9;
+      letter-spacing: -0.085em;
+      font-weight: 880;
+    }
+
+    .subhead {
+      margin: 0;
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.5;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: var(--brand);
+    }
+
+    .button.primary {
+      background: var(--brand);
+      border-color: var(--brand);
       color: white;
-      padding: 60px 30px;
-      text-align: center;
     }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .button.secondary {
+      background: var(--white);
+      color: var(--ink);
     }
 
-    header p {
-      font-size: 1.2rem;
-      color: #d0e0f0;
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(23, 35, 49, 0.05);
     }
 
-    main {
-      padding: 40px 30px;
-      flex: 1;
-      max-width: 900px;
-      margin: 0 auto;
+    .section {
+      padding: 18px 0;
     }
 
-    .about-section {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      text-align: center;
+    .section-head {
+      display: grid;
+      gap: 10px;
+      margin: 34px 0 18px;
     }
 
-    .about-section img {
-      width: 180px;
-      height: 180px;
-      border-radius: 10%;
+    .section-title {
+      margin: 0;
+      font-size: clamp(36px, 5vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+      font-weight: 860;
+    }
+
+    .section-copy {
+      max-width: 660px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+
+    .photo-card {
+      padding: 14px;
+    }
+
+    .photo-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: var(--soft);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: block;
     }
 
-    .about-section h2 {
-      font-size: 1.8rem;
-      color: #315f85;
-      margin-bottom: 15px;
+    .photo-frame::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 14px;
+      pointer-events: none;
     }
 
-    .about-section p {
-      font-size: 1.05rem;
-      line-height: 1.7;
-      margin-bottom: 15px;
+    .story-card {
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .story-card h2,
+    .side-card h2,
+    .project-card h3,
+    .press-card h3 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 850;
+    }
+
+    .story-card p,
+    .project-card p,
+    .press-card p,
+    .side-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .quote {
+      padding: 22px;
+      border-radius: 18px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: -0.05em;
+      font-weight: 850;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .stat-card {
+      min-height: 150px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stat-num {
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      font-weight: 880;
+    }
+
+    .stat-label {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .brands-marquee {
+  overflow: hidden;
+  margin-top: 18px;
+  position: relative;
+  width: 100%;
+}
+
+.brands-marquee::before,
+.brands-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.brands-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.brands-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+.brands-track {
+  display: flex;
+  width: max-content;
+  animation: brandScroll 24s linear infinite;
+}
+
+.brands-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes brandScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.brand {
+  min-width: 180px;
+  height: 96px;
+  padding: 20px;
+  margin-right: 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 850;
+  letter-spacing: -0.04em;
+  flex-shrink: 0;
+}
+
+.brand img {
+  max-width: 120px;
+  max-height: 42px;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: none;
+}
+
+    .brand {
+      min-height: 96px;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: -0.04em;
+    }
+
+
+    .cards-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .press-card,
+    .project-card,
+    .side-card {
+      padding: 26px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .tag {
+      width: fit-content;
+      color: var(--brand);
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .link {
+      color: var(--brand-dark);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .form {
+      padding: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: none;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--brand);
+    }
+
+    .submit {
+      width: 100%;
+      min-height: 54px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--brand);
+      color: white;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .form-msg {
+      display: none;
+      margin: 0;
+      color: var(--brand-dark);
+      font-size: 14px;
+      font-weight: 700;
     }
 
     footer {
-      background: #315f85;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 42px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
     }
 
-    footer a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
+    @media (max-width: 900px) {
+      .feature-grid,
+      .contact-grid,
+      .cards-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        text-align: left;
+        justify-items: start;
+      }
+
+      .cta-row {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 22px 16px 44px;
+      }
+
+      nav {
+        align-items: flex-start;
+      }
+
+      .links {
+        display: none;
+      }
+
+      .hero {
+        padding: 48px 0 28px;
+      }
+
+      .brand-row,
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .story-card,
+      .press-card,
+      .project-card,
+      .side-card,
+      .form {
+        padding: 24px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-links">
-      <a href="/index.html">Home</a>
-      <a href="/allgames.html">Games</a>
-      <a href="/show.html">Live Shows</a>
-      <a href="/leaderboard.html">Leaderboard</a>
-    </div>
-    <div class="nav-actions">
-      <input type="text" class="search-bar" placeholder="Search games...">
-      <button class="login-btn">Login</button>
-    </div>
-  </nav>
+  <main class="page">
+    <nav>
+      <a class="logo" href="#home">Colby Martel</a>
 
-  <header>
-    <h1>Meet the Creator</h1>
-    <p>Colby Martel — Creator of Guess The Singer & Guessing Games</p>
-  </header>
+    
+      <div class="links">
+        <a href="index.html">Games</a>
+        <a href="halloffame.html">Hall of Fame</a>
+        <a href="live.html">Live Shows</a>
+        <a href="about.html">About</a>
+        <a class="nav-btn" href="#">Sign in</a>
+      </div>
+    </nav>
 
-  <main>
-    <section class="about-section">
-      <img src="/images/colby-martel.jpg" alt="Colby Martel">
-      <h2>Hi, I’m Colby!</h2>
-      <p>
-        I’m a creator from New Hampshire who loves games, music, and meaningful connection. I started Guess The Singer in 2023 as a fun way to combine my love for music and interactive challenges.
-      </p>
-      <p>
-        Since then, the project has grown into a community of players, fans, and college campuses who love to compete, laugh, and give back — all through games.
-      </p>
-      <p>
-        I believe guessing games can do more than entertain. That’s why some of our games help support scholarships, Feeding America, and even wildlife conservation.
-      </p>
-      <p>
-        Thanks for being here — I hope you play, share, and join me on the journey.
-      </p>
+    
+
+    <section class="hero" id="home">
+      <div class="eyebrow">YouTuber · Game Show Host</div>
+      <h1>Colby Martel</h1>
+      <p class="subhead">I make name guessing videos, street games, and interactive challenges that turn everyday strangers into the main characters.</p>
+
     </section>
-  </main>
 
-  <footer>
-    &copy; 2024 Guessing Games | 
-    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
-    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
-    <a href="https://www.tiktok.com/@ColbyMartel">TikTok</a>
-  </footer>
-</body>
-</html>
+    <section class="section" id="about">
+      <div class="feature-grid">
+        <div class="panel photo-card">
+          <div class="photo-frame">
+            <img src="images/ColbyMartel.jpg" alt="Colby Martel">
+          </div>
+        </div>
+
+        <article class="panel story-card">
+          <div>
+            <div class="eyebrow">The Story</div>
+            <h2>From campus interviews to viral guessing games.</h2>
+          </div>
+
+          <p>Colby Martel built his channel around curiosity, confidence, and quick conversations with strangers. What started as man-on-the-street videos grew into a creator brand centered on names, games, reactions, and live audience participation.</p>
+
+          <p>Today, Colby creates short-form and long-form guessing games for YouTube, TikTok, colleges, brands, and online communities.</p>
+
+          <div class="quote">Constantly Connecting.</div>
+        </article>
+      </div>
+
+      <div class="stats">
+        <div class="panel stat-card">
+          <div class="stat-num">1M+</div>
+          <div class="stat-label">YouTube subscribers</div>
+        </div>
+        <div class="panel stat-card">
+          <div class="stat-num">750K+</div>
+          <div class="stat-label">TikTok followers</div>
+        </div>
+        <div class="panel stat-card">
+          <div class="stat-num">1B+</div>
+          <div class="stat-label">Total views</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="brands">
+      <div class="section-head">
+        <div class="eyebrow">Partnerships</div>
+        <h2 class="section-title">Brand partnerships</h2>
+      </div>
+
+      <div class="brands-marquee">
+        <div class="brands-track">
+          <div class="brand"><img src="images/logos/subwaylogo.jpg" alt="Subway"></div>
+          <div class="brand"><img src="images/logos/grammarlylogo.jpg" alt="Grammarly"></div>
+          <div class="brand"><img src="images/logos/aelogo.jpg" alt="American Eagle"></div>
+          <div class="brand"><img src="images/logos/starbuckslogo.jpg" alt="Starbucks"></div>
+          <div class="brand"><img src="images/logos/chegglogo.jpg" alt="Chegg"></div>
+          <div class="brand"><img src="images/logos/targetlogo.jpg" alt="Target"></div>
+          <div class="brand"><img src="images/logos/statefarmlogo.jpg" alt="State Farm"></div>
+          <div class="brand"><img src="images/logos/kodaklogo.jpg" alt="Kodak"></div>
+          <div class="brand"><img src="images/logos/blockblast.jpg" alt="Block Blast"></div>
+
+      
+          <!-- duplicate for seamless loop -->
+          <div class="brand"><img src="images/logos/subwaylogo.jpg" alt="Subway"></div>
+          <div class="brand"><img src="images/logos/grammarlylogo.jpg" alt="Grammarly"></div>
+          <div class="brand"><img src="images/logos/aelogo.jpg" alt="American Eagle"></div>
+          <div class="brand"><img src="images/logos/starbuckslogo.jpg" alt="Starbucks"></div>
+          <div class="brand"><img src="images/logos/chegglogo.jpg" alt="Chegg"></div>
+          <div class="brand"><img src="images/logos/targetlogo.jpg" alt="Target"></div>
+          <div class="brand"><img src="images/logos/statefarmlogo.jpg" alt="State Farm"></div>
+          <div class="brand"><img src="images/logos/kodaklogo.jpg" alt="Kodak"></div>
+          <div class="brand"><img src="images/logos/blockblast.jpg" alt="Block Blast"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="press">
+      <div class="section-head">
+        <div class="eyebrow">Recognition</div>
+        <h2 class="section-title">Press & features</h2>
+      </div>
+
+      <div class="cards-2">
+        <article class="panel press-card">
+          <span class="tag">YouTube</span>
+          <h3>Creator Spotlight</h3>
+          <p>Featured for turning college interviews and stranger-based games into a full-time creator career.</p>
+          <a class="link" href="https://www.youtube.com/howyoutubeworks/us-of-youtube/#NH" target="_blank" rel="noreferrer">Read feature →</a>
+        </article>
+
+        <article class="panel press-card">
+          <span class="tag">Babson College</span>
+          <h3>Featured Entrepreneur</h3>
+          <p>Recognized for building interactive, community-driven entertainment across digital and live experiences.</p>
+          <a class="link" href="https://entrepreneurship.babson.edu/scholar-stories/" target="_blank" rel="noreferrer">Read feature →</a>
+        </article>
+      </div>
+    </section>
+
+
+    <footer>
+      <span>© 2026 Colby Martel. All rights reserved.</span>
+    </footer>
+  </main>
