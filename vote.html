@@ -14,11 +14,11 @@
       --line: #dbe6ef;
       --soft: #edf4fa;
       --white: #ffffff;
+      --success: #1f7a4d;
+      --danger: #b42318;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -28,19 +28,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
 
     .page {
       width: min(100%, 1040px);
@@ -71,12 +61,18 @@
       font-weight: 600;
     }
 
+    .links a:hover { color: var(--ink); }
+
     .nav-btn {
       color: var(--ink);
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 9px 14px;
       background: var(--white);
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .hero {
@@ -119,10 +115,10 @@
     }
 
     .vote-panel {
-  max-width: 1180px;
-  padding: 24px;
-  margin: 0 auto 0;
-}
+      max-width: 1180px;
+      padding: 24px;
+      margin: 0 auto 0;
+    }
 
     .options {
       display: grid;
@@ -143,20 +139,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: 0 16px 34px rgba(23, 35, 49, 0.08);
-      transform: none;
       transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
-    }
-
-    .option:nth-child(2) {
-      --tilt: 0deg;
-    }
-
-    .option:nth-child(3) {
-      --tilt: 0deg;
-    }
-
-    .option:nth-child(4) {
-      --tilt: 0deg;
     }
 
     .option:hover,
@@ -178,34 +161,34 @@
       outline-offset: 0;
     }
 
-    .option.selected .option-name {
-      color: var(--brand-dark);
-    }
+    .option.selected .option-name { color: var(--brand-dark); }
 
     .option:disabled {
       color: var(--ink);
-      cursor: default;
-      opacity: 1;
+      cursor: not-allowed;
+      opacity: 0.65;
+      transform: none;
     }
 
     .option-image {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  min-height: 0;
-  height: auto;
-  border-radius: 5px;
-  overflow: hidden;
-  display: block;
-  background: var(--soft);
-}
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 0;
+      height: auto;
+      border-radius: 5px;
+      overflow: hidden;
+      display: block;
+      background: var(--soft);
+    }
 
-.option-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+    .option-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .option-image::after {
       content: "";
       position: absolute;
@@ -228,47 +211,24 @@
       font-weight: 820;
     }
 
-    .option-meta {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.4;
-      font-weight: 500;
-    }
-
     .vote-button {
       width: 100%;
+      margin-top: 16px;
+      min-height: 54px;
+      border: 0;
       border-radius: 999px;
+      background: var(--brand);
+      color: white;
+      font-size: 17px;
       font-weight: 750;
       transition: opacity 0.16s ease, background 0.16s ease;
     }
 
-    .vote-button {
-      margin-top: 16px;
-      min-height: 54px;
-      border: 0;
-      background: var(--brand);
-      color: white;
-      font-size: 17px;
-    }
+    .vote-button:hover { background: var(--brand-dark); }
 
     .vote-button:disabled {
       opacity: 0.35;
       cursor: not-allowed;
-    }
-
-    input {
-      width: 100%;
-      height: 48px;
-      border: 1px solid var(--line);
-      background: var(--white);
-      border-radius: 14px;
-      padding: 0 14px;
-      outline: none;
-      color: var(--ink);
-    }
-
-    input:focus {
-      border-color: var(--brand);
     }
 
     .message {
@@ -281,52 +241,32 @@
       font-weight: 650;
     }
 
-    .message.show {
-      display: block;
-    }
+    .message.show { display: block; }
+    .message.error { color: var(--danger); }
+    .message.success { color: var(--success); }
 
     @media (max-width: 620px) {
-      .page {
-        padding: 22px 16px 44px;
-      }
-
-      nav {
-        align-items: flex-start;
-      }
-
-      .links {
-        display: none;
-      }
-
-      .hero {
-        padding: 42px 0 16px;
-      }
-
-      .options {
-        grid-template-columns: 1fr;
-      }
-
-      .option {
-        min-height: 292px;
-      }
-
-      .option-image {
-        height: 220px;
-      }
+      .page { padding: 22px 16px 44px; }
+      nav { align-items: flex-start; }
+      .links { display: none; }
+      .hero { padding: 42px 0 16px; }
+      .options { grid-template-columns: 1fr; }
+      .option { min-height: 292px; }
+      .option-image { height: 220px; }
     }
   </style>
 </head>
 <body>
   <main class="page">
     <nav>
-      <a class="logo" href="#">Guessing Games</a>
+      <a class="logo" href="index.html">Guessing Games</a>
 
       <div class="links">
         <a href="index.html">Games</a>
         <a href="halloffame.html">Hall of Fame</a>
         <a href="live.html">Live Shows</a>
         <a href="about.html">About</a>
-        <a class="nav-btn" href="#">Sign in</a>
+        <a class="nav-btn" id="authLink" href="signin.html?redirect=vote.html">Sign in</a>
       </div>
     </nav>
 
@@ -339,166 +279,61 @@
     <section>
       <div class="panel vote-panel">
         <div class="options" id="options"></div>
-
-        <button class="vote-button" id="voteButton" disabled>Choose a name</button>
-
+        <button class="vote-button" id="voteButton" disabled>Checking sign in...</button>
         <div class="message" id="message"></div>
       </div>
     </section>
   </main>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      increment,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
+
     const weeklyNames = [
-      {
-        name: "Frog",
-        image: "images/frog.png",
-      },
-      {
-        name: "Gengyzkhan",
-        image: "images/gengyzkhan.jpg",
-      },
-      {
-        name: "J",
-        image: "images/j.jpg",
-      },
-      {
-        name: "Naruto",
-        image: "images/naruto.jpg",
-      }
+      { name: "Frog", image: "images/frog.png" },
+      { name: "Gengyzkhan", image: "images/gengyzkhan.jpg" },
+      { name: "J", image: "images/j.jpg" },
+      { name: "Naruto", image: "images/naruto.jpg" }
     ];
 
+    const WEEK = 1;
+    const ROUND = 1;
+    const ROUND_ID = "week-1-round-1";
     const STORAGE_KEY = "gg_weekly_name_vote_week_1_round_1_multi_v1";
-    const WRITE_KEY = "gg_weekly_write_ins_week_1_round_1_v2";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
     let selectedName = null;
+    let currentUser = null;
+    let existingVote = null;
+    let authReady = false;
 
     const optionsEl = document.getElementById("options");
     const voteButton = document.getElementById("voteButton");
     const messageEl = document.getElementById("message");
-
-    function getState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          return {
-            ...parsed,
-            names: parsed.names.map(item => ({
-              ...(weeklyNames.find(name => name.name === item.name) || {}),
-              ...item
-            }))
-          };
-        } catch {}
-      }
-
-      return {
-        hasVoted: false,
-        selected: null,
-        names: weeklyNames
-      };
-    }
-
-    function saveState(state) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function getWriteIns() {
-      const saved = localStorage.getItem(WRITE_KEY);
-
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {}
-      }
-
-      return [];
-    }
-
-    function saveWriteIns(writeIns) {
-      localStorage.setItem(WRITE_KEY, JSON.stringify(writeIns));
-    }
-
-    function renderOptions() {
-  const state = getState();
-
-  optionsEl.innerHTML = state.names.map(item => {
-    const selected = selectedName === item.name;
-    return `
-      <button class="option ${selected ? "selected" : ""}" onclick="selectName('${escapeAttr(item.name)}')">
-        <span class="option-image">
-          <img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name)}" />
-        </span>
-        <span class="option-copy">
-          <span class="option-name">${escapeHTML(item.name)}</span>
-        </span>
-      </button>
-    `;
-  }).join("");
-
-  voteButton.disabled = !selectedName;
-  voteButton.textContent = selectedName ? "Vote for " + selectedName : "Choose a name";
-}
-    function selectName(name) {
-      selectedName = name;
-      voteButton.disabled = false;
-      voteButton.textContent = "Vote for " + name;
-      messageEl.classList.remove("show");
-      renderOptions();
-    }
-
-    voteButton.addEventListener("click", async () => {
-      const state = getState();
-
-      if (!selectedName) return;
-
-      const updatedNames = state.names.map(item => {
-        if (item.name === selectedName) {
-          return { ...item, votes: (item.votes || 0) + 1 };
-        }
-
-        return item;
-      });
-
-      const voteHistory = Array.isArray(state.voteHistory) ? state.voteHistory : [];
-
-      const votePayload = {
-        week: 1,
-        round: 1,
-        selected: selectedName,
-        ballot: state.names.map(item => item.name),
-        submittedAtLocal: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        page: window.location.pathname
-      };
-
-      saveState({
-        hasVoted: false,
-        selected: selectedName,
-        names: updatedNames,
-        voteHistory: [
-          ...voteHistory,
-          votePayload
-        ]
-      });
-
-      try {
-        voteButton.disabled = true;
-        voteButton.textContent = "Submitting...";
-        if (window.recordNameHallVote) {
-          await window.recordNameHallVote(votePayload);
-        }
-      } catch (error) {
-        console.error("Firebase vote save failed:", error);
-      }
-
-      window.location.href = "nextballot.html";
-    });
-
-    function showMessage(element, text) {
-      element.textContent = text;
-      element.classList.add("show");
-    }
+    const authLink = document.getElementById("authLink");
 
     function escapeHTML(str) {
       return String(str)
@@ -513,32 +348,24 @@
       return String(str).replaceAll("'", "\\'");
     }
 
-    renderOptions();
-  </script>
+    function firstNameFromUser(user) {
+      const source = user.displayName || user.email || "there";
+      return source.split(" ")[0].split("@")[0];
+    }
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      doc,
-      setDoc,
-      increment,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    function setMessage(text, type = "") {
+      messageEl.textContent = text;
+      messageEl.className = "message show" + (type ? " " + type : "");
+    }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
-      authDomain: "guessinggames.firebaseapp.com",
-      projectId: "guessinggames",
-      storageBucket: "guessinggames.firebasestorage.app",
-      messagingSenderId: "431644741449",
-      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
-    };
+    function clearMessage() {
+      messageEl.textContent = "";
+      messageEl.className = "message";
+    }
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    function getVoteRef(user) {
+      return doc(db, "name-hall-of-fame-votes", ROUND_ID, "votes", user.uid);
+    }
 
     function safeFieldName(value) {
       return String(value)
@@ -547,27 +374,178 @@
         .replace(/^_+|_+$/g, "") || "unknown";
     }
 
-    window.recordNameHallVote = async function(votePayload) {
-      const selectedKey = safeFieldName(votePayload.selected);
+    function updateVoteButton() {
+      if (!authReady) {
+        voteButton.disabled = true;
+        voteButton.textContent = "Checking sign in...";
+        return;
+      }
 
-      await addDoc(collection(db, "name-hall-of-fame-votes"), {
-        ...votePayload,
-        createdAt: serverTimestamp()
+      if (!currentUser) {
+        voteButton.disabled = false;
+        voteButton.textContent = "Sign in to vote";
+        return;
+      }
+
+      if (existingVote) {
+        voteButton.disabled = true;
+        voteButton.textContent = "Already voted for " + existingVote.selected;
+        return;
+      }
+
+      voteButton.disabled = !selectedName;
+      voteButton.textContent = selectedName ? "Vote for " + selectedName : "Choose a name";
+    }
+
+    function renderOptions() {
+      const optionsDisabled = !currentUser || !!existingVote;
+
+      optionsEl.innerHTML = weeklyNames.map(item => {
+        const selected = selectedName === item.name;
+        return `
+          <button class="option ${selected ? "selected" : ""}" ${optionsDisabled ? "disabled" : ""} data-name="${escapeAttr(item.name)}">
+            <span class="option-image">
+              <img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name)}" />
+            </span>
+            <span class="option-copy">
+              <span class="option-name">${escapeHTML(item.name)}</span>
+            </span>
+          </button>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".option").forEach(button => {
+        button.addEventListener("click", () => {
+          if (!currentUser) {
+            window.location.href = "signin.html?redirect=vote.html";
+            return;
+          }
+
+          if (existingVote) return;
+
+          selectedName = button.dataset.name;
+          clearMessage();
+          renderOptions();
+          updateVoteButton();
+        });
       });
 
-      await setDoc(
-        doc(db, "name-hall-of-fame-results", "week-1-round-1"),
-        {
-          week: 1,
-          round: 1,
-          totalVotes: increment(1),
-          [`votes.${selectedKey}`]: increment(1),
-          lastVoteAt: serverTimestamp()
-        },
-        { merge: true }
-      );
-    };
-  </script>
+      updateVoteButton();
+    }
 
+    async function loadUserVote(user) {
+      const voteSnap = await getDoc(getVoteRef(user));
+      existingVote = voteSnap.exists() ? voteSnap.data() : null;
+
+      if (existingVote) {
+        setMessage("You already voted in this round.", "success");
+      } else {
+        clearMessage();
+      }
+
+      renderOptions();
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      authReady = true;
+
+      if (user) {
+        const name = firstNameFromUser(user);
+        authLink.textContent = "Hi, " + name;
+        authLink.href = "signin.html";
+        await loadUserVote(user);
+      } else {
+        existingVote = null;
+        selectedName = null;
+        authLink.textContent = "Sign in";
+        authLink.href = "signin.html?redirect=vote.html";
+        setMessage("Sign in to vote. Each account gets one vote per round.");
+        renderOptions();
+      }
+    });
+
+    voteButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        window.location.href = "signin.html?redirect=vote.html";
+        return;
+      }
+
+      if (existingVote) {
+        setMessage("You already voted in this round.", "success");
+        return;
+      }
+
+      if (!selectedName) return;
+
+      try {
+        voteButton.disabled = true;
+        voteButton.textContent = "Submitting...";
+
+        const voteRef = getVoteRef(currentUser);
+        const latestVoteSnap = await getDoc(voteRef);
+
+        if (latestVoteSnap.exists()) {
+          existingVote = latestVoteSnap.data();
+          renderOptions();
+          setMessage("You already voted in this round.", "success");
+          return;
+        }
+
+        const votePayload = {
+          week: WEEK,
+          round: ROUND,
+          selected: selectedName,
+          uid: currentUser.uid,
+          displayName: currentUser.displayName || "",
+          email: currentUser.email || "",
+          photoURL: currentUser.photoURL || "",
+          submittedAtLocal: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          page: window.location.pathname,
+          createdAt: serverTimestamp()
+        };
+
+        await setDoc(voteRef, votePayload);
+
+        const selectedKey = safeFieldName(selectedName);
+
+        await setDoc(
+          doc(db, "name-hall-of-fame-results", ROUND_ID),
+          {
+            week: WEEK,
+            round: ROUND,
+            totalVotes: increment(1),
+            [`votes.${selectedKey}`]: increment(1),
+            lastVoteAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          hasVoted: true,
+          selected: selectedName,
+          names: weeklyNames,
+          voteHistory: [
+            {
+              week: WEEK,
+              round: ROUND,
+              selected: selectedName,
+              submittedAtLocal: new Date().toISOString(),
+              page: window.location.pathname
+            }
+          ]
+        }));
+
+        window.location.href = "nextballot.html";
+      } catch (error) {
+        console.error("Vote save failed:", error);
+        setMessage("Could not submit vote. Check Firebase rules and try again.", "error");
+        updateVoteButton();
+      }
+    });
+
+    renderOptions();
+  </script>
 </body>
 </html>

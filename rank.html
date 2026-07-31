@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Battle</title>
+
+  <style>
+    :root {
+      --brand: #4f86b3;
+      --brand-dark: #376f9c;
+      --bg: #f6f9fc;
+      --ink: #172331;
+      --muted: #66788a;
+      --line: #dbe6ef;
+      --soft: #edf4fa;
+      --white: #ffffff;
+
+      --pink: #f7c7dc;
+      --pink-dark: #d85f9a;
+      --blue: #c7dcf7;
+      --blue-dark: #4f86d8;
+      --yellow: #fff0b8;
+      --yellow-dark: #c99a1a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 1160px);
+      margin: 0 auto;
+      padding: 28px 24px 64px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: var(--white);
+    }
+
+    .hero {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 16px;
+      padding: 58px 0 34px;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 880px;
+      font-size: clamp(46px, 8vw, 92px);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+      font-weight: 850;
+    }
+
+    .subhead {
+      margin: 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .battle-wrap {
+      display: grid;
+      gap: 22px;
+      margin-top: 10px;
+    }
+
+    .battle-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .name-card {
+      position: relative;
+      min-height: 290px;
+      padding: 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 18px 42px rgba(23, 35, 49, 0.07);
+      cursor: pointer;
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .name-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 54px rgba(23, 35, 49, 0.10);
+    }
+
+    .name-card.feminine {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(216, 95, 154, 0.18), transparent 35%),
+        var(--white);
+      border-color: rgba(216, 95, 154, 0.32);
+    }
+
+    .name-card.male {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(79, 134, 216, 0.18), transparent 35%),
+        var(--white);
+      border-color: rgba(79, 134, 216, 0.32);
+    }
+
+    .name-card.neutral {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(201, 154, 26, 0.20), transparent 35%),
+        var(--white);
+      border-color: rgba(201, 154, 26, 0.34);
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .feminine .card-label {
+      color: var(--pink-dark);
+    }
+
+    .male .card-label {
+      color: var(--blue-dark);
+    }
+
+    .neutral .card-label {
+      color: var(--yellow-dark);
+    }
+
+    .name-display {
+      display: grid;
+      place-items: center;
+      min-height: 150px;
+      margin: 20px 0;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      text-align: center;
+      padding: 18px;
+    }
+
+    .feminine .name-display {
+      background: linear-gradient(135deg, var(--pink), rgba(255, 255, 255, 0.9));
+    }
+
+    .male .name-display {
+      background: linear-gradient(135deg, var(--blue), rgba(255, 255, 255, 0.9));
+    }
+
+    .neutral .name-display {
+      background: linear-gradient(135deg, var(--yellow), rgba(255, 255, 255, 0.9));
+    }
+
+    .name {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -0.08em;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .vote-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      width: 100%;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 0;
+      color: white;
+      font-size: 15px;
+      font-weight: 780;
+      cursor: pointer;
+      transition: filter 0.16s ease;
+    }
+
+    .feminine .vote-btn {
+      background: var(--pink-dark);
+    }
+
+    .male .vote-btn {
+      background: var(--blue-dark);
+    }
+
+    .neutral .vote-btn {
+      background: var(--yellow-dark);
+    }
+
+    .vote-btn:hover {
+      filter: brightness(0.94);
+    }
+
+    .versus {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .vs-circle {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 28px rgba(23, 35, 49, 0.06);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .control-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform 0.16s ease;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .winner-flash {
+      animation: flash 0.35s ease;
+    }
+
+    @keyframes flash {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.025);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .battle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .versus {
+        min-height: 36px;
+      }
+
+      .vs-circle {
+        width: 48px;
+        height: 48px;
+      }
+
+      .links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding: 22px 16px 44px;
+      }
+
+      nav {
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding: 46px 0 28px;
+      }
+
+      .name-card {
+        min-height: 235px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <nav>
+      <a class="logo" href="name-hall-of-fame-ballot.html">Guessing Games</a>
+
+      <div class="links">
+        <a href="index.html">Games</a>
+        <a href="halloffame.html">Hall of Fame</a>
+        <a href="live.html">Live Shows</a>
+        <a href="about.html">About</a>
+        <a class="nav-btn" href="#">Sign in</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="eyebrow">Name battle</div>
+      <h1>Which Name Is Better?</h1>
+      <p class="subhead">
+        Pick the cooler name. Pink names are feminine, blue names are male, and yellow names are neutral.
+      </p>
+    </section>
+
+    <section class="battle-wrap" aria-label="Name voting game">
+      <div class="battle-grid">
+        <article class="name-card" id="leftCard">
+          <div>
+            <div class="card-label" id="leftLabel">Option A</div>
+            <div class="name-display">
+              <h2 class="name" id="leftName">Frog</h2>
+            </div>
+          </div>
+          <button class="vote-btn" id="leftBtn">Vote for this name</button>
+        </article>
+
+        <div class="versus" aria-hidden="true">
+          <div class="vs-circle">VS</div>
+        </div>
+
+        <article class="name-card" id="rightCard">
+          <div>
+            <div class="card-label" id="rightLabel">Option B</div>
+            <div class="name-display">
+              <h2 class="name" id="rightName">Naruto</h2>
+            </div>
+          </div>
+          <button class="vote-btn" id="rightBtn">Vote for this name</button>
+        </article>
+      </div>
+
+      <div class="stats-row">
+        <span class="pill" id="voteCount">Votes: 0</span>
+        <span class="pill" id="matchupCount">Names: 35</span>
+        <span class="pill" id="lastWinner">Last winner: —</span>
+      </div>
+
+      <div class="controls">
+        <button class="control-btn" id="skipBtn">Skip matchup</button>
+        <button class="control-btn" id="resetBtn">Reset results</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const names = [
+      { name: "Frog", gender: "neutral" },
+      { name: "J", gender: "neutral" },
+      { name: "Naruto", gender: "male" },
+      { name: "Gengyzkhan", gender: "male" },
+      { name: "Derby", gender: "neutral" },
+      { name: "Pluto", gender: "neutral" },
+      { name: "River", gender: "neutral" },
+      { name: "Indya", gender: "feminine" },
+      { name: "America", gender: "feminine" },
+      { name: "Amatista", gender: "feminine" },
+      { name: "Pranathi", gender: "feminine" },
+      { name: "Theoden", gender: "male" },
+      { name: "Ryse", gender: "neutral" },
+      { name: "Ki", gender: "neutral" },
+      { name: "Katie", gender: "feminine" },
+      { name: "Pearl", gender: "feminine" },
+      { name: "Jersey", gender: "neutral" },
+      { name: "Winnie", gender: "feminine" },
+      { name: "Ryu", gender: "male" },
+      { name: "Ridge", gender: "male" },
+      { name: "Julius", gender: "male" },
+      { name: "Vidhi", gender: "feminine" },
+      { name: "T’Niyah", gender: "feminine" },
+      { name: "Karma", gender: "neutral" },
+      { name: "Angel", gender: "neutral" },
+      { name: "Sky", gender: "neutral" },
+      { name: "Sunny", gender: "neutral" },
+      { name: "Jiwoo", gender: "neutral" },
+      { name: "Wisegeorge", gender: "male" },
+      { name: "Kaluv", gender: "neutral" },
+      { name: "Sarp", gender: "male" },
+      { name: "Boston", gender: "neutral" },
+      { name: "Storm", gender: "neutral" },
+      { name: "Clifford", gender: "male" },
+      { name: "Colby", gender: "neutral" }
+    ];
+
+    const storageKey = "nameBattleResultsV2";
+
+    const leftNameEl = document.getElementById("leftName");
+    const rightNameEl = document.getElementById("rightName");
+    const leftLabelEl = document.getElementById("leftLabel");
+    const rightLabelEl = document.getElementById("rightLabel");
+    const leftCard = document.getElementById("leftCard");
+    const rightCard = document.getElementById("rightCard");
+    const leftBtn = document.getElementById("leftBtn");
+    const rightBtn = document.getElementById("rightBtn");
+    const skipBtn = document.getElementById("skipBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const voteCountEl = document.getElementById("voteCount");
+    const matchupCountEl = document.getElementById("matchupCount");
+    const lastWinnerEl = document.getElementById("lastWinner");
+
+    let currentLeft = null;
+    let currentRight = null;
+    let results = loadResults();
+
+    function createDefaultResults() {
+      const data = {};
+
+      names.forEach((item) => {
+        data[item.name] = {
+          wins: 0,
+          losses: 0,
+          appearances: 0
+        };
+      });
+
+      return {
+        totalVotes: 0,
+        names: data
+      };
+    }
+
+    function loadResults() {
+      const saved = localStorage.getItem(storageKey);
+
+      if (!saved) {
+        return createDefaultResults();
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+
+        names.forEach((item) => {
+          if (!parsed.names[item.name]) {
+            parsed.names[item.name] = {
+              wins: 0,
+              losses: 0,
+              appearances: 0
+            };
+          }
+        });
+
+        return parsed;
+      } catch {
+        return createDefaultResults();
+      }
+    }
+
+    function saveResults() {
+      localStorage.setItem(storageKey, JSON.stringify(results));
+    }
+
+    function getRandomPair() {
+      const leftIndex = Math.floor(Math.random() * names.length);
+      let rightIndex = Math.floor(Math.random() * names.length);
+
+      while (rightIndex === leftIndex) {
+        rightIndex = Math.floor(Math.random() * names.length);
+      }
+
+      return [names[leftIndex], names[rightIndex]];
+    }
+
+    function applyGenderClass(card, gender) {
+      card.classList.remove("feminine", "male", "neutral");
+      card.classList.add(gender);
+    }
+
+    function setNewMatchup() {
+      const pair = getRandomPair();
+      currentLeft = pair[0];
+      currentRight = pair[1];
+
+      leftNameEl.textContent = currentLeft.name;
+      rightNameEl.textContent = currentRight.name;
+
+      leftLabelEl.textContent = `Option A · ${currentLeft.gender}`;
+      rightLabelEl.textContent = `Option B · ${currentRight.gender}`;
+
+      applyGenderClass(leftCard, currentLeft.gender);
+      applyGenderClass(rightCard, currentRight.gender);
+
+      leftCard.classList.remove("winner-flash");
+      rightCard.classList.remove("winner-flash");
+    }
+
+    function vote(winner, loser, winningCard) {
+      results.names[winner.name].wins += 1;
+      results.names[winner.name].appearances += 1;
+
+      results.names[loser.name].losses += 1;
+      results.names[loser.name].appearances += 1;
+
+      results.totalVotes += 1;
+
+      saveResults();
+      updateStats(winner.name);
+
+      winningCard.classList.add("winner-flash");
+
+      setTimeout(() => {
+        setNewMatchup();
+      }, 260);
+    }
+
+    function updateStats(lastWinner = "—") {
+      voteCountEl.textContent = `Votes: ${results.totalVotes}`;
+      matchupCountEl.textContent = `Names: ${names.length}`;
+      lastWinnerEl.textContent = `Last winner: ${lastWinner}`;
+    }
+
+    leftCard.addEventListener("click", () => {
+      vote(currentLeft, currentRight, leftCard);
+    });
+
+    rightCard.addEventListener("click", () => {
+      vote(currentRight, currentLeft, rightCard);
+    });
+
+    leftBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      vote(currentLeft, currentRight, leftCard);
+    });
+
+    rightBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      vote(currentRight, currentLeft, rightCard);
+    });
+
+    skipBtn.addEventListener("click", () => {
+      setNewMatchup();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      const confirmed = confirm("Reset all votes?");
+
+      if (!confirmed) return;
+
+      results = createDefaultResults();
+      saveResults();
+      updateStats();
+      setNewMatchup();
+    });
+
+    updateStats();
+    setNewMatchup();
+  </script>
+</body>
+</html>
