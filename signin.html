@@ -1511,17 +1511,15 @@
       source
     ) {
       const record = {
-        uid: user.uid,
-        email: user.email || "",
-        displayName: user.displayName || "",
-        marketingConsent:
-          marketingConsent === true,
-        emailVerified:
-          user.emailVerified === true,
-        consentSource: source,
-        consentVersion: "2026-08-06",
-        updatedAt: serverTimestamp()
-      };
+  uid: user.uid,
+  email: user.email || "",
+  displayName: user.displayName || "",
+  marketingConsent:
+    marketingConsent === true,
+  consentSource: source,
+  consentVersion: "2026-08-06",
+  updatedAt: serverTimestamp()
+};
 
       if (marketingConsent) {
         record.consentedAt =
@@ -1539,51 +1537,33 @@
         }
       );
     }
+    async function syncExistingConsentRecord(user) {
+  if (!user?.email) {
+    return;
+  }
 
-    async function syncExistingConsentRecord(
-      user
-    ) {
-      if (!user?.email) {
-        return;
-      }
+  const consentReference =
+    getConsentReference(user);
 
-      await user.reload();
+  const consentSnapshot =
+    await getDoc(consentReference);
 
-      const refreshedUser =
-        auth.currentUser;
+  if (!consentSnapshot.exists()) {
+    return;
+  }
 
-      if (!refreshedUser) {
-        return;
-      }
-
-      const consentReference =
-        getConsentReference(refreshedUser);
-
-      const consentSnapshot =
-        await getDoc(consentReference);
-
-      if (!consentSnapshot.exists()) {
-        return;
-      }
-
-      await setDoc(
-        consentReference,
-        {
-          email:
-            refreshedUser.email || "",
-          displayName:
-            refreshedUser.displayName || "",
-          emailVerified:
-            refreshedUser.emailVerified === true,
-          updatedAt:
-            serverTimestamp()
-        },
-        {
-          merge: true
-        }
-      );
+  await setDoc(
+    consentReference,
+    {
+      email: user.email || "",
+      displayName: user.displayName || "",
+      updatedAt: serverTimestamp()
+    },
+    {
+      merge: true
     }
-
+  );
+}
     async function redirectAfterAuthentication() {
       window.location.assign(
         redirectTarget
@@ -1730,10 +1710,7 @@
             "email-account-creation"
           );
 
-          await sendEmailVerification(
-            updatedUser,
-            verificationActionSettings()
-          );
+     
 
           passwordInput.value = "";
           confirmPasswordInput.value = "";

@@ -27,10 +27,13 @@
       box-sizing: border-box;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-
       background: var(--bg);
       color: var(--ink);
 
@@ -54,7 +57,9 @@
       cursor: pointer;
     }
 
-    /* NAV */
+    /* ─────────────────────────────
+       NAV
+    ───────────────────────────── */
 
     nav {
       position: fixed;
@@ -66,8 +71,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 20px;
 
-      padding: 1.25rem 2.5rem;
+      padding: 1.2rem 2.5rem;
 
       background: rgba(247, 250, 252, 0.94);
 
@@ -75,14 +81,31 @@
       -webkit-backdrop-filter: blur(20px);
 
       border-bottom: 1px solid var(--line);
+
+      transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(247, 250, 252, 0.99);
+      box-shadow:
+        0 4px 24px
+        rgba(79, 134, 179, 0.10);
     }
 
     .nav-logo {
       color: var(--brand);
 
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
+      font-size: 1.25rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
     .nav-link {
@@ -90,15 +113,40 @@
 
       font-size: 0.72rem;
       font-weight: 700;
+
       letter-spacing: 0.12em;
       text-transform: uppercase;
+
+      transition: color 0.2s ease;
     }
 
     .nav-link:hover {
       color: var(--brand);
     }
 
-    /* PAGE */
+    .nav-account {
+      max-width: 190px;
+
+      padding: 9px 14px;
+
+      overflow: hidden;
+
+      color: var(--ink);
+      background: var(--white);
+
+      border: 1px solid var(--line);
+      border-radius: 999px;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ─────────────────────────────
+       PAGE
+    ───────────────────────────── */
 
     .page {
       width: min(100%, 1180px);
@@ -110,7 +158,9 @@
         64px;
     }
 
-    /* HEADER */
+    /* ─────────────────────────────
+       HEADER
+    ───────────────────────────── */
 
     .header {
       margin-bottom: 34px;
@@ -130,21 +180,28 @@
     h1 {
       margin: 0;
 
-      font-size: clamp(46px, 7vw, 78px);
+      font-size:
+        clamp(46px, 7vw, 78px);
+
       line-height: 0.95;
       letter-spacing: -0.07em;
       font-weight: 900;
     }
 
     .subtitle {
+      max-width: 650px;
+
       margin: 16px 0 0;
 
       color: var(--muted);
 
       font-size: 17px;
+      line-height: 1.55;
     }
 
-    /* TOTAL */
+    /* ─────────────────────────────
+       TOTAL
+    ───────────────────────────── */
 
     .total-card {
       margin-bottom: 20px;
@@ -153,6 +210,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px;
 
       background: var(--white);
 
@@ -185,7 +243,7 @@
     }
 
     .refresh-button {
-      min-height: 42px;
+      min-height: 44px;
 
       padding: 0 18px;
 
@@ -196,9 +254,25 @@
       border-radius: 999px;
 
       font-weight: 750;
+
+      transition:
+        background 0.16s ease,
+        transform 0.16s ease;
     }
 
-    /* TALLY */
+    .refresh-button:hover:not(:disabled) {
+      background: #dcebf6;
+      transform: translateY(-1px);
+    }
+
+    .refresh-button:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    /* ─────────────────────────────
+       TALLY
+    ───────────────────────────── */
 
     .tally-grid {
       display: grid;
@@ -207,7 +281,7 @@
 
       gap: 14px;
 
-      margin-bottom: 34px;
+      margin-bottom: 42px;
     }
 
     .tally-card {
@@ -217,6 +291,10 @@
 
       border: 1px solid var(--line);
       border-radius: 18px;
+
+      box-shadow:
+        0 10px 26px
+        rgba(23, 35, 49, 0.04);
     }
 
     .candidate {
@@ -272,13 +350,14 @@
       transition: width 0.3s ease;
     }
 
-    /* TABLE */
+    /* ─────────────────────────────
+       SECTION HEADINGS
+    ───────────────────────────── */
 
     .section-head {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-
       gap: 20px;
 
       margin-bottom: 15px;
@@ -291,12 +370,34 @@
       letter-spacing: -0.05em;
     }
 
-    .voter-count {
+    .section-subtitle {
+      margin: 6px 0 0;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .item-count {
       color: var(--muted);
 
       font-size: 14px;
       font-weight: 650;
+
+      white-space: nowrap;
     }
+
+    .results-divider {
+      height: 1px;
+
+      margin: 52px 0;
+
+      background: var(--line);
+    }
+
+    /* ─────────────────────────────
+       TABLES
+    ───────────────────────────── */
 
     .table-card {
       overflow: hidden;
@@ -312,12 +413,13 @@
     }
 
     .table-scroll {
+      width: 100%;
       overflow-x: auto;
     }
 
     table {
       width: 100%;
-      min-width: 720px;
+      min-width: 760px;
 
       border-collapse: collapse;
     }
@@ -345,6 +447,7 @@
 
     td {
       font-size: 14px;
+      vertical-align: middle;
     }
 
     tbody tr:last-child td {
@@ -354,6 +457,10 @@
     tbody tr:hover {
       background: #fafcff;
     }
+
+    /* ─────────────────────────────
+       VOTER
+    ───────────────────────────── */
 
     .person {
       display: flex;
@@ -386,6 +493,7 @@
       width: 100%;
       height: 100%;
 
+      display: block;
       object-fit: cover;
     }
 
@@ -415,34 +523,106 @@
       font-weight: 800;
     }
 
-    .loading,
-    .error,
-    .empty {
+    .uid {
+      max-width: 180px;
+
+      overflow: hidden;
+
+      color: var(--muted);
+
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+
+      font-size: 11px;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ─────────────────────────────
+       NOMINATIONS
+    ───────────────────────────── */
+
+    .nomination-name {
+      color: var(--ink);
+
+      font-size: 16px;
+      font-weight: 850;
+    }
+
+    .nomination-reason {
+      max-width: 440px;
+
+      color: var(--muted);
+
+      line-height: 1.5;
+    }
+
+    .page-chip {
+      display: inline-flex;
+
+      padding: 5px 9px;
+
+      color: var(--muted);
+      background: #f8fafc;
+
+      border: 1px solid var(--line);
+      border-radius: 999px;
+
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ─────────────────────────────
+       STATUS
+    ───────────────────────────── */
+
+    .status {
       padding: 40px 20px;
 
       color: var(--muted);
 
       text-align: center;
+      line-height: 1.5;
     }
 
-    .error {
+    .status.error {
       color: var(--danger);
     }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    /* ─────────────────────────────
+       MOBILE
+    ───────────────────────────── */
 
     @media (max-width: 850px) {
       .tally-grid {
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 620px) {
       nav {
-        padding: 1rem;
+        padding: 0.95rem 1rem;
       }
 
       .nav-logo {
         font-size: 1rem;
+      }
+
+      .nav-link {
+        display: none;
+      }
+
+      .nav-account {
+        max-width: 145px;
       }
 
       .page {
@@ -454,6 +634,11 @@
 
       .header {
         text-align: center;
+      }
+
+      .subtitle {
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .total-card {
@@ -468,9 +653,12 @@
       }
 
       .tally-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
 
         gap: 9px;
+
+        margin-bottom: 34px;
       }
 
       .tally-card {
@@ -485,11 +673,23 @@
         font-size: 27px;
       }
 
+      .percent {
+        font-size: 12px;
+      }
+
       .section-head {
         align-items: flex-start;
         flex-direction: column;
 
         gap: 5px;
+      }
+
+      .results-divider {
+        margin: 38px 0;
+      }
+
+      .table-card {
+        border-radius: 16px;
       }
     }
   </style>
@@ -497,7 +697,10 @@
 
 <body>
 
-  <nav>
+  <!-- NAV -->
+
+  <nav id="nav">
+
     <a
       class="nav-logo"
       href="index.html"
@@ -505,16 +708,31 @@
       GuessingGames.com
     </a>
 
-    <a
-      class="nav-link"
-      href="vote.html"
-    >
-      Voting page
-    </a>
+    <div class="nav-actions">
+
+      <a
+        class="nav-link"
+        href="vote.html"
+      >
+        Voting Page
+      </a>
+
+      <a
+        class="nav-account"
+        id="accountLink"
+        href="signin.html?redirect=vote-results.html"
+      >
+        Admin
+      </a>
+
+    </div>
+
   </nav>
 
 
   <main class="page">
+
+    <!-- HEADER -->
 
     <header class="header">
 
@@ -527,7 +745,8 @@
       </h1>
 
       <p class="subtitle">
-        Live Name Hall of Fame results and individual account votes.
+        Live Name Hall of Fame results, individual account votes,
+        and next-ballot nominations.
       </p>
 
     </header>
@@ -538,6 +757,7 @@
     <section class="total-card">
 
       <div>
+
         <div class="total-label">
           Total votes
         </div>
@@ -548,14 +768,16 @@
         >
           —
         </div>
+
       </div>
+
 
       <button
         class="refresh-button"
         id="refreshButton"
         type="button"
       >
-        Refresh results
+        Refresh all
       </button>
 
     </section>
@@ -566,6 +788,7 @@
     <section
       class="tally-grid"
       id="tallyGrid"
+      aria-label="Vote totals"
     >
     </section>
 
@@ -574,12 +797,20 @@
 
     <div class="section-head">
 
-      <h2>
-        Individual votes
-      </h2>
+      <div>
+
+        <h2>
+          Individual votes
+        </h2>
+
+        <p class="section-subtitle">
+          See which account selected each finalist.
+        </p>
+
+      </div>
 
       <div
-        class="voter-count"
+        class="item-count"
         id="voterCount"
       >
       </div>
@@ -590,15 +821,16 @@
     <section class="table-card">
 
       <div
-        class="loading"
-        id="status"
+        class="status"
+        id="voteStatus"
       >
-        Checking access...
+        Checking administrator access...
       </div>
+
 
       <div
         class="table-scroll"
-        id="tableContainer"
+        id="voteTableContainer"
         hidden
       >
 
@@ -614,6 +846,77 @@
           </thead>
 
           <tbody id="voteRows">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- DIVIDER -->
+
+    <div class="results-divider"></div>
+
+
+    <!-- NOMINATIONS -->
+
+    <div class="section-head">
+
+      <div>
+
+        <div class="eyebrow">
+          Next Ballot
+        </div>
+
+        <h2>
+          Nominations
+        </h2>
+
+        <p class="section-subtitle">
+          Suggestions submitted for a future Name Hall of Fame ballot.
+        </p>
+
+      </div>
+
+      <div
+        class="item-count"
+        id="nominationCount"
+      >
+      </div>
+
+    </div>
+
+
+    <section class="table-card">
+
+      <div
+        class="status"
+        id="nominationStatus"
+      >
+        Waiting for administrator access...
+      </div>
+
+
+      <div
+        class="table-scroll"
+        id="nominationTableContainer"
+        hidden
+      >
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Nomination</th>
+              <th>Reason</th>
+              <th>Date</th>
+              <th>Page</th>
+            </tr>
+          </thead>
+
+          <tbody id="nominationRows">
           </tbody>
 
         </table>
@@ -641,19 +944,32 @@
     import {
       getFirestore,
       collection,
-      getDocs,
-      query,
-      orderBy
+      getDocs
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 
+    /* ─────────────────────────────
+       FIREBASE
+    ───────────────────────────── */
+
     const firebaseConfig = {
-      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
-      authDomain: "guessinggames.firebaseapp.com",
-      projectId: "guessinggames",
-      storageBucket: "guessinggames.firebasestorage.app",
-      messagingSenderId: "431644741449",
-      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+      apiKey:
+        "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+
+      authDomain:
+        "guessinggames.firebaseapp.com",
+
+      projectId:
+        "guessinggames",
+
+      storageBucket:
+        "guessinggames.firebasestorage.app",
+
+      messagingSenderId:
+        "431644741449",
+
+      appId:
+        "1:431644741449:web:0b699b3acdec1f95b19498"
     };
 
 
@@ -665,6 +981,14 @@
 
     const db =
       getFirestore(app);
+
+
+    /* ─────────────────────────────
+       SETTINGS
+    ───────────────────────────── */
+
+    const ADMIN_EMAIL =
+      "colbyma23@gmail.com";
 
 
     const ROUND_ID =
@@ -679,35 +1003,85 @@
     ];
 
 
+    /* ─────────────────────────────
+       ELEMENTS
+    ───────────────────────────── */
+
+    const nav =
+      document.getElementById("nav");
+
+
+    const accountLink =
+      document.getElementById("accountLink");
+
+
     const totalVotesEl =
       document.getElementById("totalVotes");
+
 
     const tallyGrid =
       document.getElementById("tallyGrid");
 
-    const statusEl =
-      document.getElementById("status");
-
-    const tableContainer =
-      document.getElementById("tableContainer");
-
-    const voteRows =
-      document.getElementById("voteRows");
-
-    const voterCount =
-      document.getElementById("voterCount");
 
     const refreshButton =
       document.getElementById("refreshButton");
 
 
+    const voterCount =
+      document.getElementById("voterCount");
+
+
+    const voteStatus =
+      document.getElementById("voteStatus");
+
+
+    const voteTableContainer =
+      document.getElementById(
+        "voteTableContainer"
+      );
+
+
+    const voteRows =
+      document.getElementById("voteRows");
+
+
+    const nominationCount =
+      document.getElementById(
+        "nominationCount"
+      );
+
+
+    const nominationStatus =
+      document.getElementById(
+        "nominationStatus"
+      );
+
+
+    const nominationTableContainer =
+      document.getElementById(
+        "nominationTableContainer"
+      );
+
+
+    const nominationRows =
+      document.getElementById(
+        "nominationRows"
+      );
+
+
+    /* ─────────────────────────────
+       HELPERS
+    ───────────────────────────── */
+
     function escapeHTML(value) {
+
       return String(value || "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+
     }
 
 
@@ -718,59 +1092,113 @@
         voter.email ||
         "?";
 
+
       return source
         .trim()
         .split(/\s+/)
+        .filter(Boolean)
         .slice(0, 2)
         .map(part =>
-          part.charAt(0).toUpperCase()
+          part
+            .charAt(0)
+            .toUpperCase()
         )
         .join("");
+
     }
 
 
     function formatDate(timestamp) {
 
-      if (!timestamp?.toDate) {
+      if (!timestamp) {
         return "—";
       }
 
-      return timestamp
-        .toDate()
-        .toLocaleString(
-          undefined,
-          {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit"
-          }
-        );
+
+      if (timestamp.toDate) {
+
+        return timestamp
+          .toDate()
+          .toLocaleString(
+            undefined,
+            {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit"
+            }
+          );
+
+      }
+
+
+      return "—";
+
     }
 
+
+    function getTimestampNumber(timestamp) {
+
+      if (!timestamp) {
+        return 0;
+      }
+
+
+      if (typeof timestamp.toMillis === "function") {
+        return timestamp.toMillis();
+      }
+
+
+      return 0;
+
+    }
+
+
+    function setRefreshBusy(isBusy) {
+
+      refreshButton.disabled =
+        isBusy;
+
+
+      refreshButton.textContent =
+        isBusy
+          ? "Refreshing..."
+          : "Refresh all";
+
+    }
+
+
+    /* ─────────────────────────────
+       TALLY
+    ───────────────────────────── */
 
     function buildTotals(votes) {
 
       const counts = {};
+
 
       for (const candidate of candidates) {
         counts[candidate] = 0;
       }
 
 
-      votes.forEach(vote => {
+      for (const vote of votes) {
 
         if (
-          Object.prototype.hasOwnProperty.call(
-            counts,
-            vote.selected
-          )
+          Object.prototype
+            .hasOwnProperty
+            .call(
+              counts,
+              vote.selected
+            )
         ) {
+
           counts[vote.selected]++;
+
         }
 
-      });
+      }
 
 
       const total =
@@ -786,7 +1214,8 @@
           .map(candidate => {
 
             const count =
-              counts[candidate];
+              counts[candidate] || 0;
+
 
             const percentage =
               total
@@ -801,17 +1230,20 @@
                   ${escapeHTML(candidate)}
                 </div>
 
+
                 <div class="candidate-row">
 
                   <div class="votes">
                     ${count}
                   </div>
 
+
                   <div class="percent">
                     ${percentage.toFixed(1)}%
                   </div>
 
                 </div>
+
 
                 <div class="bar">
 
@@ -827,27 +1259,41 @@
 
           })
           .join("");
+
     }
 
+
+    /* ─────────────────────────────
+       VOTES
+    ───────────────────────────── */
 
     function renderVotes(votes) {
 
       voterCount.textContent =
-        `${votes.length} account${votes.length === 1 ? "" : "s"}`;
+        `${votes.length} account${
+          votes.length === 1
+            ? ""
+            : "s"
+        }`;
 
 
       if (!votes.length) {
 
-        statusEl.textContent =
+        voteStatus.hidden =
+          false;
+
+        voteStatus.className =
+          "status";
+
+        voteStatus.textContent =
           "No votes have been submitted yet.";
 
-        statusEl.className =
-          "empty";
 
-        tableContainer.hidden =
+        voteTableContainer.hidden =
           true;
 
         return;
+
       }
 
 
@@ -855,15 +1301,19 @@
         votes
           .map(vote => {
 
-            const image =
+            const avatarContent =
               vote.photoURL
+
                 ? `
-                    <img
-                      src="${escapeHTML(vote.photoURL)}"
-                      alt=""
-                      referrerpolicy="no-referrer"
-                    >
-                  `
+                  <img
+                    src="${escapeHTML(
+                      vote.photoURL
+                    )}"
+                    alt=""
+                    referrerpolicy="no-referrer"
+                  >
+                `
+
                 : escapeHTML(
                     initials(vote)
                   );
@@ -877,8 +1327,9 @@
                   <div class="person">
 
                     <div class="avatar">
-                      ${image}
+                      ${avatarContent}
                     </div>
+
 
                     <div>
 
@@ -888,6 +1339,7 @@
                           "No name"
                         )}
                       </div>
+
 
                       <div class="person-email">
                         ${escapeHTML(
@@ -904,21 +1356,38 @@
 
 
                 <td>
+
                   <span class="vote-chip">
-                    ${escapeHTML(vote.selected)}
+                    ${escapeHTML(
+                      vote.selected
+                    )}
                   </span>
+
                 </td>
 
 
                 <td>
                   ${escapeHTML(
-                    formatDate(vote.createdAt)
+                    formatDate(
+                      vote.createdAt
+                    )
                   )}
                 </td>
 
 
                 <td>
-                  ${escapeHTML(vote.uid)}
+
+                  <div
+                    class="uid"
+                    title="${escapeHTML(
+                      vote.uid
+                    )}"
+                  >
+                    ${escapeHTML(
+                      vote.uid
+                    )}
+                  </div>
+
                 </td>
 
               </tr>
@@ -928,33 +1397,33 @@
           .join("");
 
 
-      statusEl.hidden =
+      voteStatus.hidden =
         true;
 
-      tableContainer.hidden =
+
+      voteTableContainer.hidden =
         false;
+
     }
 
 
     async function loadVotes() {
 
-      refreshButton.disabled =
-        true;
+      voteStatus.hidden =
+        false;
 
-      refreshButton.textContent =
-        "Refreshing...";
+      voteStatus.className =
+        "status";
+
+      voteStatus.textContent =
+        "Loading votes...";
+
+
+      voteTableContainer.hidden =
+        true;
 
 
       try {
-
-        /*
-          The votes are stored here:
-
-          name-hall-of-fame-votes
-             / week-1-round-1
-                 / votes
-                    / UID
-        */
 
         const votesRef =
           collection(
@@ -965,37 +1434,34 @@
           );
 
 
-        /*
-          If createdAt exists on every vote,
-          newest votes appear first.
-        */
-
-        const votesQuery =
-          query(
-            votesRef,
-            orderBy(
-              "createdAt",
-              "desc"
-            )
-          );
-
-
         const snapshot =
-          await getDocs(votesQuery);
+          await getDocs(votesRef);
 
 
         const votes =
-          snapshot.docs.map(
-            documentSnapshot => ({
+          snapshot.docs
+            .map(documentSnapshot => ({
+
               id:
                 documentSnapshot.id,
 
               ...documentSnapshot.data()
-            })
-          );
+
+            }))
+            .sort(
+              (a, b) =>
+                getTimestampNumber(
+                  b.createdAt
+                )
+                -
+                getTimestampNumber(
+                  a.createdAt
+                )
+            );
 
 
         buildTotals(votes);
+
         renderVotes(votes);
 
       } catch (error) {
@@ -1006,35 +1472,272 @@
         );
 
 
-        statusEl.hidden =
+        voteStatus.hidden =
           false;
 
-        statusEl.className =
-          "error";
+        voteStatus.className =
+          "status error";
 
-        statusEl.textContent =
-          "Could not load individual votes. Check your Firestore admin permissions.";
+        voteStatus.textContent =
+          "Could not load individual votes. Check your Firestore permissions.";
 
-        tableContainer.hidden =
+
+        voteTableContainer.hidden =
           true;
+
+
+        totalVotesEl.textContent =
+          "—";
+
+
+        tallyGrid.innerHTML =
+          "";
+
+      }
+
+    }
+
+
+    /* ─────────────────────────────
+       NOMINATIONS
+    ───────────────────────────── */
+
+    function renderNominations(
+      nominations
+    ) {
+
+      nominationCount.textContent =
+        `${nominations.length} nomination${
+          nominations.length === 1
+            ? ""
+            : "s"
+        }`;
+
+
+      if (!nominations.length) {
+
+        nominationStatus.hidden =
+          false;
+
+        nominationStatus.className =
+          "status";
+
+        nominationStatus.textContent =
+          "No nominations have been submitted yet.";
+
+
+        nominationTableContainer.hidden =
+          true;
+
+        return;
+
+      }
+
+
+      nominationRows.innerHTML =
+        nominations
+          .map(nomination => {
+
+            return `
+              <tr>
+
+                <td>
+
+                  <div class="nomination-name">
+                    ${escapeHTML(
+                      nomination.name ||
+                      "—"
+                    )}
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <div class="nomination-reason">
+                    ${escapeHTML(
+                      nomination.reason ||
+                      "—"
+                    )}
+                  </div>
+
+                </td>
+
+
+                <td>
+                  ${escapeHTML(
+                    formatDate(
+                      nomination.createdAt
+                    )
+                  )}
+                </td>
+
+
+                <td>
+
+                  <span class="page-chip">
+                    ${escapeHTML(
+                      nomination.page ||
+                      "—"
+                    )}
+                  </span>
+
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+
+
+      nominationStatus.hidden =
+        true;
+
+
+      nominationTableContainer.hidden =
+        false;
+
+    }
+
+
+    async function loadNominations() {
+
+      nominationStatus.hidden =
+        false;
+
+      nominationStatus.className =
+        "status";
+
+      nominationStatus.textContent =
+        "Loading nominations...";
+
+
+      nominationTableContainer.hidden =
+        true;
+
+
+      try {
+
+        const nominationsRef =
+          collection(
+            db,
+            "next-ballot-suggestions"
+          );
+
+
+        const snapshot =
+          await getDocs(
+            nominationsRef
+          );
+
+
+        const nominations =
+          snapshot.docs
+            .map(
+              documentSnapshot => ({
+
+                id:
+                  documentSnapshot.id,
+
+                ...documentSnapshot.data()
+
+              })
+            )
+            .sort(
+              (a, b) =>
+                getTimestampNumber(
+                  b.createdAt
+                )
+                -
+                getTimestampNumber(
+                  a.createdAt
+                )
+            );
+
+
+        renderNominations(
+          nominations
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not load nominations:",
+          error
+        );
+
+
+        nominationStatus.hidden =
+          false;
+
+        nominationStatus.className =
+          "status error";
+
+        nominationStatus.textContent =
+          "Could not load nominations. Check your Firestore permissions.";
+
+
+        nominationTableContainer.hidden =
+          true;
+
+      }
+
+    }
+
+
+    /* ─────────────────────────────
+       REFRESH
+    ───────────────────────────── */
+
+    async function loadEverything() {
+
+      setRefreshBusy(true);
+
+
+      try {
+
+        await Promise.all([
+          loadVotes(),
+          loadNominations()
+        ]);
 
       } finally {
 
-        refreshButton.disabled =
-          false;
-
-        refreshButton.textContent =
-          "Refresh results";
+        setRefreshBusy(false);
 
       }
+
     }
 
 
     refreshButton.addEventListener(
       "click",
-      loadVotes
+      loadEverything
     );
 
+
+    /* ─────────────────────────────
+       NAV SCROLL
+    ───────────────────────────── */
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        nav.classList.toggle(
+          "scrolled",
+          window.scrollY > 50
+        );
+
+      }
+    );
+
+
+    /* ─────────────────────────────
+       AUTH / ADMIN
+    ───────────────────────────── */
 
     onAuthStateChanged(
       auth,
@@ -1047,39 +1750,75 @@
           );
 
           return;
+
         }
 
 
-        /*
-          Admin-only check.
+        accountLink.textContent =
+          user.displayName
+            ? `Hi, ${
+                user.displayName
+                  .split(" ")[0]
+              }`
+            : user.email ||
+              "Admin";
 
-          Your Firebase user needs an
-          admin custom claim:
-
-          admin: true
-        */
 
         try {
 
-          const ADMIN_EMAIL = "colbyma23@gmail.com";
+          const token =
+            await user
+              .getIdTokenResult(true);
 
-const token =
-  await user.getIdTokenResult(true);
 
-const isAdmin =
-  token.claims.admin === true ||
-  user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+          const emailMatches =
+            user.email
+              ?.trim()
+              .toLowerCase()
+            ===
+            ADMIN_EMAIL.toLowerCase();
 
-if (!isAdmin) {
-  statusEl.className = "error";
 
-  statusEl.textContent =
-    "You do not have permission to view individual voting results.";
+          const isAdmin =
+            emailMatches ||
+            token.claims.admin === true;
 
-  return;
-}
 
-          await loadVotes();
+          if (!isAdmin) {
+
+            voteStatus.hidden =
+              false;
+
+            voteStatus.className =
+              "status error";
+
+            voteStatus.textContent =
+              "You do not have permission to view individual voting results.";
+
+
+            nominationStatus.hidden =
+              false;
+
+            nominationStatus.className =
+              "status error";
+
+            nominationStatus.textContent =
+              "You do not have permission to view nominations.";
+
+
+            refreshButton.disabled =
+              true;
+
+            refreshButton.textContent =
+              "Access denied";
+
+
+            return;
+
+          }
+
+
+          await loadEverything();
 
         } catch (error) {
 
@@ -1089,10 +1828,17 @@ if (!isAdmin) {
           );
 
 
-          statusEl.className =
-            "error";
+          voteStatus.className =
+            "status error";
 
-          statusEl.textContent =
+          voteStatus.textContent =
+            "Could not verify administrator access.";
+
+
+          nominationStatus.className =
+            "status error";
+
+          nominationStatus.textContent =
             "Could not verify administrator access.";
 
         }
