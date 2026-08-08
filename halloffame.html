@@ -38,45 +38,211 @@
       margin: 0 auto;
       padding: 28px 24px 64px;
     }
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
 
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--line);
-    }
+  padding: 1.25rem 2.5rem;
 
-    .logo {
-      font-size: 18px;
-      letter-spacing: -0.04em;
-      font-weight: 800;
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    .links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
+  background: rgba(247, 250, 252, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
-    .nav-btn {
-      color: var(--ink);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 14px;
-      background: var(--white);
-    }
+  border-bottom: 1px solid rgba(79, 134, 179, 0.18);
 
-    .hero {
-      display: grid;
-      justify-items: center;
-      text-align: center;
-      gap: 16px;
-      padding: 64px 0 38px;
-    }
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+
+nav.scrolled {
+  background: rgba(247, 250, 252, 0.98);
+  box-shadow: 0 4px 24px rgba(79, 134, 179, 0.12);
+}
+
+.nav-logo {
+  color: var(--brand);
+  text-decoration: none;
+
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--brand);
+}
+
+.hamburger {
+  display: none;
+
+  padding: 8px;
+
+  color: var(--ink);
+  background: none;
+  border: 0;
+
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* Account button */
+.nav-account {
+  padding: 9px 14px !important;
+
+  color: var(--ink) !important;
+  background: var(--white);
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  letter-spacing: 0.04em !important;
+  text-transform: none !important;
+}
+
+.nav-account:hover {
+  color: var(--brand) !important;
+  border-color: var(--brand);
+}
+
+/* Fixed nav means hero needs extra top spacing */
+.hero {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 135px 0 18px;
+}
+
+.eyebrow {
+  text-align: center;
+}
+
+h1 {
+  margin: 0 auto;
+  max-width: 880px;
+  text-align: center;
+}
+
+.subhead {
+  margin: 0 auto;
+  max-width: 620px;
+  text-align: center;
+}
+
+
+/* ── MOBILE NAV ── */
+
+@media (max-width: 900px) {
+  nav {
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links.open {
+    position: fixed;
+    top: 62px;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+
+    padding: 1rem 1.5rem 1.5rem;
+
+    background: rgba(247, 250, 252, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid var(--line);
+
+    box-shadow: 0 12px 30px rgba(23, 35, 49, 0.08);
+  }
+
+  .nav-links.open li {
+    width: 100%;
+  }
+
+  .nav-links.open a {
+    display: block;
+    width: 100%;
+
+    padding: 14px 4px;
+
+    border-bottom: 1px solid rgba(79, 134, 179, 0.10);
+  }
+
+  .nav-links.open li:last-child a {
+    border-bottom: 0;
+  }
+
+  .nav-account {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .hero {
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 620px) {
+  nav {
+    padding: 0.95rem 1rem;
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .nav-links.open {
+    top: 58px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 
     .eyebrow {
       color: var(--brand);
@@ -273,16 +439,50 @@
 </head>
 <body>
   <main class="page">
-    <nav>
-      <a class="logo" href="name-hall-of-fame-ballot.html">Guessing Games</a>
-
-      <div class="links">
-        <a href="index.html">Games</a>
-        <a href="halloffame.html">Hall of Fame</a>
-        <a href="live.html">Live Shows</a>
-        <a href="about.html">About</a>
-        <a class="nav-btn" href="#">Sign in</a>
-      </div>
+    <nav id="nav">
+      <a href="index.html" class="nav-logo">
+        Guessing Games
+      </a>
+    
+      <ul class="nav-links" id="navMenu">
+        <li>
+          <a href="index.html">
+            Home
+          </a>
+        </li>
+    
+        <li>
+          <a href="halloffame.html" class="active">
+            Hall of Fame
+          </a>
+        </li>
+    
+        <li>
+          <a href="live.html">
+            Live Shows
+          </a>
+        </li>
+    
+        <li>
+          <a
+            href="signin.html?redirect=halloffame.html"
+            class="nav-account"
+            id="authLink"
+          >
+            Sign in
+          </a>
+        </li>
+      </ul>
+    
+      <button
+        class="hamburger"
+        id="ham"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
     </nav>
 
     <section class="hero">

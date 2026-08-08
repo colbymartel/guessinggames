@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Vote Results | Name Hall of Fame</title>
+
+  <style>
+    :root {
+      --brand: #4f86b3;
+      --brand-dark: #376f9c;
+      --bg: #f6f9fc;
+      --ink: #172331;
+      --muted: #66788a;
+      --line: #dbe6ef;
+      --soft: #edf4fa;
+      --white: #ffffff;
+      --success: #1f7a4d;
+      --danger: #b42318;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      background: var(--bg);
+      color: var(--ink);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    /* NAV */
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 1.25rem 2.5rem;
+
+      background: rgba(247, 250, 252, 0.94);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-logo {
+      color: var(--brand);
+
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-link {
+      color: var(--muted);
+
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-link:hover {
+      color: var(--brand);
+    }
+
+    /* PAGE */
+
+    .page {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+
+      padding:
+        125px
+        24px
+        64px;
+    }
+
+    /* HEADER */
+
+    .header {
+      margin-bottom: 34px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+
+      color: var(--brand);
+
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size: clamp(46px, 7vw, 78px);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      margin: 16px 0 0;
+
+      color: var(--muted);
+
+      font-size: 17px;
+    }
+
+    /* TOTAL */
+
+    .total-card {
+      margin-bottom: 20px;
+      padding: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background: var(--white);
+
+      border: 1px solid var(--line);
+      border-radius: 22px;
+
+      box-shadow:
+        0 14px 35px
+        rgba(23, 35, 49, 0.06);
+    }
+
+    .total-label {
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 750;
+
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .total-number {
+      margin-top: 4px;
+
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+
+      letter-spacing: -0.05em;
+    }
+
+    .refresh-button {
+      min-height: 42px;
+
+      padding: 0 18px;
+
+      color: var(--brand-dark);
+      background: var(--soft);
+
+      border: 0;
+      border-radius: 999px;
+
+      font-weight: 750;
+    }
+
+    /* TALLY */
+
+    .tally-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 14px;
+
+      margin-bottom: 34px;
+    }
+
+    .tally-card {
+      padding: 20px;
+
+      background: var(--white);
+
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .candidate {
+      margin-bottom: 14px;
+
+      font-size: 22px;
+      font-weight: 850;
+
+      letter-spacing: -0.04em;
+    }
+
+    .candidate-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+
+      gap: 10px;
+    }
+
+    .votes {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .percent {
+      color: var(--muted);
+
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .bar {
+      width: 100%;
+      height: 8px;
+
+      margin-top: 16px;
+
+      overflow: hidden;
+
+      background: var(--soft);
+
+      border-radius: 999px;
+    }
+
+    .bar-fill {
+      height: 100%;
+
+      background: var(--brand);
+
+      border-radius: inherit;
+
+      transition: width 0.3s ease;
+    }
+
+    /* TABLE */
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      margin-bottom: 15px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+
+      font-size: 31px;
+      letter-spacing: -0.05em;
+    }
+
+    .voter-count {
+      color: var(--muted);
+
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .table-card {
+      overflow: hidden;
+
+      background: var(--white);
+
+      border: 1px solid var(--line);
+      border-radius: 20px;
+
+      box-shadow:
+        0 14px 35px
+        rgba(23, 35, 49, 0.05);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 16px 18px;
+
+      text-align: left;
+
+      border-bottom:
+        1px solid var(--line);
+    }
+
+    th {
+      color: var(--muted);
+      background: #f9fbfd;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover {
+      background: #fafcff;
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+
+      gap: 11px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+
+      display: grid;
+      place-items: center;
+
+      flex: 0 0 auto;
+
+      overflow: hidden;
+
+      color: white;
+      background: var(--brand);
+
+      border-radius: 50%;
+
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+
+    .person-name {
+      font-weight: 750;
+    }
+
+    .person-email {
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    .vote-chip {
+      display: inline-flex;
+
+      padding: 6px 10px;
+
+      color: var(--brand-dark);
+      background: var(--soft);
+
+      border-radius: 999px;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .loading,
+    .error,
+    .empty {
+      padding: 40px 20px;
+
+      color: var(--muted);
+
+      text-align: center;
+    }
+
+    .error {
+      color: var(--danger);
+    }
+
+    @media (max-width: 850px) {
+      .tally-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      nav {
+        padding: 1rem;
+      }
+
+      .nav-logo {
+        font-size: 1rem;
+      }
+
+      .page {
+        padding:
+          100px
+          16px
+          44px;
+      }
+
+      .header {
+        text-align: center;
+      }
+
+      .total-card {
+        align-items: stretch;
+        flex-direction: column;
+
+        gap: 16px;
+      }
+
+      .refresh-button {
+        width: 100%;
+      }
+
+      .tally-grid {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 9px;
+      }
+
+      .tally-card {
+        padding: 15px;
+      }
+
+      .candidate {
+        font-size: 18px;
+      }
+
+      .votes {
+        font-size: 27px;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a
+      class="nav-logo"
+      href="index.html"
+    >
+      GuessingGames.com
+    </a>
+
+    <a
+      class="nav-link"
+      href="vote.html"
+    >
+      Voting page
+    </a>
+  </nav>
+
+
+  <main class="page">
+
+    <header class="header">
+
+      <div class="eyebrow">
+        Admin · Week 1
+      </div>
+
+      <h1>
+        Voting Results
+      </h1>
+
+      <p class="subtitle">
+        Live Name Hall of Fame results and individual account votes.
+      </p>
+
+    </header>
+
+
+    <!-- TOTAL -->
+
+    <section class="total-card">
+
+      <div>
+        <div class="total-label">
+          Total votes
+        </div>
+
+        <div
+          class="total-number"
+          id="totalVotes"
+        >
+          —
+        </div>
+      </div>
+
+      <button
+        class="refresh-button"
+        id="refreshButton"
+        type="button"
+      >
+        Refresh results
+      </button>
+
+    </section>
+
+
+    <!-- TALLY -->
+
+    <section
+      class="tally-grid"
+      id="tallyGrid"
+    >
+    </section>
+
+
+    <!-- INDIVIDUAL VOTES -->
+
+    <div class="section-head">
+
+      <h2>
+        Individual votes
+      </h2>
+
+      <div
+        class="voter-count"
+        id="voterCount"
+      >
+      </div>
+
+    </div>
+
+
+    <section class="table-card">
+
+      <div
+        class="loading"
+        id="status"
+      >
+        Checking access...
+      </div>
+
+      <div
+        class="table-scroll"
+        id="tableContainer"
+        hidden
+      >
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Vote</th>
+              <th>Date</th>
+              <th>UID</th>
+            </tr>
+          </thead>
+
+          <tbody id="voteRows">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
+
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+    const db =
+      getFirestore(app);
+
+
+    const ROUND_ID =
+      "week-1-round-1";
+
+
+    const candidates = [
+      "Frog",
+      "Gengyzkhan",
+      "J",
+      "Naruto"
+    ];
+
+
+    const totalVotesEl =
+      document.getElementById("totalVotes");
+
+    const tallyGrid =
+      document.getElementById("tallyGrid");
+
+    const statusEl =
+      document.getElementById("status");
+
+    const tableContainer =
+      document.getElementById("tableContainer");
+
+    const voteRows =
+      document.getElementById("voteRows");
+
+    const voterCount =
+      document.getElementById("voterCount");
+
+    const refreshButton =
+      document.getElementById("refreshButton");
+
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    function initials(voter) {
+
+      const source =
+        voter.displayName ||
+        voter.email ||
+        "?";
+
+      return source
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part =>
+          part.charAt(0).toUpperCase()
+        )
+        .join("");
+    }
+
+
+    function formatDate(timestamp) {
+
+      if (!timestamp?.toDate) {
+        return "—";
+      }
+
+      return timestamp
+        .toDate()
+        .toLocaleString(
+          undefined,
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          }
+        );
+    }
+
+
+    function buildTotals(votes) {
+
+      const counts = {};
+
+      for (const candidate of candidates) {
+        counts[candidate] = 0;
+      }
+
+
+      votes.forEach(vote => {
+
+        if (
+          Object.prototype.hasOwnProperty.call(
+            counts,
+            vote.selected
+          )
+        ) {
+          counts[vote.selected]++;
+        }
+
+      });
+
+
+      const total =
+        votes.length;
+
+
+      totalVotesEl.textContent =
+        total.toLocaleString();
+
+
+      tallyGrid.innerHTML =
+        candidates
+          .map(candidate => {
+
+            const count =
+              counts[candidate];
+
+            const percentage =
+              total
+                ? (count / total) * 100
+                : 0;
+
+
+            return `
+              <article class="tally-card">
+
+                <div class="candidate">
+                  ${escapeHTML(candidate)}
+                </div>
+
+                <div class="candidate-row">
+
+                  <div class="votes">
+                    ${count}
+                  </div>
+
+                  <div class="percent">
+                    ${percentage.toFixed(1)}%
+                  </div>
+
+                </div>
+
+                <div class="bar">
+
+                  <div
+                    class="bar-fill"
+                    style="width:${percentage}%"
+                  ></div>
+
+                </div>
+
+              </article>
+            `;
+
+          })
+          .join("");
+    }
+
+
+    function renderVotes(votes) {
+
+      voterCount.textContent =
+        `${votes.length} account${votes.length === 1 ? "" : "s"}`;
+
+
+      if (!votes.length) {
+
+        statusEl.textContent =
+          "No votes have been submitted yet.";
+
+        statusEl.className =
+          "empty";
+
+        tableContainer.hidden =
+          true;
+
+        return;
+      }
+
+
+      voteRows.innerHTML =
+        votes
+          .map(vote => {
+
+            const image =
+              vote.photoURL
+                ? `
+                    <img
+                      src="${escapeHTML(vote.photoURL)}"
+                      alt=""
+                      referrerpolicy="no-referrer"
+                    >
+                  `
+                : escapeHTML(
+                    initials(vote)
+                  );
+
+
+            return `
+              <tr>
+
+                <td>
+
+                  <div class="person">
+
+                    <div class="avatar">
+                      ${image}
+                    </div>
+
+                    <div>
+
+                      <div class="person-name">
+                        ${escapeHTML(
+                          vote.displayName ||
+                          "No name"
+                        )}
+                      </div>
+
+                      <div class="person-email">
+                        ${escapeHTML(
+                          vote.email ||
+                          "No email"
+                        )}
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+                  <span class="vote-chip">
+                    ${escapeHTML(vote.selected)}
+                  </span>
+                </td>
+
+
+                <td>
+                  ${escapeHTML(
+                    formatDate(vote.createdAt)
+                  )}
+                </td>
+
+
+                <td>
+                  ${escapeHTML(vote.uid)}
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+
+
+      statusEl.hidden =
+        true;
+
+      tableContainer.hidden =
+        false;
+    }
+
+
+    async function loadVotes() {
+
+      refreshButton.disabled =
+        true;
+
+      refreshButton.textContent =
+        "Refreshing...";
+
+
+      try {
+
+        /*
+          The votes are stored here:
+
+          name-hall-of-fame-votes
+             / week-1-round-1
+                 / votes
+                    / UID
+        */
+
+        const votesRef =
+          collection(
+            db,
+            "name-hall-of-fame-votes",
+            ROUND_ID,
+            "votes"
+          );
+
+
+        /*
+          If createdAt exists on every vote,
+          newest votes appear first.
+        */
+
+        const votesQuery =
+          query(
+            votesRef,
+            orderBy(
+              "createdAt",
+              "desc"
+            )
+          );
+
+
+        const snapshot =
+          await getDocs(votesQuery);
+
+
+        const votes =
+          snapshot.docs.map(
+            documentSnapshot => ({
+              id:
+                documentSnapshot.id,
+
+              ...documentSnapshot.data()
+            })
+          );
+
+
+        buildTotals(votes);
+        renderVotes(votes);
+
+      } catch (error) {
+
+        console.error(
+          "Could not load votes:",
+          error
+        );
+
+
+        statusEl.hidden =
+          false;
+
+        statusEl.className =
+          "error";
+
+        statusEl.textContent =
+          "Could not load individual votes. Check your Firestore admin permissions.";
+
+        tableContainer.hidden =
+          true;
+
+      } finally {
+
+        refreshButton.disabled =
+          false;
+
+        refreshButton.textContent =
+          "Refresh results";
+
+      }
+    }
+
+
+    refreshButton.addEventListener(
+      "click",
+      loadVotes
+    );
+
+
+    onAuthStateChanged(
+      auth,
+      async user => {
+
+        if (!user) {
+
+          window.location.replace(
+            "signin.html?redirect=vote-results.html"
+          );
+
+          return;
+        }
+
+
+        /*
+          Admin-only check.
+
+          Your Firebase user needs an
+          admin custom claim:
+
+          admin: true
+        */
+
+        try {
+
+          const ADMIN_EMAIL = "colbyma23@gmail.com";
+
+const token =
+  await user.getIdTokenResult(true);
+
+const isAdmin =
+  token.claims.admin === true ||
+  user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+if (!isAdmin) {
+  statusEl.className = "error";
+
+  statusEl.textContent =
+    "You do not have permission to view individual voting results.";
+
+  return;
+}
+
+          await loadVotes();
+
+        } catch (error) {
+
+          console.error(
+            "Admin check failed:",
+            error
+          );
+
+
+          statusEl.className =
+            "error";
+
+          statusEl.textContent =
+            "Could not verify administrator access.";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>

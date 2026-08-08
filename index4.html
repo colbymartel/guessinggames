@@ -214,168 +214,6 @@
   }
   .btn-outline:hover { background:var(--accent); color:#fff; transform:translateY(-3px); box-shadow:0 12px 28px rgba(59,123,191,0.3); }
 
-/* ── COMPACT NAME HALL OF FAME HERO ── */
-
-.hof-hero {
-  min-height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 7rem 2rem 3.5rem;
-
-  background: var(--bg);
-}
-
-.hof-hero-inner {
-  width: min(100%, 1120px);
-  margin: 0 auto;
-  text-align: center;
-}
-
-.hof-eyebrow {
-  margin-bottom: 0.75rem;
-
-  color: var(--accent);
-
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.hof-title {
-  margin: 0;
-
-  color: var(--text);
-
-  font-size: clamp(3.4rem, 6.6vw, 6rem);
-  line-height: 0.92;
-  letter-spacing: -0.07em;
-  font-weight: 900;
-}
-
-.hof-subhead {
-  max-width: 600px;
-
-  margin: 1rem auto 1.6rem;
-
-  color: var(--muted);
-
-  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
-  line-height: 1.45;
-  font-weight: 500;
-}
-
-.hof-vote-panel {
-  width: 100%;
-
-  padding: 1.25rem;
-
-  background: rgba(255,255,255,.9);
-
-  border: 1px solid var(--border);
-  border-radius: 1.6rem;
-
-  box-shadow: 0 18px 45px rgba(59,123,191,.08);
-}
-
-.hof-vote-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-
-  gap: 1rem;
-}
-
-.hof-option {
-  min-width: 0;
-
-  padding: 0.8rem 0.8rem 1.1rem;
-
-  background: #fff;
-
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-
-  box-shadow: 0 8px 20px rgba(23,35,49,.04);
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    box-shadow .18s ease;
-}
-
-.hof-option:hover {
-  transform: translateY(-3px);
-
-  border-color: var(--accent);
-
-  box-shadow: 0 14px 28px rgba(59,123,191,.13);
-}
-
-.hof-option-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-
-  overflow: hidden;
-
-  border-radius: 0.7rem;
-
-  background: var(--surface);
-}
-
-.hof-option-image img {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  object-fit: cover;
-}
-
-.hof-option-name {
-  margin-top: 0.9rem;
-
-  text-align: left;
-
-  color: var(--text);
-
-  font-size: clamp(1.3rem, 2vw, 1.8rem);
-  line-height: 1;
-  letter-spacing: -0.055em;
-  font-weight: 900;
-}
-
-.hof-vote-button {
-  width: 100%;
-  min-height: 50px;
-
-  margin-top: 1rem;
-  padding: 0 1.3rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 999px;
-
-  background: var(--accent);
-  color: #fff;
-
-  font-size: 0.9rem;
-  font-weight: 800;
-
-  box-shadow: 0 10px 22px rgba(59,123,191,.16);
-
-  transition:
-    background .18s ease,
-    transform .18s ease;
-}
-
-.hof-vote-button:hover {
-  background: var(--accent-dark);
-  transform: translateY(-2px);
-}
   /* ── SHARED SECTIONS ── */
   section { padding:7rem 2.5rem; }
   .max-w { max-width:1200px; margin:0 auto; }
@@ -555,182 +393,42 @@
     color:var(--accent); text-decoration:none; transition:gap 0.2s;
   }
   .press-read:hover { gap:0.85rem; }
-/* ── PROJECTS ── */
 
-.projects {
-  background: var(--bg);
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-top: 3.5rem;
-  align-items: stretch;
-}
-
-.proj-card {
-  min-width: 0;
-  min-height: 520px;
-
-  display: flex;
-  flex-direction: column;
-
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  transition:
-    border-color 0.3s,
-    transform 0.3s,
-    box-shadow 0.3s;
-}
-
-.proj-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(59, 123, 191, 0.14);
-}
-
-.proj-body {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 2rem;
-}
-
-.proj-tag {
-  width: fit-content;
-
-  display: inline-block;
-
-  margin-bottom: 0.9rem;
-  padding: 0.35rem 0.75rem;
-
-  color: #fff;
-  background: var(--accent);
-
-  border-radius: 5px;
-
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.proj-title {
-  margin: 0 0 0.9rem;
-
-  color: var(--text);
-
-  font-size: clamp(1.7rem, 2.5vw, 2.2rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-}
-
-.proj-desc {
-  margin: 0 0 1.5rem;
-
-  color: var(--muted);
-
-  font-size: 0.9375rem;
-  line-height: 1.72;
-}
-
-.proj-link {
-  margin-top: auto;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  width: fit-content;
-
-  color: var(--accent);
-
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-
-  transition: gap 0.2s;
-}
-
-.proj-link:hover {
-  gap: 0.85rem;
-}
-
-/* Gallery only used on Live Show card */
-
-.mini-gallery {
-  height: 220px;
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-
-  gap: 0.5rem;
-
-  margin: 0 2rem 2rem;
-
-  overflow: hidden;
-}
-
-.mini-gallery img {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-
-  display: block;
-
-  object-fit: cover;
-
-  border-radius: 8px;
-
-  transition:
-    transform 0.25s,
-    opacity 0.25s;
-}
-
-.mini-gallery img:hover {
-  transform: scale(1.025);
-  opacity: 0.9;
-}
-
-
-/* Mobile */
-
-@media (max-width: 900px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-
+  /* PROJECTS */
+  .projects { background:var(--bg); }
+  .projects-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:3.5rem; }
   .proj-card {
-    min-height: auto;
+    background:var(--card); border:1px solid var(--border);
+    overflow:hidden; border-radius:12px;
+    transition:border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   }
-}
+  .proj-card:hover { border-color:var(--accent); transform:translateY(-5px); box-shadow:0 16px 40px rgba(59,123,191,0.14); }
+  .proj-thumb {
+    height:200px; background:linear-gradient(135deg,#e2e8f0,#cbd5e0);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .proj-thumb-text {
+    font-size:clamp(2rem,4vw,4rem); font-weight:900;
+    color:rgba(59,123,191,0.15); letter-spacing:-0.02em;
+    user-select:none; text-align:center; padding:1rem; line-height:1;
+  }
+  .proj-body { padding:2rem; }
+  .proj-tag {
+    display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:#fff; background:var(--accent); padding:0.3rem 0.7rem; margin-bottom:0.75rem; border-radius:4px;
+  }
+  .proj-title { font-size:1.75rem; font-weight:800; color:var(--text); margin-bottom:0.75rem; letter-spacing:-0.01em; }
+  .proj-desc { font-size:0.9375rem; line-height:1.72; color:var(--muted); margin-bottom:1.5rem; }
+  .proj-link {
+    display:inline-flex; align-items:center; gap:0.5rem;
+    font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--accent); text-decoration:none; transition:gap 0.2s;
+  }
+  .proj-link:hover { gap:0.85rem; }
+  .mini-gallery { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1.5rem; }
+  .mini-gallery img { width:100%; aspect-ratio:4/3; object-fit:cover; transition:opacity 0.2s; }
+  .mini-gallery img:hover { opacity:0.85; }
 
-@media (max-width: 560px) {
-  .projects-grid {
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-
-  .proj-body {
-    padding: 1.5rem;
-  }
-
-  .mini-gallery {
-    height: 190px;
-    margin: 0 1.5rem 1.5rem;
-  }
-}
   /* CONTACT */
   .contact { background:var(--surface); }
   .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:5rem; align-items:start; margin-top:4rem; }
@@ -779,21 +477,6 @@
 
   /* MOBILE */
   @media(max-width:900px) {
-    .hof-hero { padding: 7.5rem 1.5rem 4rem; min-height: auto; }
-    .hof-vote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .hof-title { font-size: clamp(3.2rem, 12vw, 5.5rem); }
-  }
-  @media(max-width:560px) {
-    .hof-hero { padding: 6.5rem 1rem 3.25rem; }
-    .hof-vote-panel { padding: 1rem; border-radius: 1.4rem; }
-    .hof-vote-grid { grid-template-columns: 1fr; gap: .9rem; }
-    .hof-option { display:grid; grid-template-columns: 92px 1fr; align-items:center; gap:1rem; padding:.75rem; }
-    .hof-option-image { width:92px; }
-    .hof-option-name { margin-top:0; font-size:2rem; text-align:left; }
-    .hof-vote-button { min-height:54px; margin-top:1rem; }
-  }
-
-  @media(max-width:900px) {
     nav { padding:1rem 1.5rem; }
     .nav-links { display:none; }
     .hamburger { display:block; }
@@ -838,39 +521,59 @@
   <button class="hamburger" id="ham"><i class="fas fa-bars"></i></button>
 </nav>
 
-<!-- NAME HALL OF FAME HERO -->
-<section class="hof-hero" id="home">
-  <div class="hof-hero-inner">
-    <div class="hof-eyebrow reveal">Week 1</div>
-    <h1 class="hof-title reveal reveal-delay-1">Name Hall of Fame</h1>
-    <p class="hof-subhead reveal reveal-delay-2">Vote for one finalist to enter the Name Hall of Fame.</p>
-
-    <div class="hof-vote-panel reveal reveal-delay-2">
-      <div class="hof-vote-grid">
-        <a class="hof-option" href="vote.html" aria-label="Vote for Frog">
-          <div class="hof-option-image"><img src="images/frog.png" alt="Frog"></div>
-          <div class="hof-option-name">Frog</div>
-        </a>
-
-        <a class="hof-option" href="vote.html" aria-label="Vote for Gengyzkhan">
-          <div class="hof-option-image"><img src="images/gengyzkhan.jpg" alt="Gengyzkhan"></div>
-          <div class="hof-option-name">Gengyzkhan</div>
-        </a>
-
-        <a class="hof-option" href="vote.html" aria-label="Vote for J">
-          <div class="hof-option-image"><img src="images/j.jpg" alt="J"></div>
-          <div class="hof-option-name">J</div>
-        </a>
-
-        <a class="hof-option" href="vote.html" aria-label="Vote for Naruto">
-          <div class="hof-option-image"><img src="images/naruto.jpg" alt="Naruto"></div>
-          <div class="hof-option-name">Naruto</div>
-        </a>
-      </div>
-
-      <a class="hof-vote-button" href="signin.html">Sign in to vote</a>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-ticker">
+    <div class="ticker-inner">
+      <span class="ticker-word">COLBY MARTEL</span>
+      <span class="ticker-word">YOUTUBER</span>
+      <span class="ticker-word">GAME SHOW HOST</span>
+      <span class="ticker-word">1M+ SUBSCRIBERS</span>
+      <span class="ticker-word">COLBY MARTEL</span>
+      <span class="ticker-word">YOUTUBER</span>
+      <span class="ticker-word">GAME SHOW HOST</span>
+      <span class="ticker-word">1M+ SUBSCRIBERS</span>
     </div>
   </div>
+
+  <!-- Name at top -->
+  <div class="hero-name-row reveal">
+    <div class="hero-eyebrow">YouTuber &nbsp;·&nbsp; Game Show Host</div>
+    <h1 class="hero-name">COLBY <span>MARTEL</span></h1>
+  </div>
+
+  <!-- Stats card centrepiece -->
+  <div class="stats-centrepiece reveal reveal-delay-1">
+    <div class="stats-card-inner"></div>
+
+    <div class="pfp-wrap">
+      <img src="images/pfp.jpg" alt="Colby Martel" class="pfp">
+      <div class="pfp-ring"></div>
+    </div>
+
+
+    <div class="stats-row">
+      <div class="cstat">
+        <span class="cstat-num" data-target="1240000">0</span>
+        <span class="cstat-label">Subscribers</span>
+      </div>
+
+        <div class="cstat-divider"></div>
+      <div class="cstat">
+        <span class="cstat-num" data-target="940000">0</span>
+        <span class="cstat-label">TikTok Followers</span>
+      </div>
+      <div class="cstat-divider"></div>
+
+      <div class="cstat">
+        <span class="cstat-num" data-target="2000000000">0</span>
+        <span class="cstat-label">Total Views</span>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <div class="divider"></div>
@@ -896,6 +599,7 @@
 <!-- BRANDS -->
 <section class="brands" id="brands">
   <div class="max-w">
+    <div class="section-label reveal">Partnerships</div>
     <h2 class="section-title reveal reveal-delay-1">BRAND<br>PARTNERSHIPS</h2>
   </div>
   <div class="brands-marquee reveal reveal-delay-2">
@@ -979,6 +683,7 @@
 <!-- PRESS -->
 <section class="press" id="press">
   <div class="max-w">
+    <div class="section-label reveal">Recognition</div>
     <h2 class="section-title reveal reveal-delay-1">PRESS &<br>FEATURES</h2>
     <div class="press-cards">
       <div class="press-card reveal reveal-delay-1">
@@ -1002,94 +707,37 @@
 <div class="divider"></div>
 
 <!-- PROJECTS -->
-<!-- PROJECTS -->
 <section class="projects" id="projects">
   <div class="max-w">
-
-
-    <h2 class="section-title reveal reveal-delay-1">
-      PROJECTS &<br>
-      EXPERIENCES
-    </h2>
-
+    <div class="section-label reveal">Work</div>
+    <h2 class="section-title reveal reveal-delay-1">PROJECTS &<br>EXPERIENCES</h2>
     <div class="projects-grid">
-
-      <!-- NAME HALL OF FAME -->
-      <article class="proj-card reveal reveal-delay-1">
-        <div class="proj-body">
-
-          <span class="proj-tag">
-            Name Hall of Fame
-          </span>
-
-          <h3 class="proj-title">
-            Name Hall of Fame
-          </h3>
-
-          <p class="proj-desc">
-            A fan-powered voting experience where the internet decides
-            which names deserve a place in the Name Hall of Fame.
-          </p>
-
-          <a
-            href="halloffame.html"
-            class="proj-link"
-          >
-            Vote Now
-            <i class="fas fa-arrow-right"></i>
-          </a>
-
+          <div class="proj-card reveal reveal-delay-1">
+            <div class="proj-body">
+              <span class="proj-tag">Voting Experience</span>
+              <h3 class="proj-title">Name Hall of Fame</h3>
+              <p class="proj-desc">A fan-powered voting experience where the internet decides which names deserve a place in the Name Hall of Fame.</p>
+              <a href="https://guessinggames.com/halloffame.html" target="_blank" class="proj-link">Vote Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+      </div>
+      <div class="proj-card reveal reveal-delay-2">
+        <div class="proj-body" style="padding-bottom:0">
+          <span class="proj-tag">Live Show</span>
+          <h3 class="proj-title">Guessing Games Live</h3>
+          <p class="proj-desc">An interactive game show where audiences compete in real time. Hosted at colleges, conferences, and events across the country.</p>
         </div>
-      </article>
-
-
-      <!-- LIVE SHOW -->
-      <article class="proj-card reveal reveal-delay-2">
-
-        <div class="proj-body">
-
-          <span class="proj-tag">
-            Live Show
-          </span>
-
-          <h3 class="proj-title">
-            Guessing Games Live
-          </h3>
-
-          <p class="proj-desc">
-            An interactive game show where audiences compete in real time.
-            Hosted at colleges, conferences, and events across the country.
-          </p>
-
-          <a
-            href="live.html"
-            class="proj-link"
-          >
-            Book a Show
-            <i class="fas fa-arrow-right"></i>
-          </a>
-
+        <div class="mini-gallery" style="margin:1.25rem 2rem">
+          <img src="images/Gallery2.jpg" alt="">
+          <img src="images/Gallery3.jpg" alt="">
+          <img src="images/Gallery4.jpg" alt="">
+          <img src="images/Gallery6.jpg" alt="">
         </div>
-
-        <div class="mini-gallery">
-          <img
-            src="images/Gallery2.jpg"
-            alt="Guessing Games Live event"
-            loading="lazy"
-          >
-
-          <img
-            src="images/Gallery3.jpg"
-            alt="Guessing Games Live audience"
-            loading="lazy"
-          >
-
+        <div style="padding:0 2rem 2rem">
+          <a href="#contact" class="proj-link">Book a Show <i class="fas fa-arrow-right"></i></a>
         </div>
-
-      </article>
-
+      </div>
     </div>
-
   </div>
 </section>
 
