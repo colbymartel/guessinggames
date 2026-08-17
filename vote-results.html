@@ -21,6 +21,7 @@
       --white: #ffffff;
       --success: #1f7a4d;
       --danger: #b42318;
+      --danger-soft: #fef0ee;
     }
 
     * {
@@ -34,8 +35,9 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
+
       color: var(--ink);
+      background: var(--bg);
 
       font-family:
         Inter,
@@ -57,9 +59,10 @@
       cursor: pointer;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        NAV
-    ───────────────────────────── */
+    ───────────────────── */
 
     nav {
       position: fixed;
@@ -89,6 +92,7 @@
 
     nav.scrolled {
       background: rgba(247, 250, 252, 0.99);
+
       box-shadow:
         0 4px 24px
         rgba(79, 134, 179, 0.10);
@@ -113,11 +117,9 @@
 
       font-size: 0.72rem;
       font-weight: 700;
-
       letter-spacing: 0.12em;
-      text-transform: uppercase;
 
-      transition: color 0.2s ease;
+      text-transform: uppercase;
     }
 
     .nav-link:hover {
@@ -144,12 +146,14 @@
       font-weight: 700;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        PAGE
-    ───────────────────────────── */
+    ───────────────────── */
 
     .page {
       width: min(100%, 1180px);
+
       margin: 0 auto;
 
       padding:
@@ -158,9 +162,10 @@
         64px;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        HEADER
-    ───────────────────────────── */
+    ───────────────────── */
 
     .header {
       margin-bottom: 34px;
@@ -174,6 +179,7 @@
       font-size: 12px;
       font-weight: 850;
       letter-spacing: 0.16em;
+
       text-transform: uppercase;
     }
 
@@ -199,9 +205,10 @@
       line-height: 1.55;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        TOTAL
-    ───────────────────────────── */
+    ───────────────────── */
 
     .total-card {
       margin-bottom: 20px;
@@ -227,9 +234,9 @@
 
       font-size: 13px;
       font-weight: 750;
+      letter-spacing: 0.1em;
 
       text-transform: uppercase;
-      letter-spacing: 0.1em;
     }
 
     .total-number {
@@ -238,7 +245,6 @@
       font-size: 42px;
       line-height: 1;
       font-weight: 900;
-
       letter-spacing: -0.05em;
     }
 
@@ -262,6 +268,7 @@
 
     .refresh-button:hover:not(:disabled) {
       background: #dcebf6;
+
       transform: translateY(-1px);
     }
 
@@ -270,12 +277,14 @@
       cursor: wait;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        TALLY
-    ───────────────────────────── */
+    ───────────────────── */
 
     .tally-grid {
       display: grid;
+
       grid-template-columns:
         repeat(4, minmax(0, 1fr));
 
@@ -302,7 +311,6 @@
 
       font-size: 22px;
       font-weight: 850;
-
       letter-spacing: -0.04em;
     }
 
@@ -350,14 +358,16 @@
       transition: width 0.3s ease;
     }
 
-    /* ─────────────────────────────
-       SECTION HEADINGS
-    ───────────────────────────── */
+
+    /* ─────────────────────
+       SECTION HEAD
+    ───────────────────── */
 
     .section-head {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
+
       gap: 20px;
 
       margin-bottom: 15px;
@@ -395,9 +405,10 @@
       background: var(--line);
     }
 
-    /* ─────────────────────────────
-       TABLES
-    ───────────────────────────── */
+
+    /* ─────────────────────
+       TABLE
+    ───────────────────── */
 
     .table-card {
       overflow: hidden;
@@ -414,12 +425,14 @@
 
     .table-scroll {
       width: 100%;
+
       overflow-x: auto;
     }
 
     table {
       width: 100%;
-      min-width: 760px;
+
+      min-width: 820px;
 
       border-collapse: collapse;
     }
@@ -440,13 +453,14 @@
 
       font-size: 11px;
       font-weight: 800;
-
       letter-spacing: 0.1em;
+
       text-transform: uppercase;
     }
 
     td {
       font-size: 14px;
+
       vertical-align: middle;
     }
 
@@ -454,13 +468,20 @@
       border-bottom: 0;
     }
 
+    tbody tr {
+      transition:
+        background 0.15s ease,
+        opacity 0.2s ease;
+    }
+
     tbody tr:hover {
       background: #fafcff;
     }
 
-    /* ─────────────────────────────
-       VOTER
-    ───────────────────────────── */
+
+    /* ─────────────────────
+       PERSON
+    ───────────────────── */
 
     .person {
       display: flex;
@@ -494,6 +515,7 @@
       height: 100%;
 
       display: block;
+
       object-fit: cover;
     }
 
@@ -524,7 +546,7 @@
     }
 
     .uid {
-      max-width: 180px;
+      max-width: 160px;
 
       overflow: hidden;
 
@@ -542,9 +564,61 @@
       white-space: nowrap;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
+       DELETE VOTE
+    ───────────────────── */
+
+    .action-cell {
+      width: 54px;
+
+      text-align: right;
+    }
+
+    .delete-vote {
+      width: 36px;
+      height: 36px;
+
+      display: inline-grid;
+      place-items: center;
+
+      padding: 0;
+
+      color: var(--danger);
+      background: var(--danger-soft);
+
+      border: 0;
+      border-radius: 50%;
+
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1;
+
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .delete-vote:hover:not(:disabled) {
+      color: #8f1911;
+      background: #fbd5d0;
+
+      transform: scale(1.07);
+    }
+
+    .delete-vote:disabled {
+      opacity: 0.4;
+
+      cursor: wait;
+
+      transform: none;
+    }
+
+
+    /* ─────────────────────
        NOMINATIONS
-    ───────────────────────────── */
+    ───────────────────── */
 
     .nomination-name {
       color: var(--ink);
@@ -576,9 +650,10 @@
       font-weight: 700;
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        STATUS
-    ───────────────────────────── */
+    ───────────────────── */
 
     .status {
       padding: 40px 20px;
@@ -597,18 +672,23 @@
       color: var(--success);
     }
 
-    /* ─────────────────────────────
+
+    /* ─────────────────────
        MOBILE
-    ───────────────────────────── */
+    ───────────────────── */
 
     @media (max-width: 850px) {
+
       .tally-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
+
     }
 
+
     @media (max-width: 620px) {
+
       nav {
         padding: 0.95rem 1rem;
       }
@@ -643,6 +723,7 @@
 
       .total-card {
         align-items: stretch;
+
         flex-direction: column;
 
         gap: 16px;
@@ -679,6 +760,7 @@
 
       .section-head {
         align-items: flex-start;
+
         flex-direction: column;
 
         gap: 5px;
@@ -691,9 +773,145 @@
       .table-card {
         border-radius: 16px;
       }
+
     }
+
+    .week-section {
+      margin-top: 34px;
+      padding: 24px;
+      background: rgba(255,255,255,0.52);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+
+    .week-section + .week-section {
+      margin-top: 28px;
+    }
+
+    .week-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .week-heading h2 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -0.05em;
+    }
+
+    .week-kicker {
+      margin-bottom: 6px;
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .week-total {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .week-section .tally-grid {
+      margin-bottom: 24px;
+    }
+
+    .delete-entry {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      color: var(--danger);
+      background: var(--danger-soft);
+      border: 0;
+      border-radius: 50%;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1;
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .delete-entry:hover:not(:disabled) {
+      color: #8f1911;
+      background: #fbd5d0;
+      transform: scale(1.07);
+    }
+
+    .delete-entry:disabled {
+      opacity: 0.4;
+      cursor: wait;
+      transform: none;
+    }
+
+    @media (max-width: 620px) {
+      .week-section {
+        padding: 18px;
+      }
+
+      .week-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .week-heading h2 {
+        font-size: 28px;
+      }
+    }
+
+
+    .week-votes-toggle {
+      min-height: 44px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-dark);
+      background: var(--soft);
+      border: 0;
+      border-radius: 999px;
+      font-weight: 750;
+      transition:
+        background 0.16s ease,
+        transform 0.16s ease;
+    }
+
+    .week-votes-toggle:hover {
+      background: #dcebf6;
+      transform: translateY(-1px);
+    }
+
+    .week-votes-toggle .toggle-arrow {
+      display: inline-block;
+      font-size: 13px;
+      transition: transform 0.18s ease;
+    }
+
+    .week-votes-toggle[aria-expanded="true"] .toggle-arrow {
+      transform: rotate(180deg);
+    }
+
+    .week-votes-panel[hidden] {
+      display: none;
+    }
+
+    .week-votes-panel {
+      margin-top: 16px;
+    }
+
   </style>
 </head>
+
 
 <body>
 
@@ -708,6 +926,7 @@
       GuessingGames.com
     </a>
 
+
     <div class="nav-actions">
 
       <a
@@ -716,6 +935,7 @@
       >
         Voting Page
       </a>
+
 
       <a
         class="nav-account"
@@ -730,47 +950,23 @@
   </nav>
 
 
+
   <main class="page">
 
-    <!-- HEADER -->
-
     <header class="header">
-
-      <div class="eyebrow">
-        Admin · Week 1
-      </div>
-
-      <h1>
-        Voting Results
-      </h1>
-
+      <div class="eyebrow">Admin · Name Hall of Fame</div>
+      <h1>Voting Results</h1>
       <p class="subtitle">
-        Live Name Hall of Fame results, individual account votes,
+        Manage weekly Name Hall of Fame results, individual account votes,
         and next-ballot nominations.
       </p>
-
     </header>
 
-
-    <!-- TOTAL -->
-
     <section class="total-card">
-
       <div>
-
-        <div class="total-label">
-          Total votes
-        </div>
-
-        <div
-          class="total-number"
-          id="totalVotes"
-        >
-          —
-        </div>
-
+        <div class="total-label">All visible votes</div>
+        <div class="total-number" id="totalVotes">—</div>
       </div>
-
 
       <button
         class="refresh-button"
@@ -779,118 +975,160 @@
       >
         Refresh all
       </button>
-
     </section>
 
-
-    <!-- TALLY -->
-
-    <section
-      class="tally-grid"
-      id="tallyGrid"
-      aria-label="Vote totals"
-    >
-    </section>
-
-
-    <!-- INDIVIDUAL VOTES -->
-
-    <div class="section-head">
-
-      <div>
-
-        <h2>
-          Individual votes
-        </h2>
-
-        <p class="section-subtitle">
-          See which account selected each finalist.
-        </p>
-
+    <section class="week-section" data-week-key="week1">
+      <div class="week-heading">
+        <div>
+          <div class="week-kicker">Archived Round</div>
+          <h2>Week 1</h2>
+        </div>
+        <div class="week-total" id="week1Count">—</div>
       </div>
 
       <div
-        class="item-count"
-        id="voterCount"
-      >
+        class="tally-grid"
+        id="week1Tally"
+        aria-label="Week 1 vote totals"
+      ></div>
+
+      <div class="section-head">
+        <div>
+          <h2>Individual votes</h2>
+          <p class="section-subtitle">
+            Hidden by default to keep the admin page clean.
+          </p>
+        </div>
+
+        <button
+          class="week-votes-toggle"
+          type="button"
+          data-toggle-week="week1"
+          aria-expanded="false"
+          aria-controls="week1VotesPanel"
+        >
+          <span class="toggle-label">Show votes</span>
+          <span class="toggle-arrow" aria-hidden="true">▼</span>
+        </button>
       </div>
 
-    </div>
-
-
-    <section class="table-card">
-
       <div
-        class="status"
-        id="voteStatus"
-      >
-        Checking administrator access...
-      </div>
-
-
-      <div
-        class="table-scroll"
-        id="voteTableContainer"
+        class="week-votes-panel"
+        id="week1VotesPanel"
         hidden
       >
+        <section class="table-card">
+          <div class="status" id="week1Status">
+            Checking administrator access...
+          </div>
 
-        <table>
-
-          <thead>
-            <tr>
-              <th>Account</th>
-              <th>Vote</th>
-              <th>Date</th>
-              <th>UID</th>
-            </tr>
-          </thead>
-
-          <tbody id="voteRows">
-          </tbody>
-
-        </table>
-
+          <div
+            class="table-scroll"
+            id="week1TableContainer"
+            hidden
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Vote</th>
+                  <th>Date</th>
+                  <th>UID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="week1Rows"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
-
     </section>
 
+    <section class="week-section" data-week-key="week2">
+      <div class="week-heading">
+        <div>
+          <div class="week-kicker">Current Round</div>
+          <h2>Week 2</h2>
+        </div>
+        <div class="week-total" id="week2Count">—</div>
+      </div>
 
-    <!-- DIVIDER -->
+      <div
+        class="tally-grid"
+        id="week2Tally"
+        aria-label="Week 2 vote totals"
+      ></div>
+
+      <div class="section-head">
+        <div>
+          <h2>Individual votes</h2>
+          <p class="section-subtitle">
+            Hidden by default to keep the admin page clean.
+          </p>
+        </div>
+
+        <button
+          class="week-votes-toggle"
+          type="button"
+          data-toggle-week="week2"
+          aria-expanded="false"
+          aria-controls="week2VotesPanel"
+        >
+          <span class="toggle-label">Show votes</span>
+          <span class="toggle-arrow" aria-hidden="true">▼</span>
+        </button>
+      </div>
+
+      <div
+        class="week-votes-panel"
+        id="week2VotesPanel"
+        hidden
+      >
+        <section class="table-card">
+          <div class="status" id="week2Status">
+            Checking administrator access...
+          </div>
+
+          <div
+            class="table-scroll"
+            id="week2TableContainer"
+            hidden
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Vote</th>
+                  <th>Date</th>
+                  <th>UID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="week2Rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
 
     <div class="results-divider"></div>
 
-
-    <!-- NOMINATIONS -->
-
     <div class="section-head">
-
       <div>
-
-        <div class="eyebrow">
-          Next Ballot
-        </div>
-
-        <h2>
-          Nominations
-        </h2>
-
+        <div class="eyebrow">Next Ballot</div>
+        <h2>Nominations</h2>
         <p class="section-subtitle">
-          Suggestions submitted for a future Name Hall of Fame ballot.
+          Suggestions submitted for future Name Hall of Fame ballots.
         </p>
-
       </div>
 
       <div
         class="item-count"
         id="nominationCount"
-      >
-      </div>
-
+      ></div>
     </div>
 
-
     <section class="table-card">
-
       <div
         class="status"
         id="nominationStatus"
@@ -898,34 +1136,29 @@
         Waiting for administrator access...
       </div>
 
-
       <div
         class="table-scroll"
         id="nominationTableContainer"
         hidden
       >
-
         <table>
-
           <thead>
             <tr>
               <th>Nomination</th>
               <th>Reason</th>
               <th>Date</th>
               <th>Page</th>
+              <th></th>
             </tr>
           </thead>
 
-          <tbody id="nominationRows">
-          </tbody>
-
+          <tbody id="nominationRows"></tbody>
         </table>
-
       </div>
-
     </section>
 
   </main>
+
 
 
   <script type="module">
@@ -934,405 +1167,233 @@
       initializeApp
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-
     import {
       getAuth,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-
     import {
       getFirestore,
       collection,
-      getDocs
+      getDocs,
+      doc,
+      deleteDoc
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 
-    /* ─────────────────────────────
-       FIREBASE
-    ───────────────────────────── */
-
     const firebaseConfig = {
-      apiKey:
-        "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
-
-      authDomain:
-        "guessinggames.firebaseapp.com",
-
-      projectId:
-        "guessinggames",
-
-      storageBucket:
-        "guessinggames.firebasestorage.app",
-
-      messagingSenderId:
-        "431644741449",
-
-      appId:
-        "1:431644741449:web:0b699b3acdec1f95b19498"
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
     };
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    const app =
-      initializeApp(firebaseConfig);
+    const ADMIN_EMAIL = "colbyma23@gmail.com";
 
-    const auth =
-      getAuth(app);
+    const weeks = {
+      week1: {
+        label: "Week 1",
+        roundId: "week-1-round-1",
+        candidates: ["Frog", "Gengyzkhan", "J", "Naruto"]
+      },
+      week2: {
+        label: "Week 2",
+        roundId: "week-2-round-1",
+        candidates: ["Frog", "Gengyzkhan", "Naruto", "Ryse"]
+      }
+    };
 
-    const db =
-      getFirestore(app);
+    const nav = document.getElementById("nav");
+    const accountLink = document.getElementById("accountLink");
+    const totalVotesEl = document.getElementById("totalVotes");
+    const refreshButton = document.getElementById("refreshButton");
 
+    const nominationCount = document.getElementById("nominationCount");
+    const nominationStatus = document.getElementById("nominationStatus");
+    const nominationTableContainer = document.getElementById("nominationTableContainer");
+    const nominationRows = document.getElementById("nominationRows");
 
-    /* ─────────────────────────────
-       SETTINGS
-    ───────────────────────────── */
-
-    const ADMIN_EMAIL =
-      "colbyma23@gmail.com";
-
-
-    const ROUND_ID =
-      "week-1-round-1";
-
-
-    const candidates = [
-      "Frog",
-      "Gengyzkhan",
-      "J",
-      "Naruto"
-    ];
-
-
-    /* ─────────────────────────────
-       ELEMENTS
-    ───────────────────────────── */
-
-    const nav =
-      document.getElementById("nav");
-
-
-    const accountLink =
-      document.getElementById("accountLink");
-
-
-    const totalVotesEl =
-      document.getElementById("totalVotes");
-
-
-    const tallyGrid =
-      document.getElementById("tallyGrid");
-
-
-    const refreshButton =
-      document.getElementById("refreshButton");
-
-
-    const voterCount =
-      document.getElementById("voterCount");
-
-
-    const voteStatus =
-      document.getElementById("voteStatus");
-
-
-    const voteTableContainer =
-      document.getElementById(
-        "voteTableContainer"
-      );
-
-
-    const voteRows =
-      document.getElementById("voteRows");
-
-
-    const nominationCount =
-      document.getElementById(
-        "nominationCount"
-      );
-
-
-    const nominationStatus =
-      document.getElementById(
-        "nominationStatus"
-      );
-
-
-    const nominationTableContainer =
-      document.getElementById(
-        "nominationTableContainer"
-      );
-
-
-    const nominationRows =
-      document.getElementById(
-        "nominationRows"
-      );
-
-
-    /* ─────────────────────────────
-       HELPERS
-    ───────────────────────────── */
 
     function escapeHTML(value) {
-
       return String(value || "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
-
     }
 
 
     function initials(voter) {
-
       const source =
         voter.displayName ||
         voter.email ||
         "?";
-
 
       return source
         .trim()
         .split(/\s+/)
         .filter(Boolean)
         .slice(0, 2)
-        .map(part =>
-          part
-            .charAt(0)
-            .toUpperCase()
-        )
+        .map(part => part.charAt(0).toUpperCase())
         .join("");
-
     }
 
 
     function formatDate(timestamp) {
+      if (!timestamp) return "—";
 
-      if (!timestamp) {
-        return "—";
+      if (typeof timestamp.toDate === "function") {
+        return timestamp.toDate().toLocaleString(
+          undefined,
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          }
+        );
       }
-
-
-      if (timestamp.toDate) {
-
-        return timestamp
-          .toDate()
-          .toLocaleString(
-            undefined,
-            {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-              hour: "numeric",
-              minute: "2-digit"
-            }
-          );
-
-      }
-
 
       return "—";
-
     }
 
 
     function getTimestampNumber(timestamp) {
-
-      if (!timestamp) {
-        return 0;
-      }
-
+      if (!timestamp) return 0;
 
       if (typeof timestamp.toMillis === "function") {
         return timestamp.toMillis();
       }
 
-
       return 0;
-
     }
 
 
     function setRefreshBusy(isBusy) {
-
-      refreshButton.disabled =
-        isBusy;
-
-
+      refreshButton.disabled = isBusy;
       refreshButton.textContent =
-        isBusy
-          ? "Refreshing..."
-          : "Refresh all";
-
+        isBusy ? "Refreshing..." : "Refresh all";
     }
 
 
-    /* ─────────────────────────────
-       TALLY
-    ───────────────────────────── */
+    function weekElements(weekKey) {
+      return {
+        tally: document.getElementById(`${weekKey}Tally`),
+        count: document.getElementById(`${weekKey}Count`),
+        status: document.getElementById(`${weekKey}Status`),
+        table: document.getElementById(`${weekKey}TableContainer`),
+        rows: document.getElementById(`${weekKey}Rows`)
+      };
+    }
 
-    function buildTotals(votes) {
 
+    function buildWeekTotals(weekKey, votes) {
+      const config = weeks[weekKey];
+      const elements = weekElements(weekKey);
       const counts = {};
 
-
-      for (const candidate of candidates) {
+      for (const candidate of config.candidates) {
         counts[candidate] = 0;
       }
 
-
       for (const vote of votes) {
-
         if (
-          Object.prototype
-            .hasOwnProperty
-            .call(
-              counts,
-              vote.selected
-            )
+          Object.prototype.hasOwnProperty.call(
+            counts,
+            vote.selected
+          )
         ) {
-
           counts[vote.selected]++;
-
         }
-
       }
 
+      const total = votes.length;
 
-      const total =
-        votes.length;
+      elements.count.textContent =
+        `${total.toLocaleString()} vote${total === 1 ? "" : "s"}`;
 
-
-      totalVotesEl.textContent =
-        total.toLocaleString();
-
-
-      tallyGrid.innerHTML =
-        candidates
+      elements.tally.innerHTML =
+        config.candidates
           .map(candidate => {
-
-            const count =
-              counts[candidate] || 0;
-
-
+            const count = counts[candidate] || 0;
             const percentage =
-              total
-                ? (count / total) * 100
-                : 0;
-
+              total ? (count / total) * 100 : 0;
 
             return `
               <article class="tally-card">
-
                 <div class="candidate">
                   ${escapeHTML(candidate)}
                 </div>
 
-
                 <div class="candidate-row">
-
-                  <div class="votes">
-                    ${count}
-                  </div>
-
-
+                  <div class="votes">${count}</div>
                   <div class="percent">
                     ${percentage.toFixed(1)}%
                   </div>
-
                 </div>
 
-
                 <div class="bar">
-
                   <div
                     class="bar-fill"
                     style="width:${percentage}%"
                   ></div>
-
                 </div>
-
               </article>
             `;
-
           })
           .join("");
-
     }
 
 
-    /* ─────────────────────────────
-       VOTES
-    ───────────────────────────── */
-
-    function renderVotes(votes) {
-
-      voterCount.textContent =
-        `${votes.length} account${
-          votes.length === 1
-            ? ""
-            : "s"
-        }`;
-
+    function renderWeekVotes(weekKey, votes) {
+      const elements = weekElements(weekKey);
 
       if (!votes.length) {
-
-        voteStatus.hidden =
-          false;
-
-        voteStatus.className =
-          "status";
-
-        voteStatus.textContent =
+        elements.status.hidden = false;
+        elements.status.className = "status";
+        elements.status.textContent =
           "No votes have been submitted yet.";
-
-
-        voteTableContainer.hidden =
-          true;
-
+        elements.table.hidden = true;
+        elements.rows.innerHTML = "";
         return;
-
       }
 
-
-      voteRows.innerHTML =
+      elements.rows.innerHTML =
         votes
           .map(vote => {
-
             const avatarContent =
               vote.photoURL
-
                 ? `
                   <img
-                    src="${escapeHTML(
-                      vote.photoURL
-                    )}"
+                    src="${escapeHTML(vote.photoURL)}"
                     alt=""
                     referrerpolicy="no-referrer"
                   >
                 `
+                : escapeHTML(initials(vote));
 
-                : escapeHTML(
-                    initials(vote)
-                  );
-
+            const voterLabel =
+              vote.email ||
+              vote.displayName ||
+              "this account";
 
             return `
               <tr>
-
                 <td>
-
                   <div class="person">
-
                     <div class="avatar">
                       ${avatarContent}
                     </div>
 
-
                     <div>
-
                       <div class="person-name">
                         ${escapeHTML(
                           vote.displayName ||
@@ -1340,376 +1401,412 @@
                         )}
                       </div>
 
-
                       <div class="person-email">
                         ${escapeHTML(
                           vote.email ||
                           "No email"
                         )}
                       </div>
-
                     </div>
-
                   </div>
-
                 </td>
-
 
                 <td>
-
                   <span class="vote-chip">
-                    ${escapeHTML(
-                      vote.selected
-                    )}
+                    ${escapeHTML(vote.selected)}
                   </span>
-
                 </td>
-
 
                 <td>
                   ${escapeHTML(
-                    formatDate(
-                      vote.createdAt
-                    )
+                    formatDate(vote.createdAt)
                   )}
                 </td>
 
-
                 <td>
-
                   <div
                     class="uid"
                     title="${escapeHTML(
-                      vote.uid
+                      vote.uid ||
+                      vote.id
                     )}"
                   >
                     ${escapeHTML(
-                      vote.uid
+                      vote.uid ||
+                      vote.id
                     )}
                   </div>
-
                 </td>
 
+                <td class="action-cell">
+                  <button
+                    class="delete-vote"
+                    type="button"
+                    data-week-key="${escapeHTML(weekKey)}"
+                    data-vote-id="${escapeHTML(vote.id)}"
+                    data-voter="${escapeHTML(voterLabel)}"
+                    data-selected="${escapeHTML(vote.selected)}"
+                    aria-label="Remove ${escapeHTML(voterLabel)}'s vote"
+                    title="Remove vote"
+                  >
+                    ×
+                  </button>
+                </td>
               </tr>
             `;
-
           })
           .join("");
 
-
-      voteStatus.hidden =
-        true;
-
-
-      voteTableContainer.hidden =
-        false;
-
+      elements.status.hidden = true;
+      elements.table.hidden = false;
     }
 
 
-    async function loadVotes() {
+    async function loadWeekVotes(weekKey) {
+      const config = weeks[weekKey];
+      const elements = weekElements(weekKey);
 
-      voteStatus.hidden =
-        false;
-
-      voteStatus.className =
-        "status";
-
-      voteStatus.textContent =
-        "Loading votes...";
-
-
-      voteTableContainer.hidden =
-        true;
-
+      elements.status.hidden = false;
+      elements.status.className = "status";
+      elements.status.textContent = "Loading votes...";
+      elements.table.hidden = true;
 
       try {
+        const votesRef = collection(
+          db,
+          "name-hall-of-fame-votes",
+          config.roundId,
+          "votes"
+        );
 
-        const votesRef =
-          collection(
-            db,
-            "name-hall-of-fame-votes",
-            ROUND_ID,
-            "votes"
-          );
-
-
-        const snapshot =
-          await getDocs(votesRef);
-
+        const snapshot = await getDocs(votesRef);
 
         const votes =
           snapshot.docs
             .map(documentSnapshot => ({
-
-              id:
-                documentSnapshot.id,
-
+              id: documentSnapshot.id,
               ...documentSnapshot.data()
-
             }))
             .sort(
               (a, b) =>
-                getTimestampNumber(
-                  b.createdAt
-                )
-                -
-                getTimestampNumber(
-                  a.createdAt
-                )
+                getTimestampNumber(b.createdAt) -
+                getTimestampNumber(a.createdAt)
             );
 
+        buildWeekTotals(weekKey, votes);
+        renderWeekVotes(weekKey, votes);
 
-        buildTotals(votes);
-
-        renderVotes(votes);
-
+        return votes.length;
       } catch (error) {
-
         console.error(
-          "Could not load votes:",
+          `Could not load ${config.label} votes:`,
           error
         );
 
-
-        voteStatus.hidden =
-          false;
-
-        voteStatus.className =
-          "status error";
-
-        voteStatus.textContent =
+        elements.status.hidden = false;
+        elements.status.className = "status error";
+        elements.status.textContent =
           "Could not load individual votes. Check your Firestore permissions.";
+        elements.table.hidden = true;
+        elements.tally.innerHTML = "";
+        elements.count.textContent = "—";
 
-
-        voteTableContainer.hidden =
-          true;
-
-
-        totalVotesEl.textContent =
-          "—";
-
-
-        tallyGrid.innerHTML =
-          "";
-
+        return 0;
       }
-
     }
 
 
-    /* ─────────────────────────────
-       NOMINATIONS
-    ───────────────────────────── */
-
-    function renderNominations(
-      nominations
+    async function removeVote(
+      weekKey,
+      voteId,
+      voter,
+      selected,
+      button
     ) {
+      const config = weeks[weekKey];
 
+      const confirmed = window.confirm(
+        `Remove ${voter}'s ${config.label} vote for ${selected}?\n\nThis account will be able to vote again in that round.`
+      );
+
+      if (!confirmed) return;
+
+      button.disabled = true;
+      button.textContent = "…";
+
+      try {
+        const voteRef = doc(
+          db,
+          "name-hall-of-fame-votes",
+          config.roundId,
+          "votes",
+          voteId
+        );
+
+        await deleteDoc(voteRef);
+        await refreshVoteSections();
+
+      } catch (error) {
+        console.error("Could not remove vote:", error);
+
+        window.alert(
+          "Could not remove this vote. Check your Firestore admin permissions."
+        );
+
+        button.disabled = false;
+        button.textContent = "×";
+      }
+    }
+
+
+    document.addEventListener(
+      "click",
+      async event => {
+        const button =
+          event.target.closest(".delete-vote");
+
+        if (!button) return;
+
+        await removeVote(
+          button.dataset.weekKey,
+          button.dataset.voteId,
+          button.dataset.voter,
+          button.dataset.selected,
+          button
+        );
+      }
+    );
+
+
+    function renderNominations(nominations) {
       nominationCount.textContent =
         `${nominations.length} nomination${
-          nominations.length === 1
-            ? ""
-            : "s"
+          nominations.length === 1 ? "" : "s"
         }`;
 
-
       if (!nominations.length) {
-
-        nominationStatus.hidden =
-          false;
-
-        nominationStatus.className =
-          "status";
-
+        nominationStatus.hidden = false;
+        nominationStatus.className = "status";
         nominationStatus.textContent =
           "No nominations have been submitted yet.";
-
-
-        nominationTableContainer.hidden =
-          true;
-
+        nominationTableContainer.hidden = true;
+        nominationRows.innerHTML = "";
         return;
-
       }
-
 
       nominationRows.innerHTML =
         nominations
-          .map(nomination => {
-
-            return `
-              <tr>
-
-                <td>
-
-                  <div class="nomination-name">
-                    ${escapeHTML(
-                      nomination.name ||
-                      "—"
-                    )}
-                  </div>
-
-                </td>
-
-
-                <td>
-
-                  <div class="nomination-reason">
-                    ${escapeHTML(
-                      nomination.reason ||
-                      "—"
-                    )}
-                  </div>
-
-                </td>
-
-
-                <td>
+          .map(nomination => `
+            <tr>
+              <td>
+                <div class="nomination-name">
                   ${escapeHTML(
-                    formatDate(
-                      nomination.createdAt
-                    )
+                    nomination.name ||
+                    "—"
                   )}
-                </td>
+                </div>
+              </td>
 
+              <td>
+                <div class="nomination-reason">
+                  ${escapeHTML(
+                    nomination.reason ||
+                    "—"
+                  )}
+                </div>
+              </td>
 
-                <td>
+              <td>
+                ${escapeHTML(
+                  formatDate(
+                    nomination.createdAt
+                  )
+                )}
+              </td>
 
-                  <span class="page-chip">
-                    ${escapeHTML(
-                      nomination.page ||
-                      "—"
-                    )}
-                  </span>
+              <td>
+                <span class="page-chip">
+                  ${escapeHTML(
+                    nomination.page ||
+                    "—"
+                  )}
+                </span>
+              </td>
 
-                </td>
-
-              </tr>
-            `;
-
-          })
+              <td class="action-cell">
+                <button
+                  class="delete-entry"
+                  type="button"
+                  data-nomination-id="${escapeHTML(nomination.id)}"
+                  data-nomination-name="${escapeHTML(
+                    nomination.name ||
+                    "this nomination"
+                  )}"
+                  aria-label="Delete nomination"
+                  title="Delete nomination"
+                >
+                  ×
+                </button>
+              </td>
+            </tr>
+          `)
           .join("");
 
-
-      nominationStatus.hidden =
-        true;
-
-
-      nominationTableContainer.hidden =
-        false;
-
+      nominationStatus.hidden = true;
+      nominationTableContainer.hidden = false;
     }
 
 
     async function loadNominations() {
-
-      nominationStatus.hidden =
-        false;
-
-      nominationStatus.className =
-        "status";
-
+      nominationStatus.hidden = false;
+      nominationStatus.className = "status";
       nominationStatus.textContent =
         "Loading nominations...";
-
-
-      nominationTableContainer.hidden =
-        true;
-
+      nominationTableContainer.hidden = true;
 
       try {
-
         const nominationsRef =
           collection(
             db,
             "next-ballot-suggestions"
           );
 
-
         const snapshot =
-          await getDocs(
-            nominationsRef
-          );
-
+          await getDocs(nominationsRef);
 
         const nominations =
           snapshot.docs
-            .map(
-              documentSnapshot => ({
-
-                id:
-                  documentSnapshot.id,
-
-                ...documentSnapshot.data()
-
-              })
-            )
+            .map(documentSnapshot => ({
+              id: documentSnapshot.id,
+              ...documentSnapshot.data()
+            }))
             .sort(
               (a, b) =>
-                getTimestampNumber(
-                  b.createdAt
-                )
-                -
-                getTimestampNumber(
-                  a.createdAt
-                )
+                getTimestampNumber(b.createdAt) -
+                getTimestampNumber(a.createdAt)
             );
 
-
-        renderNominations(
-          nominations
-        );
+        renderNominations(nominations);
 
       } catch (error) {
-
         console.error(
           "Could not load nominations:",
           error
         );
 
-
-        nominationStatus.hidden =
-          false;
-
+        nominationStatus.hidden = false;
         nominationStatus.className =
           "status error";
-
         nominationStatus.textContent =
           "Could not load nominations. Check your Firestore permissions.";
-
-
-        nominationTableContainer.hidden =
-          true;
-
+        nominationTableContainer.hidden = true;
       }
-
     }
 
 
-    /* ─────────────────────────────
-       REFRESH
-    ───────────────────────────── */
+    async function removeNomination(
+      nominationId,
+      nominationName,
+      button
+    ) {
+      const confirmed = window.confirm(
+        `Delete "${nominationName}" from nominations?\n\nThis cannot be undone.`
+      );
 
-    async function loadEverything() {
+      if (!confirmed) return;
 
-      setRefreshBusy(true);
-
+      button.disabled = true;
+      button.textContent = "…";
 
       try {
+        await deleteDoc(
+          doc(
+            db,
+            "next-ballot-suggestions",
+            nominationId
+          )
+        );
 
+        await loadNominations();
+
+      } catch (error) {
+        console.error(
+          "Could not delete nomination:",
+          error
+        );
+
+        window.alert(
+          "Could not delete this nomination. Check your Firestore admin permissions."
+        );
+
+        button.disabled = false;
+        button.textContent = "×";
+      }
+    }
+
+
+    nominationRows.addEventListener(
+      "click",
+      async event => {
+        const button =
+          event.target.closest(".delete-entry");
+
+        if (!button) return;
+
+        await removeNomination(
+          button.dataset.nominationId,
+          button.dataset.nominationName,
+          button
+        );
+      }
+    );
+
+
+    async function refreshVoteSections() {
+      const counts = await Promise.all([
+        loadWeekVotes("week1"),
+        loadWeekVotes("week2")
+      ]);
+
+      totalVotesEl.textContent =
+        counts
+          .reduce((sum, count) => sum + count, 0)
+          .toLocaleString();
+    }
+
+
+    async function loadEverything() {
+      setRefreshBusy(true);
+
+      try {
         await Promise.all([
-          loadVotes(),
+          refreshVoteSections(),
           loadNominations()
         ]);
-
       } finally {
-
         setRefreshBusy(false);
-
       }
-
     }
+
+
+
+    document.querySelectorAll(".week-votes-toggle").forEach(button => {
+      button.addEventListener("click", () => {
+        const weekKey = button.dataset.toggleWeek;
+        const panel = document.getElementById(`${weekKey}VotesPanel`);
+        const label = button.querySelector(".toggle-label");
+        const isOpen = button.getAttribute("aria-expanded") === "true";
+
+        button.setAttribute(
+          "aria-expanded",
+          String(!isOpen)
+        );
+
+        panel.hidden = isOpen;
+        label.textContent =
+          isOpen ? "Show votes" : "Hide votes";
+      });
+    });
 
 
     refreshButton.addEventListener(
@@ -1718,58 +1815,38 @@
     );
 
 
-    /* ─────────────────────────────
-       NAV SCROLL
-    ───────────────────────────── */
-
     window.addEventListener(
       "scroll",
       () => {
-
         nav.classList.toggle(
           "scrolled",
           window.scrollY > 50
         );
-
       }
     );
 
 
-    /* ─────────────────────────────
-       AUTH / ADMIN
-    ───────────────────────────── */
-
     onAuthStateChanged(
       auth,
       async user => {
-
         if (!user) {
-
           window.location.replace(
             "signin.html?redirect=vote-results.html"
           );
-
           return;
-
         }
-
 
         accountLink.textContent =
           user.displayName
             ? `Hi, ${
-                user.displayName
-                  .split(" ")[0]
+                user.displayName.split(" ")[0]
               }`
             : user.email ||
               "Admin";
 
-
         try {
-
           const token =
-            await user
-              .getIdTokenResult(true);
-
+            await user.getIdTokenResult(true);
 
           const emailMatches =
             user.email
@@ -1778,71 +1855,58 @@
             ===
             ADMIN_EMAIL.toLowerCase();
 
-
           const isAdmin =
             emailMatches ||
             token.claims.admin === true;
 
-
           if (!isAdmin) {
+            for (const weekKey of Object.keys(weeks)) {
+              const elements = weekElements(weekKey);
 
-            voteStatus.hidden =
-              false;
+              elements.status.hidden = false;
+              elements.status.className =
+                "status error";
+              elements.status.textContent =
+                "You do not have permission to view individual voting results.";
+            }
 
-            voteStatus.className =
-              "status error";
-
-            voteStatus.textContent =
-              "You do not have permission to view individual voting results.";
-
-
-            nominationStatus.hidden =
-              false;
-
+            nominationStatus.hidden = false;
             nominationStatus.className =
               "status error";
-
             nominationStatus.textContent =
               "You do not have permission to view nominations.";
 
-
-            refreshButton.disabled =
-              true;
-
+            refreshButton.disabled = true;
             refreshButton.textContent =
               "Access denied";
 
-
             return;
-
           }
-
 
           await loadEverything();
 
         } catch (error) {
-
           console.error(
             "Admin check failed:",
             error
           );
 
+          for (const weekKey of Object.keys(weeks)) {
+            const elements = weekElements(weekKey);
 
-          voteStatus.className =
-            "status error";
+            elements.status.hidden = false;
+            elements.status.className =
+              "status error";
+            elements.status.textContent =
+              "Could not verify administrator access.";
+          }
 
-          voteStatus.textContent =
-            "Could not verify administrator access.";
-
-
+          nominationStatus.hidden = false;
           nominationStatus.className =
             "status error";
-
           nominationStatus.textContent =
             "Could not verify administrator access.";
-
         }
-
       }
     );
 

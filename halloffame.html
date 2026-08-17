@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Name Hall of Fame</title>
+
   <style>
     :root {
       --brand: #4f86b3;
@@ -14,6 +15,10 @@
       --line: #dbe6ef;
       --soft: #edf4fa;
       --white: #ffffff;
+
+      --gold: #e0b84f;
+      --gold-dark: #b88916;
+      --gold-soft: #fff6da;
     }
 
     * {
@@ -25,7 +30,8 @@
       min-height: 100vh;
       background: var(--bg);
       color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     a {
@@ -38,211 +44,116 @@
       margin: 0 auto;
       padding: 28px 24px 64px;
     }
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
 
-  padding: 1.25rem 2.5rem;
+    /* ── NAV ── */
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
 
-  background: rgba(247, 250, 252, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+      padding: 1.25rem 2.5rem;
 
-  border-bottom: 1px solid rgba(79, 134, 179, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-}
+      background: rgba(247, 250, 252, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
 
-nav.scrolled {
-  background: rgba(247, 250, 252, 0.98);
-  box-shadow: 0 4px 24px rgba(79, 134, 179, 0.12);
-}
+      border-bottom: 1px solid rgba(79, 134, 179, 0.18);
 
-.nav-logo {
-  color: var(--brand);
-  text-decoration: none;
+      transition:
+        background 0.3s,
+        box-shadow 0.3s;
+    }
 
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
+    nav.scrolled {
+      background: rgba(247, 250, 252, 0.98);
+      box-shadow: 0 4px 24px rgba(79, 134, 179, 0.12);
+    }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
+    .nav-logo {
+      color: var(--brand);
+      text-decoration: none;
 
-  margin: 0;
-  padding: 0;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
 
-  list-style: none;
-}
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
 
-.nav-links a {
-  color: var(--muted);
-  text-decoration: none;
+      margin: 0;
+      padding: 0;
 
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+      list-style: none;
+    }
 
-  transition: color 0.2s;
-}
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
 
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--brand);
-}
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
 
-.hamburger {
-  display: none;
+      transition: color 0.2s;
+    }
 
-  padding: 8px;
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--brand);
+    }
 
-  color: var(--ink);
-  background: none;
-  border: 0;
+    .hamburger {
+      display: none;
 
-  font-size: 1.25rem;
-  cursor: pointer;
-}
+      padding: 8px;
 
-/* Account button */
-.nav-account {
-  padding: 9px 14px !important;
+      color: var(--ink);
+      background: none;
+      border: 0;
 
-  color: var(--ink) !important;
-  background: var(--white);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
 
-  border: 1px solid var(--line);
-  border-radius: 999px;
+    .nav-account {
+      padding: 9px 14px !important;
 
-  letter-spacing: 0.04em !important;
-  text-transform: none !important;
-}
+      color: var(--ink) !important;
+      background: var(--white);
 
-.nav-account:hover {
-  color: var(--brand) !important;
-  border-color: var(--brand);
-}
+      border: 1px solid var(--line);
+      border-radius: 999px;
 
-/* Fixed nav means hero needs extra top spacing */
-.hero {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  gap: 16px;
-  padding: 135px 0 18px;
-}
+      letter-spacing: 0.04em !important;
+      text-transform: none !important;
+    }
 
-.eyebrow {
-  text-align: center;
-}
+    .nav-account:hover {
+      color: var(--brand) !important;
+      border-color: var(--brand);
+    }
 
-h1 {
-  margin: 0 auto;
-  max-width: 880px;
-  text-align: center;
-}
+    /* ── HERO ── */
 
-.subhead {
-  margin: 0 auto;
-  max-width: 620px;
-  text-align: center;
-}
+    .hero {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 16px;
 
-
-/* ── MOBILE NAV ── */
-
-@media (max-width: 900px) {
-  nav {
-    padding: 1rem 1.5rem;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hamburger {
-    display: block;
-  }
-
-  .nav-links.open {
-    position: fixed;
-    top: 62px;
-    left: 0;
-    right: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-
-    padding: 1rem 1.5rem 1.5rem;
-
-    background: rgba(247, 250, 252, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    border-bottom: 1px solid var(--line);
-
-    box-shadow: 0 12px 30px rgba(23, 35, 49, 0.08);
-  }
-
-  .nav-links.open li {
-    width: 100%;
-  }
-
-  .nav-links.open a {
-    display: block;
-    width: 100%;
-
-    padding: 14px 4px;
-
-    border-bottom: 1px solid rgba(79, 134, 179, 0.10);
-  }
-
-  .nav-links.open li:last-child a {
-    border-bottom: 0;
-  }
-
-  .nav-account {
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .hero {
-    padding-top: 120px;
-  }
-}
-
-@media (max-width: 620px) {
-  nav {
-    padding: 0.95rem 1rem;
-  }
-
-  .nav-logo {
-    font-size: 1.1rem;
-  }
-
-  .nav-links.open {
-    top: 58px;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
+      padding: 135px 0 18px;
+    }
 
     .eyebrow {
       color: var(--brand);
@@ -250,24 +161,21 @@ h1 {
       font-weight: 800;
       letter-spacing: 0.16em;
       text-transform: uppercase;
+      text-align: center;
     }
 
     h1 {
-      margin: 0;
+      margin: 0 auto;
       max-width: 880px;
+      text-align: center;
+
       font-size: clamp(46px, 8vw, 92px);
       line-height: 0.94;
       letter-spacing: -0.08em;
       font-weight: 850;
     }
 
-    .subhead {
-      margin: 0;
-      max-width: 600px;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.5;
-    }
+    /* ── HALL OF FAME GRID ── */
 
     .hof-grid {
       display: grid;
@@ -278,27 +186,49 @@ h1 {
 
     .hof-card {
       position: relative;
+
       min-height: 240px;
       padding: 18px;
+
       overflow: hidden;
+
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
       background: var(--white);
+
       border: 1px solid var(--line);
       border-radius: 24px;
+
       box-shadow: 0 18px 42px rgba(23, 35, 49, 0.07);
     }
 
+    /* WEEK 1 WINNER */
+
     .hof-card.featured {
       background:
-        radial-gradient(circle at 50% 18%, rgba(79, 134, 179, 0.16), transparent 34%),
+        radial-gradient(
+          circle at 50% 15%,
+          rgba(224, 184, 79, 0.22),
+          transparent 38%
+        ),
         var(--white);
-      border-color: rgba(79, 134, 179, 0.34);
+
+      border: 2px solid var(--gold);
+
+      box-shadow:
+        0 20px 45px rgba(184, 137, 22, 0.16),
+        0 0 0 1px rgba(224, 184, 79, 0.08);
+    }
+
+    .hof-card.featured .week {
+      color: var(--gold-dark);
     }
 
     .week {
       color: var(--brand);
+
       font-size: 12px;
       font-weight: 850;
       letter-spacing: 0.14em;
@@ -308,53 +238,126 @@ h1 {
     .display {
       display: grid;
       place-items: center;
+
       width: 100%;
       aspect-ratio: 1 / 1;
+
       margin: 18px 0;
+
       border-radius: 20px;
+
       background:
-        linear-gradient(135deg, rgba(79, 134, 179, 0.12), rgba(255, 255, 255, 0.9)),
+        linear-gradient(
+          135deg,
+          rgba(79, 134, 179, 0.12),
+          rgba(255, 255, 255, 0.9)
+        ),
         var(--soft);
+
       border: 1px solid var(--line);
     }
 
-    .trophy {
-      font-size: 48px;
-      line-height: 1;
+    /* GOLD IMAGE AREA */
+
+    .hof-card.featured .display {
+      background:
+        radial-gradient(
+          circle at 50% 25%,
+          #ffffff,
+          var(--gold-soft) 68%,
+          #f3e0a8
+        );
+
+      border: 2px solid var(--gold);
+
+      box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,0.55);
     }
 
-    .lock {
+    /*
+      Replace this element later with J's actual image if you have one.
+      For now it acts as the winner image.
+    */
+
+    .winner-image {
       display: grid;
       place-items: center;
-      width: 62px;
-      height: 62px;
-      border-radius: 999px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 28px;
-      box-shadow: 0 12px 28px rgba(23, 35, 49, 0.06);
+
+      width: 76%;
+      height: 76%;
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #fffdf5,
+          #ffe9a6
+        );
+
+      border: 2px solid rgba(184, 137, 22, 0.35);
+
+      color: var(--gold-dark);
+
+      font-size: clamp(68px, 9vw, 112px);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+
+      box-shadow:
+        0 18px 30px rgba(184, 137, 22, 0.15);
     }
 
     .entry-name {
       margin: 0;
+
       font-size: 30px;
       line-height: 1;
       letter-spacing: -0.07em;
       font-weight: 850;
     }
 
+    .featured .entry-name {
+      color: var(--ink);
+    }
+
     .entry-meta {
       margin: 8px 0 0;
+
       color: var(--muted);
+
       font-size: 14px;
       line-height: 1.4;
       font-weight: 550;
     }
 
+    /* LOCKED WEEKS */
+
+    .lock {
+      display: grid;
+      place-items: center;
+
+      width: 62px;
+      height: 62px;
+
+      border-radius: 999px;
+
+      background: var(--white);
+      border: 1px solid var(--line);
+
+      color: var(--muted);
+
+      font-size: 28px;
+
+      box-shadow: 0 12px 28px rgba(23, 35, 49, 0.06);
+    }
+
     .locked {
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(237, 244, 250, 0.72)),
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.9),
+          rgba(237, 244, 250, 0.72)
+        ),
         var(--white);
     }
 
@@ -362,6 +365,23 @@ h1 {
     .locked .week {
       color: var(--muted);
     }
+    .hof-card.featured .display {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.96), rgba(255, 246, 218, 0.9) 62%, rgba(243, 224, 168, 0.98));
+  border: 2px solid var(--gold);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.55);
+  overflow: hidden;
+}
+
+.winner-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+    /* CTA */
 
     .cta {
       display: flex;
@@ -373,44 +393,94 @@ h1 {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       min-height: 50px;
+
       padding: 0 22px;
+
       border-radius: 999px;
+
       background: var(--brand);
       color: white;
+
       font-size: 15px;
       font-weight: 780;
     }
 
-    .hero-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
+    .cta a:hover {
+      background: var(--brand-dark);
+    }
 
-.vote-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 52px;
-  padding: 0 24px;
-  border-radius: 999px;
-  background: var(--brand);
-  color: white;
-  font-size: 15px;
-  font-weight: 780;
-  box-shadow: 0 14px 28px rgba(79, 134, 179, 0.18);
-  transition: transform 0.16s ease, background 0.16s ease;
-}
-
-.vote-link:hover {
-  background: var(--brand-dark);
-  transform: translateY(-2px);
-}
+    /* ── MOBILE ── */
 
     @media (max-width: 980px) {
       .hof-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .nav-links.open {
+        position: fixed;
+        top: 62px;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+
+        padding: 1rem 1.5rem 1.5rem;
+
+        background: rgba(247, 250, 252, 0.98);
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        border-bottom: 1px solid var(--line);
+
+        box-shadow:
+          0 12px 30px rgba(23, 35, 49, 0.08);
+      }
+
+      .nav-links.open li {
+        width: 100%;
+      }
+
+      .nav-links.open a {
+        display: block;
+        width: 100%;
+
+        padding: 14px 4px;
+
+        border-bottom:
+          1px solid rgba(79, 134, 179, 0.10);
+      }
+
+      .nav-links.open li:last-child a {
+        border-bottom: 0;
+      }
+
+      .nav-account {
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      .hero {
+        padding-top: 120px;
       }
     }
 
@@ -420,15 +490,21 @@ h1 {
       }
 
       nav {
-        align-items: flex-start;
+        padding: 0.95rem 1rem;
       }
 
-      .links {
-        display: none;
+      .nav-logo {
+        font-size: 1.1rem;
+      }
+
+      .nav-links.open {
+        top: 58px;
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
 
       .hero {
-        padding: 48px 0 30px;
+        padding: 110px 0 30px;
       }
 
       .hof-grid {
@@ -437,32 +513,37 @@ h1 {
     }
   </style>
 </head>
+
 <body>
+
   <main class="page">
+
     <nav id="nav">
+
       <a href="index.html" class="nav-logo">
         Guessing Games
       </a>
-    
+
       <ul class="nav-links" id="navMenu">
+
         <li>
           <a href="index.html">
             Home
           </a>
         </li>
-    
+
         <li>
           <a href="halloffame.html" class="active">
             Hall of Fame
           </a>
         </li>
-    
+
         <li>
           <a href="live.html">
             Live Shows
           </a>
         </li>
-    
+
         <li>
           <a
             href="signin.html?redirect=halloffame.html"
@@ -472,8 +553,9 @@ h1 {
             Sign in
           </a>
         </li>
+
       </ul>
-    
+
       <button
         class="hamburger"
         id="ham"
@@ -483,64 +565,193 @@ h1 {
       >
         ☰
       </button>
+
     </nav>
 
+
     <section class="hero">
-      <div class="eyebrow">Official archive</div>
-      <h1>Name Hall of Fame</h1>
+
+      <div class="eyebrow">
+        Official archive
+      </div>
+
+      <h1>
+        Name Hall of Fame
+      </h1>
+
     </section>
 
-    <section class="hof-grid" aria-label="Weekly Hall of Fame entries">
+
+    <section
+      class="hof-grid"
+      aria-label="Weekly Hall of Fame entries"
+    >
+
+      <!-- WEEK 1 WINNER -->
+
       <article class="hof-card featured">
+
         <div>
-          <div class="week">Week 1</div>
-          <div class="display">
-            <div class="lock" aria-hidden="true">🔒</div>
+
+          <div class="week">
+            Week 1
           </div>
+
+          <div class="display" aria-label="Week 1 winner">
+            <img src="images/j.jpg" alt="J" class="winner-photo" />
+          </div>
+          
+          <h2 class="entry-name">J</h2>
+
         </div>
-  
+
+        </div>
+
       </article>
 
-      <article class="hof-card locked">
-        <div>
-          <div class="week">Week 2</div>
-          <div class="display">
-            <div class="lock" aria-hidden="true">🔒</div>
-          </div>
-        </div>
-      </article>
+
+      <!-- WEEK 2 -->
 
       <article class="hof-card locked">
+
         <div>
-          <div class="week">Week 3</div>
-          <div class="display">
-            <div class="lock" aria-hidden="true">🔒</div>
+
+          <div class="week">
+            Week 2
           </div>
+
+          <div class="display">
+
+            <div
+              class="lock"
+              aria-hidden="true"
+            >
+              🔒
+            </div>
+
+          </div>
+
         </div>
+
       </article>
 
-      <article class="hof-card locked">
-        <div>
-          <div class="week">Week 4</div>
-          <div class="display">
-            <div class="lock" aria-hidden="true">🔒</div>
-          </div>
-        </div>
-      </article>
+
+      <!-- WEEK 3 -->
 
       <article class="hof-card locked">
+
         <div>
-          <div class="week">Week 5</div>
-          <div class="display">
-            <div class="lock" aria-hidden="true">🔒</div>
+
+          <div class="week">
+            Week 3
           </div>
+
+          <div class="display">
+
+            <div
+              class="lock"
+              aria-hidden="true"
+            >
+              🔒
+            </div>
+
+          </div>
+
         </div>
+
       </article>
+
+
+      <!-- WEEK 4 -->
+
+      <article class="hof-card locked">
+
+        <div>
+
+          <div class="week">
+            Week 4
+          </div>
+
+          <div class="display">
+
+            <div
+              class="lock"
+              aria-hidden="true"
+            >
+              🔒
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- WEEK 5 -->
+
+      <article class="hof-card locked">
+
+        <div>
+
+          <div class="week">
+            Week 5
+          </div>
+
+          <div class="display">
+
+            <div
+              class="lock"
+              aria-hidden="true"
+            >
+              🔒
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
     </section>
+
 
     <div class="cta">
-      <a href="vote.html">Vote on this week’s ballot</a>
+
+      <a href="vote.html">
+        Vote on this week’s ballot
+      </a>
+
     </div>
+
   </main>
+
+
+  <script>
+    const ham = document.getElementById("ham");
+    const navMenu = document.getElementById("navMenu");
+
+    ham.addEventListener("click", () => {
+      navMenu.classList.toggle("open");
+
+      const isOpen =
+        navMenu.classList.contains("open");
+
+      ham.setAttribute(
+        "aria-expanded",
+        isOpen
+      );
+    });
+
+    window.addEventListener("scroll", () => {
+      document
+        .getElementById("nav")
+        .classList.toggle(
+          "scrolled",
+          window.scrollY > 10
+        );
+    });
+  </script>
+
 </body>
 </html>
