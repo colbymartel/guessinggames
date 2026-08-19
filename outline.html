@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guess the Flag | Guessing Games</title>
+  <title>Guess the Country by Outline | Guessing Games</title>
 
   <style>
     :root {
@@ -19,7 +19,6 @@
       --correct-soft: #e9f7ef;
       --wrong: #d95b5b;
       --wrong-soft: #fff0f0;
-      --gold: #e0b84f;
     }
 
     * { box-sizing: border-box; }
@@ -129,7 +128,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(44px, 8vw, 78px);
+      font-size: clamp(42px, 8vw, 76px);
       line-height: 0.95;
       letter-spacing: -0.07em;
       font-weight: 850;
@@ -190,7 +189,6 @@
       display: inline-flex;
       gap: 5px;
       font-size: 20px;
-      letter-spacing: 0;
     }
 
     .strike.used {
@@ -202,70 +200,42 @@
       padding: 28px;
     }
 
-    .progress-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .question-count {
-      color: var(--brand);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    .progress-track {
-      flex: 1;
-      height: 8px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: var(--soft);
-      border: 1px solid var(--line);
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--brand);
-      border-radius: inherit;
-      transition: width 0.25s ease;
-    }
-
-    .flag-card {
+    .outline-card {
       display: grid;
       place-items: center;
-      min-height: 300px;
-      margin-bottom: 22px;
-      padding: 24px;
+      min-height: 360px;
+      padding: 26px;
       border-radius: 24px;
       background:
-        radial-gradient(circle at 50% 12%, rgba(79,134,179,.13), transparent 42%),
+        radial-gradient(circle at 50% 12%, rgba(79,134,179,.14), transparent 42%),
         var(--soft);
       border: 1px solid var(--line);
     }
 
-    .flag {
-      width: min(100%, 430px);
-      aspect-ratio: 3 / 2;
+    .outline-wrap {
+      width: min(100%, 420px);
+      height: 290px;
       display: grid;
       place-items: center;
-      overflow: hidden;
-      border-radius: 14px;
-      background: #fff;
-      box-shadow: 0 18px 38px rgba(23, 35, 49, 0.14);
-      border: 1px solid rgba(23,35,49,.09);
-      font-size: clamp(100px, 20vw, 180px);
-      line-height: 1;
+    }
+
+    .outline-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .country-shape {
+      fill: var(--brand);
+      stroke: var(--brand-dark);
+      stroke-width: 2.2;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 14px 22px rgba(55, 111, 156, 0.16));
     }
 
     .prompt {
-      margin: 0 0 18px;
-      text-align: center;
-      font-size: clamp(22px, 4vw, 32px);
+      margin: 0 0 16px;
+      font-size: clamp(22px, 4vw, 30px);
       line-height: 1.08;
       letter-spacing: -0.045em;
       font-weight: 850;
@@ -273,12 +243,12 @@
 
     .answers {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 12px;
     }
 
     .answer {
-      min-height: 68px;
+      min-height: 62px;
       padding: 14px 18px;
       text-align: left;
       color: var(--ink);
@@ -313,10 +283,10 @@
     .answer:disabled { cursor: default; }
 
     .feedback {
-      min-height: 46px;
+      min-height: 44px;
       display: grid;
       place-items: center;
-      margin-top: 16px;
+      margin-top: 14px;
       text-align: center;
       color: var(--muted);
       font-size: 15px;
@@ -344,9 +314,9 @@
 
     .game-over {
       display: none;
-      grid-column: 1 / -1;
       text-align: center;
       padding: 20px 4px 6px;
+      grid-column: 1 / -1;
     }
 
     .game-over-icon {
@@ -372,43 +342,24 @@
       font-weight: 850;
     }
 
-
-    /* DESKTOP GAME LAYOUT */
     @media (min-width: 901px) {
       .game-content {
         display: grid;
-        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-        grid-template-areas:
-          "flag side";
-        gap: 18px 24px;
-        align-items: start;
+        grid-template-columns: minmax(0, 1.12fr) minmax(320px, .88fr);
+        grid-template-areas: "outline side";
+        gap: 24px;
+        align-items: center;
       }
 
-      .flag-card {
-        grid-area: flag;
-        min-height: 360px;
-        margin-bottom: 0;
-      }
+      .outline-card { grid-area: outline; }
 
       .desktop-side {
         grid-area: side;
         display: flex;
         flex-direction: column;
-        align-self: center;
       }
 
-      .desktop-side .prompt {
-        text-align: left;
-        margin-bottom: 16px;
-      }
-
-      .desktop-side .answers {
-        grid-template-columns: 1fr;
-      }
-
-      .feedback {
-        margin-top: 0;
-      }
+      .desktop-side .prompt { text-align: left; }
     }
 
     @media (max-width: 900px) {
@@ -440,6 +391,18 @@
         padding: 14px 4px;
         border-bottom: 1px solid rgba(79, 134, 179, 0.10);
       }
+
+      .outline-card {
+        margin-bottom: 22px;
+      }
+
+      .prompt {
+        text-align: center;
+      }
+
+      .answers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 620px) {
@@ -448,7 +411,7 @@
       .nav-logo { font-size: 1.1rem; }
       .nav-links.open { top: 58px; padding-left: 1rem; padding-right: 1rem; }
 
-      h1 { font-size: 50px; }
+      h1 { font-size: 46px; }
 
       .game-topbar {
         grid-template-columns: 1fr 1fr;
@@ -460,9 +423,13 @@
 
       .game-content { padding: 18px; }
 
-      .flag-card {
-        min-height: 220px;
+      .outline-card {
+        min-height: 240px;
         padding: 16px;
+      }
+
+      .outline-wrap {
+        height: 205px;
       }
 
       .answers { grid-template-columns: 1fr; }
@@ -481,23 +448,20 @@
 
     <ul class="nav-links" id="navMenu">
       <li><a href="index.html">Home</a></li>
-      <li><a href="flags.html" class="active">Games</a></li>
+      <li><a href="country-outline.html" class="active">Games</a></li>
       <li><a href="halloffame.html">Hall of Fame</a></li>
       <li><a href="live.html">Live Shows</a></li>
-      <li>
-        <a href="signin.html?redirect=flags.html" class="nav-account">Sign in</a>
-      </li>
+      <li><a href="signin.html?redirect=country-outline.html" class="nav-account">Sign in</a></li>
     </ul>
 
-    <button class="hamburger" id="ham" type="button" aria-label="Open navigation" aria-expanded="false">
-      ☰
-    </button>
+    <button class="hamburger" id="ham" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
   </nav>
 
   <main class="page">
     <section class="hero">
-      <div class="eyebrow">Geography Games</div>
-      <h1>Guess the Flag</h1>
+      <div class="eyebrow">Geography Challenge</div>
+      <h1>Guess the Country</h1>
+      <p class="subtitle">Identify the country by its outline. Three strikes and you're out.</p>
     </section>
 
     <section class="game-shell">
@@ -528,20 +492,20 @@
         </div>
       </div>
 
-      <div class="game-content" id="gameContent">
-        <div class="flag-card">
-          <div class="flag" id="flag" aria-label="Flag to guess">🇫🇷</div>
+      <div class="game-content">
+        <div class="outline-card">
+          <div class="outline-wrap" id="outlineWrap"></div>
         </div>
 
         <div class="desktop-side">
           <h2 class="prompt">Which country is this?</h2>
           <div class="answers" id="answers"></div>
           <div class="feedback" id="feedback"></div>
-          <button class="next-btn" id="nextBtn">Next Flag →</button>
+          <button class="next-btn" id="nextBtn">Next Country →</button>
         </div>
 
         <div class="game-over" id="gameOver">
-          <div class="game-over-icon">🏁</div>
+          <div class="game-over-icon">🗺️</div>
           <h2>Game Over</h2>
           <p>You scored <span class="final-score" id="finalScore">0</span>.</p>
           <button class="restart-btn" id="restartBtn">Play Again</button>
@@ -551,34 +515,110 @@
   </main>
 
   <script>
+    /*
+      Simplified SVG silhouettes designed for a fast browser game.
+      They are intentionally stylized rather than cartographically exact.
+    */
     const questions = [
-      { flag: "🇺🇸", country: "United States", choices: ["United States", "Malaysia", "Liberia", "Puerto Rico"] },
-      { flag: "🇫🇷", country: "France", choices: ["Netherlands", "France", "Russia", "Luxembourg"] },
-      { flag: "🇯🇵", country: "Japan", choices: ["Bangladesh", "South Korea", "Japan", "Indonesia"] },
-      { flag: "🇧🇷", country: "Brazil", choices: ["Brazil", "Bolivia", "Portugal", "Mexico"] },
-      { flag: "🇨🇦", country: "Canada", choices: ["Canada", "Austria", "Peru", "Denmark"] },
-      { flag: "🇩🇪", country: "Germany", choices: ["Belgium", "Germany", "Romania", "Armenia"] },
-      { flag: "🇮🇹", country: "Italy", choices: ["Mexico", "Ireland", "Italy", "Hungary"] },
-      { flag: "🇬🇧", country: "United Kingdom", choices: ["Australia", "New Zealand", "United Kingdom", "Iceland"] },
-      { flag: "🇦🇺", country: "Australia", choices: ["Australia", "New Zealand", "Fiji", "United Kingdom"] },
-      { flag: "🇮🇳", country: "India", choices: ["India", "Niger", "Ireland", "Ivory Coast"] },
-      { flag: "🇲🇽", country: "Mexico", choices: ["Italy", "Mexico", "Hungary", "Iran"] },
-      { flag: "🇰🇷", country: "South Korea", choices: ["Japan", "South Korea", "Taiwan", "Singapore"] },
-      { flag: "🇪🇸", country: "Spain", choices: ["Spain", "Colombia", "Ecuador", "Venezuela"] },
-      { flag: "🇦🇷", country: "Argentina", choices: ["Uruguay", "Argentina", "Guatemala", "Honduras"] },
-      { flag: "🇿🇦", country: "South Africa", choices: ["South Africa", "Kenya", "Ghana", "Zimbabwe"] },
-      { flag: "🇸🇪", country: "Sweden", choices: ["Norway", "Finland", "Sweden", "Iceland"] },
-      { flag: "🇳🇴", country: "Norway", choices: ["Denmark", "Norway", "Sweden", "Finland"] },
-      { flag: "🇬🇷", country: "Greece", choices: ["Greece", "Israel", "Finland", "Uruguay"] },
-      { flag: "🇵🇹", country: "Portugal", choices: ["Spain", "Portugal", "Brazil", "Italy"] },
-      { flag: "🇹🇭", country: "Thailand", choices: ["Thailand", "Costa Rica", "North Korea", "Paraguay"] },
-      { flag: "🇨🇭", country: "Switzerland", choices: ["Denmark", "Switzerland", "Georgia", "Tonga"] },
-      { flag: "🇵🇭", country: "Philippines", choices: ["Philippines", "Czechia", "Cuba", "Chile"] },
-      { flag: "🇹🇷", country: "Turkey", choices: ["Tunisia", "Turkey", "Pakistan", "Morocco"] },
-      { flag: "🇳🇿", country: "New Zealand", choices: ["Australia", "New Zealand", "Fiji", "Samoa"] }
+      {
+        country: "United States",
+        viewBox: "0 0 300 180",
+        path: "M25 68 L45 47 L83 46 L97 36 L126 42 L150 34 L185 43 L203 39 L232 53 L259 51 L278 69 L270 90 L247 92 L237 109 L216 111 L206 132 L180 134 L163 119 L143 126 L125 111 L103 113 L88 99 L64 101 L48 89 L29 88 Z",
+        choices: ["United States", "Canada", "Mexico", "Brazil"]
+      },
+      {
+        country: "France",
+        viewBox: "0 0 220 220",
+        path: "M72 30 L124 22 L168 56 L180 104 L149 156 L111 190 L70 166 L38 120 L44 68 Z",
+        choices: ["France", "Spain", "Germany", "Belgium"]
+      },
+      {
+        country: "Italy",
+        viewBox: "0 0 220 260",
+        path: "M91 22 L129 33 L137 72 L125 101 L149 129 L143 156 L165 184 L145 202 L126 187 L108 212 L83 228 L70 209 L88 188 L74 164 L91 143 L76 120 L83 92 L70 65 Z M132 221 L157 210 L171 223 L155 239 Z",
+        choices: ["Italy", "Greece", "Portugal", "Croatia"]
+      },
+      {
+        country: "Japan",
+        viewBox: "0 0 180 300",
+        path: "M93 18 L111 33 L106 56 L119 75 L106 94 L116 111 L101 135 L109 158 L91 176 L102 199 L83 220 L91 246 L73 278 L58 261 L62 234 L49 211 L64 189 L57 164 L70 143 L61 120 L74 101 L68 78 L82 59 L77 37 Z",
+        choices: ["Japan", "Philippines", "Indonesia", "South Korea"]
+      },
+      {
+        country: "Brazil",
+        viewBox: "0 0 250 250",
+        path: "M74 24 L125 18 L158 36 L191 47 L218 82 L205 120 L181 140 L171 178 L145 220 L113 205 L94 175 L66 161 L49 130 L27 100 L42 69 Z",
+        choices: ["Brazil", "Argentina", "Colombia", "Peru"]
+      },
+      {
+        country: "Australia",
+        viewBox: "0 0 280 220",
+        path: "M35 91 L60 57 L104 47 L140 35 L188 47 L224 69 L250 101 L232 139 L198 158 L176 190 L136 178 L111 157 L72 160 L45 137 Z",
+        choices: ["Australia", "New Zealand", "South Africa", "Madagascar"]
+      },
+      {
+        country: "India",
+        viewBox: "0 0 220 280",
+        path: "M76 24 L129 20 L168 48 L177 84 L157 111 L147 151 L126 185 L112 230 L94 258 L80 229 L65 196 L48 162 L51 126 L31 99 L45 60 Z",
+        choices: ["India", "Pakistan", "Bangladesh", "Nepal"]
+      },
+      {
+        country: "Mexico",
+        viewBox: "0 0 300 220",
+        path: "M31 55 L71 45 L112 55 L145 51 L178 62 L212 58 L253 82 L271 106 L249 126 L224 120 L208 142 L185 133 L167 113 L145 104 L121 91 L94 88 L78 110 L60 100 L45 78 Z",
+        choices: ["Mexico", "Chile", "Peru", "Cuba"]
+      },
+      {
+        country: "Argentina",
+        viewBox: "0 0 180 300",
+        path: "M75 20 L111 29 L126 58 L117 94 L130 126 L115 159 L122 190 L106 220 L99 256 L81 280 L68 249 L58 215 L66 181 L52 151 L61 119 L51 88 L61 56 Z",
+        choices: ["Argentina", "Chile", "Uruguay", "Peru"]
+      },
+      {
+        country: "United Kingdom",
+        viewBox: "0 0 200 270",
+        path: "M92 20 L119 42 L114 67 L135 84 L123 109 L139 128 L126 148 L105 145 L95 170 L112 189 L98 222 L72 242 L65 214 L73 188 L57 166 L68 143 L55 118 L68 94 L61 68 L78 50 Z M146 164 L159 173 L154 189 L140 185 Z",
+        choices: ["United Kingdom", "Ireland", "Iceland", "Norway"]
+      },
+      {
+        country: "Germany",
+        viewBox: "0 0 220 240",
+        path: "M83 22 L132 28 L158 53 L151 86 L170 111 L151 136 L157 171 L131 207 L91 216 L63 190 L50 157 L57 129 L41 96 L57 68 Z",
+        choices: ["Germany", "Poland", "Austria", "France"]
+      },
+      {
+        country: "Spain",
+        viewBox: "0 0 250 220",
+        path: "M44 52 L86 37 L136 42 L177 36 L210 57 L213 91 L188 122 L157 153 L117 167 L77 156 L48 132 L31 95 Z",
+        choices: ["Spain", "Portugal", "France", "Italy"]
+      },
+      {
+        country: "China",
+        viewBox: "0 0 300 230",
+        path: "M48 58 L85 34 L128 40 L161 24 L199 43 L238 49 L268 79 L253 111 L225 120 L218 151 L180 164 L155 190 L118 175 L93 151 L59 145 L38 113 L27 82 Z",
+        choices: ["China", "Mongolia", "India", "Russia"]
+      },
+      {
+        country: "South Africa",
+        viewBox: "0 0 250 220",
+        path: "M54 37 L101 29 L143 38 L191 36 L216 60 L205 96 L184 122 L161 158 L126 188 L92 179 L64 155 L49 126 L31 95 Z",
+        choices: ["South Africa", "Namibia", "Botswana", "Zimbabwe"]
+      },
+      {
+        country: "Egypt",
+        viewBox: "0 0 230 220",
+        path: "M49 38 L169 37 L187 63 L176 91 L186 119 L172 157 L154 189 L112 179 L72 187 L45 155 L47 110 L38 73 Z",
+        choices: ["Egypt", "Libya", "Sudan", "Saudi Arabia"]
+      },
+      {
+        country: "Norway",
+        viewBox: "0 0 180 300",
+        path: "M86 18 L113 33 L105 56 L119 73 L106 96 L114 119 L96 141 L102 167 L87 192 L94 215 L78 239 L80 273 L61 282 L55 250 L63 221 L51 195 L61 169 L49 141 L61 116 L52 89 L66 65 L62 40 Z",
+        choices: ["Norway", "Sweden", "Finland", "Chile"]
+      }
     ];
 
-    const flagEl = document.getElementById("flag");
+    const outlineWrap = document.getElementById("outlineWrap");
     const answersEl = document.getElementById("answers");
     const scoreEl = document.getElementById("score");
     const highScoreEl = document.getElementById("highScore");
@@ -595,7 +635,7 @@
     let answered = false;
     let deck = [];
 
-    let highScore = Number(localStorage.getItem("flagGameHighScore") || 0);
+    let highScore = Number(localStorage.getItem("countryOutlineHighScore") || 0);
     highScoreEl.textContent = highScore;
 
     function shuffle(array) {
@@ -608,8 +648,8 @@
     }
 
     function resetDeck() {
-      // When every flag has been used, reshuffle the full set and keep going.
-      // The game has no question limit; it only ends after 3 strikes.
+      // Endless mode: after all countries have appeared, reshuffle and keep going.
+      // The game only ends after the player reaches 3 strikes.
       deck = shuffle(questions);
     }
 
@@ -622,9 +662,17 @@
     function updateHighScore() {
       if (score > highScore) {
         highScore = score;
-        localStorage.setItem("flagGameHighScore", String(highScore));
+        localStorage.setItem("countryOutlineHighScore", String(highScore));
         highScoreEl.textContent = highScore;
       }
+    }
+
+    function renderOutline(q) {
+      outlineWrap.innerHTML = `
+        <svg viewBox="${q.viewBox}" role="img" aria-label="Country outline">
+          <path class="country-shape" d="${q.path}"></path>
+        </svg>
+      `;
     }
 
     function loadQuestion() {
@@ -636,7 +684,7 @@
       if (!deck.length) resetDeck();
 
       currentQuestion = deck.pop();
-      flagEl.textContent = currentQuestion.flag;
+      renderOutline(currentQuestion);
 
       answersEl.innerHTML = "";
       shuffle(currentQuestion.choices).forEach(choice => {
@@ -665,8 +713,10 @@
       } else {
         strikes += 1;
         button.classList.add("wrong");
+
         const correctBtn = buttons.find(btn => btn.textContent === currentQuestion.country);
         if (correctBtn) correctBtn.classList.add("correct");
+
         feedbackEl.textContent = `It was ${currentQuestion.country}.`;
         updateStrikes();
       }
@@ -679,11 +729,8 @@
     }
 
     function endGame() {
-      answersEl.style.display = "none";
-      feedbackEl.style.display = "none";
-      nextBtn.style.display = "none";
-      document.querySelector(".flag-card").style.display = "none";
-      document.querySelector(".prompt").style.display = "none";
+      document.querySelector(".outline-card").style.display = "none";
+      document.querySelector(".desktop-side").style.display = "none";
 
       finalScoreEl.textContent = score;
       gameOverEl.style.display = "block";
@@ -697,10 +744,8 @@
       scoreEl.textContent = "0";
       updateStrikes();
 
-      answersEl.style.display = "grid";
-      feedbackEl.style.display = "grid";
-      document.querySelector(".flag-card").style.display = "grid";
-      document.querySelector(".prompt").style.display = "block";
+      document.querySelector(".outline-card").style.display = "grid";
+      document.querySelector(".desktop-side").style.display = "flex";
       restartBtn.style.display = "none";
 
       resetDeck();

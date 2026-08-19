@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guess the Flag | Guessing Games</title>
+  <title>Guess the Capital | Guessing Games</title>
 
   <style>
     :root {
@@ -19,7 +19,6 @@
       --correct-soft: #e9f7ef;
       --wrong: #d95b5b;
       --wrong-soft: #fff0f0;
-      --gold: #e0b84f;
     }
 
     * { box-sizing: border-box; }
@@ -190,7 +189,6 @@
       display: inline-flex;
       gap: 5px;
       font-size: 20px;
-      letter-spacing: 0;
     }
 
     .strike.used {
@@ -235,31 +233,36 @@
       transition: width 0.25s ease;
     }
 
-    .flag-card {
+    .country-card {
       display: grid;
       place-items: center;
-      min-height: 300px;
+      min-height: 250px;
       margin-bottom: 22px;
-      padding: 24px;
+      padding: 28px;
       border-radius: 24px;
       background:
-        radial-gradient(circle at 50% 12%, rgba(79,134,179,.13), transparent 42%),
+        radial-gradient(circle at 50% 12%, rgba(79,134,179,.14), transparent 42%),
         var(--soft);
       border: 1px solid var(--line);
+      text-align: center;
     }
 
-    .flag {
-      width: min(100%, 430px);
-      aspect-ratio: 3 / 2;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      border-radius: 14px;
-      background: #fff;
-      box-shadow: 0 18px 38px rgba(23, 35, 49, 0.14);
-      border: 1px solid rgba(23,35,49,.09);
-      font-size: clamp(100px, 20vw, 180px);
-      line-height: 1;
+    .country-label {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .country-name {
+      font-size: clamp(44px, 8vw, 76px);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+      font-weight: 900;
+      max-width: 100%;
+      word-break: break-word;
     }
 
     .prompt {
@@ -344,7 +347,6 @@
 
     .game-over {
       display: none;
-      grid-column: 1 / -1;
       text-align: center;
       padding: 20px 4px 6px;
     }
@@ -373,19 +375,19 @@
     }
 
 
-    /* DESKTOP GAME LAYOUT */
+    /* DESKTOP: COUNTRY LEFT, ANSWERS RIGHT */
     @media (min-width: 901px) {
       .game-content {
         display: grid;
-        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
         grid-template-areas:
-          "flag side";
-        gap: 18px 24px;
-        align-items: start;
+          "country side";
+        gap: 24px;
+        align-items: center;
       }
 
-      .flag-card {
-        grid-area: flag;
+      .country-card {
+        grid-area: country;
         min-height: 360px;
         margin-bottom: 0;
       }
@@ -406,8 +408,12 @@
         grid-template-columns: 1fr;
       }
 
-      .feedback {
-        margin-top: 0;
+      .desktop-side .feedback {
+        margin-top: 16px;
+      }
+
+      .game-over {
+        grid-column: 1 / -1;
       }
     }
 
@@ -460,9 +466,13 @@
 
       .game-content { padding: 18px; }
 
-      .flag-card {
-        min-height: 220px;
-        padding: 16px;
+      .country-card {
+        min-height: 210px;
+        padding: 20px;
+      }
+
+      .country-name {
+        font-size: 48px;
       }
 
       .answers { grid-template-columns: 1fr; }
@@ -481,12 +491,10 @@
 
     <ul class="nav-links" id="navMenu">
       <li><a href="index.html">Home</a></li>
-      <li><a href="flags.html" class="active">Games</a></li>
+      <li><a href="capitals.html" class="active">Games</a></li>
       <li><a href="halloffame.html">Hall of Fame</a></li>
       <li><a href="live.html">Live Shows</a></li>
-      <li>
-        <a href="signin.html?redirect=flags.html" class="nav-account">Sign in</a>
-      </li>
+      <li><a href="signin.html?redirect=capitals.html" class="nav-account">Sign in</a></li>
     </ul>
 
     <button class="hamburger" id="ham" type="button" aria-label="Open navigation" aria-expanded="false">
@@ -497,7 +505,7 @@
   <main class="page">
     <section class="hero">
       <div class="eyebrow">Geography Games</div>
-      <h1>Guess the Flag</h1>
+      <h1>Guess the Capital</h1>
     </section>
 
     <section class="game-shell">
@@ -528,20 +536,23 @@
         </div>
       </div>
 
-      <div class="game-content" id="gameContent">
-        <div class="flag-card">
-          <div class="flag" id="flag" aria-label="Flag to guess">🇫🇷</div>
+      <div class="game-content">
+        <div class="country-card">
+          <div>
+            <div class="country-label">Country</div>
+            <div class="country-name" id="countryName">France</div>
+          </div>
         </div>
 
         <div class="desktop-side">
-          <h2 class="prompt">Which country is this?</h2>
+          <h2 class="prompt">What is the capital?</h2>
           <div class="answers" id="answers"></div>
           <div class="feedback" id="feedback"></div>
-          <button class="next-btn" id="nextBtn">Next Flag →</button>
+          <button class="next-btn" id="nextBtn">Next Country →</button>
         </div>
 
         <div class="game-over" id="gameOver">
-          <div class="game-over-icon">🏁</div>
+          <div class="game-over-icon">🌎</div>
           <h2>Game Over</h2>
           <p>You scored <span class="final-score" id="finalScore">0</span>.</p>
           <button class="restart-btn" id="restartBtn">Play Again</button>
@@ -552,33 +563,39 @@
 
   <script>
     const questions = [
-      { flag: "🇺🇸", country: "United States", choices: ["United States", "Malaysia", "Liberia", "Puerto Rico"] },
-      { flag: "🇫🇷", country: "France", choices: ["Netherlands", "France", "Russia", "Luxembourg"] },
-      { flag: "🇯🇵", country: "Japan", choices: ["Bangladesh", "South Korea", "Japan", "Indonesia"] },
-      { flag: "🇧🇷", country: "Brazil", choices: ["Brazil", "Bolivia", "Portugal", "Mexico"] },
-      { flag: "🇨🇦", country: "Canada", choices: ["Canada", "Austria", "Peru", "Denmark"] },
-      { flag: "🇩🇪", country: "Germany", choices: ["Belgium", "Germany", "Romania", "Armenia"] },
-      { flag: "🇮🇹", country: "Italy", choices: ["Mexico", "Ireland", "Italy", "Hungary"] },
-      { flag: "🇬🇧", country: "United Kingdom", choices: ["Australia", "New Zealand", "United Kingdom", "Iceland"] },
-      { flag: "🇦🇺", country: "Australia", choices: ["Australia", "New Zealand", "Fiji", "United Kingdom"] },
-      { flag: "🇮🇳", country: "India", choices: ["India", "Niger", "Ireland", "Ivory Coast"] },
-      { flag: "🇲🇽", country: "Mexico", choices: ["Italy", "Mexico", "Hungary", "Iran"] },
-      { flag: "🇰🇷", country: "South Korea", choices: ["Japan", "South Korea", "Taiwan", "Singapore"] },
-      { flag: "🇪🇸", country: "Spain", choices: ["Spain", "Colombia", "Ecuador", "Venezuela"] },
-      { flag: "🇦🇷", country: "Argentina", choices: ["Uruguay", "Argentina", "Guatemala", "Honduras"] },
-      { flag: "🇿🇦", country: "South Africa", choices: ["South Africa", "Kenya", "Ghana", "Zimbabwe"] },
-      { flag: "🇸🇪", country: "Sweden", choices: ["Norway", "Finland", "Sweden", "Iceland"] },
-      { flag: "🇳🇴", country: "Norway", choices: ["Denmark", "Norway", "Sweden", "Finland"] },
-      { flag: "🇬🇷", country: "Greece", choices: ["Greece", "Israel", "Finland", "Uruguay"] },
-      { flag: "🇵🇹", country: "Portugal", choices: ["Spain", "Portugal", "Brazil", "Italy"] },
-      { flag: "🇹🇭", country: "Thailand", choices: ["Thailand", "Costa Rica", "North Korea", "Paraguay"] },
-      { flag: "🇨🇭", country: "Switzerland", choices: ["Denmark", "Switzerland", "Georgia", "Tonga"] },
-      { flag: "🇵🇭", country: "Philippines", choices: ["Philippines", "Czechia", "Cuba", "Chile"] },
-      { flag: "🇹🇷", country: "Turkey", choices: ["Tunisia", "Turkey", "Pakistan", "Morocco"] },
-      { flag: "🇳🇿", country: "New Zealand", choices: ["Australia", "New Zealand", "Fiji", "Samoa"] }
+      { country: "United States", capital: "Washington, D.C.", choices: ["Washington, D.C.", "New York City", "Philadelphia", "Boston"] },
+      { country: "France", capital: "Paris", choices: ["Paris", "Lyon", "Marseille", "Nice"] },
+      { country: "Japan", capital: "Tokyo", choices: ["Osaka", "Kyoto", "Tokyo", "Nagoya"] },
+      { country: "Brazil", capital: "Brasília", choices: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"] },
+      { country: "Canada", capital: "Ottawa", choices: ["Toronto", "Vancouver", "Montreal", "Ottawa"] },
+      { country: "Germany", capital: "Berlin", choices: ["Munich", "Berlin", "Frankfurt", "Hamburg"] },
+      { country: "Italy", capital: "Rome", choices: ["Milan", "Rome", "Naples", "Florence"] },
+      { country: "United Kingdom", capital: "London", choices: ["Manchester", "Edinburgh", "London", "Liverpool"] },
+      { country: "Australia", capital: "Canberra", choices: ["Sydney", "Melbourne", "Canberra", "Brisbane"] },
+      { country: "India", capital: "New Delhi", choices: ["Mumbai", "New Delhi", "Kolkata", "Bengaluru"] },
+      { country: "Mexico", capital: "Mexico City", choices: ["Guadalajara", "Monterrey", "Mexico City", "Cancún"] },
+      { country: "South Korea", capital: "Seoul", choices: ["Busan", "Seoul", "Incheon", "Daegu"] },
+      { country: "Spain", capital: "Madrid", choices: ["Barcelona", "Madrid", "Valencia", "Seville"] },
+      { country: "Argentina", capital: "Buenos Aires", choices: ["Córdoba", "Rosario", "Buenos Aires", "Mendoza"] },
+      { country: "South Africa", capital: "Pretoria", choices: ["Cape Town", "Johannesburg", "Pretoria", "Durban"] },
+      { country: "Sweden", capital: "Stockholm", choices: ["Gothenburg", "Malmö", "Stockholm", "Uppsala"] },
+      { country: "Norway", capital: "Oslo", choices: ["Bergen", "Oslo", "Trondheim", "Stavanger"] },
+      { country: "Greece", capital: "Athens", choices: ["Athens", "Thessaloniki", "Patras", "Heraklion"] },
+      { country: "Portugal", capital: "Lisbon", choices: ["Porto", "Lisbon", "Braga", "Faro"] },
+      { country: "Thailand", capital: "Bangkok", choices: ["Phuket", "Chiang Mai", "Bangkok", "Pattaya"] },
+      { country: "Switzerland", capital: "Bern", choices: ["Zurich", "Geneva", "Bern", "Basel"] },
+      { country: "Philippines", capital: "Manila", choices: ["Cebu City", "Davao City", "Manila", "Quezon City"] },
+      { country: "Turkey", capital: "Ankara", choices: ["Istanbul", "Ankara", "Izmir", "Antalya"] },
+      { country: "New Zealand", capital: "Wellington", choices: ["Auckland", "Christchurch", "Wellington", "Hamilton"] },
+      { country: "Egypt", capital: "Cairo", choices: ["Alexandria", "Cairo", "Giza", "Luxor"] },
+      { country: "China", capital: "Beijing", choices: ["Shanghai", "Beijing", "Shenzhen", "Guangzhou"] },
+      { country: "Kenya", capital: "Nairobi", choices: ["Mombasa", "Nairobi", "Kisumu", "Nakuru"] },
+      { country: "Peru", capital: "Lima", choices: ["Cusco", "Arequipa", "Lima", "Trujillo"] },
+      { country: "Ireland", capital: "Dublin", choices: ["Cork", "Galway", "Dublin", "Limerick"] },
+      { country: "Morocco", capital: "Rabat", choices: ["Casablanca", "Marrakesh", "Rabat", "Fez"] }
     ];
 
-    const flagEl = document.getElementById("flag");
+    const countryNameEl = document.getElementById("countryName");
     const answersEl = document.getElementById("answers");
     const scoreEl = document.getElementById("score");
     const highScoreEl = document.getElementById("highScore");
@@ -595,7 +612,7 @@
     let answered = false;
     let deck = [];
 
-    let highScore = Number(localStorage.getItem("flagGameHighScore") || 0);
+    let highScore = Number(localStorage.getItem("capitalGameHighScore") || 0);
     highScoreEl.textContent = highScore;
 
     function shuffle(array) {
@@ -608,8 +625,8 @@
     }
 
     function resetDeck() {
-      // When every flag has been used, reshuffle the full set and keep going.
-      // The game has no question limit; it only ends after 3 strikes.
+      // Endless mode: after every country has appeared, reshuffle the full set
+      // and continue. The only game-over condition is reaching 3 strikes.
       deck = shuffle(questions);
     }
 
@@ -622,7 +639,7 @@
     function updateHighScore() {
       if (score > highScore) {
         highScore = score;
-        localStorage.setItem("flagGameHighScore", String(highScore));
+        localStorage.setItem("capitalGameHighScore", String(highScore));
         highScoreEl.textContent = highScore;
       }
     }
@@ -634,9 +651,8 @@
       gameOverEl.style.display = "none";
 
       if (!deck.length) resetDeck();
-
       currentQuestion = deck.pop();
-      flagEl.textContent = currentQuestion.flag;
+      countryNameEl.textContent = currentQuestion.country;
 
       answersEl.innerHTML = "";
       shuffle(currentQuestion.choices).forEach(choice => {
@@ -656,7 +672,7 @@
       const buttons = [...answersEl.querySelectorAll(".answer")];
       buttons.forEach(btn => btn.disabled = true);
 
-      if (choice === currentQuestion.country) {
+      if (choice === currentQuestion.capital) {
         score += 1;
         scoreEl.textContent = score;
         button.classList.add("correct");
@@ -665,9 +681,9 @@
       } else {
         strikes += 1;
         button.classList.add("wrong");
-        const correctBtn = buttons.find(btn => btn.textContent === currentQuestion.country);
+        const correctBtn = buttons.find(btn => btn.textContent === currentQuestion.capital);
         if (correctBtn) correctBtn.classList.add("correct");
-        feedbackEl.textContent = `It was ${currentQuestion.country}.`;
+        feedbackEl.textContent = `The capital is ${currentQuestion.capital}.`;
         updateStrikes();
       }
 
@@ -682,7 +698,7 @@
       answersEl.style.display = "none";
       feedbackEl.style.display = "none";
       nextBtn.style.display = "none";
-      document.querySelector(".flag-card").style.display = "none";
+      document.querySelector(".country-card").style.display = "none";
       document.querySelector(".prompt").style.display = "none";
 
       finalScoreEl.textContent = score;
@@ -699,7 +715,7 @@
 
       answersEl.style.display = "grid";
       feedbackEl.style.display = "grid";
-      document.querySelector(".flag-card").style.display = "grid";
+      document.querySelector(".country-card").style.display = "grid";
       document.querySelector(".prompt").style.display = "block";
       restartBtn.style.display = "none";
 
