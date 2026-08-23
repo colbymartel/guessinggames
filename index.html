@@ -214,7 +214,7 @@
   }
   .btn-outline:hover { background:var(--accent); color:#fff; transform:translateY(-3px); box-shadow:0 12px 28px rgba(59,123,191,0.3); }
 
-/* ── COMPACT NAME HALL OF FAME HERO ── */
+/* ── COMPACT HALL OF NAMES HERO ── */
 
 .hof-hero {
   min-height: auto;
@@ -289,6 +289,7 @@
 
 .hof-option {
   min-width: 0;
+  text-decoration: none;
 
   padding: 0.8rem 0.8rem 1.1rem;
 
@@ -335,6 +336,7 @@
 
 .hof-option-name {
   margin-top: 0.9rem;
+  text-decoration: none;
 
   text-align: left;
 
@@ -821,6 +823,15 @@
     .form-row { grid-template-columns:1fr; }
     footer { flex-direction:column; align-items:center; text-align:center; }
   }
+
+.hof-option,
+.hof-option:hover,
+.hof-option:focus,
+.hof-option:visited,
+.hof-option-name {
+  text-decoration: none !important;
+}
+
 </style>
 </head>
 <body>
@@ -838,12 +849,12 @@
   <button class="hamburger" id="ham"><i class="fas fa-bars"></i></button>
 </nav>
 
-<!-- NAME HALL OF FAME HERO -->
+<!-- HALL OF NAMES HERO -->
 <section class="hof-hero" id="home">
   <div class="hof-hero-inner">
-    <div class="hof-eyebrow reveal">Week 2</div>
-    <h1 class="hof-title reveal reveal-delay-1">Name Hall of Fame</h1>
-    <p class="hof-subhead reveal reveal-delay-2">Vote for one finalist to enter the Name Hall of Fame.</p>
+    <div class="hof-eyebrow reveal">Week 3</div>
+    <h1 class="hof-title reveal reveal-delay-1">Hall of Names</h1>
+    <p class="hof-subhead reveal reveal-delay-2">Vote for one finalist to enter the Hall of Names.</p>
 
     <div class="hof-vote-panel reveal reveal-delay-2">
       <div class="hof-vote-grid">
@@ -852,9 +863,9 @@
           <div class="hof-option-name">Frog</div>
         </a>
 
-        <a class="hof-option" href="vote.html" aria-label="Vote for Gengyzkhan">
-          <div class="hof-option-image"><img src="images/gengyzkhan.jpg" alt="Gengyzkhan"></div>
-          <div class="hof-option-name">Gengyzkhan</div>
+        <a class="hof-option" href="vote.html" aria-label="Vote for Radio">
+          <div class="hof-option-image"><img src="images/radio.png" alt="Radio"></div>
+          <div class="hof-option-name">Radio</div>
         </a>
 
         <a class="hof-option" href="vote.html" aria-label="Vote for Naruto">
@@ -862,13 +873,13 @@
           <div class="hof-option-name">Naruto</div>
         </a>
 
-        <a class="hof-option" href="vote.html" aria-label="Vote for Ryse">
-          <div class="hof-option-image"><img src="images/ryse.jpg" alt="Ryse"></div>
-          <div class="hof-option-name">Ryse</div>
+        <a class="hof-option" href="vote.html" aria-label="Vote for Colby">
+          <div class="hof-option-image"><img src="images/colbygirl.png" alt="Colby"></div>
+          <div class="hof-option-name">Colby</div>
         </a>
       </div>
 
-      <a class="hof-vote-button" href="vote.html">Vote in Week 2</a>
+      <a class="hof-vote-button" href="vote.html">Vote in Week 3</a>
     </div>
   </div>
 </section>
@@ -1014,21 +1025,21 @@
 
     <div class="projects-grid">
 
-      <!-- NAME HALL OF FAME -->
+      <!-- HALL OF NAMES -->
       <article class="proj-card reveal reveal-delay-1">
         <div class="proj-body">
 
           <span class="proj-tag">
-            Name Hall of Fame
+            Hall of Names
           </span>
 
           <h3 class="proj-title">
-            Name Hall of Fame
+            Hall of Names
           </h3>
 
           <p class="proj-desc">
             A fan-powered voting experience where the internet decides
-            which names deserve a place in the Name Hall of Fame.
+            which names deserve a place in the Hall of Names.
           </p>
 
           <a
