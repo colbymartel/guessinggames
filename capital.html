@@ -185,17 +185,6 @@
       letter-spacing: -0.04em;
     }
 
-    .strikes {
-      display: inline-flex;
-      gap: 5px;
-      font-size: 20px;
-    }
-
-    .strike.used {
-      opacity: 0.22;
-      filter: grayscale(1);
-    }
-
     .game-content {
       padding: 28px;
     }
@@ -492,9 +481,9 @@
     <ul class="nav-links" id="navMenu">
       <li><a href="index.html">Home</a></li>
       <li><a href="capitals.html" class="active">Games</a></li>
-      <li><a href="halloffame.html">Hall of Fame</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
       <li><a href="live.html">Live Shows</a></li>
-      <li><a href="signin.html?redirect=capitals.html" class="nav-account">Sign in</a></li>
+      <li><a href="signin.html?redirect=capitals.html" class="nav-account" id="authLink">Sign in</a></li>
     </ul>
 
     <button class="hamburger" id="ham" type="button" aria-label="Open navigation" aria-expanded="false">
@@ -526,12 +515,8 @@
 
         <div class="stat">
           <div>
-            <span class="stat-label">Strikes</span>
-            <span class="strikes" id="strikes">
-              <span class="strike">❌</span>
-              <span class="strike">❌</span>
-              <span class="strike">❌</span>
-            </span>
+            <span class="stat-label">Time</span>
+            <span class="stat-value" id="timer">2:00</span>
           </div>
         </div>
       </div>
@@ -561,59 +546,310 @@
     </section>
   </main>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     const questions = [
-      { country: "United States", capital: "Washington, D.C.", choices: ["Washington, D.C.", "New York City", "Philadelphia", "Boston"] },
-      { country: "France", capital: "Paris", choices: ["Paris", "Lyon", "Marseille", "Nice"] },
-      { country: "Japan", capital: "Tokyo", choices: ["Osaka", "Kyoto", "Tokyo", "Nagoya"] },
-      { country: "Brazil", capital: "Brasília", choices: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"] },
-      { country: "Canada", capital: "Ottawa", choices: ["Toronto", "Vancouver", "Montreal", "Ottawa"] },
-      { country: "Germany", capital: "Berlin", choices: ["Munich", "Berlin", "Frankfurt", "Hamburg"] },
-      { country: "Italy", capital: "Rome", choices: ["Milan", "Rome", "Naples", "Florence"] },
-      { country: "United Kingdom", capital: "London", choices: ["Manchester", "Edinburgh", "London", "Liverpool"] },
-      { country: "Australia", capital: "Canberra", choices: ["Sydney", "Melbourne", "Canberra", "Brisbane"] },
-      { country: "India", capital: "New Delhi", choices: ["Mumbai", "New Delhi", "Kolkata", "Bengaluru"] },
-      { country: "Mexico", capital: "Mexico City", choices: ["Guadalajara", "Monterrey", "Mexico City", "Cancún"] },
-      { country: "South Korea", capital: "Seoul", choices: ["Busan", "Seoul", "Incheon", "Daegu"] },
-      { country: "Spain", capital: "Madrid", choices: ["Barcelona", "Madrid", "Valencia", "Seville"] },
+      { country: "Afghanistan", capital: "Kabul", choices: ["Nouakchott", "Kuwait City", "Kabul", "Singapore"] },
+      { country: "Albania", capital: "Tirana", choices: ["Hanoi", "Canberra", "Tirana", "Moroni"] },
+      { country: "Algeria", capital: "Algiers", choices: ["Podgorica", "Kampala", "Algiers", "Bogotá"] },
+      { country: "Andorra", capital: "Andorra la Vella", choices: ["Andorra la Vella", "Canberra", "Nassau", "Kingstown"] },
+      { country: "Angola", capital: "Luanda", choices: ["Sana'a", "Luanda", "Kampala", "Saint John's"] },
+      { country: "Antigua and Barbuda", capital: "Saint John's", choices: ["Tokyo", "Saint John's", "Mexico City", "Athens"] },
       { country: "Argentina", capital: "Buenos Aires", choices: ["Córdoba", "Rosario", "Buenos Aires", "Mendoza"] },
-      { country: "South Africa", capital: "Pretoria", choices: ["Cape Town", "Johannesburg", "Pretoria", "Durban"] },
-      { country: "Sweden", capital: "Stockholm", choices: ["Gothenburg", "Malmö", "Stockholm", "Uppsala"] },
-      { country: "Norway", capital: "Oslo", choices: ["Bergen", "Oslo", "Trondheim", "Stavanger"] },
-      { country: "Greece", capital: "Athens", choices: ["Athens", "Thessaloniki", "Patras", "Heraklion"] },
-      { country: "Portugal", capital: "Lisbon", choices: ["Porto", "Lisbon", "Braga", "Faro"] },
-      { country: "Thailand", capital: "Bangkok", choices: ["Phuket", "Chiang Mai", "Bangkok", "Pattaya"] },
-      { country: "Switzerland", capital: "Bern", choices: ["Zurich", "Geneva", "Bern", "Basel"] },
-      { country: "Philippines", capital: "Manila", choices: ["Cebu City", "Davao City", "Manila", "Quezon City"] },
-      { country: "Turkey", capital: "Ankara", choices: ["Istanbul", "Ankara", "Izmir", "Antalya"] },
-      { country: "New Zealand", capital: "Wellington", choices: ["Auckland", "Christchurch", "Wellington", "Hamilton"] },
-      { country: "Egypt", capital: "Cairo", choices: ["Alexandria", "Cairo", "Giza", "Luxor"] },
+      { country: "Armenia", capital: "Yerevan", choices: ["Yerevan", "Monrovia", "Freetown", "Beirut"] },
+      { country: "Australia", capital: "Canberra", choices: ["Sydney", "Melbourne", "Canberra", "Brisbane"] },
+      { country: "Austria", capital: "Vienna", choices: ["Vienna", "Palikir", "Andorra la Vella", "San Salvador"] },
+      { country: "Azerbaijan", capital: "Baku", choices: ["Sarajevo", "Baku", "Lilongwe", "Bandar Seri Begawan"] },
+      { country: "Bahamas", capital: "Nassau", choices: ["Moscow", "Bridgetown", "Phnom Penh", "Nassau"] },
+      { country: "Bahrain", capital: "Manama", choices: ["San Marino", "Bridgetown", "Buenos Aires", "Manama"] },
+      { country: "Bangladesh", capital: "Dhaka", choices: ["Dhaka", "Abu Dhabi", "Doha", "Vaduz"] },
+      { country: "Barbados", capital: "Bridgetown", choices: ["Bridgetown", "Naypyidaw", "New Delhi", "Wellington"] },
+      { country: "Belarus", capital: "Minsk", choices: ["Minsk", "Dakar", "Tehran", "Kyiv"] },
+      { country: "Belgium", capital: "Brussels", choices: ["Tegucigalpa", "Tehran", "Brussels", "Brazzaville"] },
+      { country: "Belize", capital: "Belmopan", choices: ["Yamoussoukro", "Havana", "Belmopan", "Asunción"] },
+      { country: "Benin", capital: "Porto-Novo", choices: ["Porto-Novo", "Dublin", "Ulaanbaatar", "Warsaw"] },
+      { country: "Bhutan", capital: "Thimphu", choices: ["Malabo", "Tallinn", "Thimphu", "Maputo"] },
+      { country: "Bolivia", capital: "Sucre", choices: ["Ulaanbaatar", "Sucre", "Nouakchott", "Tokyo"] },
+      { country: "Bosnia and Herzegovina", capital: "Sarajevo", choices: ["Saint John's", "Sarajevo", "Montevideo", "Havana"] },
+      { country: "Botswana", capital: "Gaborone", choices: ["Gaborone", "Kingstown", "Kuwait City", "Apia"] },
+      { country: "Brazil", capital: "Brasília", choices: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"] },
+      { country: "Brunei", capital: "Bandar Seri Begawan", choices: ["Tripoli", "Ramallah", "Bandar Seri Begawan", "Lomé"] },
+      { country: "Bulgaria", capital: "Sofia", choices: ["Quito", "Oslo", "Sofia", "Valletta"] },
+      { country: "Burkina Faso", capital: "Ouagadougou", choices: ["Ouagadougou", "Stockholm", "Tunis", "Andorra la Vella"] },
+      { country: "Burundi", capital: "Gitega", choices: ["Freetown", "Minsk", "Gitega", "Kingston"] },
+      { country: "Cabo Verde", capital: "Praia", choices: ["Praia", "Nassau", "Vaduz", "Nairobi"] },
+      { country: "Cambodia", capital: "Phnom Penh", choices: ["Phnom Penh", "Beijing", "Nicosia", "Tashkent"] },
+      { country: "Cameroon", capital: "Yaoundé", choices: ["Kingston", "Tokyo", "Caracas", "Yaoundé"] },
+      { country: "Canada", capital: "Ottawa", choices: ["Toronto", "Vancouver", "Montreal", "Ottawa"] },
+      { country: "Central African Republic", capital: "Bangui", choices: ["Kathmandu", "Pyongyang", "Brazzaville", "Bangui"] },
+      { country: "Chad", capital: "N'Djamena", choices: ["Cairo", "N'Djamena", "Tirana", "Kampala"] },
+      { country: "Chile", capital: "Santiago", choices: ["Quito", "Yaren", "Santiago", "Luxembourg"] },
       { country: "China", capital: "Beijing", choices: ["Shanghai", "Beijing", "Shenzhen", "Guangzhou"] },
-      { country: "Kenya", capital: "Nairobi", choices: ["Mombasa", "Nairobi", "Kisumu", "Nakuru"] },
-      { country: "Peru", capital: "Lima", choices: ["Cusco", "Arequipa", "Lima", "Trujillo"] },
+      { country: "Colombia", capital: "Bogotá", choices: ["Andorra la Vella", "Bucharest", "Bogotá", "Gitega"] },
+      { country: "Comoros", capital: "Moroni", choices: ["Damascus", "Lusaka", "Ouagadougou", "Moroni"] },
+      { country: "Costa Rica", capital: "San José", choices: ["Suva", "San José", "Amsterdam", "Seoul"] },
+      { country: "Croatia", capital: "Zagreb", choices: ["Palikir", "Zagreb", "Lima", "Islamabad"] },
+      { country: "Cuba", capital: "Havana", choices: ["Kampala", "Havana", "Palikir", "Gitega"] },
+      { country: "Cyprus", capital: "Nicosia", choices: ["Nicosia", "Riyadh", "Andorra la Vella", "Mbabane"] },
+      { country: "Czechia", capital: "Prague", choices: ["Georgetown", "Niamey", "San Marino", "Prague"] },
+      { country: "Democratic Republic of the Congo", capital: "Kinshasa", choices: ["Bogotá", "Kinshasa", "Paris", "Thimphu"] },
+      { country: "Denmark", capital: "Copenhagen", choices: ["Porto-Novo", "Copenhagen", "Budapest", "Dodoma"] },
+      { country: "Djibouti", capital: "Djibouti", choices: ["Djibouti", "Ramallah", "Bratislava", "São Tomé"] },
+      { country: "Dominica", capital: "Roseau", choices: ["Kyiv", "Roseau", "Managua", "Saint John's"] },
+      { country: "Dominican Republic", capital: "Santo Domingo", choices: ["Wellington", "Nairobi", "Sana'a", "Santo Domingo"] },
+      { country: "Ecuador", capital: "Quito", choices: ["Lusaka", "Maseru", "Quito", "Paramaribo"] },
+      { country: "Egypt", capital: "Cairo", choices: ["Alexandria", "Cairo", "Giza", "Luxor"] },
+      { country: "El Salvador", capital: "San Salvador", choices: ["Rabat", "San Salvador", "Abu Dhabi", "Lisbon"] },
+      { country: "Equatorial Guinea", capital: "Ciudad de la Paz", choices: ["Malabo", "New Delhi", "Ciudad de la Paz", "Asmara"] },
+      { country: "Eritrea", capital: "Asmara", choices: ["Belmopan", "Funafuti", "Kathmandu", "Asmara"] },
+      { country: "Estonia", capital: "Tallinn", choices: ["Tallinn", "São Tomé", "Sri Jayawardenepura Kotte", "Kuwait City"] },
+      { country: "Eswatini", capital: "Mbabane", choices: ["Basseterre", "Rabat", "Buenos Aires", "Mbabane"] },
+      { country: "Ethiopia", capital: "Addis Ababa", choices: ["Addis Ababa", "Ankara", "Brazzaville", "Beijing"] },
+      { country: "Fiji", capital: "Suva", choices: ["Suva", "Tripoli", "Sofia", "Kampala"] },
+      { country: "Finland", capital: "Helsinki", choices: ["Belmopan", "Abu Dhabi", "Bridgetown", "Helsinki"] },
+      { country: "France", capital: "Paris", choices: ["Paris", "Lyon", "Marseille", "Nice"] },
+      { country: "Gabon", capital: "Libreville", choices: ["Buenos Aires", "Nicosia", "Madrid", "Libreville"] },
+      { country: "Gambia", capital: "Banjul", choices: ["Nukuʻalofa", "Managua", "Banjul", "Prague"] },
+      { country: "Georgia", capital: "Tbilisi", choices: ["London", "Addis Ababa", "Sofia", "Tbilisi"] },
+      { country: "Germany", capital: "Berlin", choices: ["Munich", "Berlin", "Frankfurt", "Hamburg"] },
+      { country: "Ghana", capital: "Accra", choices: ["Freetown", "Bamako", "Accra", "Victoria"] },
+      { country: "Greece", capital: "Athens", choices: ["Athens", "Thessaloniki", "Patras", "Heraklion"] },
+      { country: "Grenada", capital: "Saint George's", choices: ["Monaco", "Riga", "Singapore", "Saint George's"] },
+      { country: "Guatemala", capital: "Guatemala City", choices: ["Tbilisi", "Guatemala City", "Brazzaville", "Muscat"] },
+      { country: "Guinea", capital: "Conakry", choices: ["Conakry", "Asmara", "Yerevan", "Accra"] },
+      { country: "Guinea-Bissau", capital: "Bissau", choices: ["Jakarta", "Malé", "Bissau", "Berlin"] },
+      { country: "Guyana", capital: "Georgetown", choices: ["Sucre", "Georgetown", "Kuwait City", "Brussels"] },
+      { country: "Haiti", capital: "Port-au-Prince", choices: ["Rabat", "Ljubljana", "Tehran", "Port-au-Prince"] },
+      { country: "Honduras", capital: "Tegucigalpa", choices: ["Tegucigalpa", "Oslo", "Amman", "Kyiv"] },
+      { country: "Hungary", capital: "Budapest", choices: ["Pyongyang", "Bucharest", "Asmara", "Budapest"] },
+      { country: "Iceland", capital: "Reykjavík", choices: ["Lima", "Buenos Aires", "Conakry", "Reykjavík"] },
+      { country: "India", capital: "New Delhi", choices: ["Mumbai", "New Delhi", "Kolkata", "Bengaluru"] },
+      { country: "Indonesia", capital: "Jakarta", choices: ["Warsaw", "Jakarta", "London", "Tripoli"] },
+      { country: "Iran", capital: "Tehran", choices: ["Tehran", "Vaduz", "Luxembourg", "San Marino"] },
+      { country: "Iraq", capital: "Baghdad", choices: ["Baghdad", "Caracas", "Helsinki", "Washington, D.C."] },
       { country: "Ireland", capital: "Dublin", choices: ["Cork", "Galway", "Dublin", "Limerick"] },
-      { country: "Morocco", capital: "Rabat", choices: ["Casablanca", "Marrakesh", "Rabat", "Fez"] }
+      { country: "Israel", capital: "Jerusalem", choices: ["Ngerulmud", "Zagreb", "Suva", "Jerusalem"] },
+      { country: "Italy", capital: "Rome", choices: ["Milan", "Rome", "Naples", "Florence"] },
+      { country: "Ivory Coast", capital: "Yamoussoukro", choices: ["Yamoussoukro", "Seoul", "Gitega", "Hanoi"] },
+      { country: "Jamaica", capital: "Kingston", choices: ["Kingston", "Dublin", "Port-au-Prince", "Tehran"] },
+      { country: "Japan", capital: "Tokyo", choices: ["Osaka", "Kyoto", "Tokyo", "Nagoya"] },
+      { country: "Jordan", capital: "Amman", choices: ["Kyiv", "Canberra", "Amman", "Budapest"] },
+      { country: "Kazakhstan", capital: "Astana", choices: ["Astana", "Castries", "Vaduz", "Nassau"] },
+      { country: "Kenya", capital: "Nairobi", choices: ["Mombasa", "Nairobi", "Kisumu", "Nakuru"] },
+      { country: "Kiribati", capital: "South Tarawa", choices: ["South Tarawa", "Amsterdam", "Bangkok", "Kuwait City"] },
+      { country: "Kuwait", capital: "Kuwait City", choices: ["Windhoek", "Tunis", "Kuwait City", "Malabo"] },
+      { country: "Kyrgyzstan", capital: "Bishkek", choices: ["Bishkek", "Antananarivo", "Brussels", "Bridgetown"] },
+      { country: "Laos", capital: "Vientiane", choices: ["Apia", "Stockholm", "Vientiane", "Damascus"] },
+      { country: "Latvia", capital: "Riga", choices: ["Ouagadougou", "Conakry", "Buenos Aires", "Riga"] },
+      { country: "Lebanon", capital: "Beirut", choices: ["Beirut", "Oslo", "Ankara", "Riga"] },
+      { country: "Lesotho", capital: "Maseru", choices: ["Jerusalem", "Moscow", "Rome", "Maseru"] },
+      { country: "Liberia", capital: "Monrovia", choices: ["Yaoundé", "Dhaka", "Monrovia", "Caracas"] },
+      { country: "Libya", capital: "Tripoli", choices: ["Tripoli", "Mogadishu", "Asmara", "Georgetown"] },
+      { country: "Liechtenstein", capital: "Vaduz", choices: ["Brussels", "Vienna", "San Marino", "Vaduz"] },
+      { country: "Lithuania", capital: "Vilnius", choices: ["Apia", "Vilnius", "Bucharest", "Caracas"] },
+      { country: "Luxembourg", capital: "Luxembourg", choices: ["Dili", "Kinshasa", "Luxembourg", "Vienna"] },
+      { country: "Madagascar", capital: "Antananarivo", choices: ["Madrid", "Yamoussoukro", "Nukuʻalofa", "Antananarivo"] },
+      { country: "Malawi", capital: "Lilongwe", choices: ["Lilongwe", "Prague", "Copenhagen", "Mexico City"] },
+      { country: "Malaysia", capital: "Kuala Lumpur", choices: ["Ulaanbaatar", "Baghdad", "Bishkek", "Kuala Lumpur"] },
+      { country: "Maldives", capital: "Malé", choices: ["Damascus", "Paris", "Libreville", "Malé"] },
+      { country: "Mali", capital: "Bamako", choices: ["Ankara", "Phnom Penh", "Conakry", "Bamako"] },
+      { country: "Malta", capital: "Valletta", choices: ["Andorra la Vella", "Valletta", "Quito", "Yamoussoukro"] },
+      { country: "Marshall Islands", capital: "Majuro", choices: ["Rome", "Majuro", "Bogotá", "Windhoek"] },
+      { country: "Mauritania", capital: "Nouakchott", choices: ["Nouakchott", "Washington, D.C.", "Beirut", "Brazzaville"] },
+      { country: "Mauritius", capital: "Port Louis", choices: ["Bogotá", "Ramallah", "Port Louis", "Sofia"] },
+      { country: "Mexico", capital: "Mexico City", choices: ["Guadalajara", "Monterrey", "Mexico City", "Cancún"] },
+      { country: "Micronesia", capital: "Palikir", choices: ["Montevideo", "Palikir", "Riyadh", "New Delhi"] },
+      { country: "Moldova", capital: "Chișinău", choices: ["Lilongwe", "Berlin", "Helsinki", "Chișinău"] },
+      { country: "Monaco", capital: "Monaco", choices: ["Kigali", "Porto-Novo", "Tirana", "Monaco"] },
+      { country: "Mongolia", capital: "Ulaanbaatar", choices: ["Kabul", "Ulaanbaatar", "Zagreb", "Bucharest"] },
+      { country: "Montenegro", capital: "Podgorica", choices: ["Podgorica", "Thimphu", "Belgrade", "Bamako"] },
+      { country: "Morocco", capital: "Rabat", choices: ["Casablanca", "Marrakesh", "Rabat", "Fez"] },
+      { country: "Mozambique", capital: "Maputo", choices: ["Paris", "Maputo", "Dakar", "Asmara"] },
+      { country: "Myanmar", capital: "Naypyidaw", choices: ["Honiara", "Bissau", "Naypyidaw", "Tirana"] },
+      { country: "Namibia", capital: "Windhoek", choices: ["Porto-Novo", "Sarajevo", "Windhoek", "Port-au-Prince"] },
+      { country: "Nauru", capital: "Yaren", choices: ["Bangkok", "Bishkek", "Phnom Penh", "Yaren"] },
+      { country: "Nepal", capital: "Kathmandu", choices: ["Gitega", "Kathmandu", "Beijing", "Reykjavík"] },
+      { country: "Netherlands", capital: "Amsterdam", choices: ["Stockholm", "Amsterdam", "Lomé", "Dublin"] },
+      { country: "New Zealand", capital: "Wellington", choices: ["Auckland", "Christchurch", "Wellington", "Hamilton"] },
+      { country: "Nicaragua", capital: "Managua", choices: ["Managua", "Doha", "Victoria", "Yamoussoukro"] },
+      { country: "Niger", capital: "Niamey", choices: ["Lusaka", "Juba", "Mogadishu", "Niamey"] },
+      { country: "Nigeria", capital: "Abuja", choices: ["Abuja", "Tegucigalpa", "Nukuʻalofa", "San José"] },
+      { country: "North Korea", capital: "Pyongyang", choices: ["Algiers", "Santiago", "Pyongyang", "Ouagadougou"] },
+      { country: "North Macedonia", capital: "Skopje", choices: ["Riga", "Skopje", "Bratislava", "Panama City"] },
+      { country: "Norway", capital: "Oslo", choices: ["Bergen", "Oslo", "Trondheim", "Stavanger"] },
+      { country: "Oman", capital: "Muscat", choices: ["Muscat", "Roseau", "Bissau", "San Marino"] },
+      { country: "Pakistan", capital: "Islamabad", choices: ["Apia", "Islamabad", "San Marino", "São Tomé"] },
+      { country: "Palau", capital: "Ngerulmud", choices: ["London", "Sucre", "Ngerulmud", "Santo Domingo"] },
+      { country: "Palestine", capital: "Ramallah", choices: ["Ramallah", "Pretoria", "Banjul", "Ottawa"] },
+      { country: "Panama", capital: "Panama City", choices: ["Manama", "Panama City", "Lusaka", "Antananarivo"] },
+      { country: "Papua New Guinea", capital: "Port Moresby", choices: ["Gitega", "Port Moresby", "Ljubljana", "Saint John's"] },
+      { country: "Paraguay", capital: "Asunción", choices: ["Asunción", "Valletta", "Kampala", "Caracas"] },
+      { country: "Peru", capital: "Lima", choices: ["Cusco", "Arequipa", "Lima", "Trujillo"] },
+      { country: "Philippines", capital: "Manila", choices: ["Cebu City", "Davao City", "Manila", "Quezon City"] },
+      { country: "Poland", capital: "Warsaw", choices: ["Nicosia", "Stockholm", "Baghdad", "Warsaw"] },
+      { country: "Portugal", capital: "Lisbon", choices: ["Porto", "Lisbon", "Braga", "Faro"] },
+      { country: "Qatar", capital: "Doha", choices: ["Doha", "Basseterre", "Mogadishu", "Luanda"] },
+      { country: "Republic of the Congo", capital: "Brazzaville", choices: ["Djibouti", "Tallinn", "South Tarawa", "Brazzaville"] },
+      { country: "Romania", capital: "Bucharest", choices: ["Manama", "Bucharest", "Skopje", "Lisbon"] },
+      { country: "Russia", capital: "Moscow", choices: ["Islamabad", "Moscow", "Kingstown", "Amman"] },
+      { country: "Rwanda", capital: "Kigali", choices: ["Beijing", "Palikir", "Kigali", "Port Moresby"] },
+      { country: "Saint Kitts and Nevis", capital: "Basseterre", choices: ["Riga", "Copenhagen", "Basseterre", "Kathmandu"] },
+      { country: "Saint Lucia", capital: "Castries", choices: ["Tashkent", "San José", "Castries", "Malé"] },
+      { country: "Saint Vincent and the Grenadines", capital: "Kingstown", choices: ["Copenhagen", "Paris", "Mbabane", "Kingstown"] },
+      { country: "Samoa", capital: "Apia", choices: ["Abu Dhabi", "Bogotá", "Apia", "Basseterre"] },
+      { country: "San Marino", capital: "San Marino", choices: ["San Marino", "Accra", "Astana", "Ouagadougou"] },
+      { country: "Sao Tome and Principe", capital: "São Tomé", choices: ["Riga", "São Tomé", "Ramallah", "Nassau"] },
+      { country: "Saudi Arabia", capital: "Riyadh", choices: ["Riyadh", "Yaoundé", "Roseau", "Vienna"] },
+      { country: "Senegal", capital: "Dakar", choices: ["Dakar", "N'Djamena", "Ulaanbaatar", "Caracas"] },
+      { country: "Serbia", capital: "Belgrade", choices: ["Guatemala City", "Nouakchott", "Brasília", "Belgrade"] },
+      { country: "Seychelles", capital: "Victoria", choices: ["Helsinki", "Freetown", "Victoria", "Addis Ababa"] },
+      { country: "Sierra Leone", capital: "Freetown", choices: ["Port Moresby", "Harare", "Sucre", "Freetown"] },
+      { country: "Singapore", capital: "Singapore", choices: ["Singapore", "San José", "Algiers", "Harare"] },
+      { country: "Slovakia", capital: "Bratislava", choices: ["Mbabane", "Bratislava", "Kabul", "Bishkek"] },
+      { country: "Slovenia", capital: "Ljubljana", choices: ["San José", "Islamabad", "Wellington", "Ljubljana"] },
+      { country: "Solomon Islands", capital: "Honiara", choices: ["Honiara", "Seoul", "Manila", "Bridgetown"] },
+      { country: "Somalia", capital: "Mogadishu", choices: ["Freetown", "Mogadishu", "Ramallah", "Addis Ababa"] },
+      { country: "South Korea", capital: "Seoul", choices: ["Busan", "Seoul", "Incheon", "Daegu"] },
+      { country: "South Sudan", capital: "Juba", choices: ["Juba", "Tunis", "Kampala", "Mogadishu"] },
+      { country: "Spain", capital: "Madrid", choices: ["Barcelona", "Madrid", "Valencia", "Seville"] },
+      { country: "Sri Lanka", capital: "Sri Jayawardenepura Kotte", choices: ["Ramallah", "Pyongyang", "Dodoma", "Sri Jayawardenepura Kotte"] },
+      { country: "Sudan", capital: "Khartoum", choices: ["Podgorica", "Khartoum", "Basseterre", "Ngerulmud"] },
+      { country: "Suriname", capital: "Paramaribo", choices: ["Paramaribo", "Hanoi", "Roseau", "Madrid"] },
+      { country: "Sweden", capital: "Stockholm", choices: ["Gothenburg", "Malmö", "Stockholm", "Uppsala"] },
+      { country: "Switzerland", capital: "Bern", choices: ["Zurich", "Geneva", "Bern", "Basel"] },
+      { country: "Syria", capital: "Damascus", choices: ["Suva", "South Tarawa", "Tunis", "Damascus"] },
+      { country: "Tajikistan", capital: "Dushanbe", choices: ["Dhaka", "Dushanbe", "Accra", "San Marino"] },
+      { country: "Tanzania", capital: "Dodoma", choices: ["Dodoma", "Port Moresby", "Gitega", "Ankara"] },
+      { country: "Thailand", capital: "Bangkok", choices: ["Phuket", "Chiang Mai", "Bangkok", "Pattaya"] },
+      { country: "Timor-Leste", capital: "Dili", choices: ["Majuro", "Ngerulmud", "Thimphu", "Dili"] },
+      { country: "Togo", capital: "Lomé", choices: ["Lomé", "Porto-Novo", "Beijing", "Yaoundé"] },
+      { country: "Tonga", capital: "Nukuʻalofa", choices: ["Helsinki", "Dodoma", "Nukuʻalofa", "Luanda"] },
+      { country: "Trinidad and Tobago", capital: "Port of Spain", choices: ["Port of Spain", "Zagreb", "San Salvador", "Vaduz"] },
+      { country: "Tunisia", capital: "Tunis", choices: ["Tunis", "Montevideo", "Ljubljana", "Luxembourg"] },
+      { country: "Turkey", capital: "Ankara", choices: ["Istanbul", "Ankara", "Izmir", "Antalya"] },
+      { country: "Turkmenistan", capital: "Ashgabat", choices: ["Ashgabat", "Vatican City", "Bern", "Vilnius"] },
+      { country: "Tuvalu", capital: "Funafuti", choices: ["Funafuti", "Maseru", "Astana", "Jakarta"] },
+      { country: "Uganda", capital: "Kampala", choices: ["Kampala", "Dublin", "London", "Havana"] },
+      { country: "Ukraine", capital: "Kyiv", choices: ["Ashgabat", "São Tomé", "Mexico City", "Kyiv"] },
+      { country: "United Arab Emirates", capital: "Abu Dhabi", choices: ["Abuja", "Georgetown", "Bandar Seri Begawan", "Abu Dhabi"] },
+      { country: "United Kingdom", capital: "London", choices: ["Manchester", "Edinburgh", "London", "Liverpool"] },
+      { country: "United States", capital: "Washington, D.C.", choices: ["Washington, D.C.", "New York City", "Philadelphia", "Boston"] },
+      { country: "Uruguay", capital: "Montevideo", choices: ["Kigali", "Naypyidaw", "Montevideo", "Prague"] },
+      { country: "Uzbekistan", capital: "Tashkent", choices: ["Mbabane", "Skopje", "Amsterdam", "Tashkent"] },
+      { country: "Vanuatu", capital: "Port Vila", choices: ["Port Vila", "Lusaka", "San Salvador", "New Delhi"] },
+      { country: "Vatican City", capital: "Vatican City", choices: ["Luanda", "Vatican City", "Athens", "Skopje"] },
+      { country: "Venezuela", capital: "Caracas", choices: ["Lima", "Caracas", "Sri Jayawardenepura Kotte", "Amman"] },
+      { country: "Vietnam", capital: "Hanoi", choices: ["Dili", "Yaoundé", "Lilongwe", "Hanoi"] },
+      { country: "Yemen", capital: "Sana'a", choices: ["Hanoi", "Sana'a", "Dhaka", "Bogotá"] },
+      { country: "Zambia", capital: "Lusaka", choices: ["Abuja", "Baku", "Lusaka", "San Marino"] },
+      { country: "Zimbabwe", capital: "Harare", choices: ["Harare", "Canberra", "Manama", "Yaoundé"] }
     ];
 
     const countryNameEl = document.getElementById("countryName");
     const answersEl = document.getElementById("answers");
     const scoreEl = document.getElementById("score");
     const highScoreEl = document.getElementById("highScore");
-    const strikesEl = document.getElementById("strikes");
+    const timerEl = document.getElementById("timer");
     const feedbackEl = document.getElementById("feedback");
     const nextBtn = document.getElementById("nextBtn");
     const restartBtn = document.getElementById("restartBtn");
     const gameOverEl = document.getElementById("gameOver");
     const finalScoreEl = document.getElementById("finalScore");
+    const authLink = document.getElementById("authLink");
+
+    let currentUser = null;
+    let cloudHighScore = 0;
 
     let score = 0;
-    let strikes = 0;
+    let timeLeft = 120;
+    let timerInterval = null;
+    let timerStarted = false;
     let currentQuestion = null;
     let answered = false;
     let deck = [];
 
     let highScore = Number(localStorage.getItem("capitalGameHighScore") || 0);
     highScoreEl.textContent = highScore;
+
+    async function loadCloudHighScore(user) {
+      if (!user) return;
+
+      try {
+        const scoreRef = doc(db, "leaderboards", "capital", "scores", user.uid);
+        const snap = await getDoc(scoreRef);
+
+        if (snap.exists()) {
+          cloudHighScore = Number(snap.data().score || 0);
+
+          if (cloudHighScore > highScore) {
+            highScore = cloudHighScore;
+            localStorage.setItem("capitalGameHighScore", String(highScore));
+            highScoreEl.textContent = highScore;
+          }
+        }
+      } catch (error) {
+        console.error("Could not load community high score:", error);
+      }
+    }
+
+    async function saveCloudHighScore() {
+      if (!currentUser || score <= cloudHighScore) return;
+
+      try {
+        const scoreRef = doc(db, "leaderboards", "capital", "scores", currentUser.uid);
+        const existingSnap = await getDoc(scoreRef);
+        const existingScore = existingSnap.exists()
+          ? Number(existingSnap.data().score || 0)
+          : 0;
+
+        if (score <= existingScore) {
+          cloudHighScore = existingScore;
+          return;
+        }
+
+        const displayName =
+          currentUser.displayName ||
+          currentUser.email?.split("@")[0] ||
+          "Player";
+
+        await setDoc(scoreRef, {
+          uid: currentUser.uid,
+          displayName,
+          photoURL: currentUser.photoURL || "",
+          score,
+          updatedAt: serverTimestamp()
+        });
+
+        cloudHighScore = score;
+      } catch (error) {
+        console.error("Could not save community high score:", error);
+      }
+    }
 
     function shuffle(array) {
       const copy = [...array];
@@ -630,10 +866,47 @@
       deck = shuffle(questions);
     }
 
-    function updateStrikes() {
-      [...strikesEl.querySelectorAll(".strike")].forEach((el, index) => {
-        el.classList.toggle("used", index >= strikes);
-      });
+    function formatTime(seconds) {
+      const safe = Math.max(0, seconds);
+      const minutes = Math.floor(safe / 60);
+      const remaining = safe % 60;
+      return `${minutes}:${String(remaining).padStart(2, "0")}`;
+    }
+
+    function updateTimer() {
+      timerEl.textContent = formatTime(timeLeft);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      updateTimer();
+
+      timerInterval = setInterval(() => {
+        timeLeft -= 1;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+          stopTimer();
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function subtractTime(seconds) {
+      timeLeft = Math.max(0, timeLeft - seconds);
+      updateTimer();
+
+      if (timeLeft <= 0) {
+        stopTimer();
+        setTimeout(endGame, 350);
+      }
     }
 
     function updateHighScore() {
@@ -641,6 +914,10 @@
         highScore = score;
         localStorage.setItem("capitalGameHighScore", String(highScore));
         highScoreEl.textContent = highScore;
+      }
+
+      if (currentUser && score > cloudHighScore) {
+        saveCloudHighScore();
       }
     }
 
@@ -669,6 +946,11 @@
       if (answered) return;
       answered = true;
 
+      if (!timerStarted) {
+        timerStarted = true;
+        startTimer();
+      }
+
       const buttons = [...answersEl.querySelectorAll(".answer")];
       buttons.forEach(btn => btn.disabled = true);
 
@@ -679,22 +961,20 @@
         feedbackEl.textContent = "Correct! +1";
         updateHighScore();
       } else {
-        strikes += 1;
         button.classList.add("wrong");
         const correctBtn = buttons.find(btn => btn.textContent === currentQuestion.capital);
         if (correctBtn) correctBtn.classList.add("correct");
-        feedbackEl.textContent = `The capital is ${currentQuestion.capital}.`;
-        updateStrikes();
+        subtractTime(5);
+        feedbackEl.textContent = `The capital is ${currentQuestion.capital}. −5 seconds`;
       }
 
-      if (strikes >= 3) {
-        setTimeout(endGame, 650);
-      } else {
+      if (timeLeft > 0) {
         nextBtn.style.display = "block";
       }
     }
 
     function endGame() {
+      stopTimer();
       answersEl.style.display = "none";
       feedbackEl.style.display = "none";
       nextBtn.style.display = "none";
@@ -709,9 +989,11 @@
 
     function restartGame() {
       score = 0;
-      strikes = 0;
+      timeLeft = 120;
+      timerStarted = false;
+      stopTimer();
       scoreEl.textContent = "0";
-      updateStrikes();
+      updateTimer();
 
       answersEl.style.display = "grid";
       feedbackEl.style.display = "grid";
@@ -738,7 +1020,27 @@
       document.getElementById("nav").classList.toggle("scrolled", window.scrollY > 10);
     });
 
-    updateStrikes();
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+
+      if (user) {
+        const firstName =
+          (user.displayName || user.email || "Account")
+            .split(" ")[0]
+            .split("@")[0];
+
+        authLink.textContent = `Hi, ${firstName}`;
+        authLink.href = "signin.html";
+
+        await loadCloudHighScore(user);
+      } else {
+        cloudHighScore = 0;
+        authLink.textContent = "Sign in";
+        authLink.href = "signin.html?redirect=capitals.html";
+      }
+    });
+
+    updateTimer();
     resetDeck();
     loadQuestion();
   </script>

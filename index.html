@@ -378,6 +378,131 @@
   background: var(--accent-dark);
   transform: translateY(-2px);
 }
+
+/* ── FEATURED GAMES ── */
+.games-hero {
+  min-height: auto;
+  padding: 7rem 2rem 4rem;
+  background: var(--bg);
+}
+
+.games-hero-inner {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+.games-eyebrow {
+  margin-bottom: .75rem;
+  color: var(--accent);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.games-title {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(3.4rem, 6.6vw, 6rem);
+  line-height: .92;
+  letter-spacing: -.07em;
+  font-weight: 900;
+  text-align: center;
+}
+
+.games-subhead {
+  max-width: 620px;
+  margin: 1rem auto 2rem;
+  color: var(--muted);
+  font-size: clamp(.95rem, 1.25vw, 1.15rem);
+  line-height: 1.5;
+  font-weight: 500;
+  text-align: center;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.game-card {
+  min-width: 0;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.4rem;
+  box-shadow: 0 14px 34px rgba(59,123,191,.08);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 42px rgba(59,123,191,.14);
+}
+
+.game-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 1.55rem;
+}
+
+.game-kicker {
+  margin-bottom: .55rem;
+  color: var(--accent);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.game-name {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1;
+  letter-spacing: -.055em;
+  font-weight: 900;
+}
+
+.game-desc {
+  max-width: 430px;
+  margin: .85rem 0 1.5rem;
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+.game-play {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  width: fit-content;
+  color: var(--accent);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+  .games-hero { padding: 6.5rem 1rem 3.25rem; }
+  .games-grid { grid-template-columns: 1fr; }
+  .game-card { min-height: 240px; padding: 1.5rem; }
+}
+
   /* ── SHARED SECTIONS ── */
   section { padding:7rem 2.5rem; }
   .max-w { max-width:1200px; margin:0 auto; }
@@ -832,6 +957,15 @@
   text-decoration: none !important;
 }
 
+
+.game-card,
+.game-card:hover,
+.game-card:focus,
+.game-card:visited,
+.game-play {
+  text-decoration: none !important;
+}
+
 </style>
 </head>
 <body>
@@ -842,44 +976,45 @@
   <ul class="nav-links" id="navMenu">
     <li><a href="#about">About</a></li>
     <li><a href="#brands">Brands</a></li>
-    <li><a href="/halloffame.html">Hall of Fame</a></li>
+    <li><a href="#games">Games</a></li>
     <li><a href="/live.html">Live Shows</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <button class="hamburger" id="ham"><i class="fas fa-bars"></i></button>
 </nav>
 
-<!-- HALL OF NAMES HERO -->
-<section class="hof-hero" id="home">
-  <div class="hof-hero-inner">
-    <div class="hof-eyebrow reveal">Week 3</div>
-    <h1 class="hof-title reveal reveal-delay-1">Hall of Names</h1>
-    <p class="hof-subhead reveal reveal-delay-2">Vote for one finalist to enter the Hall of Names.</p>
+<!-- FEATURED GAMES -->
+<section class="games-hero" id="games">
+  <div class="games-hero-inner">
+    <div class="games-eyebrow reveal">Play Now</div>
+    <h1 class="games-title reveal reveal-delay-1">Geography Games</h1>
+    <p class="games-subhead reveal reveal-delay-2">
+    </p>
 
-    <div class="hof-vote-panel reveal reveal-delay-2">
-      <div class="hof-vote-grid">
-        <a class="hof-option" href="vote.html" aria-label="Vote for Frog">
-          <div class="hof-option-image"><img src="images/frog.png" alt="Frog"></div>
-          <div class="hof-option-name">Frog</div>
-        </a>
+    <div class="games-grid reveal reveal-delay-2">
+      <a class="game-card" href="capital.html" aria-label="Play Guess the Capital">
+        <div>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-landmark"></i></div>
+          <div class="game-kicker">Geography</div>
+          <h2 class="game-name">Guess the Capital</h2>
+          <p class="game-desc">
+            See a country and choose its capital. Match as many as you can before time runs out.
+          </p>
+        </div>
+        <span class="game-play">Play Capital Game <i class="fas fa-arrow-right"></i></span>
+      </a>
 
-        <a class="hof-option" href="vote.html" aria-label="Vote for Radio">
-          <div class="hof-option-image"><img src="images/radio.png" alt="Radio"></div>
-          <div class="hof-option-name">Radio</div>
-        </a>
-
-        <a class="hof-option" href="vote.html" aria-label="Vote for Naruto">
-          <div class="hof-option-image"><img src="images/naruto.jpg" alt="Naruto"></div>
-          <div class="hof-option-name">Naruto</div>
-        </a>
-
-        <a class="hof-option" href="vote.html" aria-label="Vote for Colby">
-          <div class="hof-option-image"><img src="images/colbygirl.png" alt="Colby"></div>
-          <div class="hof-option-name">Colby</div>
-        </a>
-      </div>
-
-      <a class="hof-vote-button" href="vote.html">Vote in Week 3</a>
+      <a class="game-card" href="flags.html" aria-label="Play Guess the Flag">
+        <div>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-flag"></i></div>
+          <div class="game-kicker">Geography</div>
+          <h2 class="game-name">Guess the Flag</h2>
+          <p class="game-desc">
+            Identify countries from their flags and see how many you can get before time runs out.
+          </p>
+        </div>
+        <span class="game-play">Play Flag Game <i class="fas fa-arrow-right"></i></span>
+      </a>
     </div>
   </div>
 </section>

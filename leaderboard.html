@@ -3,279 +3,342 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboard | Guessing Games</title>
-  <link rel="icon" href="/favicongg.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <title>Leaderboard | GuessingGames.com</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --brand:#4f86b3;
+      --brand-dark:#376f9c;
+      --bg:#f6f9fc;
+      --ink:#172331;
+      --muted:#66788a;
+      --line:#dbe6ef;
+      --soft:#edf4fa;
+      --white:#fff;
+      --gold:#d4a72c;
     }
-
-    body {
-      font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(to bottom, #ffffff, #e7f1f9);
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-
-    nav {
-      background: #1e2b38;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-      flex-wrap: wrap;
+    a{color:inherit;text-decoration:none}
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:20;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:1rem 1.5rem;
+      background:rgba(247,250,252,.94);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(18px);
     }
-
-    .nav-links a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
+    .logo{font-weight:850;color:var(--brand);letter-spacing:.04em}
+    .nav-right{display:flex;gap:.75rem;align-items:center}
+    .pill{
+      padding:.65rem 1rem;border:1px solid var(--line);border-radius:999px;background:var(--white);
+      font-size:.85rem;font-weight:700;color:var(--ink)
     }
-
-    .nav-links a:hover {
-      color: #ffcb05;
+    main{width:min(100%,980px);margin:0 auto;padding:7rem 1rem 4rem}
+    .eyebrow{color:var(--brand);font-size:.72rem;font-weight:850;letter-spacing:.16em;text-transform:uppercase}
+    h1{font-size:clamp(3rem,8vw,5.5rem);line-height:.95;letter-spacing:-.07em;margin:.5rem 0 1rem}
+    .sub{color:var(--muted);font-size:1.05rem;line-height:1.5;max-width:640px}
+    .toolbar{
+      margin-top:2rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;justify-content:space-between
     }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 15px;
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+    .tab{
+      border:1px solid var(--line);background:var(--white);color:var(--ink);
+      border-radius:999px;padding:.75rem 1rem;font-weight:800;cursor:pointer
     }
-
-    .search-bar {
-      padding: 8px 16px 8px 36px;
-      height: 40px;
-      border-radius: 20px;
-      border: none;
-      background: white;
-      color: #315f85;
-      font-size: 0.95rem;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
-      background-size: 16px;
-      background-repeat: no-repeat;
-      background-position: 12px center;
+    .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .me-card{
+      margin-top:1.5rem;background:var(--white);border:1px solid var(--line);border-radius:20px;
+      padding:1rem 1.1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center
     }
-
-    .search-bar::placeholder {
-      color: #888;
+    .avatar{
+      width:48px;height:48px;border-radius:50%;background:var(--brand);color:#fff;
+      display:grid;place-items:center;font-weight:850;overflow:hidden
     }
-
-    .login-btn {
-      background-color: #ffcb05;
-      border: none;
-      padding: 8px 16px;
-      height: 40px;
-      border-radius: 20px;
-      font-weight: bold;
-      color: #1e2b38;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      font-size: 0.95rem;
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .muted{color:var(--muted)}
+    .me-rank{text-align:right}
+    .me-rank strong{font-size:1.4rem}
+    .board{
+      margin-top:1rem;background:var(--white);border:1px solid var(--line);border-radius:22px;overflow:hidden
     }
-
-    .login-btn:hover {
-      background-color: #e6b800;
-      transform: translateY(-1px);
+    .row{
+      display:grid;grid-template-columns:72px minmax(0,1fr) 110px;
+      gap:1rem;align-items:center;padding:1rem 1.1rem;border-bottom:1px solid var(--line)
     }
-
-    header {
-      background: #315f85;
-      color: white;
-      padding: 60px 30px;
-      text-align: center;
+    .row:last-child{border-bottom:0}
+    .row.me{background:rgba(79,134,179,.07)}
+    .rank{font-size:1.15rem;font-weight:900}
+    .player{display:flex;align-items:center;gap:.8rem;min-width:0}
+    .player-copy{min-width:0}
+    .name{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .score{text-align:right;font-weight:900;font-size:1.25rem}
+    .status{
+      padding:2rem;text-align:center;color:var(--muted)
     }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .signin-cta{
+      margin-top:1.5rem;padding:1rem 1.1rem;border-radius:18px;background:var(--soft);
+      color:var(--brand-dark);font-weight:750
     }
-
-    header p {
-      font-size: 1.2rem;
-      color: #d0e0f0;
+    .refresh{
+      border:0;background:var(--soft);color:var(--brand-dark);
+      border-radius:999px;padding:.75rem 1rem;font-weight:800;cursor:pointer
     }
-
-    main {
-      padding: 40px 30px;
-      flex: 1;
-    }
-
-    .leaderboard {
-      max-width: 800px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .leaderboard h2 {
-      background-color: #4682b4;
-      color: white;
-      padding: 20px;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    .leaderboard table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .leaderboard th, .leaderboard td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-
-    .leaderboard tr:hover {
-      background-color: #f5faff;
-    }
-
-    .leaderboard th {
-      background-color: #f0f4fa;
-    }
-
-    .pagination {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .pagination button {
-      background-color: #4682b4;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 5px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .pagination button:hover {
-      background-color: #315f85;
-    }
-
-    footer {
-      background: #315f85;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: auto;
-    }
-
-    footer a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
+    @media(max-width:620px){
+      nav{padding:.9rem 1rem}
+      .row{grid-template-columns:48px minmax(0,1fr) 82px;padding:.9rem}
+      .me-card{grid-template-columns:auto 1fr}
+      .me-rank{grid-column:1/-1;text-align:left;padding-top:.2rem}
+      .score{font-size:1.05rem}
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="nav-links">
-      <a href="/index.html">Home</a>
-      <a href="/allgames.html">Games</a>
-      <a href="/leaderboard.html">Leaderboard</a>
-    </div>
-    <div class="nav-actions">
-      <input type="text" class="search-bar" placeholder="Search games...">
-      <button class="login-btn">Login</button>
+    <a class="logo" href="index.html">GuessingGames.com</a>
+    <div class="nav-right">
+      <a class="pill" href="index.html#games">Games</a>
+      <a class="pill" id="authLink" href="signin.html?redirect=leaderboard.html">Sign in</a>
     </div>
   </nav>
 
-  <header>
-    <h1>Leaderboard</h1>
-    <p>See who's topping the charts this week!</p>
-  </header>
-
   <main>
-    <div class="leaderboard">
-      <h2>Top Players</h2>
-      <table id="leaderboard-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-          <!-- Rows inserted by JS -->
-        </tbody>
-      </table>
-      <div class="pagination">
-        <button onclick="changePage(-1)">&laquo; Prev</button>
-        <button onclick="changePage(1)">Next &raquo;</button>
+    <div class="eyebrow">Community rankings</div>
+    <h1>Leaderboard</h1>
+    <p class="sub">Compare your best score with signed-in players across Guess the Capital and Guess the Flag.</p>
+
+    <div class="toolbar">
+      <div class="tabs" role="tablist" aria-label="Choose leaderboard">
+        <button class="tab active" data-game="capital" type="button">Capitals</button>
+        <button class="tab" data-game="flags" type="button">Flags</button>
       </div>
+      <button class="refresh" id="refreshButton" type="button">Refresh</button>
     </div>
+
+    <section class="me-card" id="meCard" hidden>
+      <div class="avatar" id="meAvatar">?</div>
+      <div>
+        <div class="name" id="meName">You</div>
+        <div class="muted" id="meBest">Best score: —</div>
+      </div>
+      <div class="me-rank">
+        <div class="muted">Your rank</div>
+        <strong id="meRank">—</strong>
+      </div>
+    </section>
+
+    <div class="signin-cta" id="signinMessage">
+      Sign in to save your personal high score and see your position on the community leaderboard.
+    </div>
+
+    <section class="board" aria-live="polite">
+      <div class="status" id="status">Loading leaderboard...</div>
+      <div id="rows" hidden></div>
+    </section>
   </main>
 
-  <footer>
-    &copy; 2024 Guessing Games | 
-    <a href="https://www.instagram.com/colbymartel19/">Instagram</a> |
-    <a href="https://www.youtube.com/ColbyMartel">YouTube</a> |
-    <a href="https://www.tiktok.com/@Colbymartel">TikTok</a>
-  </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy,
+      limit,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  <script>
-    const players = [
-      { name: "ColbyM", score: 9850 },
-      { name: "GuessQueen99", score: 9230 },
-      { name: "MusicGuru88", score: 8900 },
-      { name: "TriviaKing", score: 8650 },
-      { name: "SongMaster", score: 8420 },
-      { name: "LyricLegend", score: 8200 },
-      { name: "FastFingers", score: 8030 },
-      { name: "SingItBack", score: 7900 },
-      { name: "TheGuessr", score: 7725 },
-      { name: "NoteHunter", score: 7600 },
-      { name: "EchoChamp", score: 7520 },
-      { name: "RhythmAce", score: 7400 },
-      { name: "MelodyWhiz", score: 7330 },
-      { name: "VibeSniper", score: 7200 },
-      { name: "TrackTamer", score: 7100 },
-      { name: "BeatBoss", score: 7000 },
-      { name: "QuizJammer", score: 6900 },
-      { name: "NoteBlazer", score: 6800 },
-      { name: "TempoTitan", score: 6700 },
-      { name: "HookHero", score: 6600 }
-    ];
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
 
-    let currentPage = 0;
-    const rowsPerPage = 10;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    function renderTable() {
-      const tbody = document.getElementById('leaderboard-body');
-      tbody.innerHTML = '';
-      const start = currentPage * rowsPerPage;
-      const end = start + rowsPerPage;
-      players.slice(start, end).forEach((player, index) => {
-        const row = `<tr>
-          <td>${start + index + 1}</td>
-          <td>${player.name}</td>
-          <td>${player.score}</td>
-        </tr>`;
-        tbody.innerHTML += row;
+    const tabs = [...document.querySelectorAll(".tab")];
+    const rowsEl = document.getElementById("rows");
+    const statusEl = document.getElementById("status");
+    const refreshButton = document.getElementById("refreshButton");
+    const authLink = document.getElementById("authLink");
+    const meCard = document.getElementById("meCard");
+    const signinMessage = document.getElementById("signinMessage");
+    const meAvatar = document.getElementById("meAvatar");
+    const meName = document.getElementById("meName");
+    const meBest = document.getElementById("meBest");
+    const meRank = document.getElementById("meRank");
+
+    let currentGame = "capital";
+    let currentUser = null;
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function initials(name) {
+      return String(name || "?")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0,2)
+        .map(part => part[0]?.toUpperCase() || "")
+        .join("") || "?";
+    }
+
+    async function loadLeaderboard() {
+      refreshButton.disabled = true;
+      refreshButton.textContent = "Refreshing...";
+      statusEl.hidden = false;
+      statusEl.textContent = "Loading leaderboard...";
+      rowsEl.hidden = true;
+
+      try {
+        const scoresRef = collection(db, "leaderboards", currentGame, "scores");
+        const topQuery = query(scoresRef, orderBy("score", "desc"), limit(100));
+        const snap = await getDocs(topQuery);
+
+        const scores = snap.docs.map((d, index) => ({
+          id: d.id,
+          rank: index + 1,
+          ...d.data()
+        }));
+
+        if (!scores.length) {
+          rowsEl.innerHTML = "";
+          rowsEl.hidden = true;
+          statusEl.hidden = false;
+          statusEl.textContent = "No scores yet. Be the first on the board.";
+        } else {
+          rowsEl.innerHTML = scores.map(entry => {
+            const isMe = currentUser && entry.uid === currentUser.uid;
+            const displayName = entry.displayName || "Player";
+            const avatar = entry.photoURL
+              ? `<img src="${escapeHTML(entry.photoURL)}" alt="">`
+              : escapeHTML(initials(displayName));
+
+            return `
+              <div class="row ${isMe ? "me" : ""}">
+                <div class="rank">${entry.rank}</div>
+                <div class="player">
+                  <div class="avatar">${avatar}</div>
+                  <div class="player-copy">
+                    <div class="name">${escapeHTML(displayName)}${isMe ? " · You" : ""}</div>
+                    <div class="muted">${escapeHTML(currentGame === "capital" ? "Guess the Capital" : "Guess the Flag")}</div>
+                  </div>
+                </div>
+                <div class="score">${Number(entry.score || 0).toLocaleString()}</div>
+              </div>
+            `;
+          }).join("");
+
+          statusEl.hidden = true;
+          rowsEl.hidden = false;
+        }
+
+        await loadMyScore(scores);
+      } catch (error) {
+        console.error(error);
+        rowsEl.hidden = true;
+        statusEl.hidden = false;
+        statusEl.textContent = "Could not load leaderboard. Check Firestore rules and indexes.";
+      } finally {
+        refreshButton.disabled = false;
+        refreshButton.textContent = "Refresh";
+      }
+    }
+
+    async function loadMyScore(topScores) {
+      if (!currentUser) {
+        meCard.hidden = true;
+        signinMessage.hidden = false;
+        return;
+      }
+
+      signinMessage.hidden = true;
+      meCard.hidden = false;
+
+      const displayName =
+        currentUser.displayName ||
+        currentUser.email?.split("@")[0] ||
+        "You";
+
+      meName.textContent = displayName;
+
+      if (currentUser.photoURL) {
+        meAvatar.innerHTML = `<img src="${escapeHTML(currentUser.photoURL)}" alt="">`;
+      } else {
+        meAvatar.textContent = initials(displayName);
+      }
+
+      const myRef = doc(db, "leaderboards", currentGame, "scores", currentUser.uid);
+      const mySnap = await getDoc(myRef);
+      const myData = mySnap.exists() ? mySnap.data() : null;
+      const best = Number(myData?.score || 0);
+
+      meBest.textContent = `Best score: ${best.toLocaleString()}`;
+
+      const inTop = topScores.find(row => row.uid === currentUser.uid);
+      if (inTop) {
+        meRank.textContent = `#${inTop.rank}`;
+        return;
+      }
+
+      if (!best) {
+        meRank.textContent = "Unranked";
+        return;
+      }
+
+      const allRef = collection(db, "leaderboards", currentGame, "scores");
+      const allSnap = await getDocs(allRef);
+      const better = allSnap.docs.filter(d => Number(d.data().score || 0) > best).length;
+      meRank.textContent = `#${better + 1}`;
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        currentGame = tab.dataset.game;
+        tabs.forEach(t => t.classList.toggle("active", t === tab));
+        loadLeaderboard();
       });
-    }
+    });
 
-    function changePage(direction) {
-      const totalPages = Math.ceil(players.length / rowsPerPage);
-      currentPage = Math.min(Math.max(currentPage + direction, 0), totalPages - 1);
-      renderTable();
-    }
+    refreshButton.addEventListener("click", loadLeaderboard);
 
-    renderTable();
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+
+      if (user) {
+        const first = (user.displayName || user.email || "Account").split(" ")[0].split("@")[0];
+        authLink.textContent = `Hi, ${first}`;
+        authLink.href = "signin.html";
+      } else {
+        authLink.textContent = "Sign in";
+        authLink.href = "signin.html?redirect=leaderboard.html";
+      }
+
+      loadLeaderboard();
+    });
   </script>
 </body>
 </html>

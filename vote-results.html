@@ -1115,7 +1115,7 @@
     <section class="week-section" data-week-key="week3">
       <div class="week-heading">
         <div>
-          <div class="week-kicker">Current Round</div>
+          <div class="week-kicker">Archived Round</div>
           <h2>Week 3</h2>
         </div>
         <div class="week-total" id="week3Count">—</div>
@@ -1173,6 +1173,73 @@
                 </tr>
               </thead>
               <tbody id="week3Rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="week-section" data-week-key="week4">
+      <div class="week-heading">
+        <div>
+          <div class="week-kicker">Current Round</div>
+          <h2>Week 4</h2>
+        </div>
+        <div class="week-total" id="week4Count">—</div>
+      </div>
+
+      <div
+        class="tally-grid"
+        id="week4Tally"
+        aria-label="Week 4 vote totals"
+      ></div>
+
+      <div class="section-head">
+        <div>
+          <h2>Individual votes</h2>
+          <p class="section-subtitle">
+            Hidden by default to keep the admin page clean.
+          </p>
+        </div>
+
+        <button
+          class="week-votes-toggle"
+          type="button"
+          data-toggle-week="week4"
+          aria-expanded="false"
+          aria-controls="week4VotesPanel"
+        >
+          <span class="toggle-label">Show votes</span>
+          <span class="toggle-arrow" aria-hidden="true">▼</span>
+        </button>
+      </div>
+
+      <div
+        class="week-votes-panel"
+        id="week4VotesPanel"
+        hidden
+      >
+        <section class="table-card">
+          <div class="status" id="week4Status">
+            Checking administrator access...
+          </div>
+
+          <div
+            class="table-scroll"
+            id="week4TableContainer"
+            hidden
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Vote</th>
+                  <th>Date</th>
+                  <th>UID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="week4Rows"></tbody>
             </table>
           </div>
         </section>
@@ -1279,6 +1346,11 @@
         label: "Week 3",
         roundId: "week-3-round-1",
         candidates: ["Frog", "Radio", "Naruto", "Colby"]
+      },
+      week4: {
+        label: "Week 4",
+        roundId: "week-4-round-1",
+        candidates: ["Colby", "Naruto", "Radio", "Ryse"]
       }
     };
 
@@ -1839,7 +1911,8 @@
       const counts = await Promise.all([
         loadWeekVotes("week1"),
         loadWeekVotes("week2"),
-        loadWeekVotes("week3")
+        loadWeekVotes("week3"),
+        loadWeekVotes("week4")
       ]);
 
       totalVotesEl.textContent =

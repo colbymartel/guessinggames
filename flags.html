@@ -186,18 +186,6 @@
       letter-spacing: -0.04em;
     }
 
-    .strikes {
-      display: inline-flex;
-      gap: 5px;
-      font-size: 20px;
-      letter-spacing: 0;
-    }
-
-    .strike.used {
-      opacity: 0.22;
-      filter: grayscale(1);
-    }
-
     .game-content {
       padding: 28px;
     }
@@ -482,10 +470,10 @@
     <ul class="nav-links" id="navMenu">
       <li><a href="index.html">Home</a></li>
       <li><a href="flags.html" class="active">Games</a></li>
-      <li><a href="halloffame.html">Hall of Fame</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
       <li><a href="live.html">Live Shows</a></li>
       <li>
-        <a href="signin.html?redirect=flags.html" class="nav-account">Sign in</a>
+        <a href="signin.html?redirect=flags.html" class="nav-account" id="authLink">Sign in</a>
       </li>
     </ul>
 
@@ -518,12 +506,8 @@
 
         <div class="stat">
           <div>
-            <span class="stat-label">Strikes</span>
-            <span class="strikes" id="strikes">
-              <span class="strike">❌</span>
-              <span class="strike">❌</span>
-              <span class="strike">❌</span>
-            </span>
+            <span class="stat-label">Time</span>
+            <span class="stat-value" id="timer">2:00</span>
           </div>
         </div>
       </div>
@@ -550,53 +534,311 @@
     </section>
   </main>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+      authDomain: "guessinggames.firebaseapp.com",
+      projectId: "guessinggames",
+      storageBucket: "guessinggames.firebasestorage.app",
+      messagingSenderId: "431644741449",
+      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     const questions = [
-      { flag: "🇺🇸", country: "United States", choices: ["United States", "Malaysia", "Liberia", "Puerto Rico"] },
-      { flag: "🇫🇷", country: "France", choices: ["Netherlands", "France", "Russia", "Luxembourg"] },
-      { flag: "🇯🇵", country: "Japan", choices: ["Bangladesh", "South Korea", "Japan", "Indonesia"] },
-      { flag: "🇧🇷", country: "Brazil", choices: ["Brazil", "Bolivia", "Portugal", "Mexico"] },
-      { flag: "🇨🇦", country: "Canada", choices: ["Canada", "Austria", "Peru", "Denmark"] },
-      { flag: "🇩🇪", country: "Germany", choices: ["Belgium", "Germany", "Romania", "Armenia"] },
-      { flag: "🇮🇹", country: "Italy", choices: ["Mexico", "Ireland", "Italy", "Hungary"] },
-      { flag: "🇬🇧", country: "United Kingdom", choices: ["Australia", "New Zealand", "United Kingdom", "Iceland"] },
-      { flag: "🇦🇺", country: "Australia", choices: ["Australia", "New Zealand", "Fiji", "United Kingdom"] },
-      { flag: "🇮🇳", country: "India", choices: ["India", "Niger", "Ireland", "Ivory Coast"] },
-      { flag: "🇲🇽", country: "Mexico", choices: ["Italy", "Mexico", "Hungary", "Iran"] },
-      { flag: "🇰🇷", country: "South Korea", choices: ["Japan", "South Korea", "Taiwan", "Singapore"] },
-      { flag: "🇪🇸", country: "Spain", choices: ["Spain", "Colombia", "Ecuador", "Venezuela"] },
-      { flag: "🇦🇷", country: "Argentina", choices: ["Uruguay", "Argentina", "Guatemala", "Honduras"] },
-      { flag: "🇿🇦", country: "South Africa", choices: ["South Africa", "Kenya", "Ghana", "Zimbabwe"] },
-      { flag: "🇸🇪", country: "Sweden", choices: ["Norway", "Finland", "Sweden", "Iceland"] },
-      { flag: "🇳🇴", country: "Norway", choices: ["Denmark", "Norway", "Sweden", "Finland"] },
-      { flag: "🇬🇷", country: "Greece", choices: ["Greece", "Israel", "Finland", "Uruguay"] },
-      { flag: "🇵🇹", country: "Portugal", choices: ["Spain", "Portugal", "Brazil", "Italy"] },
-      { flag: "🇹🇭", country: "Thailand", choices: ["Thailand", "Costa Rica", "North Korea", "Paraguay"] },
-      { flag: "🇨🇭", country: "Switzerland", choices: ["Denmark", "Switzerland", "Georgia", "Tonga"] },
-      { flag: "🇵🇭", country: "Philippines", choices: ["Philippines", "Czechia", "Cuba", "Chile"] },
-      { flag: "🇹🇷", country: "Turkey", choices: ["Tunisia", "Turkey", "Pakistan", "Morocco"] },
-      { flag: "🇳🇿", country: "New Zealand", choices: ["Australia", "New Zealand", "Fiji", "Samoa"] }
+      { flag: "🇦🇫", country: "Afghanistan", choices: ["Cambodia", "Afghanistan", "Sri Lanka", "Armenia"] },
+      { flag: "🇦🇱", country: "Albania", choices: ["Albania", "Vatican City", "Burundi", "Colombia"] },
+      { flag: "🇩🇿", country: "Algeria", choices: ["Algeria", "Brunei", "Austria", "Australia"] },
+      { flag: "🇦🇩", country: "Andorra", choices: ["United Kingdom", "Equatorial Guinea", "Saint Kitts and Nevis", "Andorra"] },
+      { flag: "🇦🇴", country: "Angola", choices: ["Senegal", "Angola", "Albania", "Hungary"] },
+      { flag: "🇦🇬", country: "Antigua and Barbuda", choices: ["Cuba", "Kuwait", "Antigua and Barbuda", "Hungary"] },
+      { flag: "🇦🇷", country: "Argentina", choices: ["Brunei", "Argentina", "Luxembourg", "Bulgaria"] },
+      { flag: "🇦🇲", country: "Armenia", choices: ["Nauru", "Armenia", "Uzbekistan", "Bahrain"] },
+      { flag: "🇦🇺", country: "Australia", choices: ["Iran", "Russia", "Australia", "South Korea"] },
+      { flag: "🇦🇹", country: "Austria", choices: ["Bahrain", "Uganda", "Austria", "Benin"] },
+      { flag: "🇦🇿", country: "Azerbaijan", choices: ["Gambia", "Azerbaijan", "Burkina Faso", "Luxembourg"] },
+      { flag: "🇧🇸", country: "Bahamas", choices: ["Czechia", "Bahamas", "Latvia", "Libya"] },
+      { flag: "🇧🇭", country: "Bahrain", choices: ["Tonga", "Bahrain", "Suriname", "Tuvalu"] },
+      { flag: "🇧🇩", country: "Bangladesh", choices: ["Poland", "Ghana", "Bangladesh", "Uzbekistan"] },
+      { flag: "🇧🇧", country: "Barbados", choices: ["Haiti", "Barbados", "Tunisia", "Sri Lanka"] },
+      { flag: "🇧🇾", country: "Belarus", choices: ["Barbados", "Belarus", "Gabon", "Australia"] },
+      { flag: "🇧🇪", country: "Belgium", choices: ["Belgium", "Ethiopia", "Belize", "Saint Vincent and the Grenadines"] },
+      { flag: "🇧🇿", country: "Belize", choices: ["Nauru", "Maldives", "Belize", "Sudan"] },
+      { flag: "🇧🇯", country: "Benin", choices: ["Greece", "Vietnam", "Benin", "Saint Kitts and Nevis"] },
+      { flag: "🇧🇹", country: "Bhutan", choices: ["Lesotho", "Bhutan", "Saudi Arabia", "Mali"] },
+      { flag: "🇧🇴", country: "Bolivia", choices: ["Zimbabwe", "Bahrain", "Bolivia", "Brunei"] },
+      { flag: "🇧🇦", country: "Bosnia and Herzegovina", choices: ["Bosnia and Herzegovina", "Seychelles", "Micronesia", "Tonga"] },
+      { flag: "🇧🇼", country: "Botswana", choices: ["Netherlands", "Seychelles", "Botswana", "Philippines"] },
+      { flag: "🇧🇷", country: "Brazil", choices: ["Tonga", "United States", "Brazil", "Cameroon"] },
+      { flag: "🇧🇳", country: "Brunei", choices: ["Mongolia", "Cambodia", "Brunei", "Iran"] },
+      { flag: "🇧🇬", country: "Bulgaria", choices: ["Bulgaria", "United States", "Pakistan", "Guinea-Bissau"] },
+      { flag: "🇧🇫", country: "Burkina Faso", choices: ["Sri Lanka", "Burkina Faso", "South Korea", "Iraq"] },
+      { flag: "🇧🇮", country: "Burundi", choices: ["Burundi", "Qatar", "Philippines", "Czechia"] },
+      { flag: "🇨🇻", country: "Cabo Verde", choices: ["Cabo Verde", "North Macedonia", "Angola", "Cambodia"] },
+      { flag: "🇰🇭", country: "Cambodia", choices: ["Saint Vincent and the Grenadines", "Germany", "Cambodia", "Barbados"] },
+      { flag: "🇨🇲", country: "Cameroon", choices: ["Belize", "Cameroon", "Chad", "Poland"] },
+      { flag: "🇨🇦", country: "Canada", choices: ["Democratic Republic of the Congo", "Guinea-Bissau", "Romania", "Canada"] },
+      { flag: "🇨🇫", country: "Central African Republic", choices: ["United Arab Emirates", "Central African Republic", "Italy", "Mali"] },
+      { flag: "🇹🇩", country: "Chad", choices: ["France", "Chad", "Greece", "Cameroon"] },
+      { flag: "🇨🇱", country: "Chile", choices: ["Chile", "Gabon", "Senegal", "Russia"] },
+      { flag: "🇨🇳", country: "China", choices: ["China", "Belarus", "Ukraine", "South Sudan"] },
+      { flag: "🇨🇴", country: "Colombia", choices: ["Kazakhstan", "Panama", "Colombia", "Benin"] },
+      { flag: "🇰🇲", country: "Comoros", choices: ["Chad", "Qatar", "Ethiopia", "Comoros"] },
+      { flag: "🇨🇷", country: "Costa Rica", choices: ["Costa Rica", "Egypt", "Brunei", "Marshall Islands"] },
+      { flag: "🇭🇷", country: "Croatia", choices: ["Micronesia", "Latvia", "Mauritania", "Croatia"] },
+      { flag: "🇨🇺", country: "Cuba", choices: ["Suriname", "Switzerland", "Cuba", "Timor-Leste"] },
+      { flag: "🇨🇾", country: "Cyprus", choices: ["Cyprus", "Burundi", "Uzbekistan", "Kiribati"] },
+      { flag: "🇨🇿", country: "Czechia", choices: ["China", "Mozambique", "Portugal", "Czechia"] },
+      { flag: "🇨🇩", country: "Democratic Republic of the Congo", choices: ["Greece", "Nepal", "Bhutan", "Democratic Republic of the Congo"] },
+      { flag: "🇩🇰", country: "Denmark", choices: ["Sweden", "Qatar", "Denmark", "Bahrain"] },
+      { flag: "🇩🇯", country: "Djibouti", choices: ["North Korea", "Marshall Islands", "Czechia", "Djibouti"] },
+      { flag: "🇩🇲", country: "Dominica", choices: ["Dominica", "Luxembourg", "Czechia", "Belarus"] },
+      { flag: "🇩🇴", country: "Dominican Republic", choices: ["India", "Micronesia", "Namibia", "Dominican Republic"] },
+      { flag: "🇪🇨", country: "Ecuador", choices: ["Ecuador", "Fiji", "Barbados", "Iran"] },
+      { flag: "🇪🇬", country: "Egypt", choices: ["Bahrain", "Barbados", "Saudi Arabia", "Egypt"] },
+      { flag: "🇸🇻", country: "El Salvador", choices: ["El Salvador", "Bolivia", "Barbados", "Palestine"] },
+      { flag: "🇬🇶", country: "Equatorial Guinea", choices: ["Georgia", "Equatorial Guinea", "Malta", "Timor-Leste"] },
+      { flag: "🇪🇷", country: "Eritrea", choices: ["Eritrea", "Azerbaijan", "Seychelles", "Sao Tome and Principe"] },
+      { flag: "🇪🇪", country: "Estonia", choices: ["Estonia", "Eritrea", "Guinea", "Thailand"] },
+      { flag: "🇸🇿", country: "Eswatini", choices: ["Maldives", "Eswatini", "Chad", "Thailand"] },
+      { flag: "🇪🇹", country: "Ethiopia", choices: ["Benin", "Zambia", "Algeria", "Ethiopia"] },
+      { flag: "🇫🇯", country: "Fiji", choices: ["Fiji", "Portugal", "Benin", "Eswatini"] },
+      { flag: "🇫🇮", country: "Finland", choices: ["Finland", "Ghana", "Belize", "Libya"] },
+      { flag: "🇫🇷", country: "France", choices: ["France", "Uganda", "Ireland", "Republic of the Congo"] },
+      { flag: "🇬🇦", country: "Gabon", choices: ["Burkina Faso", "Gabon", "Tajikistan", "Chile"] },
+      { flag: "🇬🇲", country: "Gambia", choices: ["Gambia", "Vietnam", "Russia", "Croatia"] },
+      { flag: "🇬🇪", country: "Georgia", choices: ["United Kingdom", "Kuwait", "Georgia", "Eritrea"] },
+      { flag: "🇩🇪", country: "Germany", choices: ["Brazil", "Grenada", "Bangladesh", "Germany"] },
+      { flag: "🇬🇭", country: "Ghana", choices: ["Ghana", "Kenya", "Afghanistan", "Chad"] },
+      { flag: "🇬🇷", country: "Greece", choices: ["Uganda", "Moldova", "Greece", "Russia"] },
+      { flag: "🇬🇩", country: "Grenada", choices: ["Republic of the Congo", "Grenada", "Costa Rica", "Tunisia"] },
+      { flag: "🇬🇹", country: "Guatemala", choices: ["Guatemala", "Monaco", "Central African Republic", "Azerbaijan"] },
+      { flag: "🇬🇳", country: "Guinea", choices: ["Guinea", "Lebanon", "Tonga", "Estonia"] },
+      { flag: "🇬🇼", country: "Guinea-Bissau", choices: ["Guinea-Bissau", "Marshall Islands", "Latvia", "Saint Kitts and Nevis"] },
+      { flag: "🇬🇾", country: "Guyana", choices: ["Djibouti", "Guyana", "Argentina", "Mauritania"] },
+      { flag: "🇭🇹", country: "Haiti", choices: ["Vatican City", "Mauritania", "Haiti", "Thailand"] },
+      { flag: "🇭🇳", country: "Honduras", choices: ["Luxembourg", "Honduras", "Burundi", "Tuvalu"] },
+      { flag: "🇭🇺", country: "Hungary", choices: ["Nauru", "Hungary", "Equatorial Guinea", "Laos"] },
+      { flag: "🇮🇸", country: "Iceland", choices: ["Argentina", "Egypt", "Syria", "Iceland"] },
+      { flag: "🇮🇳", country: "India", choices: ["Belize", "Honduras", "Laos", "India"] },
+      { flag: "🇮🇩", country: "Indonesia", choices: ["Armenia", "Indonesia", "Guatemala", "Cambodia"] },
+      { flag: "🇮🇷", country: "Iran", choices: ["Austria", "Seychelles", "Burundi", "Iran"] },
+      { flag: "🇮🇶", country: "Iraq", choices: ["Palestine", "Iraq", "Slovakia", "Mongolia"] },
+      { flag: "🇮🇪", country: "Ireland", choices: ["Bahamas", "Ukraine", "Grenada", "Ireland"] },
+      { flag: "🇮🇱", country: "Israel", choices: ["Liberia", "Monaco", "Israel", "Belize"] },
+      { flag: "🇮🇹", country: "Italy", choices: ["Tajikistan", "Canada", "Italy", "United States"] },
+      { flag: "🇨🇮", country: "Ivory Coast", choices: ["Tanzania", "Marshall Islands", "Jordan", "Ivory Coast"] },
+      { flag: "🇯🇲", country: "Jamaica", choices: ["Russia", "Central African Republic", "Egypt", "Jamaica"] },
+      { flag: "🇯🇵", country: "Japan", choices: ["Japan", "Togo", "Yemen", "Denmark"] },
+      { flag: "🇯🇴", country: "Jordan", choices: ["Iraq", "Iceland", "Estonia", "Jordan"] },
+      { flag: "🇰🇿", country: "Kazakhstan", choices: ["Netherlands", "Kazakhstan", "Timor-Leste", "Morocco"] },
+      { flag: "🇰🇪", country: "Kenya", choices: ["Kenya", "Syria", "Democratic Republic of the Congo", "Vatican City"] },
+      { flag: "🇰🇮", country: "Kiribati", choices: ["Zambia", "Kiribati", "Brazil", "Gambia"] },
+      { flag: "🇰🇼", country: "Kuwait", choices: ["Bahamas", "Comoros", "Kuwait", "Argentina"] },
+      { flag: "🇰🇬", country: "Kyrgyzstan", choices: ["Namibia", "Kyrgyzstan", "South Sudan", "Mauritius"] },
+      { flag: "🇱🇦", country: "Laos", choices: ["Laos", "Norway", "Germany", "Mali"] },
+      { flag: "🇱🇻", country: "Latvia", choices: ["Micronesia", "Latvia", "Zambia", "Burundi"] },
+      { flag: "🇱🇧", country: "Lebanon", choices: ["Ghana", "Lebanon", "Rwanda", "Bahrain"] },
+      { flag: "🇱🇸", country: "Lesotho", choices: ["Nepal", "Lesotho", "Tanzania", "Philippines"] },
+      { flag: "🇱🇷", country: "Liberia", choices: ["Romania", "Cuba", "Mozambique", "Liberia"] },
+      { flag: "🇱🇾", country: "Libya", choices: ["Zambia", "Ghana", "Libya", "Sri Lanka"] },
+      { flag: "🇱🇮", country: "Liechtenstein", choices: ["Haiti", "Georgia", "South Korea", "Liechtenstein"] },
+      { flag: "🇱🇹", country: "Lithuania", choices: ["Guyana", "Gambia", "Lithuania", "Kazakhstan"] },
+      { flag: "🇱🇺", country: "Luxembourg", choices: ["Costa Rica", "China", "Gabon", "Luxembourg"] },
+      { flag: "🇲🇬", country: "Madagascar", choices: ["Uganda", "Belgium", "Eswatini", "Madagascar"] },
+      { flag: "🇲🇼", country: "Malawi", choices: ["Mauritius", "Netherlands", "Malawi", "Qatar"] },
+      { flag: "🇲🇾", country: "Malaysia", choices: ["Malaysia", "Saudi Arabia", "Turkmenistan", "Madagascar"] },
+      { flag: "🇲🇻", country: "Maldives", choices: ["Niger", "Maldives", "Albania", "Laos"] },
+      { flag: "🇲🇱", country: "Mali", choices: ["Vatican City", "Portugal", "Mali", "Yemen"] },
+      { flag: "🇲🇹", country: "Malta", choices: ["Malta", "North Korea", "Mongolia", "Guyana"] },
+      { flag: "🇲🇭", country: "Marshall Islands", choices: ["Mali", "Thailand", "Marshall Islands", "Togo"] },
+      { flag: "🇲🇷", country: "Mauritania", choices: ["Poland", "South Africa", "Argentina", "Mauritania"] },
+      { flag: "🇲🇺", country: "Mauritius", choices: ["Moldova", "Bosnia and Herzegovina", "Mauritius", "Sudan"] },
+      { flag: "🇲🇽", country: "Mexico", choices: ["Mexico", "Guatemala", "Bahrain", "Lithuania"] },
+      { flag: "🇫🇲", country: "Micronesia", choices: ["Japan", "Micronesia", "Kenya", "Lithuania"] },
+      { flag: "🇲🇩", country: "Moldova", choices: ["Angola", "Moldova", "New Zealand", "Bolivia"] },
+      { flag: "🇲🇨", country: "Monaco", choices: ["Belize", "Azerbaijan", "Monaco", "Sweden"] },
+      { flag: "🇲🇳", country: "Mongolia", choices: ["Croatia", "Mongolia", "Antigua and Barbuda", "South Africa"] },
+      { flag: "🇲🇪", country: "Montenegro", choices: ["Thailand", "Saint Lucia", "Montenegro", "Cambodia"] },
+      { flag: "🇲🇦", country: "Morocco", choices: ["Slovakia", "Czechia", "Morocco", "Liberia"] },
+      { flag: "🇲🇿", country: "Mozambique", choices: ["Burundi", "Sao Tome and Principe", "Mozambique", "Argentina"] },
+      { flag: "🇲🇲", country: "Myanmar", choices: ["United Kingdom", "Myanmar", "El Salvador", "Malaysia"] },
+      { flag: "🇳🇦", country: "Namibia", choices: ["Turkmenistan", "Namibia", "Iraq", "Burkina Faso"] },
+      { flag: "🇳🇷", country: "Nauru", choices: ["Nauru", "Poland", "Kuwait", "Micronesia"] },
+      { flag: "🇳🇵", country: "Nepal", choices: ["Nepal", "North Macedonia", "Mauritius", "Andorra"] },
+      { flag: "🇳🇱", country: "Netherlands", choices: ["Ukraine", "Spain", "Netherlands", "Namibia"] },
+      { flag: "🇳🇿", country: "New Zealand", choices: ["Vanuatu", "Paraguay", "New Zealand", "Sweden"] },
+      { flag: "🇳🇮", country: "Nicaragua", choices: ["Nicaragua", "Nepal", "Monaco", "Vanuatu"] },
+      { flag: "🇳🇪", country: "Niger", choices: ["Botswana", "Mozambique", "Niger", "Honduras"] },
+      { flag: "🇳🇬", country: "Nigeria", choices: ["Nigeria", "Armenia", "Kenya", "Norway"] },
+      { flag: "🇰🇵", country: "North Korea", choices: ["Eswatini", "North Korea", "Laos", "Guatemala"] },
+      { flag: "🇲🇰", country: "North Macedonia", choices: ["North Macedonia", "Papua New Guinea", "Rwanda", "Algeria"] },
+      { flag: "🇳🇴", country: "Norway", choices: ["United States", "Norway", "North Korea", "Malta"] },
+      { flag: "🇴🇲", country: "Oman", choices: ["United Arab Emirates", "North Korea", "Suriname", "Oman"] },
+      { flag: "🇵🇰", country: "Pakistan", choices: ["Indonesia", "Mali", "Pakistan", "Fiji"] },
+      { flag: "🇵🇼", country: "Palau", choices: ["New Zealand", "Palau", "Russia", "Philippines"] },
+      { flag: "🇵🇸", country: "Palestine", choices: ["Laos", "Palestine", "Tuvalu", "Myanmar"] },
+      { flag: "🇵🇦", country: "Panama", choices: ["United States", "Gabon", "Panama", "Cameroon"] },
+      { flag: "🇵🇬", country: "Papua New Guinea", choices: ["Papua New Guinea", "Tunisia", "Vietnam", "Portugal"] },
+      { flag: "🇵🇾", country: "Paraguay", choices: ["Niger", "Paraguay", "Venezuela", "Haiti"] },
+      { flag: "🇵🇪", country: "Peru", choices: ["Lebanon", "Indonesia", "Peru", "France"] },
+      { flag: "🇵🇭", country: "Philippines", choices: ["Poland", "Philippines", "Ukraine", "Central African Republic"] },
+      { flag: "🇵🇱", country: "Poland", choices: ["Russia", "Poland", "Turkmenistan", "India"] },
+      { flag: "🇵🇹", country: "Portugal", choices: ["Burkina Faso", "Portugal", "Andorra", "Samoa"] },
+      { flag: "🇶🇦", country: "Qatar", choices: ["Qatar", "Dominican Republic", "Kiribati", "Mongolia"] },
+      { flag: "🇨🇬", country: "Republic of the Congo", choices: ["Belgium", "Maldives", "Cambodia", "Republic of the Congo"] },
+      { flag: "🇷🇴", country: "Romania", choices: ["Saint Lucia", "Iraq", "Romania", "Costa Rica"] },
+      { flag: "🇷🇺", country: "Russia", choices: ["Rwanda", "Russia", "Slovakia", "Mauritania"] },
+      { flag: "🇷🇼", country: "Rwanda", choices: ["Iran", "Mozambique", "Montenegro", "Rwanda"] },
+      { flag: "🇰🇳", country: "Saint Kitts and Nevis", choices: ["Saint Kitts and Nevis", "Slovenia", "Bulgaria", "Venezuela"] },
+      { flag: "🇱🇨", country: "Saint Lucia", choices: ["Saint Lucia", "Bolivia", "Guinea", "Tajikistan"] },
+      { flag: "🇻🇨", country: "Saint Vincent and the Grenadines", choices: ["Saint Vincent and the Grenadines", "Cuba", "Bhutan", "Romania"] },
+      { flag: "🇼🇸", country: "Samoa", choices: ["Seychelles", "Samoa", "Tunisia", "Netherlands"] },
+      { flag: "🇸🇲", country: "San Marino", choices: ["Uganda", "Hungary", "Iceland", "San Marino"] },
+      { flag: "🇸🇹", country: "Sao Tome and Principe", choices: ["Senegal", "Guinea", "Sao Tome and Principe", "South Korea"] },
+      { flag: "🇸🇦", country: "Saudi Arabia", choices: ["Suriname", "Qatar", "Saudi Arabia", "Finland"] },
+      { flag: "🇸🇳", country: "Senegal", choices: ["Benin", "Belarus", "Senegal", "Czechia"] },
+      { flag: "🇷🇸", country: "Serbia", choices: ["Mongolia", "Canada", "Serbia", "Nepal"] },
+      { flag: "🇸🇨", country: "Seychelles", choices: ["Portugal", "Guyana", "Oman", "Seychelles"] },
+      { flag: "🇸🇱", country: "Sierra Leone", choices: ["Seychelles", "Azerbaijan", "Sierra Leone", "Moldova"] },
+      { flag: "🇸🇬", country: "Singapore", choices: ["Singapore", "Brazil", "France", "Argentina"] },
+      { flag: "🇸🇰", country: "Slovakia", choices: ["Samoa", "Zimbabwe", "Slovakia", "Azerbaijan"] },
+      { flag: "🇸🇮", country: "Slovenia", choices: ["Honduras", "Dominica", "Sao Tome and Principe", "Slovenia"] },
+      { flag: "🇸🇧", country: "Solomon Islands", choices: ["Brazil", "Kyrgyzstan", "Netherlands", "Solomon Islands"] },
+      { flag: "🇸🇴", country: "Somalia", choices: ["Thailand", "Somalia", "Burkina Faso", "Cyprus"] },
+      { flag: "🇿🇦", country: "South Africa", choices: ["Maldives", "South Africa", "Tajikistan", "Iceland"] },
+      { flag: "🇰🇷", country: "South Korea", choices: ["Jamaica", "South Korea", "Greece", "Italy"] },
+      { flag: "🇸🇸", country: "South Sudan", choices: ["Portugal", "Nauru", "Syria", "South Sudan"] },
+      { flag: "🇪🇸", country: "Spain", choices: ["Panama", "Lebanon", "Somalia", "Spain"] },
+      { flag: "🇱🇰", country: "Sri Lanka", choices: ["Bangladesh", "Guinea-Bissau", "Sri Lanka", "Eritrea"] },
+      { flag: "🇸🇩", country: "Sudan", choices: ["Nigeria", "Sudan", "Canada", "Turkmenistan"] },
+      { flag: "🇸🇷", country: "Suriname", choices: ["Suriname", "Cuba", "Israel", "Ukraine"] },
+      { flag: "🇸🇪", country: "Sweden", choices: ["Finland", "Cambodia", "Brazil", "Sweden"] },
+      { flag: "🇨🇭", country: "Switzerland", choices: ["Norway", "Switzerland", "United Kingdom", "India"] },
+      { flag: "🇸🇾", country: "Syria", choices: ["Myanmar", "Netherlands", "Syria", "Germany"] },
+      { flag: "🇹🇯", country: "Tajikistan", choices: ["Yemen", "Tajikistan", "Seychelles", "Palau"] },
+      { flag: "🇹🇿", country: "Tanzania", choices: ["Tanzania", "Kiribati", "Mauritania", "Pakistan"] },
+      { flag: "🇹🇭", country: "Thailand", choices: ["Saudi Arabia", "Iran", "Uruguay", "Thailand"] },
+      { flag: "🇹🇱", country: "Timor-Leste", choices: ["Poland", "Niger", "Timor-Leste", "Kuwait"] },
+      { flag: "🇹🇬", country: "Togo", choices: ["Myanmar", "Togo", "Ecuador", "Jamaica"] },
+      { flag: "🇹🇴", country: "Tonga", choices: ["Gabon", "Marshall Islands", "Tonga", "Bahamas"] },
+      { flag: "🇹🇹", country: "Trinidad and Tobago", choices: ["Luxembourg", "Uganda", "Trinidad and Tobago", "Lithuania"] },
+      { flag: "🇹🇳", country: "Tunisia", choices: ["Tunisia", "Oman", "Central African Republic", "Senegal"] },
+      { flag: "🇹🇷", country: "Turkey", choices: ["Paraguay", "Turkey", "Myanmar", "Bulgaria"] },
+      { flag: "🇹🇲", country: "Turkmenistan", choices: ["Turkmenistan", "Croatia", "Sweden", "Malta"] },
+      { flag: "🇹🇻", country: "Tuvalu", choices: ["Somalia", "Kenya", "Tunisia", "Tuvalu"] },
+      { flag: "🇺🇬", country: "Uganda", choices: ["Jordan", "Philippines", "Thailand", "Uganda"] },
+      { flag: "🇺🇦", country: "Ukraine", choices: ["Solomon Islands", "Austria", "Ukraine", "Portugal"] },
+      { flag: "🇦🇪", country: "United Arab Emirates", choices: ["Yemen", "Brazil", "France", "United Arab Emirates"] },
+      { flag: "🇬🇧", country: "United Kingdom", choices: ["Czechia", "United Kingdom", "Montenegro", "Tunisia"] },
+      { flag: "🇺🇸", country: "United States", choices: ["Japan", "United States", "Barbados", "Indonesia"] },
+      { flag: "🇺🇾", country: "Uruguay", choices: ["Germany", "Comoros", "Peru", "Uruguay"] },
+      { flag: "🇺🇿", country: "Uzbekistan", choices: ["Denmark", "Democratic Republic of the Congo", "Bolivia", "Uzbekistan"] },
+      { flag: "🇻🇺", country: "Vanuatu", choices: ["Norway", "Colombia", "Vanuatu", "Sao Tome and Principe"] },
+      { flag: "🇻🇦", country: "Vatican City", choices: ["Vatican City", "Tajikistan", "Grenada", "Namibia"] },
+      { flag: "🇻🇪", country: "Venezuela", choices: ["Venezuela", "Cuba", "Qatar", "Timor-Leste"] },
+      { flag: "🇻🇳", country: "Vietnam", choices: ["Saudi Arabia", "Iran", "Spain", "Vietnam"] },
+      { flag: "🇾🇪", country: "Yemen", choices: ["El Salvador", "Myanmar", "Iraq", "Yemen"] },
+      { flag: "🇿🇲", country: "Zambia", choices: ["Gambia", "Lithuania", "Zambia", "Saint Vincent and the Grenadines"] },
+      { flag: "🇿🇼", country: "Zimbabwe", choices: ["Antigua and Barbuda", "Turkmenistan", "Indonesia", "Zimbabwe"] }
     ];
 
     const flagEl = document.getElementById("flag");
     const answersEl = document.getElementById("answers");
     const scoreEl = document.getElementById("score");
     const highScoreEl = document.getElementById("highScore");
-    const strikesEl = document.getElementById("strikes");
+    const timerEl = document.getElementById("timer");
     const feedbackEl = document.getElementById("feedback");
     const nextBtn = document.getElementById("nextBtn");
     const restartBtn = document.getElementById("restartBtn");
     const gameOverEl = document.getElementById("gameOver");
     const finalScoreEl = document.getElementById("finalScore");
+    const authLink = document.getElementById("authLink");
+
+    let currentUser = null;
+    let cloudHighScore = 0;
 
     let score = 0;
-    let strikes = 0;
+    let timeLeft = 120;
+    let timerInterval = null;
+    let timerStarted = false;
     let currentQuestion = null;
     let answered = false;
     let deck = [];
 
     let highScore = Number(localStorage.getItem("flagGameHighScore") || 0);
     highScoreEl.textContent = highScore;
+
+    async function loadCloudHighScore(user) {
+      if (!user) return;
+
+      try {
+        const scoreRef = doc(db, "leaderboards", "flags", "scores", user.uid);
+        const snap = await getDoc(scoreRef);
+
+        if (snap.exists()) {
+          cloudHighScore = Number(snap.data().score || 0);
+
+          if (cloudHighScore > highScore) {
+            highScore = cloudHighScore;
+            localStorage.setItem("flagGameHighScore", String(highScore));
+            highScoreEl.textContent = highScore;
+          }
+        }
+      } catch (error) {
+        console.error("Could not load community high score:", error);
+      }
+    }
+
+    async function saveCloudHighScore() {
+      if (!currentUser || score <= cloudHighScore) return;
+
+      try {
+        const scoreRef = doc(db, "leaderboards", "flags", "scores", currentUser.uid);
+        const existingSnap = await getDoc(scoreRef);
+        const existingScore = existingSnap.exists()
+          ? Number(existingSnap.data().score || 0)
+          : 0;
+
+        if (score <= existingScore) {
+          cloudHighScore = existingScore;
+          return;
+        }
+
+        const displayName =
+          currentUser.displayName ||
+          currentUser.email?.split("@")[0] ||
+          "Player";
+
+        await setDoc(scoreRef, {
+          uid: currentUser.uid,
+          displayName,
+          photoURL: currentUser.photoURL || "",
+          score,
+          updatedAt: serverTimestamp()
+        });
+
+        cloudHighScore = score;
+      } catch (error) {
+        console.error("Could not save community high score:", error);
+      }
+    }
 
     function shuffle(array) {
       const copy = [...array];
@@ -609,14 +851,51 @@
 
     function resetDeck() {
       // When every flag has been used, reshuffle the full set and keep going.
-      // The game has no question limit; it only ends after 3 strikes.
+      // The game has no question limit; it ends when the 2-minute timer reaches zero.
       deck = shuffle(questions);
     }
 
-    function updateStrikes() {
-      [...strikesEl.querySelectorAll(".strike")].forEach((el, index) => {
-        el.classList.toggle("used", index >= strikes);
-      });
+    function formatTime(seconds) {
+      const safe = Math.max(0, seconds);
+      const minutes = Math.floor(safe / 60);
+      const remaining = safe % 60;
+      return `${minutes}:${String(remaining).padStart(2, "0")}`;
+    }
+
+    function updateTimer() {
+      timerEl.textContent = formatTime(timeLeft);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      updateTimer();
+
+      timerInterval = setInterval(() => {
+        timeLeft -= 1;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+          stopTimer();
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function subtractTime(seconds) {
+      timeLeft = Math.max(0, timeLeft - seconds);
+      updateTimer();
+
+      if (timeLeft <= 0) {
+        stopTimer();
+        setTimeout(endGame, 350);
+      }
     }
 
     function updateHighScore() {
@@ -624,6 +903,10 @@
         highScore = score;
         localStorage.setItem("flagGameHighScore", String(highScore));
         highScoreEl.textContent = highScore;
+      }
+
+      if (currentUser && score > cloudHighScore) {
+        saveCloudHighScore();
       }
     }
 
@@ -653,6 +936,11 @@
       if (answered) return;
       answered = true;
 
+      if (!timerStarted) {
+        timerStarted = true;
+        startTimer();
+      }
+
       const buttons = [...answersEl.querySelectorAll(".answer")];
       buttons.forEach(btn => btn.disabled = true);
 
@@ -663,22 +951,20 @@
         feedbackEl.textContent = "Correct! +1";
         updateHighScore();
       } else {
-        strikes += 1;
         button.classList.add("wrong");
         const correctBtn = buttons.find(btn => btn.textContent === currentQuestion.country);
         if (correctBtn) correctBtn.classList.add("correct");
-        feedbackEl.textContent = `It was ${currentQuestion.country}.`;
-        updateStrikes();
+        subtractTime(5);
+        feedbackEl.textContent = `It was ${currentQuestion.country}. −5 seconds`;
       }
 
-      if (strikes >= 3) {
-        setTimeout(endGame, 650);
-      } else {
+      if (timeLeft > 0) {
         nextBtn.style.display = "block";
       }
     }
 
     function endGame() {
+      stopTimer();
       answersEl.style.display = "none";
       feedbackEl.style.display = "none";
       nextBtn.style.display = "none";
@@ -693,9 +979,11 @@
 
     function restartGame() {
       score = 0;
-      strikes = 0;
+      timeLeft = 120;
+      timerStarted = false;
+      stopTimer();
       scoreEl.textContent = "0";
-      updateStrikes();
+      updateTimer();
 
       answersEl.style.display = "grid";
       feedbackEl.style.display = "grid";
@@ -722,7 +1010,27 @@
       document.getElementById("nav").classList.toggle("scrolled", window.scrollY > 10);
     });
 
-    updateStrikes();
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+
+      if (user) {
+        const firstName =
+          (user.displayName || user.email || "Account")
+            .split(" ")[0]
+            .split("@")[0];
+
+        authLink.textContent = `Hi, ${firstName}`;
+        authLink.href = "signin.html";
+
+        await loadCloudHighScore(user);
+      } else {
+        cloudHighScore = 0;
+        authLink.textContent = "Sign in";
+        authLink.href = "signin.html?redirect=flags.html";
+      }
+    });
+
+    updateTimer();
     resetDeck();
     loadQuestion();
   </script>
