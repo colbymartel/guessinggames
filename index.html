@@ -423,65 +423,167 @@
 
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
+  perspective: 1200px;
 }
 
 .game-card {
+  position: relative;
   min-width: 0;
-  min-height: 280px;
+  min-height: 285px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1.85rem;
+  overflow: hidden;
+  isolation: isolate;
   color: var(--text);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 1.4rem;
-  box-shadow: 0 14px 34px rgba(59,123,191,.08);
-  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  background:
+    radial-gradient(circle at 92% 6%, rgba(79,134,179,.16), transparent 32%),
+    linear-gradient(145deg, #ffffff 0%, #fbfdff 58%, #f1f7fb 100%);
+  border: 1px solid rgba(79,134,179,.20);
+  border-radius: 1.65rem;
+  box-shadow:
+    0 18px 45px rgba(31,65,96,.10),
+    0 3px 10px rgba(31,65,96,.05),
+    inset 0 1px 0 rgba(255,255,255,.95);
+  transition:
+    transform .24s ease,
+    border-color .24s ease,
+    box-shadow .24s ease;
 }
 
-.game-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 20px 42px rgba(59,123,191,.14);
+.game-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 150px;
+  height: 150px;
+  right: -55px;
+  bottom: -65px;
+  border-radius: 50%;
+  background: rgba(79,134,179,.08);
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+.game-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255,255,255,.55), transparent 35%);
+}
+
+.game-card:not(.coming-soon):hover {
+  transform: translateY(-9px) scale(1.015);
+  border-color: rgba(79,134,179,.52);
+  box-shadow:
+    0 30px 62px rgba(55,111,156,.18),
+    0 8px 18px rgba(31,65,96,.08),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+.game-card:not(.coming-soon):hover::before {
+  transform: scale(1.35);
+}
+
+.game-card:not(.coming-soon):hover .game-icon {
+  transform: rotate(-5deg) scale(1.08);
+  box-shadow: 0 12px 26px rgba(79,134,179,.23);
+}
+
+.game-card:not(.coming-soon):hover .game-play i {
+  transform: translateX(4px);
+}
+
+.game-card.coming-soon {
+  color: #7f8a96;
+  background:
+    linear-gradient(145deg, rgba(247,249,251,.98), rgba(231,236,241,.98));
+  border-color: #d7dee5;
+  box-shadow:
+    0 12px 30px rgba(51,65,85,.055),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  cursor: default;
+}
+
+.game-card.coming-soon::before {
+  background: rgba(118,132,146,.07);
+}
+
+.game-card.coming-soon::after {
+  background: linear-gradient(120deg, rgba(255,255,255,.48), transparent 38%);
+}
+
+.game-card.coming-soon .game-icon {
+  color: #7f8a96;
+  background: linear-gradient(145deg, #e7ebef, #dce2e7);
+  border-color: rgba(127,138,150,.15);
+  box-shadow: none;
+}
+
+.game-card.coming-soon .game-kicker,
+.game-card.coming-soon .game-play {
+  color: #7f8a96;
+}
+
+.game-card.coming-soon .game-desc {
+  color: #8995a1;
 }
 
 .game-icon {
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   display: grid;
   place-items: center;
-  margin-bottom: 2rem;
-  border-radius: 16px;
-  background: var(--accent-dim);
+  margin-bottom: 2.15rem;
+  border: 1px solid rgba(79,134,179,.16);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, rgba(79,134,179,.17), rgba(79,134,179,.08));
   color: var(--accent);
-  font-size: 1.55rem;
+  box-shadow:
+    0 10px 24px rgba(79,134,179,.15),
+    inset 0 1px 0 rgba(255,255,255,.65);
+  font-size: 1.72rem;
+  transition: transform .24s ease, box-shadow .24s ease;
 }
 
 .game-kicker {
-  margin-bottom: .55rem;
+  width: fit-content;
+  margin-bottom: .7rem;
+  padding: .38rem .62rem;
   color: var(--accent);
-  font-size: .65rem;
-  font-weight: 800;
-  letter-spacing: .15em;
+  background: rgba(79,134,179,.08);
+  border: 1px solid rgba(79,134,179,.11);
+  border-radius: 999px;
+  font-size: .61rem;
+  font-weight: 850;
+  letter-spacing: .16em;
   text-transform: uppercase;
+}
+
+.game-card.coming-soon .game-kicker {
+  background: rgba(127,138,150,.09);
+  border-color: rgba(127,138,150,.13);
 }
 
 .game-name {
   margin: 0;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 1;
-  letter-spacing: -.055em;
-  font-weight: 900;
+  font-size: clamp(2rem, 2.6vw, 2.75rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+  font-weight: 920;
 }
 
 .game-desc {
   max-width: 430px;
-  margin: .85rem 0 1.5rem;
+  margin: .9rem 0 1.6rem;
   color: var(--muted);
-  font-size: .95rem;
+  font-size: .93rem;
   line-height: 1.6;
 }
 
@@ -490,17 +592,27 @@
   align-items: center;
   gap: .55rem;
   width: fit-content;
+  padding-top: .2rem;
   color: var(--accent);
-  font-size: .72rem;
-  font-weight: 800;
+  font-size: .7rem;
+  font-weight: 850;
   letter-spacing: .12em;
   text-transform: uppercase;
+}
+
+.game-play i {
+  transition: transform .2s ease;
+}
+
+@media (max-width: 980px) {
+  .games-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 700px) {
   .games-hero { padding: 6.5rem 1rem 3.25rem; }
   .games-grid { grid-template-columns: 1fr; }
-  .game-card { min-height: 240px; padding: 1.5rem; }
+  .game-card { min-height: 260px; padding: 1.6rem; }
+  .game-card:not(.coming-soon):hover { transform: translateY(-4px); }
 }
 
   /* ── SHARED SECTIONS ── */
@@ -976,7 +1088,7 @@
   <ul class="nav-links" id="navMenu">
     <li><a href="#about">About</a></li>
     <li><a href="#brands">Brands</a></li>
-    <li><a href="/halloffame.html">Hall of Names</a></li>
+    <li><a href="#games">Games</a></li>
     <li><a href="/live.html">Live Shows</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -987,34 +1099,54 @@
 <section class="games-hero" id="games">
   <div class="games-hero-inner">
     <div class="games-eyebrow reveal">Play Now</div>
-    <h1 class="games-title reveal reveal-delay-1">Geography Games</h1>
+    <h1 class="games-title reveal reveal-delay-1">New Games</h1>
     <p class="games-subhead reveal reveal-delay-2">
     </p>
 
     <div class="games-grid reveal reveal-delay-2">
-      <a class="game-card" href="capital.html" aria-label="Play Guess the Capital">
+      <a class="game-card" href="geography.html">
         <div>
-          <div class="game-icon" aria-hidden="true"><i class="fas fa-landmark"></i></div>
-          <div class="game-kicker">Geography</div>
-          <h2 class="game-name">Guess the Capital</h2>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-earth-americas"></i></div>
+          <div class="game-kicker">Play Now</div>
+          <h2 class="game-name">Geography</h2>
           <p class="game-desc">
-            See a country and choose its capital. Match as many as you can before time runs out.
+            Test your knowledge of countries, flags, capitals, and more.
           </p>
         </div>
-        <span class="game-play">Play Capital Game <i class="fas fa-arrow-right"></i></span>
       </a>
 
-      <a class="game-card" href="flags.html" aria-label="Play Guess the Flag">
+      <div class="game-card coming-soon" aria-label="Music Games coming soon">
         <div>
-          <div class="game-icon" aria-hidden="true"><i class="fas fa-flag"></i></div>
-          <div class="game-kicker">Geography</div>
-          <h2 class="game-name">Guess the Flag</h2>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-music"></i></div>
+          <div class="game-kicker">Coming Soon</div>
+          <h2 class="game-name">Music</h2>
           <p class="game-desc">
-            Identify countries from their flags and see how many you can get before time runs out.
+            Guess artists, songs, and more music favorites.
           </p>
         </div>
-        <span class="game-play">Play Flag Game <i class="fas fa-arrow-right"></i></span>
-      </a>
+      </div>
+
+      <div class="game-card coming-soon" aria-label="Sports Games coming soon">
+        <div>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-basketball"></i></div>
+          <div class="game-kicker">Coming Soon</div>
+          <h2 class="game-name">Sports</h2>
+          <p class="game-desc">
+            Put your sports knowledge to the test across teams, players, and leagues.
+          </p>
+        </div>
+      </div>
+
+      <div class="game-card coming-soon" aria-label="Name Games coming soon">
+        <div>
+          <div class="game-icon" aria-hidden="true"><i class="fas fa-signature"></i></div>
+          <div class="game-kicker">Coming Soon</div>
+          <h2 class="game-name">Names</h2>
+          <p class="game-desc">
+            Play guessing games inspired by names, clues, and categories.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
