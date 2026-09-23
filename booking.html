@@ -3,540 +3,463 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Book a Guessing Games live show." />
-  <title>Book a Show | Guessing Games</title>
+  <meta
+    name="description"
+    content="Request information about booking a Guessing Games Live event with Colby Martel."
+  />
+  <title>Request Information | Guessing Games Live</title>
   <link rel="icon" href="/favicongg.ico" />
+
   <style>
     :root {
       --brand: #4f86b3;
       --brand-dark: #376f9c;
       --bg: #f6f9fc;
+      --white: #ffffff;
       --ink: #172331;
       --muted: #66788a;
       --line: #dbe6ef;
       --soft: #edf4fa;
-      --white: #ffffff;
-      --success: #1f7a4d;
-      --danger: #b42318;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
       color: var(--ink);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(79, 134, 179, 0.10), transparent 34%),
+        var(--bg);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; text-decoration: none; }
-    button, input, textarea, select { font: inherit; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    .page {
-      width: min(100%, 1180px);
-      margin: 0 auto;
-      padding: 28px 24px 56px;
+    button,
+    input,
+    textarea {
+      font: inherit;
     }
 
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--line);
+
+      padding: 18px clamp(18px, 4vw, 48px);
+
+      background: rgba(246, 249, 252, 0.90);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border-bottom: 1px solid rgba(79, 134, 179, 0.12);
     }
 
-    .logo {
-      font-size: 18px;
-      letter-spacing: -0.04em;
-      font-weight: 800;
+    .nav-logo {
+      color: var(--brand);
+      font-size: 1.15rem;
+      font-weight: 850;
+      letter-spacing: 0.03em;
     }
 
-    .links {
-      display: flex;
+    .nav-back {
+      display: inline-flex;
       align-items: center;
-      gap: 24px;
+      gap: 7px;
+
       color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 750;
+
+      transition: color .18s ease;
     }
 
-    .links a:hover { color: var(--ink); }
-
-    .nav-btn {
-      color: var(--ink);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 14px;
-      background: var(--white);
+    .nav-back:hover {
+      color: var(--brand-dark);
     }
 
-    .hero {
-      display: grid;
-      gap: 18px;
-      padding: 64px 0 34px;
+    main {
+      width: min(100% - 32px, 820px);
+      margin: 0 auto;
+      padding: 72px 0 64px;
+    }
+
+    .intro {
+      max-width: 680px;
+      margin: 0 auto 28px;
       text-align: center;
-      justify-items: center;
     }
 
     .eyebrow {
+      margin-bottom: 12px;
+
       color: var(--brand);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 980px;
-      font-size: clamp(48px, 9vw, 108px);
-      line-height: 0.9;
-      letter-spacing: -0.085em;
-      font-weight: 880;
+
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+      font-weight: 900;
     }
 
     .subhead {
-      margin: 0;
-      max-width: 680px;
+      max-width: 590px;
+      margin: 18px auto 0;
+
       color: var(--muted);
-      font-size: 19px;
-      line-height: 1.5;
+      font-size: 1.02rem;
+      line-height: 1.6;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 18px;
-      align-items: start;
-      margin-top: 18px;
+    .microcopy {
+      margin-top: 10px;
+
+      color: #8292a1;
+      font-size: 0.8rem;
+      font-weight: 650;
     }
 
-    .panel {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: 0 18px 40px rgba(23, 35, 49, 0.05);
-    }
+    .form-card {
+      padding: clamp(24px, 5vw, 40px);
 
-    .info-panel {
-      padding: 28px;
-      display: grid;
-      gap: 18px;
-    }
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(79, 134, 179, 0.16);
+      border-radius: 28px;
 
-    .info-panel h2,
-    .form-panel h2 {
-      margin: 0;
-      font-size: clamp(34px, 4vw, 54px);
-      line-height: 0.95;
-      letter-spacing: -0.075em;
-      font-weight: 860;
-    }
-
-    .info-panel p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 16px;
-    }
-
-    .quick-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .quick-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .quick-item:last-child { border-bottom: 0; }
-    .quick-item strong { color: var(--ink); text-align: right; }
-
-    .form-panel {
-      padding: 28px;
+      box-shadow:
+        0 24px 60px rgba(23, 35, 49, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.96);
     }
 
     form {
       display: grid;
-      gap: 16px;
-      margin-top: 22px;
+      gap: 18px;
     }
 
-    .grid {
+    .row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 16px;
     }
 
     .field {
       display: grid;
-      gap: 8px;
+      gap: 7px;
     }
 
     label {
-      font-size: 13px;
-      font-weight: 800;
       color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 800;
     }
 
-    input, select, textarea {
+    .optional {
+      margin-left: 5px;
+
+      color: #95a2af;
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--white);
-      color: var(--ink);
+
       padding: 14px 15px;
+
+      color: var(--ink);
+      background: #fbfdff;
+
+      border: 1px solid #d7e3ec;
+      border-radius: 14px;
+
       outline: none;
-      font-size: 15px;
+
+      font-size: 0.95rem;
+
+      transition:
+        border-color .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+    }
+
+    input {
+      min-height: 52px;
     }
 
     textarea {
-      min-height: 130px;
+      min-height: 110px;
       resize: vertical;
       line-height: 1.5;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input::placeholder,
+    textarea::placeholder {
+      color: #a1adba;
+    }
+
+    input:hover,
+    textarea:hover {
+      border-color: #c0d1df;
+      background: var(--white);
+    }
+
+    input:focus,
+    textarea:focus {
+      background: var(--white);
       border-color: var(--brand);
-      box-shadow: 0 0 0 4px rgba(79, 134, 179, 0.12);
+      box-shadow: 0 0 0 4px rgba(79, 134, 179, 0.10);
     }
 
-    .button-row {
+    .submit-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
       align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+
       margin-top: 4px;
+      padding-top: 4px;
     }
 
-    .button {
+    .submit-note {
+      max-width: 340px;
+
+      color: #8998a6;
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+
+    .submit-note strong {
+      color: var(--muted);
+    }
+
+    .submit {
+      min-height: 52px;
+      min-width: 180px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 52px;
-      padding: 0 24px;
-      border-radius: 999px;
-      font-size: 15px;
-      font-weight: 800;
-      border: 1px solid var(--line);
-      cursor: pointer;
-      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-    }
+      gap: 12px;
 
-    .button:hover {
-      transform: translateY(-2px);
-      border-color: var(--brand);
-    }
+      padding: 0 22px;
 
-    .button.primary {
-      background: var(--brand);
-      border-color: var(--brand);
       color: white;
-      box-shadow: 0 14px 28px rgba(79, 134, 179, 0.18);
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+
+      border: 0;
+      border-radius: 999px;
+
+      box-shadow:
+        0 14px 28px rgba(55, 111, 156, 0.22),
+        inset 0 1px 0 rgba(255,255,255,0.24);
+
+      font-size: 0.9rem;
+      font-weight: 850;
+
+      cursor: pointer;
+
+      transition:
+        transform .16s ease,
+        box-shadow .16s ease;
     }
 
-    .button.primary:hover { background: var(--brand-dark); }
-
-    .button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+    .submit:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 18px 34px rgba(55, 111, 156, 0.27),
+        inset 0 1px 0 rgba(255,255,255,0.24);
     }
-
-    .message {
-      min-height: 22px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 650;
-      line-height: 1.4;
-    }
-
-    .message.success { color: var(--success); }
-    .message.error { color: var(--danger); }
 
     footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      margin-top: 42px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 650;
+      padding: 26px 0 0;
+
+      color: #8b99a7;
+      text-align: center;
+      font-size: 0.72rem;
     }
 
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 620px) {
-      .page { padding: 22px 16px 44px; }
-      .links { display: none; }
-      .hero {
-        padding: 48px 0 28px;
-        text-align: left;
-        justify-items: start;
+    @media (max-width: 680px) {
+      main {
+        width: min(100% - 24px, 820px);
+        padding-top: 50px;
       }
-      .grid { grid-template-columns: 1fr; }
-      .info-panel, .form-panel { padding: 24px; }
-      footer { flex-direction: column; }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        border-radius: 22px;
+      }
+
+      .submit-row {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .submit {
+        width: 100%;
+      }
+
+      .submit-note {
+        max-width: none;
+        text-align: center;
+      }
     }
   </style>
 </head>
-<body>
-  <main class="page">
-    <nav aria-label="Primary">
-      <a class="logo" href="index.html">Guessing Games</a>
-      <div class="links">
-        <a href="index.html">Games</a>
-        <a href="halloffame.html">Hall of Fame</a>
-        <a href="live.html">Live Shows</a>
-        <a href="about.html">About</a>
-        <a class="nav-btn" href="signin.html" id="authLink">Sign in</a>
-      </div>
-    </nav>
 
-    <section class="hero">
-      <div class="eyebrow">Book a live show</div>
-      <p class="subhead">Submit an inquiry for campus events, brand activations, private shows, or custom game experiences.</p>
+<body>
+  <nav>
+    <a class="nav-logo" href="index.html">Guessing Games</a>
+    <a class="nav-back" href="live.html">← Back to Live Shows</a>
+  </nav>
+
+  <main>
+    <section class="intro">
+      <h1>Request Information</h1>
+
+      <p class="subhead">
+        Interested in bringing Guessing Games Live to your school, company, or event?
+        Send us your information and we’ll follow up with availability and next steps.
+      </p>
+
     </section>
 
-    <section class="layout">
-      <aside class="panel info-panel">
-        <div>
-          <div class="eyebrow">What to include</div>
-          <h2>Tell us the basics</h2>
-        </div>
-        <p>Share your event date, location, audience size, budget range, and what kind of show you are interested in. This helps us respond with the right package and next steps.</p>
+    <section class="form-card">
+      <form
+        action="https://formsubmit.co/partnerships@colbymartel.com"
+        method="POST"
+      >
+        <input type="hidden" name="_subject" value="New Guessing Games Live Inquiry">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input
+          type="text"
+          name="_honey"
+          style="display:none"
+          tabindex="-1"
+          autocomplete="off"
+        >
 
-        <div class="quick-list">
-          <div class="quick-item"><span>Best for</span><strong>Schools, brands, events</strong></div>
-          <div class="quick-item"><span>Show type</span><strong>Live games + audience prizes</strong></div>
-          <div class="quick-item"><span>Typical format</span><strong>60–120 minutes</strong></div>
-          <div class="quick-item"><span>Response</span><strong>Usually within a few days</strong></div>
-        </div>
-      </aside>
-
-      <section class="panel form-panel">
-        <div>
-          <div class="eyebrow">Inquiry form</div>
-          <h2>Request booking info</h2>
-        </div>
-
-        <form id="bookingForm">
-          <div class="grid">
-            <div class="field">
-              <label for="name">Your name *</label>
-              <input id="name" name="name" type="text" autocomplete="name" required placeholder="First and last name">
-            </div>
-
-            <div class="field">
-              <label for="email">Email *</label>
-              <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-            </div>
-          </div>
-
-          <div class="grid">
-            <div class="field">
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Optional">
-            </div>
-
-            <div class="field">
-              <label for="organization">Organization / school *</label>
-              <input id="organization" name="organization" type="text" required placeholder="College, company, event, etc.">
-            </div>
-          </div>
-
-          <div class="grid">
-            <div class="field">
-              <label for="eventDate">Preferred event date</label>
-              <input id="eventDate" name="eventDate" type="date">
-            </div>
-
-            <div class="field">
-              <label for="location">Event location *</label>
-              <input id="location" name="location" type="text" required placeholder="City, state, venue, or virtual">
-            </div>
-          </div>
-
-          <div class="grid">
-            <div class="field">
-              <label for="packageInterest">Package interest</label>
-              <select id="packageInterest" name="packageInterest">
-                <option value="">Not sure yet</option>
-                <option>Essential</option>
-                <option>Pro</option>
-                <option>Platinum</option>
-                <option>Custom</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="audienceSize">Expected audience size</label>
-              <input id="audienceSize" name="audienceSize" type="number" min="1" step="1" placeholder="Example: 300">
-            </div>
-          </div>
-
-          <div class="grid">
-            <div class="field">
-              <label for="budget">Budget range</label>
-              <select id="budget" name="budget">
-                <option value="">Select one</option>
-                <option>Under $2,500</option>
-                <option>$2,500–$5,000</option>
-                <option>$5,000–$10,000</option>
-                <option>$10,000+</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="eventType">Event type</label>
-              <select id="eventType" name="eventType">
-                <option value="">Select one</option>
-                <option>College / campus event</option>
-                <option>Brand activation</option>
-                <option>Private event</option>
-                <option>Conference / convention</option>
-                <option>Virtual show</option>
-                <option>Other</option>
-              </select>
-            </div>
+        <div class="row">
+          <div class="field">
+            <label for="name">Name *</label>
+            <input
+              id="name"
+              name="Name"
+              type="text"
+              autocomplete="name"
+              required
+              placeholder="Your name"
+            >
           </div>
 
           <div class="field">
-            <label for="message">Tell us more *</label>
-            <textarea id="message" name="message" required placeholder="What are you hoping to book? Include timing, goals, audience, and anything else helpful."></textarea>
+            <label for="email">Email *</label>
+            <input
+              id="email"
+              name="Email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="you@organization.com"
+            >
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="phone">Phone <span class="optional">Optional</span></label>
+            <input
+              id="phone"
+              name="Phone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="(555) 555-5555"
+            >
           </div>
 
-          <div class="button-row">
-            <button class="button primary" id="submitBtn" type="submit">Submit inquiry</button>
-            <span class="message" id="messageEl"></span>
+          <div class="field">
+            <label for="organization">Organization / School *</label>
+            <input
+              id="organization"
+              name="Organization / School"
+              type="text"
+              required
+              placeholder="College, company, event, etc."
+            >
           </div>
-        </form>
-      </section>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="location">Event City / State <span class="optional">Optional</span></label>
+            <input
+              id="location"
+              name="Event Location"
+              type="text"
+              placeholder="Boston, MA"
+            >
+          </div>
+
+          <div class="field">
+            <label for="eventDate">Preferred Date <span class="optional">Optional</span></label>
+            <input
+              id="eventDate"
+              name="Preferred Event Date"
+              type="date"
+            >
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message">Anything else? <span class="optional">Optional</span></label>
+          <textarea
+            id="message"
+            name="Additional Details"
+            placeholder="Anything helpful about your event..."
+          ></textarea>
+        </div>
+
+        <div class="submit-row">
+          <div class="submit-note">
+            Sent directly to <strong>bookings@colbymartel.com</strong>.
+          </div>
+
+          <button class="submit" type="submit">
+            Request Info
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
     </section>
 
     <footer>
-      <span>Guessing Games</span>
-      <span>© 2026 Guessing Games. All rights reserved.</span>
+      © 2026 Guessing Games. All rights reserved.
     </footer>
   </main>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
-      authDomain: "guessinggames.firebaseapp.com",
-      projectId: "guessinggames",
-      storageBucket: "guessinggames.firebasestorage.app",
-      messagingSenderId: "431644741449",
-      appId: "1:431644741449:web:0b699b3acdec1f95b19498"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    const form = document.getElementById("bookingForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const messageEl = document.getElementById("messageEl");
-    const authLink = document.getElementById("authLink");
-
-    let currentUser = null;
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      if (user && authLink) {
-        authLink.textContent = user.displayName || "Account";
-        authLink.href = "signin.html";
-      }
-    });
-
-    function setMessage(text, type = "") {
-      messageEl.textContent = text;
-      messageEl.className = "message" + (type ? " " + type : "");
-    }
-
-    function clean(value) {
-      return String(value || "").trim();
-    }
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const formData = new FormData(form);
-
-      const inquiry = {
-        name: clean(formData.get("name")),
-        email: clean(formData.get("email")).toLowerCase(),
-        phone: clean(formData.get("phone")),
-        organization: clean(formData.get("organization")),
-        eventDate: clean(formData.get("eventDate")),
-        location: clean(formData.get("location")),
-        packageInterest: clean(formData.get("packageInterest")),
-        audienceSize: clean(formData.get("audienceSize")),
-        budget: clean(formData.get("budget")),
-        eventType: clean(formData.get("eventType")),
-        message: clean(formData.get("message")),
-        sourcePage: window.location.pathname,
-        submittedAtLocal: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        createdAt: serverTimestamp(),
-        status: "new",
-        uid: currentUser ? currentUser.uid : "",
-        authDisplayName: currentUser ? (currentUser.displayName || "") : "",
-        authEmail: currentUser ? (currentUser.email || "") : ""
-      };
-
-      if (!inquiry.name || !inquiry.email || !inquiry.organization || !inquiry.location || !inquiry.message) {
-        setMessage("Please fill out the required fields.", "error");
-        return;
-      }
-
-      try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
-        setMessage("Saving inquiry...");
-
-        await addDoc(collection(db, "booking-inquiries"), inquiry);
-
-        form.reset();
-        setMessage("Inquiry submitted. Thank you — we’ll follow up soon.", "success");
-        submitBtn.textContent = "Submitted";
-      } catch (error) {
-        console.error(error);
-        setMessage("Could not submit. Please try again.", "error");
-        submitBtn.textContent = "Submit inquiry";
-      } finally {
-        submitBtn.disabled = false;
-      }
-    });
-  </script>
 </body>
 </html>
