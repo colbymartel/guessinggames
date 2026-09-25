@@ -1,358 +1,1114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VVCFY7WH7T');
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Book a Call with Colby | GuessingGames.com</title>
-<meta name="description" content="Book a private 10-minute video call with Colby Martel. Launch special: first 50 paid bookings are 50% off.">
+<meta name="description" content="Book a one-on-one call with Colby Martel. Choose a time that works for you and meet directly over video.">
+<title>10-Minute Call with Colby | GuessingGames.com</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Calendly -->
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 
 <style>
-:root{
-  --bg:#f7fafc;
-  --surface:#edf2f7;
-  --card:#fff;
-  --border:rgba(59,123,191,.18);
-  --accent:#3b7bbf;
-  --accent-dark:#2d5f8f;
-  --accent-light:#5a9bd4;
-  --text:#1a202c;
-  --muted:#718096;
-  --success:#14815f;
-  --font:'Montserrat',sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden}
-a{color:inherit}
-nav{
-  position:sticky;top:0;z-index:1000;
-  height:72px;padding:0 2.4rem;
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(247,250,252,.94);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--border);
-}
-.nav-logo{font-size:1.25rem;font-weight:900;letter-spacing:.02em;color:var(--accent);text-decoration:none}
-.nav-actions{display:flex;align-items:center;gap:.9rem}
-.nav-back{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--muted)}
-.nav-book{
-  text-decoration:none;background:var(--accent);color:#fff;padding:.72rem 1rem;border-radius:999px;
-  font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em
-}
-.hero{
-  position:relative;overflow:hidden;
-  padding:4.4rem 1.5rem 3.8rem;
-  background:
-    radial-gradient(circle at 80% 20%,rgba(59,123,191,.18),transparent 30%),
-    radial-gradient(circle at 10% 90%,rgba(90,155,212,.12),transparent 35%),
-    linear-gradient(180deg,#f8fbff 0%,#eef5fb 100%);
-}
-.hero-inner{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:3.5rem;align-items:center}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:.55rem;
-  padding:.55rem .8rem;border-radius:999px;background:#fff;border:1px solid var(--border);
-  color:var(--accent-dark);font-size:.7rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase;
-  box-shadow:0 8px 20px rgba(59,123,191,.08);margin-bottom:1.25rem
-}
-.eyebrow b{color:#e53e3e}
-h1{font-size:clamp(3rem,6vw,6.2rem);line-height:.93;letter-spacing:-.055em;font-weight:900;margin-bottom:1.25rem}
-h1 span{color:var(--accent)}
-.lead{font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.7;color:var(--muted);max-width:620px}
-.price-row{display:flex;align-items:end;gap:.8rem;margin:1.6rem 0 .35rem}
-.price-now{font-size:2.8rem;font-weight:900;letter-spacing:-.04em;color:var(--text)}
-.price-old{font-size:1.15rem;color:var(--muted);padding-bottom:.35rem}
-.offer-note{font-size:.78rem;color:var(--muted);margin-bottom:1.5rem}
-.hero-actions{display:flex;gap:.8rem;flex-wrap:wrap}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
-  padding:1rem 1.35rem;border-radius:12px;text-decoration:none;border:0;cursor:pointer;
-  font:800 .76rem/1 var(--font);letter-spacing:.09em;text-transform:uppercase;
-  transition:transform .2s ease,box-shadow .2s ease
-}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;box-shadow:0 12px 28px rgba(59,123,191,.3)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 17px 36px rgba(59,123,191,.38)}
-.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--accent-dark)}
-.hero-visual{position:relative}
-.hero-visual img{width:100%;display:block;border-radius:22px;border:1px solid rgba(59,123,191,.2);box-shadow:0 25px 70px rgba(45,95,143,.2)}
-.hero-visual::after{
-  content:'10 MINUTES • PRIVATE VIDEO CALL';
-  position:absolute;left:1rem;bottom:1rem;
-  padding:.55rem .72rem;border-radius:999px;
-  background:rgba(10,20,30,.82);color:#fff;
-  font-size:.62rem;font-weight:900;letter-spacing:.1em
-}
-.trustbar{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.trustbar-inner{width:min(1000px,100%);margin:0 auto;padding:1.05rem 1.5rem;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.76rem;font-weight:700}
-.trust-item i{color:var(--accent)}
-.section{padding:5rem 1.5rem}
-.section-inner{width:min(1080px,100%);margin:0 auto}
-.section-head{text-align:center;max-width:720px;margin:0 auto 2.25rem}
-.section-kicker{color:var(--accent);font-size:.68rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.7rem}
-.section h2{font-size:clamp(2rem,4vw,3.5rem);letter-spacing:-.04em;line-height:1;font-weight:900;margin-bottom:.9rem}
-.section-head p{color:var(--muted);line-height:1.7}
-.what-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-.what-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.35rem}
-.what-icon{width:42px;height:42px;border-radius:12px;background:rgba(59,123,191,.1);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
-.what-card h3{font-size:1rem;font-weight:800;margin-bottom:.5rem}
-.what-card p{font-size:.84rem;line-height:1.6;color:var(--muted)}
-.booking-section{background:var(--surface)}
-.booking-shell{
-  background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;
-  box-shadow:0 24px 60px rgba(59,123,191,.11)
-}
-.booking-top{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
-  padding:1.25rem 1.35rem;border-bottom:1px solid var(--border)
-}
-.booking-top h3{font-size:1.05rem;font-weight:900}
-.booking-top p{font-size:.8rem;color:var(--muted);margin-top:.25rem}
-.secure-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .75rem;border-radius:999px;background:#eefaf5;color:var(--success);font-size:.69rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
-.calendly-inline-widget{min-width:320px;height:760px}
-.setup-notice{
-  display:none;
-  margin:1rem 1.35rem 1.35rem;padding:1rem 1.1rem;border-radius:12px;
-  background:#fffaf0;border:1px solid #f6d98f;color:#7a5b16;font-size:.83rem;line-height:1.55
-}
-.faq{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.faq details{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.15rem 1.2rem}
-.faq summary{cursor:pointer;font-weight:800;font-size:.92rem}
-.faq p{color:var(--muted);font-size:.84rem;line-height:1.65;padding-top:.8rem}
-.footer{padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border)}
-.footer a{color:var(--accent);font-weight:800;text-decoration:none}
+  :root {
+    --bg:#fff;
+    --surface:#f2f2f2;
+    --surface-hover:#e5e5e5;
+    --text:#0f0f0f;
+    --muted:#606060;
+    --line:#e5e5e5;
+    --accent:#3b7bbf;
+    --accent-dark:#2d5f8f;
+    --sidebar:232px;
+    --topbar:64px;
+  }
 
-@media(max-width:900px){
-  .hero-inner{grid-template-columns:1fr;gap:2.2rem}
-  .hero{padding-top:3rem}
-  .what-grid{grid-template-columns:1fr 1fr}
-  .hero-visual{order:-1}
-}
-@media(max-width:600px){
-  nav{padding:0 1rem;height:64px}
-  .nav-back{display:none}
-  .hero{padding:2.5rem 1rem 3rem}
-  h1{font-size:clamp(2.8rem,15vw,4.2rem)}
-  .hero-visual img{border-radius:14px}
-  .hero-visual::after{font-size:.52rem;left:.6rem;bottom:.6rem}
-  .price-now{font-size:2.3rem}
-  .section{padding:3.5rem 1rem}
-  .what-grid,.faq{grid-template-columns:1fr}
-  .calendly-inline-widget{height:820px}
-}
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    min-height:100vh;
+    font-family:"Roboto", Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+  }
+
+  a { color:inherit; text-decoration:none; }
+  button,input { font:inherit; }
+
+  /* TOP BAR */
+  .topbar {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:1000;
+    height:var(--topbar);
+    display:grid;
+    grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
+    align-items:center;
+    gap:24px;
+    padding:0 20px;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid transparent;
+  }
+
+  .topbar.scrolled { border-bottom-color:var(--line); }
+
+  .brand-area,
+  .top-actions {
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+
+  .top-actions { justify-content:flex-end; }
+
+  .icon-btn {
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:50%;
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+    font-size:18px;
+  }
+
+  .icon-btn:hover { background:var(--surface); }
+
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-.7px;
+  }
+
+  .brand-mark {
+    width:31px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:var(--accent);
+    color:#fff;
+    font-size:11px;
+    box-shadow:0 3px 10px rgba(59,123,191,.22);
+  }
+
+  .brand-domain {
+    margin-left:-5px;
+    transform:translateY(-7px);
+    color:var(--muted);
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:0;
+  }
+
+  .search-wrap {
+    display:flex;
+    width:100%;
+    height:42px;
+  }
+
+  .search-wrap input {
+    flex:1;
+    min-width:0;
+    padding:0 18px;
+    border:1px solid #c6c6c6;
+    border-right:0;
+    border-radius:22px 0 0 22px;
+    outline:none;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
+    font-size:16px;
+  }
+
+  .search-wrap input:focus {
+    border-color:var(--accent);
+    box-shadow:inset 1px 0 0 var(--accent);
+  }
+
+  .search-btn {
+    width:64px;
+    border:1px solid #c6c6c6;
+    border-radius:0 22px 22px 0;
+    background:#f8f8f8;
+    cursor:pointer;
+    font-size:17px;
+  }
+
+  .search-btn:hover { background:#f0f0f0; }
+
+  .top-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    min-height:38px;
+    padding:0 14px;
+    border-radius:20px;
+    background:#0f0f0f;
+    color:#fff;
+    white-space:nowrap;
+    font-size:14px;
+    font-weight:700;
+  }
+
+  .top-pill:hover { background:#272727; }
+
+  .avatar {
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#ddd;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position:fixed;
+    top:var(--topbar);
+    left:0;
+    bottom:0;
+    z-index:900;
+    width:var(--sidebar);
+    overflow-y:auto;
+    padding:12px 12px 28px;
+    background:#fff;
+  }
+
+  .nav-group {
+    padding:8px 0 12px;
+    margin-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-group:last-child { border-bottom:0; }
+
+  .nav-label {
+    padding:8px 12px 5px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .side-link {
+    display:flex;
+    align-items:center;
+    gap:22px;
+    min-height:42px;
+    padding:0 12px;
+    border-radius:10px;
+    font-size:14px;
+  }
+
+  .side-link i {
+    width:22px;
+    text-align:center;
+    font-size:18px;
+  }
+
+  .side-link:hover { background:var(--surface); }
+
+  .side-link.active {
+    background:var(--surface);
+    font-weight:700;
+  }
+
+  .sidebar-foot {
+    padding:10px 12px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.45;
+  }
+
+  /* PAGE */
+  .page {
+    margin-left:var(--sidebar);
+    padding-top:var(--topbar);
+  }
+
+  .chips-bar {
+    position:sticky;
+    top:var(--topbar);
+    z-index:800;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:12px 24px;
+    background:rgba(255,255,255,.98);
+    scrollbar-width:none;
+  }
+
+  .chips-bar::-webkit-scrollbar { display:none; }
+
+  .chip {
+    flex:0 0 auto;
+    padding:8px 13px;
+    border:0;
+    border-radius:9px;
+    background:var(--surface);
+    color:var(--text);
+    font-size:14px;
+    font-weight:500;
+  }
+
+  .chip:hover { background:var(--surface-hover); }
+  .chip.active { background:#0f0f0f; color:#fff; }
+
+  .content {
+    width:100%;
+    max-width:1360px;
+    margin:0 auto;
+    padding:20px 24px 64px;
+  }
+
+  /* HERO */
+  .booking-hero {
+    display:grid;
+    grid-template-columns:minmax(0,.85fr) minmax(440px,1.15fr);
+    gap:28px;
+    align-items:start;
+  }
+
+  .booking-copy {
+    position:sticky;
+    top:132px;
+    padding:8px 0;
+  }
+
+  .eyebrow {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:13px;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .booking-title {
+    max-width:560px;
+    font-size:clamp(42px,6vw,74px);
+    line-height:.92;
+    letter-spacing:-3px;
+    font-weight:900;
+    margin-bottom:18px;
+  }
+
+  .booking-sub {
+    max-width:590px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.6;
+    margin-bottom:24px;
+  }
+
+  .host-row {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:24px;
+  }
+
+  .host-row img {
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+  }
+
+  .host-name {
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:3px;
+  }
+
+  .host-meta {
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  .benefit-list {
+    display:grid;
+    gap:12px;
+    max-width:570px;
+    margin-bottom:24px;
+  }
+
+  .benefit {
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:13px 14px;
+    border-radius:12px;
+    background:var(--surface);
+  }
+
+  .benefit i {
+    width:24px;
+    margin-top:2px;
+    color:var(--accent);
+    text-align:center;
+    font-size:16px;
+  }
+
+  .benefit strong {
+    display:block;
+    margin-bottom:2px;
+    font-size:14px;
+  }
+
+  .benefit span {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  .mini-note {
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    max-width:580px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.45;
+  }
+
+  .mini-note i {
+    margin-top:2px;
+    color:var(--accent);
+  }
+
+  /* CALENDLY PANEL */
+  .calendar-panel {
+    overflow:hidden;
+    min-height:760px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#fff;
+    box-shadow:0 12px 32px rgba(0,0,0,.07);
+  }
+
+  .calendar-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:18px 20px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .calendar-title {
+    font-size:17px;
+    font-weight:900;
+  }
+
+  .calendar-status {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:600;
+  }
+
+  .status-dot {
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#25a45a;
+  }
+
+  .calendly-inline-widget {
+    min-width:320px;
+    height:720px;
+  }
+
+
+  /* BOOKING RULES */
+  .rules-section {
+    margin-top:38px;
+  }
+
+  .rules-shell {
+    overflow:hidden;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#fff;
+  }
+
+  .rules-head {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    padding:22px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .rules-title {
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:-.3px;
+    margin-bottom:5px;
+  }
+
+  .rules-sub {
+    max-width:760px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .rules-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .rule {
+    display:flex;
+    gap:13px;
+    padding:19px 20px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .rule:nth-child(odd) {
+    border-right:1px solid var(--line);
+  }
+
+  .rule-icon {
+    width:38px;
+    height:38px;
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--surface);
+    color:var(--accent);
+    font-size:15px;
+  }
+
+  .rule strong {
+    display:block;
+    margin-bottom:4px;
+    font-size:14px;
+  }
+
+  .rule p {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .minor-consent {
+    padding:20px;
+    background:#f8f8f8;
+  }
+
+  .minor-consent h3 {
+    font-size:16px;
+    font-weight:900;
+    margin-bottom:7px;
+  }
+
+  .minor-consent p {
+    max-width:900px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .consent-email {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-top:12px;
+    padding:9px 13px;
+    border-radius:20px;
+    background:#0f0f0f;
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .consent-email:hover {
+    background:#272727;
+  }
+
+  .terms-line {
+    padding:15px 20px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.45;
+    border-top:1px solid var(--line);
+  }
+
+  /* FAQ / INFO */
+  .section {
+    margin-top:38px;
+  }
+
+  .section-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:16px;
+  }
+
+  .section-title {
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:-.3px;
+  }
+
+  .info-grid {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+  }
+
+  .info-card {
+    min-height:180px;
+    padding:20px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+  }
+
+  .info-icon {
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    margin-bottom:16px;
+    border-radius:50%;
+    background:var(--surface);
+    color:var(--accent);
+    font-size:17px;
+  }
+
+  .info-card h3 {
+    font-size:17px;
+    line-height:1.2;
+    font-weight:900;
+    margin-bottom:8px;
+  }
+
+  .info-card p {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .footer {
+    padding:38px 0 8px;
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  @media (max-width:1200px) {
+    :root { --sidebar:78px; }
+
+    .sidebar { padding:8px 4px; }
+
+    .side-link {
+      min-height:66px;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      padding:7px 2px;
+      text-align:center;
+      font-size:10px;
+    }
+
+    .side-link i { font-size:18px; }
+
+    .nav-label,
+    .sidebar-foot,
+    .nav-group.secondary {
+      display:none;
+    }
+
+    .booking-hero {
+      grid-template-columns:1fr;
+    }
+
+    .booking-copy {
+      position:static;
+    }
+  }
+
+  @media (max-width:900px) {
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      gap:10px;
+      padding:0 10px;
+    }
+
+    .brand-domain,
+    .top-pill,
+    .top-actions .icon-btn {
+      display:none;
+    }
+
+    .brand { font-size:17px; }
+    .search-wrap { height:38px; }
+
+    .info-grid {
+      grid-template-columns:1fr;
+    }
+  }
+
+  @media (max-width:650px) {
+    :root { --sidebar:0px; }
+
+    .sidebar { display:none; }
+
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      height:58px;
+    }
+
+    .topbar .brand-area .icon-btn {
+      display:none;
+    }
+
+    .brand span:not(.brand-mark) {
+      display:none;
+    }
+
+    .search-wrap input {
+      padding:0 12px;
+      font-size:14px;
+    }
+
+    .search-btn { width:46px; }
+
+    .chips-bar {
+      top:58px;
+      padding:10px 12px;
+    }
+
+    .page { padding-top:58px; }
+
+    .content {
+      padding:18px 12px 42px;
+    }
+
+
+    .rules-grid {
+      grid-template-columns:1fr;
+    }
+
+    .rule:nth-child(odd) {
+      border-right:0;
+    }
+
+    .booking-title {
+      font-size:44px;
+      letter-spacing:-2px;
+    }
+
+    .calendar-panel {
+      min-height:690px;
+      border-radius:12px;
+    }
+
+    .calendly-inline-widget {
+      height:660px;
+    }
+
+    .calendar-head {
+      padding:15px 16px;
+    }
+  }
 </style>
 </head>
 
 <body>
-<!--
-  ===============================================================
-  SETUP — 3 STEPS TO GO LIVE
-  ===============================================================
-  1) In Calendly, create an event type called "10-Minute Call with Colby".
-     Set duration to 10 minutes and connect your preferred video meeting app.
 
-  2) In Calendly > Integrations / Payments, connect STRIPE.
-     Turn on payment collection for this event.
-     Launch price: $49.50 USD.
-     After the first 50 PAID bookings, change the event price to $99 USD.
+<header class="topbar" id="topbar">
+  <div class="brand-area">
+    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
 
-  3) Replace the value of CALENDLY_URL in the script at the bottom of this
-     file with your actual Calendly event URL, for example:
-     https://calendly.com/yourusername/10-minute-call
-
-  Stripe is intentionally handled INSIDE Calendly. Do not paste Stripe secret
-  keys into this HTML file. This keeps payment data off your website and lets
-  Calendly confirm the booking only after successful payment.
-  ===============================================================
--->
-
-<nav>
-  <a class="nav-logo" href="index.html">GuessingGames.com</a>
-  <div class="nav-actions">
-    <a class="nav-back" href="index.html#games">Play Games</a>
-    <a class="nav-book" href="#book">Book for $49.50</a>
+    <a href="index.html" class="brand" aria-label="GuessingGames.com home">
+      <span class="brand-mark"><i class="fas fa-play"></i></span>
+      <span>GuessingGames</span><span class="brand-domain">.com</span>
+    </a>
   </div>
-</nav>
 
-<header class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow"><i class="fas fa-bolt"></i> Launch special · <b>50% off</b></div>
-      <h1>Can I guess <span>your name?</span></h1>
-      <p class="lead">
-        Book a private 10-minute video call with Colby. I can try to guess your name,
-        answer questions, talk content, or just hang out for a few minutes.
-      </p>
+  <form class="search-wrap" id="searchForm">
+    <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
+    <button class="search-btn" type="submit" aria-label="Search">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
 
-      <div class="price-row">
-        <div class="price-now">$49.50</div>
-        <div class="price-old">regularly <s>$99</s></div>
-      </div>
-      <div class="offer-note">Launch price is limited to the first 50 paid bookings.</div>
+  <div class="top-actions">
+    <a class="top-pill" href="#book">
+      <i class="far fa-calendar"></i>
+      Book a Call
+    </a>
 
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#book">Choose a Time <i class="fas fa-arrow-down"></i></a>
-        <a class="btn btn-secondary" href="#details">What's Included?</a>
-      </div>
-    </div>
+    <a class="icon-btn" href="index.html#contact" aria-label="Contact">
+      <i class="far fa-envelope"></i>
+    </a>
 
-    <div class="hero-visual">
-      <img src="images/book-call-banner.png" alt="Can I Guess Your Name? Book a Call">
-    </div>
+    <img class="avatar" src="images/colbypfp.jpg" alt="Colby Martel">
   </div>
 </header>
 
-<div class="trustbar">
-  <div class="trustbar-inner">
-    <div class="trust-item"><i class="fas fa-lock"></i> Secure payment through Stripe</div>
-    <div class="trust-item"><i class="far fa-calendar-check"></i> Scheduling by Calendly</div>
-    <div class="trust-item"><i class="fas fa-video"></i> Video-call link sent automatically</div>
+<aside class="sidebar" id="sidebar">
+  <div class="nav-group">
+    <a class="side-link" href="index.html">
+      <i class="fas fa-house"></i><span>Home</span>
+    </a>
+
+    <a class="side-link" href="index.html#play">
+      <i class="fas fa-gamepad"></i><span>Play</span>
+    </a>
+
+    <a class="side-link" href="halloffame.html">
+      <i class="fas fa-trophy"></i><span>Hall of Names</span>
+    </a>
+
+    <a class="side-link" href="live.html">
+      <i class="fas fa-bolt"></i><span>Live Shows</span>
+    </a>
   </div>
-</div>
 
-<section class="section" id="details">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-kicker">Your 10 Minutes</div>
-      <h2>Make the call yours.</h2>
-      <p>This is meant to be fun and personal. Pick what you want to do when you book.</p>
-    </div>
+  <div class="nav-group secondary">
+    <div class="nav-label">Connect</div>
 
-    <div class="what-grid">
-      <article class="what-card">
-        <div class="what-icon"><i class="fas fa-signature"></i></div>
-        <h3>Name Guessing</h3>
-        <p>See if Colby can guess your name live, with as many or as few hints as you want.</p>
-      </article>
-      <article class="what-card">
-        <div class="what-icon"><i class="fas fa-comments"></i></div>
-        <h3>Ask Anything</h3>
-        <p>Ask questions about videos, guessing games, YouTube, or anything appropriate for the call.</p>
-      </article>
-      <article class="what-card">
-        <div class="what-icon"><i class="fas fa-lightbulb"></i></div>
-        <h3>Creator Advice</h3>
-        <p>Bring one specific content question, idea, title, hook, or channel challenge to workshop.</p>
-      </article>
-      <article class="what-card">
-        <div class="what-icon"><i class="fas fa-face-smile"></i></div>
-        <h3>Just Hang Out</h3>
-        <p>No agenda needed. Say hi, chat for a few minutes, and make it a memorable fan experience.</p>
-      </article>
-    </div>
+    <a class="side-link active" href="calls.html">
+      <i class="far fa-calendar"></i><span>Book a Call</span>
+    </a>
+
+    <a class="side-link" href="#rules">
+      <i class="fas fa-shield-halved"></i><span>Rules</span>
+    </a>
+
+    <a class="side-link" href="index.html#contact">
+      <i class="far fa-envelope"></i><span>Contact</span>
+    </a>
   </div>
-</section>
 
-<section class="section booking-section" id="book">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-kicker">Book Now</div>
-      <h2>Pick your time.</h2>
-      <p>Your booking is confirmed after payment. You’ll receive the meeting details by email.</p>
-    </div>
+  <div class="sidebar-foot">
+    Pick a time.<br>
+    Meet with Colby.
+  </div>
+</aside>
 
-    <div class="booking-shell">
-      <div class="booking-top">
-        <div>
-          <h3>10-Minute Call with Colby</h3>
-          <p>Launch price: $49.50 · Regular price: $99</p>
+<main class="page">
+
+  <div class="chips-bar">
+    <span class="chip active">Calls</span>
+    <a class="chip" href="#book">Schedule</a>
+    <a class="chip" href="#rules">Rules</a>
+    <a class="chip" href="#what-to-expect">What to Expect</a>
+    <a class="chip" href="live.html">Live Shows</a>
+    <a class="chip" href="index.html">Home</a>
+  </div>
+
+  <div class="content">
+
+    <section class="booking-hero" id="book">
+
+      <div class="booking-copy">
+        <div class="eyebrow">
+          <i class="far fa-calendar-check"></i>
+          10-minute video call
         </div>
-        <div class="secure-badge"><i class="fas fa-shield-halved"></i> Stripe secured</div>
+
+        <h1 class="booking-title">
+          Call with<br>Colby
+        </h1>
+
+        <p class="booking-sub">
+          Spend 10 minutes with Colby. Challenge him to guess your name, favorite singer,
+          birthday, or something else — or use the time to ask questions, get creator advice,
+          talk content, or just hang out.
+        </p>
+
+        <div class="host-row">
+          <img src="images/colbypfp.jpg" alt="Colby Martel">
+          <div>
+            <div class="host-name">Colby Martel</div>
+            <div class="host-meta">Creator • Guessing Games • 2B+ views</div>
+          </div>
+        </div>
+
+        <div class="benefit-list">
+          <div class="benefit">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <div>
+              <strong>Make it a guessing game</strong>
+              <span>Have Colby guess your name, favorite singer, birthday, hometown, or another fun prompt.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <i class="far fa-clock"></i>
+            <div>
+              <strong>Choose a time that works</strong>
+              <span>Calendly automatically shows available times in your local timezone.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <i class="far fa-comments"></i>
+            <div>
+              <strong>Your 10 minutes, your choice</strong>
+              <span>Ask for creator advice, talk about content or career goals, or simply have a conversation.</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="mini-note">
+          <i class="fas fa-circle-info"></i>
+          <span>
+            Please read the age, consent, recording, and conduct rules below before booking.
+            Availability and any pricing are shown in the scheduler.
+          </span>
+        </p>
       </div>
 
-      <div
-        id="calendlyWidget"
-        class="calendly-inline-widget"
-        data-url=""
-        style="min-width:320px;height:760px;">
+      <div class="calendar-panel">
+        <div class="calendar-head">
+          <div class="calendar-title">Choose your 10-minute call</div>
+          <div class="calendar-status">
+            <span class="status-dot"></span>
+            Calendly
+          </div>
+        </div>
+
+        <div
+          class="calendly-inline-widget"
+          id="calendlyEmbed"
+          data-url="https://calendly.com/partnerships-colbymartel/new-meeting?hide_gdpr_banner=1&background_color=ffffff&text_color=0f0f0f&primary_color=3b7bbf">
+        </div>
       </div>
 
-      <div class="setup-notice" id="setupNotice">
-        <strong>Site owner:</strong> replace <code>CALENDLY_URL</code> at the bottom of this file
-        with your live Calendly event URL. Then connect Stripe to that event inside Calendly.
+    </section>
+
+
+    <section class="rules-section" id="rules">
+      <div class="rules-shell">
+        <div class="rules-head">
+          <div>
+            <h2 class="rules-title">Before you book</h2>
+            <p class="rules-sub">
+              These calls are meant to be fun, positive, and comfortable for everyone.
+              Booking a call means you agree to the rules below.
+            </p>
+          </div>
+        </div>
+
+        <div class="rules-grid">
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-user-check"></i></div>
+            <div>
+              <strong>18+ may book directly</strong>
+              <p>If you are 18 or older, you can schedule the call yourself through Calendly.</p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-people-roof"></i></div>
+            <div>
+              <strong>Ages 13–17: parent or guardian required</strong>
+              <p>
+                A parent or legal guardian must make the Calendly booking using their own name and email,
+                approve the call, and be present for the call.
+              </p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-ban"></i></div>
+            <div>
+              <strong>Under 13: not eligible</strong>
+              <p>Calls are not offered to children under 13.</p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="far fa-clock"></i></div>
+            <div>
+              <strong>Calls are approximately 10 minutes</strong>
+              <p>Please join on time. Late arrival may reduce the amount of time available and does not guarantee an extension.</p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-face-smile"></i></div>
+            <div>
+              <strong>Keep it appropriate</strong>
+              <p>
+                No sexual content, harassment, threats, hate, dangerous requests, illegal activity,
+                or intentionally disruptive behavior. A call may be ended early for inappropriate conduct.
+              </p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-camera"></i></div>
+            <div>
+              <strong>No recording without agreement</strong>
+              <p>
+                Do not record, livestream, screenshot, or repost the call without permission.
+                If a call will be recorded or used in content, that requires separate consent.
+              </p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-lightbulb"></i></div>
+            <div>
+              <strong>Advice is informal</strong>
+              <p>
+                Creator, career, or life advice is based on Colby's personal experience and is not legal,
+                financial, medical, mental-health, or other professional advice.
+              </p>
+            </div>
+          </div>
+
+          <div class="rule">
+            <div class="rule-icon"><i class="fas fa-gamepad"></i></div>
+            <div>
+              <strong>Make the call yours</strong>
+              <p>
+                Ask Colby to guess your name, favorite singer, birthday, or another fun fact — or spend the time
+                talking content, creativity, social media, career goals, or whatever is most useful to you.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="minor-consent">
+          <h3>Parent / guardian consent for ages 13–17</h3>
+          <p>
+            The parent or guardian should make the Calendly booking themselves and attend the call.
+            For an additional written record of consent, email
+            <strong>bookings@colbymartel.com</strong> from the parent or guardian's email address
+            with the minor's first name, age, booked date/time, and a statement confirming permission
+            for the minor to participate.
+          </p>
+
+          <a
+            class="consent-email"
+            href="mailto:bookings@colbymartel.com?subject=Minor%20Call%20Consent&body=I%20am%20the%20parent%20or%20legal%20guardian%20of%20%5Bfirst%20name%5D%2C%20age%20%5Bage%5D.%20I%20give%20permission%20for%20them%20to%20participate%20in%20the%20scheduled%2010-minute%20call%20with%20Colby%20Martel%20on%20%5Bdate%2Ftime%5D.%20I%20made%20the%20booking%20and%20will%20be%20present%20for%20the%20call.">
+            <i class="far fa-envelope"></i>
+            Email Parent Consent
+          </a>
+        </div>
+
+        <div class="terms-line">
+          By booking, you confirm that the information provided is accurate and that you meet the applicable age
+          and consent requirements. Separate written permission is required before any call is recorded or published.
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section class="section" id="what-to-expect">
+      <div class="section-head">
+        <h2 class="section-title">What to expect</h2>
+      </div>
+
+      <div class="info-grid">
+        <article class="info-card">
+          <div class="info-icon">
+            <i class="far fa-calendar-check"></i>
+          </div>
+          <h3>Book instantly</h3>
+          <p>
+            Choose an available date and time directly in the calendar. Your timezone is handled automatically.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">
+            <i class="far fa-envelope"></i>
+          </div>
+          <h3>Get confirmation</h3>
+          <p>
+            Calendly sends your confirmation and the information you need for the scheduled call.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <h3>Join your call</h3>
+          <p>
+            Use the meeting link in your confirmation at the scheduled time and connect directly with Colby.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © 2026 GuessingGames.com • Calls with Colby
+    </footer>
+
   </div>
-</section>
+</main>
 
-<section class="section">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-kicker">Before You Book</div>
-      <h2>Quick answers.</h2>
-    </div>
-
-    <div class="faq">
-      <details open>
-        <summary>What happens after I book?</summary>
-        <p>Calendly emails your confirmation and meeting details. Save that email so you have the video-call link at your scheduled time.</p>
-      </details>
-      <details>
-        <summary>Can I reschedule?</summary>
-        <p>Use the reschedule link in your Calendly confirmation email. Availability may be limited, so please reschedule as early as possible.</p>
-      </details>
-      <details>
-        <summary>What if I'm under 18?</summary>
-        <p>A parent or legal guardian should make the booking and join the call. Do not submit private personal information beyond what is needed to schedule the call.</p>
-      </details>
-      <details>
-        <summary>Are calls refundable?</summary>
-        <p>Unless required by law, completed calls and missed appointments are non-refundable. If Colby needs to cancel, you can reschedule or receive a refund.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<footer class="footer">
-  © 2026 GuessingGames.com · <a href="index.html">Back to Guessing Games</a>
-</footer>
-
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 <script>
-  /*
-   * PASTE YOUR LIVE CALENDLY EVENT URL HERE.
-   * Example: https://calendly.com/yourusername/10-minute-call
-   *
-   * Payment is collected by Stripe through the Calendly event settings.
-   */
-  const CALENDLY_URL = "https://calendly.com/YOUR-CALENDLY-USERNAME/10-minute-call";
+  const topbar = document.getElementById('topbar');
 
-  function mountCalendly() {
-    const widget = document.getElementById("calendlyWidget");
-    const setup = document.getElementById("setupNotice");
-    const isPlaceholder = CALENDLY_URL.includes("YOUR-CALENDLY-USERNAME");
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 8);
+  });
 
-    if (isPlaceholder) {
-      setup.style.display = "block";
-      widget.style.display = "none";
-      return;
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const page = document.querySelector('.page');
+
+    if (window.innerWidth > 650) {
+      const hidden = sidebar.style.display === 'none';
+      sidebar.style.display = hidden ? '' : 'none';
+      page.style.marginLeft = hidden ? '' : '0';
     }
+  });
 
-    const params = new URLSearchParams({
-      hide_gdpr_banner: "1",
-      background_color: "ffffff",
-      text_color: "1a202c",
-      primary_color: "3b7bbf"
-    });
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
 
-    widget.dataset.url = CALENDLY_URL + (CALENDLY_URL.includes("?") ? "&" : "?") + params.toString();
+  const CALENDLY_URL = "https://calendly.com/partnerships-colbymartel/new-meeting";
 
-    if (window.Calendly && window.Calendly.initInlineWidget) {
-      window.Calendly.initInlineWidget({
-        url: widget.dataset.url,
-        parentElement: widget
-      });
-    } else {
-      // Calendly script may still be loading.
-      setTimeout(mountCalendly, 350);
-    }
+  if (CALENDLY_URL) {
+    const embed = document.getElementById('calendlyEmbed');
+    embed.dataset.url =
+      CALENDLY_URL +
+      "?hide_gdpr_banner=1&background_color=ffffff&text_color=0f0f0f&primary_color=3b7bbf";
   }
-
-  window.addEventListener("load", mountCalendly);
 </script>
+
 </body>
 </html>

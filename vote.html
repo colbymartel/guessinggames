@@ -1,512 +1,792 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-VVCFY7WH7T');
 </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hall of Names</title>
-  <style>
-    :root {
-      --brand: #4f86b3;
-      --brand-dark: #376f9c;
-      --bg: #f6f9fc;
-      --ink: #172331;
-      --muted: #66788a;
-      --line: #dbe6ef;
-      --soft: #edf4fa;
-      --white: #ffffff;
-      --success: #1f7a4d;
-      --danger: #b42318;
-    }
 
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vote | Hall of Names</title>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    a { color: inherit; text-decoration: none; }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-
-    .page {
-      width: min(100%, 1040px);
-      margin: 0 auto;
-      padding: 28px 24px 56px;
-    }
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-
-  padding: 1.25rem 2.5rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: rgba(247, 250, 252, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  border-bottom: 1px solid var(--line);
-
-  transition:
-    background 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-nav.scrolled {
-  background: rgba(247, 250, 252, 0.98);
-  box-shadow: 0 4px 24px rgba(79, 134, 179, 0.12);
-}
-
-.nav-logo {
-  color: var(--brand);
-  text-decoration: none;
-
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-
-  margin: 0;
-  padding: 0;
-
-  list-style: none;
-}
-
-.nav-links a {
-  color: var(--muted);
-  text-decoration: none;
-
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-
-  transition: color 0.2s ease;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--brand);
-}
-
-.nav-account {
-  max-width: 180px;
-
-  padding: 9px 14px !important;
-
-  overflow: hidden;
-
-  color: var(--ink) !important;
-  background: var(--white);
-
-  border: 1px solid var(--line);
-  border-radius: 999px;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  letter-spacing: 0.04em !important;
-  text-transform: none !important;
-}
-
-.nav-account:hover {
-  color: var(--brand) !important;
-  border-color: var(--brand);
-}
-
-.hamburger {
-  display: none;
-
-  padding: 8px;
-
-  color: var(--ink);
-  background: none;
-  border: 0;
-
-  font-size: 1.25rem;
-  cursor: pointer;
-}
-
-/* Account for fixed navigation */
-.page {
-  width: min(100%, 1040px);
-  margin: 0 auto;
-  padding: 0 24px 56px;
-}
-
-.hero {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  gap: 16px;
-  padding: 135px 0 18px;
-}
-
-.eyebrow {
-  text-align: center;
-}
-
-h1 {
-  margin: 0 auto;
-  max-width: 880px;
-  text-align: center;
-}
-
-.subhead {
-  margin: 0 auto;
-  max-width: 620px;
-  text-align: center;
-}
-
-/* ── MOBILE NAV ── */
-@media (max-width: 900px) {
-  nav {
-    padding: 1rem 1.5rem;
+<style>
+  :root {
+    --bg:#fff;
+    --surface:#f2f2f2;
+    --surface-hover:#e5e5e5;
+    --text:#0f0f0f;
+    --muted:#606060;
+    --line:#e5e5e5;
+    --accent:#3b7bbf;
+    --accent-dark:#2d5f8f;
+    --success:#16824f;
+    --danger:#b42318;
+    --sidebar:232px;
+    --topbar:64px;
   }
 
-  .nav-links {
-    display: none;
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  html { scroll-behavior:smooth; }
+
+  body {
+    min-height:100vh;
+    font-family:"Roboto", Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
   }
 
-  .hamburger {
-    display: block;
+  a { color:inherit; text-decoration:none; }
+  button,input { font:inherit; }
+
+  /* TOP BAR */
+  .topbar {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:1000;
+    height:var(--topbar);
+    display:grid;
+    grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
+    align-items:center;
+    gap:24px;
+    padding:0 20px;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid transparent;
   }
 
-  .nav-links.open {
-    position: fixed;
-    top: 62px;
-    left: 0;
-    right: 0;
+  .topbar.scrolled { border-bottom-color:var(--line); }
 
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-
-    padding: 1rem 1.5rem 1.5rem;
-
-    background: rgba(247, 250, 252, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    border-bottom: 1px solid var(--line);
-
-    box-shadow: 0 12px 30px rgba(23, 35, 49, 0.08);
+  .brand-area,
+  .top-actions {
+    display:flex;
+    align-items:center;
+    gap:16px;
   }
 
-  .nav-links.open li {
-    width: 100%;
+  .top-actions { justify-content:flex-end; }
+
+  .icon-btn {
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:50%;
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+    font-size:18px;
   }
 
-  .nav-links.open a {
-    display: block;
-    width: 100%;
+  .icon-btn:hover { background:var(--surface); }
 
-    padding: 14px 4px;
-
-    border-bottom: 1px solid rgba(79, 134, 179, 0.10);
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-.7px;
   }
 
-  .nav-links.open li:last-child a {
-    border-bottom: 0;
+  .brand-mark {
+    width:31px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:var(--accent);
+    color:#fff;
+    font-size:11px;
+    box-shadow:0 3px 10px rgba(59,123,191,.22);
   }
 
-  .nav-account {
-    margin-top: 10px;
-    text-align: center;
+  .brand-domain {
+    margin-left:-5px;
+    transform:translateY(-7px);
+    color:var(--muted);
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:0;
   }
 
-  .hero {
-    padding-top: 110px;
+  .search-wrap {
+    display:flex;
+    width:100%;
+    height:42px;
   }
-}
 
-@media (max-width: 620px) {
+  .search-wrap input {
+    flex:1;
+    min-width:0;
+    padding:0 18px;
+    border:1px solid #c6c6c6;
+    border-right:0;
+    border-radius:22px 0 0 22px;
+    outline:none;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
+    font-size:16px;
+  }
+
+  .search-wrap input:focus {
+    border-color:var(--accent);
+    box-shadow:inset 1px 0 0 var(--accent);
+  }
+
+  .search-btn {
+    width:64px;
+    border:1px solid #c6c6c6;
+    border-radius:0 22px 22px 0;
+    background:#f8f8f8;
+    cursor:pointer;
+    font-size:17px;
+  }
+
+  .search-btn:hover { background:#f0f0f0; }
+
+  .top-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    min-height:38px;
+    padding:0 14px;
+    border-radius:20px;
+    background:var(--surface);
+    white-space:nowrap;
+    font-size:14px;
+    font-weight:700;
+  }
+
+  .top-pill:hover { background:var(--surface-hover); }
+
+  .avatar {
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:14px;
+    font-weight:900;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position:fixed;
+    top:var(--topbar);
+    left:0;
+    bottom:0;
+    z-index:900;
+    width:var(--sidebar);
+    overflow-y:auto;
+    padding:12px 12px 28px;
+    background:#fff;
+  }
+
+  .nav-group {
+    padding:8px 0 12px;
+    margin-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-group:last-child { border-bottom:0; }
+
+  .nav-label {
+    padding:8px 12px 5px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .side-link {
+    display:flex;
+    align-items:center;
+    gap:22px;
+    min-height:42px;
+    padding:0 12px;
+    border-radius:10px;
+    font-size:14px;
+  }
+
+  .side-link i {
+    width:22px;
+    text-align:center;
+    font-size:18px;
+  }
+
+  .side-link:hover { background:var(--surface); }
+
+  .side-link.active {
+    background:var(--surface);
+    font-weight:700;
+  }
+
+  .sidebar-foot {
+    padding:10px 12px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.45;
+  }
+
+  /* MAIN */
   .page {
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-bottom: 44px;
+    margin-left:var(--sidebar);
+    padding-top:var(--topbar);
   }
 
-  nav {
-    padding: 0.95rem 1rem;
+  .chips-bar {
+    position:sticky;
+    top:var(--topbar);
+    z-index:800;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:12px 24px;
+    background:rgba(255,255,255,.98);
+    scrollbar-width:none;
   }
 
-  .nav-logo {
-    font-size: 1.1rem;
+  .chips-bar::-webkit-scrollbar { display:none; }
+
+  .chip {
+    flex:0 0 auto;
+    padding:8px 13px;
+    border:0;
+    border-radius:9px;
+    background:var(--surface);
+    color:var(--text);
+    font-size:14px;
+    font-weight:500;
   }
 
-  .nav-links.open {
-    top: 58px;
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .chip:hover { background:var(--surface-hover); }
+  .chip.active { background:#0f0f0f; color:#fff; }
+
+  .content {
+    width:100%;
+    max-width:1280px;
+    margin:0 auto;
+    padding:24px 24px 64px;
   }
-}
-    .eyebrow {
-      color: var(--brand);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+
+  /* BALLOT HEADER */
+  .ballot-header {
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:28px;
+    align-items:end;
+    margin-bottom:24px;
+  }
+
+  .ballot-kicker {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:8px;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .ballot-title {
+    font-size:clamp(34px,5vw,58px);
+    line-height:.95;
+    letter-spacing:-2px;
+    font-weight:900;
+  }
+
+  .ballot-sub {
+    max-width:680px;
+    margin-top:10px;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+  }
+
+  .round-badge {
+    padding:10px 14px;
+    border-radius:10px;
+    background:var(--surface);
+    color:var(--muted);
+    white-space:nowrap;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  /* VOTE OPTIONS */
+  .vote-panel {
+    width:100%;
+  }
+
+  .options {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:18px;
+    align-items:start;
+  }
+
+  .option {
+    width:100%;
+    min-width:0;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+  }
+
+  .option:disabled {
+    cursor:not-allowed;
+    opacity:.68;
+  }
+
+  .option-image {
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    border-radius:14px;
+    background:#ececec;
+    border:3px solid transparent;
+    transition:
+      border-color .16s ease,
+      transform .16s ease,
+      box-shadow .16s ease;
+  }
+
+  .option-image img {
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    transition:transform .22s ease;
+  }
+
+  .option:not(:disabled):hover .option-image img {
+    transform:scale(1.025);
+  }
+
+  .option:not(:disabled):hover .option-image {
+    transform:translateY(-2px);
+  }
+
+  .option.selected .option-image {
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(59,123,191,.15);
+  }
+
+  .option.selected .option-image::after {
+    content:"✓";
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+
+  .option-copy {
+    display:block;
+    padding:12px 2px 0;
+  }
+
+  .option-name {
+    display:block;
+    font-size:24px;
+    line-height:1.05;
+    letter-spacing:-.65px;
+    font-weight:900;
+  }
+
+  .option.selected .option-name {
+    color:var(--accent-dark);
+  }
+
+  .option-meta {
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:500;
+  }
+
+  /* STICKY VOTE AREA */
+  .vote-footer {
+    position:sticky;
+    bottom:14px;
+    z-index:50;
+    margin-top:26px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(14px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+  }
+
+  .vote-button {
+    width:100%;
+    min-height:48px;
+    border:0;
+    border-radius:24px;
+    background:#0f0f0f;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .vote-button:hover:not(:disabled) { background:#272727; }
+
+  .vote-button:disabled {
+    background:#cfcfcf;
+    color:#757575;
+    cursor:not-allowed;
+  }
+
+  .message {
+    display:none;
+    padding:9px 8px 0;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.4;
+    font-weight:600;
+  }
+
+  .message.show { display:block; }
+  .message.error { color:var(--danger); }
+  .message.success { color:var(--success); }
+
+  /* HOW IT WORKS */
+  .vote-note {
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-top:28px;
+    padding:18px;
+    border-radius:14px;
+    background:var(--surface);
+  }
+
+  .vote-note i {
+    margin-top:2px;
+    color:var(--accent);
+    font-size:18px;
+  }
+
+  .vote-note strong {
+    display:block;
+    margin-bottom:3px;
+    font-size:14px;
+  }
+
+  .vote-note span {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .footer {
+    padding:34px 0 6px;
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  @media (max-width:1200px) {
+    :root { --sidebar:78px; }
+
+    .sidebar { padding:8px 4px; }
+
+    .side-link {
+      min-height:66px;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      padding:7px 2px;
+      text-align:center;
+      font-size:10px;
     }
 
-    h1 {
-      margin: 0;
-      max-width: 720px;
-      font-size: clamp(44px, 8vw, 88px);
-      line-height: 0.94;
-      letter-spacing: -0.08em;
-      font-weight: 850;
+    .side-link i { font-size:18px; }
+
+    .nav-label,
+    .sidebar-foot,
+    .nav-group.secondary {
+      display:none;
+    }
+  }
+
+  @media (max-width:900px) {
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      gap:10px;
+      padding:0 10px;
     }
 
-    .subhead {
-      margin: 0;
-      max-width: 520px;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.5;
+    .brand-domain,
+    .top-pill {
+      display:none;
     }
 
-    .panel {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 24px;
+    .brand { font-size:17px; }
+    .search-wrap { height:38px; }
+
+    .options {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+  }
+
+  @media (max-width:650px) {
+    :root { --sidebar:0px; }
+
+    .sidebar { display:none; }
+
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      height:58px;
     }
 
-    .vote-panel {
-      max-width: 1180px;
-      padding: 24px;
-      margin: 0 auto 0;
+    .topbar .brand-area .icon-btn {
+      display:none;
+    }
+
+    .brand span:not(.brand-mark) {
+      display:none;
+    }
+
+    .search-wrap input {
+      padding:0 12px;
+      font-size:14px;
+    }
+
+    .search-btn { width:46px; }
+
+    .chips-bar {
+      top:58px;
+      padding:10px 12px;
+    }
+
+    .page { padding-top:58px; }
+
+    .content {
+      padding:18px 12px 42px;
+    }
+
+    .ballot-header {
+      grid-template-columns:1fr;
+      gap:12px;
+      align-items:start;
+    }
+
+    .ballot-title {
+      font-size:38px;
+      letter-spacing:-1.2px;
+    }
+
+    .round-badge {
+      justify-self:start;
     }
 
     .options {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .option {
-      min-height: 0;
-      padding: 12px 12px 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 12px;
-      text-align: center;
-      color: var(--ink);
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 0 16px 34px rgba(23, 35, 49, 0.08);
-      transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
-    }
-
-    .option:hover,
-    .option.selected {
-      border-color: var(--brand);
-      box-shadow: 0 20px 44px rgba(79, 134, 179, 0.16);
-      transform: translateY(-3px);
-    }
-
-    .option.selected {
-      background:
-        linear-gradient(180deg, rgba(79, 134, 179, 0.10), rgba(255,255,255,1) 45%),
-        var(--white);
-      border-color: var(--brand);
-    }
-
-    .option.selected .option-image {
-      outline: 3px solid var(--brand);
-      outline-offset: 0;
-    }
-
-    .option.selected .option-name { color: var(--brand-dark); }
-
-    .option:disabled {
-      color: var(--ink);
-      cursor: not-allowed;
-      opacity: 0.65;
-      transform: none;
-    }
-
-    .option-image {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      min-height: 0;
-      height: auto;
-      border-radius: 5px;
-      overflow: hidden;
-      display: block;
-      background: var(--soft);
-    }
-
-    .option-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .option-image::after {
-      content: "";
-      position: absolute;
-      inset: 10px;
-      border: 1px solid rgba(255,255,255,0.28);
-      border-radius: 4px;
-    }
-
-    .option-copy {
-      display: grid;
-      gap: 8px;
-      justify-items: center;
-      padding: 0 6px;
-      margin-top: 2px;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px 12px;
     }
 
     .option-name {
-      font-size: 32px;
-      line-height: 1;
-      letter-spacing: -0.06em;
-      font-weight: 820;
+      font-size:21px;
     }
 
-    .vote-button {
-      width: 100%;
-      margin-top: 16px;
-      min-height: 54px;
-      border: 0;
-      border-radius: 999px;
-      background: var(--brand);
-      color: white;
-      font-size: 17px;
-      font-weight: 750;
-      transition: opacity 0.16s ease, background 0.16s ease;
+    .vote-footer {
+      bottom:8px;
     }
-
-    .vote-button:hover { background: var(--brand-dark); }
-
-    .vote-button:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    .message {
-      display: none;
-      text-align: center;
-      margin-top: 14px;
-      color: var(--brand-dark);
-      font-size: 14px;
-      line-height: 1.4;
-      font-weight: 650;
-    }
-
-    .message.show { display: block; }
-    .message.error { color: var(--danger); }
-    .message.success { color: var(--success); }
-
-    @media (max-width: 620px) {
-      .page { padding: 22px 16px 44px; }
-      nav { align-items: flex-start; }
-      .links { display: none; }
-      .hero { padding: 42px 0 16px; }
-      .options { grid-template-columns: 1fr; }
-      .option { min-height: 292px; }
-      .option-image { height: 220px; }
-    }
-  </style>
+  }
+</style>
 </head>
-<body>
-  <main class="page">
-    <nav id="nav">
-      <a href="index.html" class="nav-logo">
-        GuessingGames.com
-      </a>
-    
-      <ul class="nav-links" id="navMenu">
-        <li>
-          <a href="index.html">
-            Home
-          </a>
-        </li>
-    
-        <li>
-          <a href="halloffame.html" class="active">
-            Hall of Names
-          </a>
-        </li>
-    
-        <li>
-          <a href="live.html">
-            Live Shows
-          </a>
-        </li>
-    
-    
-    
-        <li>
-          <a
-            class="nav-account"
-            id="authLink"
-            href="signin.html?redirect=vote.html"
-          >
-            Sign in
-          </a>
-        </li>
-      </ul>
-    
-      <button
-        class="hamburger"
-        id="ham"
-        type="button"
-        aria-label="Open navigation"
-        aria-expanded="false"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
-    </nav>
 
-    <section class="hero">
-      <div class="eyebrow">Week 7</div>
-      <h1>Hall of Names</h1>
-      <p class="subhead">Vote for one finalist to enter the Hall of Names.</p>
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="brand-area">
+    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <a href="index.html" class="brand" aria-label="GuessingGames.com home">
+      <span class="brand-mark"><i class="fas fa-play"></i></span>
+      <span>GuessingGames</span><span class="brand-domain">.com</span>
+    </a>
+  </div>
+
+  <form class="search-wrap" id="searchForm">
+    <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
+    <button class="search-btn" type="submit" aria-label="Search">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+
+  <div class="top-actions">
+    <a class="top-pill" href="halloffame.html">
+      <i class="fas fa-trophy"></i>
+      Hall of Names
+    </a>
+
+    <a
+      class="icon-btn"
+      id="authLink"
+      href="signin.html?redirect=vote.html"
+      aria-label="Sign in"
+    >
+      <i class="far fa-circle-user"></i>
+    </a>
+
+    <div class="avatar">G</div>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <div class="nav-group">
+    <a class="side-link" href="index.html">
+      <i class="fas fa-house"></i><span>Home</span>
+    </a>
+
+    <a class="side-link" href="index.html#play">
+      <i class="fas fa-gamepad"></i><span>Play</span>
+    </a>
+
+    <a class="side-link active" href="halloffame.html">
+      <i class="fas fa-trophy"></i><span>Hall of Names</span>
+    </a>
+
+    <a class="side-link" href="live.html">
+      <i class="fas fa-bolt"></i><span>Live Shows</span>
+    </a>
+  </div>
+
+  <div class="nav-group secondary">
+    <div class="nav-label">Hall of Names</div>
+
+    <a class="side-link active" href="vote.html">
+      <i class="fas fa-check-to-slot"></i><span>Vote</span>
+    </a>
+
+    <a class="side-link" href="halloffame.html">
+      <i class="fas fa-crown"></i><span>Inductees</span>
+    </a>
+  </div>
+
+  <div class="sidebar-foot">
+    One account.<br>
+    One vote per round.
+  </div>
+</aside>
+
+<main class="page">
+
+  <div class="chips-bar">
+    <span class="chip active">Week 7</span>
+    <a class="chip" href="halloffame.html">Inductees</a>
+    <a class="chip" href="index.html#play">Play Games</a>
+    <a class="chip" href="live.html">Live Shows</a>
+  </div>
+
+  <div class="content">
+
+    <section class="ballot-header">
+      <div>
+        <div class="ballot-kicker">
+          <i class="fas fa-check-to-slot"></i>
+          Hall of Names
+        </div>
+
+        <h1 class="ballot-title">Vote for this week’s inductee</h1>
+
+        <p class="ballot-sub">
+          Choose one finalist. The winner earns a permanent spot in the Hall of Names.
+        </p>
+      </div>
+
+      <div class="round-badge">Week 7 • Round 1</div>
     </section>
 
-    <section>
-      <div class="panel vote-panel">
-        <div class="options" id="options"></div>
-        <button class="vote-button" id="voteButton" disabled>Checking sign in...</button>
+    <section class="vote-panel">
+      <div class="options" id="options"></div>
+
+      <div class="vote-footer">
+        <button class="vote-button" id="voteButton" disabled>
+          Checking sign in...
+        </button>
+
         <div class="message" id="message"></div>
       </div>
     </section>
-  </main>
 
-  <script type="module">
+    <div class="vote-note">
+      <i class="fas fa-circle-info"></i>
+      <div>
+        <strong>How voting works</strong>
+        <span>
+          Sign in, choose one nominee, and submit your vote. Each account gets one vote in this round.
+        </span>
+      </div>
+    </div>
+
+    <footer class="footer">
+      © 2026 GuessingGames.com • Hall of Names
+    </footer>
+
+  </div>
+</main>
+
+<script>
+  const topbar = document.getElementById('topbar');
+
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const page = document.querySelector('.page');
+
+    if (window.innerWidth > 650) {
+      const hidden = sidebar.style.display === 'none';
+
+      sidebar.style.display = hidden ? '' : 'none';
+      page.style.marginLeft = hidden ? '' : '0';
+    }
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+</script>
+
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import {
       getAuth,
@@ -630,6 +910,7 @@ h1 {
             </span>
             <span class="option-copy">
               <span class="option-name">${escapeHTML(item.name)}</span>
+              <span class="option-meta">Week 7 Nominee</span>
             </span>
           </button>
         `;
@@ -673,13 +954,13 @@ h1 {
 
       if (user) {
         const name = firstNameFromUser(user);
-        authLink.textContent = "Hi, " + name;
+        authLink.innerHTML = '<span style="font-size:12px;font-weight:700;white-space:nowrap;">Hi, ' + escapeHTML(name) + '</span>';
         authLink.href = "signin.html";
         await loadUserVote(user);
       } else {
         existingVote = null;
         selectedName = null;
-        authLink.textContent = "Sign in";
+        authLink.innerHTML = '<i class="far fa-circle-user"></i>';
         authLink.href = "signin.html?redirect=vote.html";
         setMessage("Sign in to vote. Each account gets one vote per round.");
         renderOptions();
@@ -768,5 +1049,6 @@ h1 {
 
     renderOptions();
   </script>
+
 </body>
 </html>

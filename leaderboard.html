@@ -1,123 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboard | GuessingGames.com</title>
-  <style>
-    :root{
-      --brand:#4f86b3;
-      --brand-dark:#376f9c;
-      --bg:#f6f9fc;
-      --ink:#172331;
-      --muted:#66788a;
-      --line:#dbe6ef;
-      --soft:#edf4fa;
-      --white:#fff;
-      --gold:#d4a72c;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-    a{color:inherit;text-decoration:none}
-    nav{
-      position:fixed;top:0;left:0;right:0;z-index:20;
-      display:flex;justify-content:space-between;align-items:center;
-      padding:1rem 1.5rem;
-      background:rgba(247,250,252,.94);
-      border-bottom:1px solid var(--line);
-      backdrop-filter:blur(18px);
-    }
-    .logo{font-weight:850;color:var(--brand);letter-spacing:.04em}
-    .nav-right{display:flex;gap:.75rem;align-items:center}
-    .pill{
-      padding:.65rem 1rem;border:1px solid var(--line);border-radius:999px;background:var(--white);
-      font-size:.85rem;font-weight:700;color:var(--ink)
-    }
-    main{width:min(100%,980px);margin:0 auto;padding:7rem 1rem 4rem}
-    .eyebrow{color:var(--brand);font-size:.72rem;font-weight:850;letter-spacing:.16em;text-transform:uppercase}
-    h1{font-size:clamp(3rem,8vw,5.5rem);line-height:.95;letter-spacing:-.07em;margin:.5rem 0 1rem}
-    .sub{color:var(--muted);font-size:1.05rem;line-height:1.5;max-width:640px}
-    .toolbar{
-      margin-top:2rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;justify-content:space-between
-    }
-    .tabs{display:flex;gap:.5rem;flex-wrap:wrap}
-    .tab{
-      border:1px solid var(--line);background:var(--white);color:var(--ink);
-      border-radius:999px;padding:.75rem 1rem;font-weight:800;cursor:pointer
-    }
-    .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-    .me-card{
-      margin-top:1.5rem;background:var(--white);border:1px solid var(--line);border-radius:20px;
-      padding:1rem 1.1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center
-    }
-    .avatar{
-      width:48px;height:48px;border-radius:50%;background:var(--brand);color:#fff;
-      display:grid;place-items:center;font-weight:850;overflow:hidden
-    }
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    .muted{color:var(--muted)}
-    .me-rank{text-align:right}
-    .me-rank strong{font-size:1.4rem}
-    .board{
-      margin-top:1rem;background:var(--white);border:1px solid var(--line);border-radius:22px;overflow:hidden
-    }
-    .row{
-      display:grid;grid-template-columns:72px minmax(0,1fr) 110px;
-      gap:1rem;align-items:center;padding:1rem 1.1rem;border-bottom:1px solid var(--line)
-    }
-    .row:last-child{border-bottom:0}
-    .row.me{background:rgba(79,134,179,.07)}
-    .rank{font-size:1.15rem;font-weight:900}
-    .player{display:flex;align-items:center;gap:.8rem;min-width:0}
-    .player-copy{min-width:0}
-    .name{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .score{text-align:right;font-weight:900;font-size:1.25rem}
-    .status{
-      padding:2rem;text-align:center;color:var(--muted)
-    }
-    .signin-cta{
-      margin-top:1.5rem;padding:1rem 1.1rem;border-radius:18px;background:var(--soft);
-      color:var(--brand-dark);font-weight:750
-    }
-    .refresh{
-      border:0;background:var(--soft);color:var(--brand-dark);
-      border-radius:999px;padding:.75rem 1rem;font-weight:800;cursor:pointer
-    }
-    @media(max-width:620px){
-      nav{padding:.9rem 1rem}
-      .row{grid-template-columns:48px minmax(0,1fr) 82px;padding:.9rem}
-      .me-card{grid-template-columns:auto 1fr}
-      .me-rank{grid-column:1/-1;text-align:left;padding-top:.2rem}
-      .score{font-size:1.05rem}
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <a class="logo" href="index.html">GuessingGames.com</a>
-    <div class="nav-right">
-      <a class="pill" href="index.html#games">Games</a>
-      <a class="pill" id="authLink" href="signin.html?redirect=leaderboard.html">Sign in</a>
-    </div>
-  </nav>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard | GuessingGames.com</title>
 
-  <main>
-    <div class="eyebrow">Community rankings</div>
-    <h1>Leaderboard</h1>
-    <p class="sub">Compare your best score with signed-in players across Guess the Capital and Guess the Flag.</p>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#fff;--surface:#f2f2f2;--surface-hover:#e5e5e5;--text:#0f0f0f;
+  --muted:#606060;--line:#e5e5e5;--accent:#3b7bbf;--gold:#d4a72c;
+  --sidebar:232px;--topbar:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;font-family:"Roboto",Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:inherit;text-decoration:none}button,input{font:inherit}
+
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--topbar);
+  display:grid;grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
+  align-items:center;gap:24px;padding:0 20px;background:rgba(255,255,255,.97);
+}
+.topbar.scrolled{border-bottom:1px solid var(--line)}
+.brand-area,.top-actions{display:flex;align-items:center;gap:16px}
+.top-actions{justify-content:flex-end}
+.icon-btn{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;cursor:pointer;font-size:18px}
+.icon-btn:hover{background:var(--surface)}
+.brand{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:900;letter-spacing:-.7px;white-space:nowrap}
+.brand-mark{width:31px;height:22px;display:grid;place-items:center;border-radius:7px;background:var(--accent);color:#fff;font-size:11px}
+.brand-domain{margin-left:-5px;transform:translateY(-7px);color:var(--muted);font-size:10px;font-weight:500}
+.search-wrap{display:flex;width:100%;height:42px}
+.search-wrap input{flex:1;min-width:0;padding:0 18px;border:1px solid #c6c6c6;border-right:0;border-radius:22px 0 0 22px;outline:none}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-btn{width:64px;border:1px solid #c6c6c6;border-radius:0 22px 22px 0;background:#f8f8f8;cursor:pointer}
+.top-pill{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 14px;border-radius:20px;background:var(--surface);font-size:14px;font-weight:700}
+.top-pill:hover{background:var(--surface-hover)}
+
+.sidebar{position:fixed;top:var(--topbar);left:0;bottom:0;width:var(--sidebar);z-index:900;overflow-y:auto;padding:12px;background:#fff}
+.nav-group{padding:8px 0 12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.nav-label{padding:8px 12px 5px;color:var(--muted);font-size:13px;font-weight:700}
+.side-link{display:flex;align-items:center;gap:22px;min-height:42px;padding:0 12px;border-radius:10px;font-size:14px}
+.side-link i{width:22px;text-align:center;font-size:18px}
+.side-link:hover,.side-link.active{background:var(--surface)}
+.side-link.active{font-weight:700}
+.sidebar-foot{padding:10px 12px;color:var(--muted);font-size:11px;line-height:1.45}
+
+.page{margin-left:var(--sidebar);padding-top:var(--topbar)}
+.chips-bar{position:sticky;top:var(--topbar);z-index:800;display:flex;gap:10px;overflow-x:auto;padding:12px 24px;background:rgba(255,255,255,.98);scrollbar-width:none}
+.chips-bar::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:8px 13px;border-radius:9px;background:var(--surface);font-size:14px;font-weight:500}
+.chip.active{background:#0f0f0f;color:#fff}
+.content{width:100%;max-width:1100px;margin:0 auto;padding:22px 24px 64px}
+
+.leaderboard-header{margin-bottom:24px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;margin-bottom:7px;color:var(--accent);font-size:12px;font-weight:800}
+h1{font-size:clamp(40px,6vw,66px);line-height:.94;letter-spacing:-2.5px;font-weight:900}
+.sub{max-width:660px;margin-top:10px;color:var(--muted);font-size:14px;line-height:1.5}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab,.refresh{min-height:38px;padding:0 14px;border:0;border-radius:19px;background:var(--surface);font-size:13px;font-weight:800;cursor:pointer}
+.tab:hover,.refresh:hover{background:var(--surface-hover)}
+.tab.active{background:#0f0f0f;color:#fff}
+.refresh:disabled{opacity:.6;cursor:default}
+
+.me-card{margin-bottom:16px;padding:16px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.04)}
+.avatar{width:46px;height:46px;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:var(--accent);color:#fff;font-size:14px;font-weight:900}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.muted{color:var(--muted);font-size:12px;margin-top:3px}
+.me-rank{min-width:88px;text-align:right}
+.me-rank strong{display:block;font-size:24px;line-height:1;font-weight:900}
+.signin-cta{margin-bottom:16px;padding:14px 16px;border-radius:12px;background:var(--surface);color:var(--muted);font-size:13px;line-height:1.45}
+
+.board{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}
+.board-head,.row{display:grid;grid-template-columns:72px minmax(0,1fr) 110px;gap:14px;align-items:center}
+.board-head{padding:11px 16px;border-bottom:1px solid var(--line);background:#fafafa;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.row{padding:14px 16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row:hover{background:#fafafa}
+.row.me{background:rgba(59,123,191,.07)}
+.rank{font-size:17px;font-weight:900}
+.row:nth-child(1) .rank{color:var(--gold)}
+.row:nth-child(2) .rank{color:#8a8a8a}
+.row:nth-child(3) .rank{color:#a66d3f}
+.player{display:flex;align-items:center;gap:10px;min-width:0}
+.player-copy{min-width:0}
+.score{text-align:right;font-size:19px;font-weight:900}
+.status{padding:34px 20px;text-align:center;color:var(--muted);font-size:14px}
+.footer{padding:30px 0 6px;color:var(--muted);font-size:12px}
+
+@media(max-width:1200px){
+  :root{--sidebar:78px}
+  .sidebar{padding:8px 4px}
+  .side-link{min-height:66px;flex-direction:column;justify-content:center;gap:5px;padding:7px 2px;text-align:center;font-size:10px}
+  .side-link i{font-size:18px}.nav-label,.sidebar-foot,.nav-group.secondary{display:none}
+}
+@media(max-width:900px){
+  .topbar{grid-template-columns:auto 1fr auto;gap:10px;padding:0 10px}
+  .brand-domain,.top-pill{display:none}.brand{font-size:17px}.search-wrap{height:38px}
+}
+@media(max-width:650px){
+  :root{--sidebar:0px}
+  .sidebar{display:none}
+  .topbar{grid-template-columns:auto 1fr auto;height:58px}
+  .topbar .brand-area .icon-btn{display:none}.brand span:not(.brand-mark){display:none}
+  .search-wrap input{padding:0 12px;font-size:14px}.search-btn{width:46px}
+  .chips-bar{top:58px;padding:10px 12px}.page{padding-top:58px}.content{padding:16px 12px 40px}
+  h1{font-size:44px;letter-spacing:-1.8px}
+  .toolbar{align-items:flex-start;flex-direction:column}
+  .me-card{grid-template-columns:auto 1fr}.me-rank{grid-column:1/-1;text-align:left}
+  .board-head,.row{grid-template-columns:48px minmax(0,1fr) 74px;gap:10px;padding-left:12px;padding-right:12px}
+  .score{font-size:16px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="brand-area">
+    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><i class="fas fa-play"></i></span>
+      <span>GuessingGames</span><span class="brand-domain">.com</span>
+    </a>
+  </div>
+
+  <form class="search-wrap" id="searchForm">
+    <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
+    <button class="search-btn" type="submit"><i class="fas fa-search"></i></button>
+  </form>
+
+  <div class="top-actions">
+    <a class="top-pill" href="geography.html"><i class="fas fa-earth-americas"></i> Geography</a>
+    <a class="top-pill" id="authLink" href="signin.html?redirect=leaderboard.html">Sign in</a>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <div class="nav-group">
+    <a class="side-link" href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
+    <a class="side-link" href="index.html#play"><i class="fas fa-gamepad"></i><span>Play</span></a>
+    <a class="side-link" href="halloffame.html"><i class="fas fa-trophy"></i><span>Hall of Names</span></a>
+    <a class="side-link" href="live.html"><i class="fas fa-bolt"></i><span>Live Shows</span></a>
+  </div>
+
+  <div class="nav-group secondary">
+    <div class="nav-label">Geography</div>
+    <a class="side-link" href="flags.html"><i class="fas fa-flag"></i><span>Guess the Flag</span></a>
+    <a class="side-link" href="capitals.html"><i class="fas fa-landmark"></i><span>Capitals</span></a>
+    <a class="side-link active" href="leaderboard.html"><i class="fas fa-ranking-star"></i><span>Leaderboard</span></a>
+  </div>
+
+  <div class="sidebar-foot">Community high scores.<br>Sign in to save yours.</div>
+</aside>
+
+<main class="page">
+  <div class="chips-bar">
+    <span class="chip active">Leaderboard</span>
+    <a class="chip" href="flags.html">Guess the Flag</a>
+    <a class="chip" href="capitals.html">Capital Cities</a>
+    <a class="chip" href="geography.html">All Geography</a>
+  </div>
+
+  <div class="content">
+    <section class="leaderboard-header">
+      <div class="eyebrow"><i class="fas fa-ranking-star"></i> Community Rankings</div>
+      <h1>Leaderboard</h1>
+      <p class="sub">Compare your best score with signed-in players across Guess the Capital and Guess the Flag.</p>
+    </section>
 
     <div class="toolbar">
       <div class="tabs" role="tablist" aria-label="Choose leaderboard">
-        <button class="tab active" data-game="capital" type="button">Capitals</button>
-        <button class="tab" data-game="flags" type="button">Flags</button>
+        <button class="tab active" data-game="capital" type="button"><i class="fas fa-landmark"></i> Capitals</button>
+        <button class="tab" data-game="flags" type="button"><i class="fas fa-flag"></i> Flags</button>
       </div>
-      <button class="refresh" id="refreshButton" type="button">Refresh</button>
+      <button class="refresh" id="refreshButton" type="button"><i class="fas fa-rotate-right"></i> Refresh</button>
     </div>
 
     <section class="me-card" id="meCard" hidden>
@@ -137,12 +199,33 @@
     </div>
 
     <section class="board" aria-live="polite">
+      <div class="board-head">
+        <div>Rank</div><div>Player</div><div style="text-align:right">Score</div>
+      </div>
       <div class="status" id="status">Loading leaderboard...</div>
       <div id="rows" hidden></div>
     </section>
-  </main>
 
-  <script type="module">
+    <footer class="footer">© 2026 GuessingGames.com • Community Leaderboard</footer>
+  </div>
+</main>
+
+<script>
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>topbar.classList.toggle('scrolled',window.scrollY>8));
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  const sidebar=document.getElementById('sidebar');
+  const page=document.querySelector('.page');
+  if(window.innerWidth>650){
+    const hidden=sidebar.style.display==='none';
+    sidebar.style.display=hidden?'':'none';
+    page.style.marginLeft=hidden?'':'0';
+  }
+});
+document.getElementById('searchForm').addEventListener('submit',e=>e.preventDefault());
+</script>
+
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import {
       getAuth,
@@ -340,5 +423,6 @@
       loadLeaderboard();
     });
   </script>
+
 </body>
 </html>
