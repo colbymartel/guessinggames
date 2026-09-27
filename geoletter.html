@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country Letter Rush | GuessingGames.com</title>
+<link rel="icon" href="/favicongg.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--surface:#f2f2f2;--hover:#e5e5e5;--text:#0f0f0f;--muted:#606060;--line:#e5e5e5;--blue:#3b7bbf;--green:#179c56;--greenSoft:#e9f8ef;--red:#cf5050;--redSoft:#fff0f0;--sidebar:232px;--top:64px}
+*{box-sizing:border-box}body{margin:0;font-family:Roboto,Arial,sans-serif;color:var(--text);background:#fff}a{color:inherit;text-decoration:none}button,input{font:inherit}
+.topbar{position:fixed;inset:0 0 auto 0;height:var(--top);z-index:1000;display:grid;grid-template-columns:minmax(215px,1fr) minmax(260px,620px) minmax(180px,1fr);gap:20px;align-items:center;padding:0 20px;background:rgba(255,255,255,.98)}
+.brand-area,.actions{display:flex;align-items:center;gap:15px}.actions{justify-content:flex-end}.round-btn{width:40px;height:40px;border:0;border-radius:50%;background:transparent;cursor:pointer}.round-btn:hover{background:var(--surface)}
+.brand{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:900;letter-spacing:-.7px}.mark{width:31px;height:22px;border-radius:7px;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:11px}.domain{margin-left:-5px;transform:translateY(-7px);font-size:10px;color:var(--muted);font-weight:500}
+.search{display:flex;height:42px}.search input{flex:1;min-width:0;padding:0 17px;border:1px solid #c6c6c6;border-right:0;border-radius:22px 0 0 22px;outline:none}.search button{width:60px;border:1px solid #c6c6c6;border-radius:0 22px 22px 0;background:#f8f8f8}.pill{padding:10px 14px;border-radius:20px;background:var(--surface);font-size:14px;font-weight:700;white-space:nowrap}
+.sidebar{position:fixed;top:var(--top);left:0;bottom:0;width:var(--sidebar);padding:12px;z-index:900;background:#fff}.group{padding:8px 0 12px;border-bottom:1px solid var(--line);margin-bottom:8px}.label{padding:8px 12px 5px;font-size:13px;font-weight:700;color:var(--muted)}.side{min-height:42px;display:flex;align-items:center;gap:22px;padding:0 12px;border-radius:10px;font-size:14px}.side i{width:22px;text-align:center}.side:hover,.side.active{background:var(--surface)}.side.active{font-weight:700}
+.page{margin-left:var(--sidebar);padding-top:var(--top)}.chips{position:sticky;top:var(--top);z-index:800;display:flex;gap:10px;overflow:auto;padding:12px 24px;background:#fff}.chip{padding:8px 13px;border-radius:9px;background:var(--surface);font-size:14px;white-space:nowrap}.chip.active{background:#111;color:#fff}.content{max-width:1120px;margin:auto;padding:20px 24px 60px}
+.heading{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px}.eyebrow{color:var(--blue);font-size:12px;font-weight:800;margin-bottom:6px}.heading h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:.95;letter-spacing:-2px;font-weight:900}.sub{margin:8px 0 0;max-width:680px;color:var(--muted);font-size:14px;line-height:1.45}.how{border:0;border-radius:20px;padding:10px 14px;background:var(--surface);font-weight:800;cursor:pointer}
+.shell{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.06)}.stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.stat{min-height:70px;display:grid;place-items:center;text-align:center;border-right:1px solid var(--line);padding:10px}.stat:last-child{border-right:0}.stat small{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}.stat strong{font-size:24px}.timer.urgent{color:var(--red)}
+.game{display:grid;grid-template-columns:240px 1fr;gap:22px;padding:22px}.letter-card{min-height:320px;border-radius:14px;background:linear-gradient(135deg,#183b59,#3b7bbf);color:#fff;display:grid;place-items:center;text-align:center;padding:18px}.letter{font-size:145px;line-height:.8;font-weight:900;letter-spacing:-8px}.letter-info{margin-top:18px;font-size:13px;color:rgba(255,255,255,.8);font-weight:700}.letter-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.7)}
+.challenge h2{margin:0 0 6px;font-size:27px;letter-spacing:-.7px}.challenge p{margin:0 0 14px;color:var(--muted);font-size:13px}.guess{display:flex;gap:8px;margin-bottom:9px}.guess input{flex:1;min-width:0;height:52px;border:1px solid #c6c6c6;border-radius:12px;padding:0 15px;outline:none;font-size:16px}.guess input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(59,123,191,.12)}.guess button{height:52px;min-width:88px;border:0;border-radius:26px;background:#111;color:#fff;font-weight:800;cursor:pointer}.guess button:hover{background:#292929}
+.feedback{min-height:20px;margin-bottom:10px;color:var(--muted);font-size:13px;font-weight:700}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.complete{display:none;padding:10px 12px;margin-bottom:10px;border-radius:9px;background:var(--greenSoft);color:#176b41;font-size:13px;font-weight:800}.complete.show{display:block}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.slot{min-height:45px;display:flex;justify-content:center;align-items:center;padding:7px;border:1px dashed #c6c6c6;border-radius:10px;background:#fafafa;color:#999;font-size:13px;font-weight:800;text-align:center}.slot.correct{border:1px solid var(--green);background:var(--greenSoft);color:#176b41}.slot.missed{border:1px solid #ebb0b0;background:var(--redSoft);color:#9c3737}
+.footerbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;border-top:1px solid var(--line);background:#fafafa}.progress{font-size:12px;color:var(--muted);font-weight:700}.next{border:0;border-radius:20px;background:var(--blue);color:#fff;padding:10px 15px;font-size:13px;font-weight:800;cursor:pointer}
+@media(max-width:1200px){:root{--sidebar:78px}.sidebar{padding:8px 4px}.side{min-height:66px;flex-direction:column;justify-content:center;gap:5px;padding:7px 2px;font-size:10px;text-align:center}.label,.secondary{display:none}}
+@media(max-width:900px){.topbar{grid-template-columns:auto 1fr auto;gap:10px;padding:0 10px}.domain,.pill{display:none}.brand{font-size:17px}.game{grid-template-columns:180px 1fr}.letter{font-size:112px}}
+@media(max-width:650px){:root{--sidebar:0px}.sidebar{display:none}.topbar{height:58px;grid-template-columns:auto 1fr auto}.brand span:not(.mark){display:none}.brand-area .round-btn{display:none}.search input{font-size:14px;padding:0 11px}.search button{width:45px}.page{margin-left:0;padding-top:58px}.chips{top:58px;padding:8px 10px}.content{padding:10px 10px 34px}.heading{align-items:flex-start;flex-direction:column;gap:8px;margin-bottom:12px}.heading h1{font-size:34px;letter-spacing:-1.2px}.sub{font-size:12px}.how{display:none}.stats{grid-template-columns:repeat(4,1fr)}.stat{min-height:54px;padding:6px 3px}.stat small{font-size:7px;letter-spacing:.02em}.stat strong{font-size:18px}.game{display:block;padding:10px}.letter-card{min-height:0;height:110px;margin-bottom:10px;display:flex;justify-content:flex-start;text-align:left}.letter-wrap{display:flex;align-items:center;gap:16px}.letter{font-size:72px;letter-spacing:-4px}.letter-info{margin-top:3px;font-size:11px}.letter-label{font-size:8px}.challenge h2{font-size:21px}.challenge p{font-size:11px;margin-bottom:9px}.guess{gap:6px;margin-bottom:6px}.guess input{height:46px;padding:0 12px}.guess button{height:46px;min-width:72px;font-size:13px}.feedback{min-height:17px;margin-bottom:6px;font-size:11px}.answers{gap:6px}.slot{min-height:39px;font-size:11px;border-radius:8px}.footerbar{padding:10px}.progress{font-size:11px}}
+@media(max-width:360px){.answers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topbar" id="topbar">
+  <div class="brand-area"><button class="round-btn" id="menuBtn"><i class="fas fa-bars"></i></button><a class="brand" href="index.html"><span class="mark"><i class="fas fa-play"></i></span><span>GuessingGames</span><span class="domain">.com</span></a></div>
+  <form class="search" id="siteSearch"><input type="search" placeholder="Search GuessingGames..."><button><i class="fas fa-search"></i></button></form>
+  <div class="actions"><a class="pill" href="geography.html"><i class="fas fa-earth-americas"></i> Geography</a></div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <div class="group">
+    <a class="side" href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
+    <a class="side active" href="index.html#play"><i class="fas fa-gamepad"></i><span>Play</span></a>
+    <a class="side" href="halloffame.html"><i class="fas fa-trophy"></i><span>Hall of Names</span></a>
+    <a class="side" href="live.html"><i class="fas fa-bolt"></i><span>Live Shows</span></a>
+  </div>
+  <div class="group secondary">
+    <div class="label">Geography</div>
+    <a class="side" href="flags.html"><i class="fas fa-flag"></i><span>Guess the Flag</span></a>
+    <a class="side" href="capitals.html"><i class="fas fa-landmark"></i><span>Capitals</span></a>
+    <a class="side active" href="country-letter.html"><i class="fas fa-font"></i><span>Country Letter</span></a>
+    <a class="side" href="leaderboard.html"><i class="fas fa-ranking-star"></i><span>Leaderboard</span></a>
+  </div>
+</aside>
+
+<main class="page">
+  <div class="chips">
+    <span class="chip active">Country Letter</span>
+    <a class="chip" href="flags.html">Flags</a>
+    <a class="chip" href="capitals.html">Capitals</a>
+    <a class="chip" href="geography.html">All Geography</a>
+  </div>
+  <div class="content">
+    <section class="heading">
+      <div><div class="eyebrow"><i class="fas fa-earth-americas"></i> Geography Games</div><h1>Country Letter Rush</h1><p class="sub">Name every country that starts with the letter before time runs out. You get 10 seconds for every possible answer.</p></div>
+      <button class="how" id="howBtn"><i class="fas fa-circle-info"></i> How to play</button>
+    </section>
+
+    <section class="shell">
+      <div class="stats">
+        <div class="stat"><div><small>Letter</small><strong id="statLetter">A</strong></div></div>
+        <div class="stat"><div><small>Found</small><strong id="found">0 / 0</strong></div></div>
+        <div class="stat"><div><small>Time</small><strong class="timer" id="timer">0:00</strong></div></div>
+        <div class="stat"><div><small>Score</small><strong id="score">0</strong></div></div>
+      </div>
+
+      <div class="game">
+        <div class="letter-card">
+          <div class="letter-wrap">
+            <div class="letter" id="letter">A</div>
+            <div><div class="letter-label">Starting letter</div><div class="letter-info" id="letterInfo"></div></div>
+          </div>
+        </div>
+
+        <div class="challenge">
+          <h2 id="title">Name every country starting with A</h2>
+          <p>Type countries in any order. Correct answers fill a blank green.</p>
+          <div class="complete" id="complete"><i class="fas fa-circle-check"></i> Perfect! You named every country.</div>
+          <form class="guess" id="guessForm"><input id="guessInput" autocomplete="off" placeholder="Type a country..." aria-label="Country guess"><button id="guessBtn">Enter</button></form>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+          <div class="answers" id="answers"></div>
+        </div>
+      </div>
+
+      <div class="footerbar"><div class="progress" id="progress">The timer starts with your first guess.</div><button class="next" id="nextBtn">New Letter</button></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(()=>{
+const groups={
+A:["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan"],
+B:["Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi"],
+C:["Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Costa Rica","Cote d'Ivoire","Croatia","Cuba","Cyprus","Czechia"],
+D:["Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic"],
+E:["Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia"],
+F:["Fiji","Finland","France"],
+G:["Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana"],
+H:["Haiti","Honduras","Hungary"],
+I:["Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy"],
+J:["Jamaica","Japan","Jordan"],
+K:["Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan"],
+L:["Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg"],
+M:["Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar"],
+N:["Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway"],
+O:["Oman"],
+P:["Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal"],
+Q:["Qatar"],
+R:["Republic of the Congo","Romania","Russia","Rwanda"],
+S:["Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria"],
+T:["Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu"],
+U:["Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan"],
+V:["Vanuatu","Vatican City","Venezuela","Vietnam"],
+Y:["Yemen"],Z:["Zambia","Zimbabwe"]
+};
+const aliases={"usa":"United States","us":"United States","united states of america":"United States","uk":"United Kingdom","uae":"United Arab Emirates","czech republic":"Czechia","cape verde":"Cabo Verde","burma":"Myanmar","east timor":"Timor-Leste","vatican":"Vatican City","holy see":"Vatican City","the gambia":"Gambia","drc":"Democratic Republic of the Congo","dr congo":"Democratic Republic of the Congo","congo kinshasa":"Democratic Republic of the Congo","congo brazzaville":"Republic of the Congo","federated states of micronesia":"Micronesia","ivory coast":"Cote d'Ivoire"};
+const letters=Object.keys(groups);
+let current="A",answers=[],found=new Set(),secs=0,timerId=null,started=false,ended=false,scoreTotal=0,last=null;
+const $=id=>document.getElementById(id);
+const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
+const fmt=s=>`${Math.floor(Math.max(0,s)/60)}:${String(Math.max(0,s)%60).padStart(2,"0")}`;
+function update(){
+ $("found").textContent=`${found.size} / ${answers.length}`;$("timer").textContent=fmt(secs);$("score").textContent=scoreTotal;
+ $("timer").classList.toggle("urgent",started&&!ended&&secs<=10);
+ $("progress").textContent=ended?`Round complete: ${found.size} of ${answers.length} found.`:started?`${answers.length-found.size} ${answers.length-found.size===1?"country":"countries"} left`:"The timer starts with your first guess.";
+}
+function slots(){
+ $("answers").innerHTML="";
+ answers.forEach((c,i)=>{const d=document.createElement("div");d.className="slot";d.dataset.country=c;d.textContent=`Country ${i+1}`;$("answers").appendChild(d)});
+}
+function choose(){const a=letters.filter(x=>x!==last);return a[Math.floor(Math.random()*a.length)]}
+function round(letter=choose()){
+ clearInterval(timerId);last=current;current=letter;answers=[...groups[current]];found=new Set();secs=answers.length*10;started=false;ended=false;
+ $("letter").textContent=current;$("statLetter").textContent=current;$("title").textContent=`Name every country starting with ${current}`;$("letterInfo").textContent=`${answers.length} ${answers.length===1?"country":"countries"} • ${secs} seconds`;
+ $("guessInput").disabled=false;$("guessBtn").disabled=false;$("guessInput").value="";$("feedback").textContent="";$("feedback").className="feedback";$("complete").classList.remove("show");slots();update();setTimeout(()=>$("guessInput").focus(),50);
+}
+function start(){if(started||ended)return;started=true;timerId=setInterval(()=>{secs--;update();if(secs<=0)finish(false)},1000)}
+function reveal(c,miss=false){const el=[...document.querySelectorAll(".slot")].find(x=>x.dataset.country===c);if(!el)return;el.classList.add(miss?"missed":"correct");el.innerHTML=miss?c:`<i class="fas fa-check" style="margin-right:6px"></i>${c}`}
+function finish(perfect){
+ if(ended)return;ended=true;clearInterval(timerId);$("guessInput").disabled=true;$("guessBtn").disabled=true;
+ if(perfect){$("complete").classList.add("show");$("feedback").textContent=`Perfect — ${answers.length}/${answers.length}!`;$("feedback").className="feedback good"}
+ else{answers.forEach(c=>{if(!found.has(c))reveal(c,true)});$("feedback").textContent=`Time! You found ${found.size} of ${answers.length}.`;$("feedback").className="feedback bad"}update();
+}
+function guess(raw){
+ if(ended)return;const n=norm(raw);if(!n){$("feedback").textContent="Type a country first.";$("feedback").className="feedback bad";return}start();
+ const alias=aliases[n];const match=answers.find(c=>norm(c)===n)||(alias&&answers.includes(alias)?alias:null);
+ if(!match){$("feedback").textContent=`No ${current} country matches “${raw.trim()}”.`;$("feedback").className="feedback bad";$("guessInput").select();return}
+ if(found.has(match)){$("feedback").textContent=`${match} is already filled in.`;$("feedback").className="feedback";$("guessInput").value="";return}
+ found.add(match);scoreTotal++;reveal(match);$("feedback").textContent=`Correct — ${match}!`;$("feedback").className="feedback good";$("guessInput").value="";update();if(found.size===answers.length)finish(true);
+}
+$("guessForm").addEventListener("submit",e=>{e.preventDefault();guess($("guessInput").value)});
+$("nextBtn").addEventListener("click",()=>round());
+$("howBtn").addEventListener("click",()=>alert("HOW TO PLAY\n\n• You get one starting letter.\n• There is one blank for every country beginning with that letter.\n• You get 10 seconds per possible answer.\n• Type countries in any order.\n• Correct answers turn green.\n• Missed answers are revealed when time expires."));
+$("siteSearch").addEventListener("submit",e=>e.preventDefault());
+$("menuBtn").addEventListener("click",()=>{if(innerWidth<=650)return;const s=$("sidebar"),p=document.querySelector(".page"),hidden=s.style.display==="none";s.style.display=hidden?"":"none";p.style.marginLeft=hidden?"":"0"});
+round("A");
+})();
+</script>
+</body>
+</html>

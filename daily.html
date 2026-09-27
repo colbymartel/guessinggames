@@ -1519,6 +1519,61 @@
       .guess-btn { width:100%; }
     }
 
+
+    /* === DAILY NAME COMPACT / MOBILE-FIRST GAMEPLAY TUNING === */
+    @media (min-width:901px) {
+      .game-content { grid-template-columns:minmax(300px,.82fr) minmax(430px,1.18fr); gap:22px; align-items:start; }
+      .photo-card { width:100%; min-height:0; height:360px; }
+      .photo-card img { width:100%; height:360px; min-height:0; object-fit:cover; object-position:center 28%; }
+      .desktop-side { align-self:start !important; padding-top:10px !important; }
+      .prompt-row { margin-bottom:10px; }
+      .guess-form { margin-bottom:9px; }
+      .feedback { margin-bottom:8px; }
+    }
+    @media (min-width:651px) and (max-width:900px) {
+      .content { padding-top:14px; }
+      .hero { margin-bottom:14px; }
+      .photo-card, .photo-card img { min-height:0; height:330px; }
+      .photo-card img { object-position:center 25%; }
+      .photo-card { margin-bottom:14px; }
+      .prompt-row { margin-bottom:10px; }
+    }
+    @media (max-width:650px) {
+      .chips-bar { padding-top:8px; padding-bottom:8px; }
+      .content { padding:10px 10px 30px; }
+      .hero { gap:3px; margin-bottom:12px; }
+      .eyebrow { font-size:11px; }
+      h1 { font-size:34px; line-height:.98; letter-spacing:-1.2px; }
+      .game-shell { border-radius:13px; }
+      .game-topbar { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .game-topbar .stat:last-child { grid-column:auto; border-top:0; border-right:0; }
+      .stat:nth-child(2) { border-right:1px solid var(--line); }
+      .stat { min-height:58px; padding:8px 5px; }
+      .stat-label { font-size:8px; letter-spacing:.04em; }
+      .stat-value { font-size:20px; }
+      .game-content { padding:10px; }
+      .photo-card { margin-bottom:11px; min-height:0; height:235px; border-radius:11px; }
+      .photo-card img { width:100%; height:235px; min-height:0; object-fit:cover; object-position:center 24%; }
+      .photo-label { top:8px; left:8px; padding:5px 7px; font-size:8px; }
+      .desktop-side { padding-top:0 !important; }
+      .prompt-row { margin-bottom:8px; }
+      .prompt { font-size:22px; line-height:1; }
+      .info-btn { width:34px; height:34px; flex-basis:34px; font-size:15px; }
+      .guess-form { display:flex; grid-template-columns:none; gap:7px; margin-bottom:7px; }
+      .guess-input { height:46px; min-width:0; padding:0 12px; border-radius:10px; font-size:16px; }
+      .guess-btn { width:auto; min-width:76px; min-height:46px; padding:0 15px; border-radius:23px; font-size:14px; }
+      .feedback { min-height:16px; margin-bottom:7px; font-size:12px; }
+      .history-panel { padding:10px; border-radius:11px; }
+      .history-header { margin-bottom:7px; }
+      .history-empty { padding:9px 8px; }
+      .letter-cell { width:31px; height:34px; font-size:14px; }
+    }
+    @media (max-width:390px) {
+      .photo-card, .photo-card img { height:215px; }
+      h1 { font-size:31px; }
+      .guess-btn { min-width:68px; padding:0 12px; }
+    }
+
   </style>
 </head>
 

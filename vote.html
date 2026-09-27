@@ -1,805 +1,868 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-VVCFY7WH7T');
-</script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vote | Hall of Names</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-  :root {
-    --bg:#fff;
-    --surface:#f2f2f2;
-    --surface-hover:#e5e5e5;
-    --text:#0f0f0f;
-    --muted:#606060;
-    --line:#e5e5e5;
-    --accent:#3b7bbf;
-    --accent-dark:#2d5f8f;
-    --success:#16824f;
-    --danger:#b42318;
-    --sidebar:232px;
-    --topbar:64px;
-  }
-
-  * { box-sizing:border-box; margin:0; padding:0; }
-
-  html { scroll-behavior:smooth; }
-
-  body {
-    min-height:100vh;
-    font-family:"Roboto", Arial, sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    overflow-x:hidden;
-  }
-
-  a { color:inherit; text-decoration:none; }
-  button,input { font:inherit; }
-
-  /* TOP BAR */
-  .topbar {
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    z-index:1000;
-    height:var(--topbar);
-    display:grid;
-    grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
-    align-items:center;
-    gap:24px;
-    padding:0 20px;
-    background:rgba(255,255,255,.97);
-    border-bottom:1px solid transparent;
-  }
-
-  .topbar.scrolled { border-bottom-color:var(--line); }
-
-  .brand-area,
-  .top-actions {
-    display:flex;
-    align-items:center;
-    gap:16px;
-  }
-
-  .top-actions { justify-content:flex-end; }
-
-  .icon-btn {
-    width:40px;
-    height:40px;
-    display:grid;
-    place-items:center;
-    border:0;
-    border-radius:50%;
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-    font-size:18px;
-  }
-
-  .icon-btn:hover { background:var(--surface); }
-
-  .brand {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    white-space:nowrap;
-    font-size:20px;
-    font-weight:900;
-    letter-spacing:-.7px;
-  }
-
-  .brand-mark {
-    width:31px;
-    height:22px;
-    display:grid;
-    place-items:center;
-    border-radius:7px;
-    background:var(--accent);
-    color:#fff;
-    font-size:11px;
-    box-shadow:0 3px 10px rgba(59,123,191,.22);
-  }
-
-  .brand-domain {
-    margin-left:-5px;
-    transform:translateY(-7px);
-    color:var(--muted);
-    font-size:10px;
-    font-weight:500;
-    letter-spacing:0;
-  }
-
-  .search-wrap {
-    display:flex;
-    width:100%;
-    height:42px;
-  }
-
-  .search-wrap input {
-    flex:1;
-    min-width:0;
-    padding:0 18px;
-    border:1px solid #c6c6c6;
-    border-right:0;
-    border-radius:22px 0 0 22px;
-    outline:none;
-    box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
-    font-size:16px;
-  }
-
-  .search-wrap input:focus {
-    border-color:var(--accent);
-    box-shadow:inset 1px 0 0 var(--accent);
-  }
-
-  .search-btn {
-    width:64px;
-    border:1px solid #c6c6c6;
-    border-radius:0 22px 22px 0;
-    background:#f8f8f8;
-    cursor:pointer;
-    font-size:17px;
-  }
-
-  .search-btn:hover { background:#f0f0f0; }
-
-  .top-pill {
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    min-height:38px;
-    padding:0 14px;
-    border-radius:20px;
-    background:var(--surface);
-    white-space:nowrap;
-    font-size:14px;
-    font-weight:700;
-  }
-
-  .top-pill:hover { background:var(--surface-hover); }
-
-  .avatar {
-    width:34px;
-    height:34px;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    background:var(--accent);
-    color:#fff;
-    font-size:14px;
-    font-weight:900;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    position:fixed;
-    top:var(--topbar);
-    left:0;
-    bottom:0;
-    z-index:900;
-    width:var(--sidebar);
-    overflow-y:auto;
-    padding:12px 12px 28px;
-    background:#fff;
-  }
-
-  .nav-group {
-    padding:8px 0 12px;
-    margin-bottom:8px;
-    border-bottom:1px solid var(--line);
-  }
-
-  .nav-group:last-child { border-bottom:0; }
-
-  .nav-label {
-    padding:8px 12px 5px;
-    color:var(--muted);
-    font-size:13px;
-    font-weight:700;
-  }
-
-  .side-link {
-    display:flex;
-    align-items:center;
-    gap:22px;
-    min-height:42px;
-    padding:0 12px;
-    border-radius:10px;
-    font-size:14px;
-  }
-
-  .side-link i {
-    width:22px;
-    text-align:center;
-    font-size:18px;
-  }
-
-  .side-link:hover { background:var(--surface); }
-
-  .side-link.active {
-    background:var(--surface);
-    font-weight:700;
-  }
-
-  .sidebar-foot {
-    padding:10px 12px;
-    color:var(--muted);
-    font-size:11px;
-    line-height:1.45;
-  }
-
-  /* MAIN */
-  .page {
-    margin-left:var(--sidebar);
-    padding-top:var(--topbar);
-  }
-
-  .chips-bar {
-    position:sticky;
-    top:var(--topbar);
-    z-index:800;
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    padding:12px 24px;
-    background:rgba(255,255,255,.98);
-    scrollbar-width:none;
-  }
-
-  .chips-bar::-webkit-scrollbar { display:none; }
-
-  .chip {
-    flex:0 0 auto;
-    padding:8px 13px;
-    border:0;
-    border-radius:9px;
-    background:var(--surface);
-    color:var(--text);
-    font-size:14px;
-    font-weight:500;
-  }
-
-  .chip:hover { background:var(--surface-hover); }
-  .chip.active { background:#0f0f0f; color:#fff; }
-
-  .content {
-    width:100%;
-    max-width:1280px;
-    margin:0 auto;
-    padding:24px 24px 64px;
-  }
-
-  /* BALLOT HEADER */
-  .ballot-header {
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:28px;
-    align-items:end;
-    margin-bottom:24px;
-  }
-
-  .ballot-kicker {
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    margin-bottom:8px;
-    color:var(--accent);
-    font-size:13px;
-    font-weight:800;
-  }
-
-  .ballot-title {
-    font-size:clamp(34px,5vw,58px);
-    line-height:.95;
-    letter-spacing:-2px;
-    font-weight:900;
-  }
-
-  .ballot-sub {
-    max-width:680px;
-    margin-top:10px;
-    color:var(--muted);
-    font-size:15px;
-    line-height:1.5;
-  }
-
-  .round-badge {
-    padding:10px 14px;
-    border-radius:10px;
-    background:var(--surface);
-    color:var(--muted);
-    white-space:nowrap;
-    font-size:13px;
-    font-weight:700;
-  }
-
-  /* VOTE OPTIONS */
-  .vote-panel {
-    width:100%;
-  }
-
-  .options {
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:18px;
-    align-items:start;
-  }
-
-  .option {
-    width:100%;
-    min-width:0;
-    padding:0;
-    border:0;
-    background:transparent;
-    color:var(--text);
-    text-align:left;
-    cursor:pointer;
-  }
-
-  .option:disabled {
-    cursor:not-allowed;
-    opacity:.68;
-  }
-
-  .option-image {
-    position:relative;
-    display:block;
-    width:100%;
-    aspect-ratio:1/1;
-    overflow:hidden;
-    border-radius:14px;
-    background:#ececec;
-    border:3px solid transparent;
-    transition:
-      border-color .16s ease,
-      transform .16s ease,
-      box-shadow .16s ease;
-  }
-
-  .option-image img {
-    width:100%;
-    height:100%;
-    display:block;
-    object-fit:cover;
-    object-position:center;
-    transition:transform .22s ease;
-  }
-
-  .option:not(:disabled):hover .option-image img {
-    transform:scale(1.025);
-  }
-
-  .option:not(:disabled):hover .option-image {
-    transform:translateY(-2px);
-  }
-
-  .option.selected .option-image {
-    border-color:var(--accent);
-    box-shadow:0 0 0 2px rgba(59,123,191,.15);
-  }
-
-  .option.selected .option-image::after {
-    content:"✓";
-    position:absolute;
-    top:10px;
-    right:10px;
-    width:34px;
-    height:34px;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    background:var(--accent);
-    color:#fff;
-    font-size:16px;
-    font-weight:900;
-    box-shadow:0 4px 14px rgba(0,0,0,.2);
-  }
-
-  .option-copy {
-    display:block;
-    padding:12px 2px 0;
-  }
-
-  .option-name {
-    display:block;
-    font-size:24px;
-    line-height:1.05;
-    letter-spacing:-.65px;
-    font-weight:900;
-  }
-
-  .option.selected .option-name {
-    color:var(--accent-dark);
-  }
-
-  .option-meta {
-    display:block;
-    margin-top:4px;
-    color:var(--muted);
-    font-size:13px;
-    font-weight:500;
-  }
-
-  /* STICKY VOTE AREA */
-  .vote-footer {
-    position:sticky;
-    bottom:14px;
-    z-index:50;
-    margin-top:26px;
-    padding:12px;
-    border:1px solid var(--line);
-    border-radius:16px;
-    background:rgba(255,255,255,.94);
-    backdrop-filter:blur(14px);
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
-  }
-
-  .vote-button {
-    width:100%;
-    min-height:48px;
-    border:0;
-    border-radius:24px;
-    background:#0f0f0f;
-    color:#fff;
-    font-size:15px;
-    font-weight:800;
-    cursor:pointer;
-  }
-
-  .vote-button:hover:not(:disabled) { background:#272727; }
-
-  .vote-button:disabled {
-    background:#cfcfcf;
-    color:#757575;
-    cursor:not-allowed;
-  }
-
-  .message {
-    display:none;
-    padding:9px 8px 0;
-    text-align:center;
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.4;
-    font-weight:600;
-  }
-
-  .message.show { display:block; }
-  .message.error { color:var(--danger); }
-  .message.success { color:var(--success); }
-
-  /* HOW IT WORKS */
-  .vote-note {
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    margin-top:28px;
-    padding:18px;
-    border-radius:14px;
-    background:var(--surface);
-  }
-
-  .vote-note i {
-    margin-top:2px;
-    color:var(--accent);
-    font-size:18px;
-  }
-
-  .vote-note strong {
-    display:block;
-    margin-bottom:3px;
-    font-size:14px;
-  }
-
-  .vote-note span {
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.45;
-  }
-
-  .footer {
-    padding:34px 0 6px;
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  @media (max-width:1200px) {
-    :root { --sidebar:78px; }
-
-    .sidebar { padding:8px 4px; }
-
-    .side-link {
-      min-height:66px;
-      flex-direction:column;
-      justify-content:center;
-      gap:5px;
-      padding:7px 2px;
-      text-align:center;
-      font-size:10px;
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-VVCFY7WH7T");
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vote | Hall of Names</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #fff;
+      --surface: #f2f2f2;
+      --surface-hover: #e5e5e5;
+      --text: #0f0f0f;
+      --muted: #606060;
+      --line: #e5e5e5;
+      --accent: #3b7bbf;
+      --accent-dark: #2d5f8f;
+      --success: #16824f;
+      --danger: #b42318;
+      --sidebar: 232px;
+      --topbar: 64px;
     }
 
-    .side-link i { font-size:18px; }
-
-    .nav-label,
-    .sidebar-foot,
-    .nav-group.secondary {
-      display:none;
-    }
-  }
-
-  @media (max-width:900px) {
-    .topbar {
-      grid-template-columns:auto 1fr auto;
-      gap:10px;
-      padding:0 10px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .brand-domain,
-    .top-pill {
-      display:none;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .brand { font-size:17px; }
-    .search-wrap { height:38px; }
-
-    .options {
-      grid-template-columns:repeat(2,minmax(0,1fr));
+    body {
+      min-height: 100vh;
+      font-family: "Roboto", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
     }
-  }
 
-  @media (max-width:650px) {
-    :root { --sidebar:0px; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    .sidebar { display:none; }
+    button,
+    input {
+      font: inherit;
+    }
 
     .topbar {
-      grid-template-columns:auto 1fr auto;
-      height:58px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: var(--topbar);
+      display: grid;
+      grid-template-columns: minmax(215px, 1fr) minmax(280px, 660px) minmax(215px, 1fr);
+      align-items: center;
+      gap: 24px;
+      padding: 0 20px;
+      background: rgba(255,255,255,.97);
+      border-bottom: 1px solid transparent;
     }
 
-    .topbar .brand-area .icon-btn {
-      display:none;
+    .topbar.scrolled {
+      border-bottom-color: var(--line);
     }
 
-    .brand span:not(.brand-mark) {
-      display:none;
+    .brand-area,
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-actions {
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .icon-btn:hover {
+      background: var(--surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -.7px;
+    }
+
+    .brand-mark {
+      width: 31px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      box-shadow: 0 3px 10px rgba(59,123,191,.22);
+    }
+
+    .brand-domain {
+      margin-left: -5px;
+      transform: translateY(-7px);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .search-wrap {
+      display: flex;
+      width: 100%;
+      height: 42px;
     }
 
     .search-wrap input {
-      padding:0 12px;
-      font-size:14px;
+      flex: 1;
+      min-width: 0;
+      padding: 0 18px;
+      border: 1px solid #c6c6c6;
+      border-right: 0;
+      border-radius: 22px 0 0 22px;
+      outline: none;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+      font-size: 16px;
     }
 
-    .search-btn { width:46px; }
+    .search-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: inset 1px 0 0 var(--accent);
+    }
+
+    .search-btn {
+      width: 64px;
+      border: 1px solid #c6c6c6;
+      border-radius: 0 22px 22px 0;
+      background: #f8f8f8;
+      cursor: pointer;
+      font-size: 17px;
+    }
+
+    .search-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 20px;
+      background: var(--surface);
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .top-pill:hover {
+      background: var(--surface-hover);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: var(--topbar);
+      left: 0;
+      bottom: 0;
+      z-index: 900;
+      width: var(--sidebar);
+      overflow-y: auto;
+      padding: 12px 12px 28px;
+      background: #fff;
+    }
+
+    .nav-group {
+      padding: 8px 0 12px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-group:last-child {
+      border-bottom: 0;
+    }
+
+    .nav-label {
+      padding: 8px 12px 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      min-height: 42px;
+      padding: 0 12px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .side-link i {
+      width: 22px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .side-link:hover {
+      background: var(--surface);
+    }
+
+    .side-link.active {
+      background: var(--surface);
+      font-weight: 700;
+    }
+
+    .sidebar-foot {
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .page {
+      margin-left: var(--sidebar);
+      padding-top: var(--topbar);
+    }
 
     .chips-bar {
-      top:58px;
-      padding:10px 12px;
+      position: sticky;
+      top: var(--topbar);
+      z-index: 800;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 12px 24px;
+      background: rgba(255,255,255,.98);
+      scrollbar-width: none;
     }
 
-    .page { padding-top:58px; }
+    .chips-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 8px 13px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .chip:hover {
+      background: var(--surface-hover);
+    }
+
+    .chip.active {
+      background: #0f0f0f;
+      color: #fff;
+    }
 
     .content {
-      padding:18px 12px 42px;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 64px;
     }
 
     .ballot-header {
-      grid-template-columns:1fr;
-      gap:12px;
-      align-items:start;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .ballot-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .ballot-title {
-      font-size:38px;
-      letter-spacing:-1.2px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: .95;
+      letter-spacing: -2px;
+      font-weight: 900;
+    }
+
+    .ballot-sub {
+      max-width: 680px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
     }
 
     .round-badge {
-      justify-self:start;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .options {
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .option {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .option:disabled {
+      cursor: not-allowed;
+      opacity: .68;
+    }
+
+    .option-image {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #ececec;
+      border: 3px solid transparent;
+      transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+
+    .option-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      transition: transform .22s ease;
+    }
+
+    .option:not(:disabled):hover .option-image {
+      transform: translateY(-2px);
+    }
+
+    .option:not(:disabled):hover .option-image img {
+      transform: scale(1.025);
+    }
+
+    .option.selected .option-image {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(59,123,191,.15);
+    }
+
+    .option.selected .option-image::after {
+      content: "✓";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      box-shadow: 0 4px 14px rgba(0,0,0,.2);
+    }
+
+    .option-copy {
+      display: block;
+      padding: 12px 2px 0;
     }
 
     .option-name {
-      font-size:21px;
+      display: block;
+      font-size: 24px;
+      line-height: 1.05;
+      letter-spacing: -.65px;
+      font-weight: 900;
+    }
+
+    .option.selected .option-name {
+      color: var(--accent-dark);
+    }
+
+    .option-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .vote-footer {
-      bottom:8px;
+      position: sticky;
+      bottom: 14px;
+      z-index: 50;
+      margin-top: 26px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.08);
     }
-  }
-</style>
+
+    .vote-button {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 24px;
+      background: #0f0f0f;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .vote-button:hover:not(:disabled) {
+      background: #272727;
+    }
+
+    .vote-button:disabled {
+      background: #cfcfcf;
+      color: #757575;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 9px 8px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: var(--danger);
+    }
+
+    .message.success {
+      color: var(--success);
+    }
+
+    .vote-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .vote-note i {
+      margin-top: 2px;
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .vote-note strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 14px;
+    }
+
+    .vote-note span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .footer {
+      padding: 34px 0 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1200px) {
+      :root {
+        --sidebar: 78px;
+      }
+
+      .sidebar {
+        padding: 8px 4px;
+      }
+
+      .side-link {
+        min-height: 66px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        padding: 7px 2px;
+        text-align: center;
+        font-size: 10px;
+      }
+
+      .nav-label,
+      .sidebar-foot,
+      .nav-group.secondary {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        padding: 0 10px;
+      }
+
+      .brand-domain,
+      .top-pill {
+        display: none;
+      }
+
+      .brand {
+        font-size: 17px;
+      }
+
+      .search-wrap {
+        height: 38px;
+      }
+
+      .options {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      :root {
+        --sidebar: 0px;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+        height: 58px;
+      }
+
+      .topbar .brand-area .icon-btn {
+        display: none;
+      }
+
+      .brand span:not(.brand-mark) {
+        display: none;
+      }
+
+      .search-wrap input {
+        padding: 0 12px;
+        font-size: 14px;
+      }
+
+      .search-btn {
+        width: 46px;
+      }
+
+      .chips-bar {
+        top: 58px;
+        padding: 10px 12px;
+      }
+
+      .page {
+        padding-top: 58px;
+      }
+
+      .content {
+        padding: 18px 12px 42px;
+      }
+
+      .ballot-header {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .ballot-title {
+        font-size: 38px;
+        letter-spacing: -1.2px;
+      }
+
+      .round-badge {
+        justify-self: start;
+      }
+
+      .options {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 18px 12px;
+      }
+
+      .option-name {
+        font-size: 21px;
+      }
+
+      .vote-footer {
+        bottom: 8px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar" id="topbar">
-  <div class="brand-area">
-    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
-      <i class="fas fa-bars"></i>
-    </button>
+  <header class="topbar" id="topbar">
+    <div class="brand-area">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
 
-    <a href="index.html" class="brand" aria-label="GuessingGames.com home">
-      <span class="brand-mark"><i class="fas fa-play"></i></span>
-      <span>GuessingGames</span><span class="brand-domain">.com</span>
-    </a>
-  </div>
-
-  <form class="search-wrap" id="searchForm">
-    <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
-    <button class="search-btn" type="submit" aria-label="Search">
-      <i class="fas fa-search"></i>
-    </button>
-  </form>
-
-  <div class="top-actions">
-    <a class="top-pill" href="halloffame.html">
-      <i class="fas fa-trophy"></i>
-      Hall of Names
-    </a>
-
-    <a
-      class="icon-btn"
-      id="authLink"
-      href="signin.html?redirect=vote.html"
-      aria-label="Sign in"
-    >
-      <i class="far fa-circle-user"></i>
-    </a>
-
-    <div class="avatar">G</div>
-  </div>
-</header>
-
-<aside class="sidebar" id="sidebar">
-  <div class="nav-group">
-    <a class="side-link" href="index.html">
-      <i class="fas fa-house"></i><span>Home</span>
-    </a>
-
-    <a class="side-link" href="index.html#play">
-      <i class="fas fa-gamepad"></i><span>Play</span>
-    </a>
-
-    <a class="side-link active" href="halloffame.html">
-      <i class="fas fa-trophy"></i><span>Hall of Names</span>
-    </a>
-
-    <a class="side-link" href="live.html">
-      <i class="fas fa-bolt"></i><span>Live Shows</span>
-    </a>
-  </div>
-
-  <div class="nav-group secondary">
-    <div class="nav-label">Hall of Names</div>
-
-    <a class="side-link active" href="vote.html">
-      <i class="fas fa-check-to-slot"></i><span>Vote</span>
-    </a>
-
-    <a class="side-link" href="halloffame.html">
-      <i class="fas fa-crown"></i><span>Inductees</span>
-    </a>
-  </div>
-
-  <div class="sidebar-foot">
-    One account.<br>
-    One vote per round.
-  </div>
-</aside>
-
-<main class="page">
-
-  <div class="chips-bar">
-    <span class="chip active">Week 7</span>
-    <a class="chip" href="halloffame.html">Inductees</a>
-    <a class="chip" href="index.html#play">Play Games</a>
-    <a class="chip" href="live.html">Live Shows</a>
-  </div>
-
-  <div class="content">
-
-    <section class="ballot-header">
-      <div>
-        <div class="ballot-kicker">
-          <i class="fas fa-check-to-slot"></i>
-          Hall of Names
-        </div>
-
-        <h1 class="ballot-title">Vote for this week’s inductee</h1>
-
-        <p class="ballot-sub">
-          Choose one finalist. The winner earns a permanent spot in the Hall of Names.
-        </p>
-      </div>
-
-      <div class="round-badge">Week 7 • Round 1</div>
-    </section>
-
-    <section class="vote-panel">
-      <div class="options" id="options"></div>
-
-      <div class="vote-footer">
-        <button class="vote-button" id="voteButton" disabled>
-          Checking sign in...
-        </button>
-
-        <div class="message" id="message"></div>
-      </div>
-    </section>
-
-    <div class="vote-note">
-      <i class="fas fa-circle-info"></i>
-      <div>
-        <strong>How voting works</strong>
-        <span>
-          Sign in, choose one nominee, and submit your vote. Each account gets one vote in this round.
-        </span>
-      </div>
+      <a href="index.html" class="brand" aria-label="GuessingGames.com home">
+        <span class="brand-mark"><i class="fas fa-play"></i></span>
+        <span>GuessingGames</span>
+        <span class="brand-domain">.com</span>
+      </a>
     </div>
 
-    <footer class="footer">
-      © 2026 GuessingGames.com • Hall of Names
-    </footer>
+    <form class="search-wrap" id="searchForm">
+      <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
+      <button class="search-btn" type="submit" aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+    </form>
 
-  </div>
-</main>
+    <div class="top-actions">
+      <a class="top-pill" href="halloffame.html">
+        <i class="fas fa-trophy"></i>
+        Hall of Names
+      </a>
 
-<script>
-  const topbar = document.getElementById('topbar');
+      <a
+        class="icon-btn"
+        id="authLink"
+        href="signin.html?redirect=vote.html"
+        aria-label="Sign in"
+      >
+        <i class="far fa-circle-user"></i>
+      </a>
 
-  window.addEventListener('scroll', () => {
-    topbar.classList.toggle('scrolled', window.scrollY > 8);
-  });
+      <div class="avatar">G</div>
+    </div>
+  </header>
 
-  document.getElementById('sidebarToggle').addEventListener('click', () => {
-    const sidebar = document.getElementById('sidebar');
-    const page = document.querySelector('.page');
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <a class="side-link" href="index.html">
+        <i class="fas fa-house"></i>
+        <span>Home</span>
+      </a>
 
-    if (window.innerWidth > 650) {
-      const hidden = sidebar.style.display === 'none';
+      <a class="side-link" href="index.html#play">
+        <i class="fas fa-gamepad"></i>
+        <span>Play</span>
+      </a>
 
-      sidebar.style.display = hidden ? '' : 'none';
-      page.style.marginLeft = hidden ? '' : '0';
-    }
-  });
+      <a class="side-link active" href="halloffame.html">
+        <i class="fas fa-trophy"></i>
+        <span>Hall of Names</span>
+      </a>
 
-  document.getElementById('searchForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-  });
-</script>
+      <a class="side-link" href="live.html">
+        <i class="fas fa-bolt"></i>
+        <span>Live Shows</span>
+      </a>
+    </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    <div class="nav-group secondary">
+      <div class="nav-label">Hall of Names</div>
+
+      <a class="side-link active" href="vote.html">
+        <i class="fas fa-check-to-slot"></i>
+        <span>Vote</span>
+      </a>
+
+      <a class="side-link" href="halloffame.html">
+        <i class="fas fa-crown"></i>
+        <span>Inductees</span>
+      </a>
+    </div>
+
+    <div class="sidebar-foot">
+      One account.<br>
+      One vote per round.
+    </div>
+  </aside>
+
+  <main class="page">
+    <div class="chips-bar">
+      <span class="chip active">Week 8</span>
+      <a class="chip" href="halloffame.html">Inductees</a>
+      <a class="chip" href="index.html#play">Play Games</a>
+      <a class="chip" href="live.html">Live Shows</a>
+    </div>
+
+    <div class="content">
+      <section class="ballot-header">
+        <div>
+          <div class="ballot-kicker">
+            <i class="fas fa-check-to-slot"></i>
+            Hall of Names
+          </div>
+
+          <h1 class="ballot-title">Vote for this week’s inductee</h1>
+
+          <p class="ballot-sub">
+            Choose one finalist. The winner earns a permanent spot in the Hall of Names.
+          </p>
+        </div>
+
+        <div class="round-badge">Week 8 • Round 1</div>
+      </section>
+
+      <section class="vote-panel">
+        <div class="options" id="options"></div>
+
+        <div class="vote-footer">
+          <button class="vote-button" id="voteButton" disabled>
+            Checking sign in...
+          </button>
+
+          <div class="message" id="message"></div>
+        </div>
+      </section>
+
+      <div class="vote-note">
+        <i class="fas fa-circle-info"></i>
+
+        <div>
+          <strong>How voting works</strong>
+
+          <span>
+            Sign in, choose one nominee, and submit your vote.
+            Each account gets one vote in this round.
+          </span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        © 2026 GuessingGames.com • Hall of Names
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const topbar = document.getElementById("topbar");
+
+    window.addEventListener("scroll", () => {
+      topbar.classList.toggle("scrolled", window.scrollY > 8);
+    });
+
+    document
+      .getElementById("sidebarToggle")
+      .addEventListener("click", () => {
+        const sidebar = document.getElementById("sidebar");
+        const page = document.querySelector(".page");
+
+        if (window.innerWidth > 650) {
+          const hidden = sidebar.style.display === "none";
+
+          sidebar.style.display = hidden ? "" : "none";
+          page.style.marginLeft = hidden ? "" : "0";
+        }
+      });
+
+    document
+      .getElementById("searchForm")
+      .addEventListener("submit", event => {
+        event.preventDefault();
+      });
+  </script>
+
+  <script type="module">
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
     import {
       getAuth,
       onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
     import {
       getFirestore,
       doc,
       getDoc,
       setDoc,
-      increment,
       serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
 
     const firebaseConfig = {
       apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
@@ -810,244 +873,760 @@
       appId: "1:431644741449:web:0b699b3acdec1f95b19498"
     };
 
+
     const weeklyNames = [
-      { name: "Ocean", image: "images/ocean.jpg" },
-      { name: "Qad", image: "images/qad.jpg" },
-      { name: "Savvy", image: "images/savvy.jpg" },
-      { name: "Fox", image: "images/fox.jpg" }
+      {
+        name: "September",
+        image: "images/september.png"
+      },
+      {
+        name: "Fox",
+        image: "images/fox.jpg"
+      },
+      {
+        name: "Qad",
+        image: "images/qad.jpg"
+      },
+      {
+        name: "Ocean",
+        image: "images/ocean.jpg"
+      }
     ];
 
-    const WEEK = 7;
-    const ROUND = 1;
-    const ROUND_ID = "week-7-round-1";
-    const STORAGE_KEY = "gg_weekly_name_vote_week_7_round_1_multi_v1";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const WEEK = 8;
+    const ROUND = 1;
+
+    const ROUND_ID =
+      "week-8-round-1";
+
+    const STORAGE_KEY =
+      "gg_weekly_name_vote_week_8_round_1_multi_v1";
+
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+    const db =
+      getFirestore(app);
+
 
     let selectedName = null;
+
     let currentUser = null;
+
     let existingVote = null;
+
     let authReady = false;
 
-    const optionsEl = document.getElementById("options");
-    const voteButton = document.getElementById("voteButton");
-    const messageEl = document.getElementById("message");
-    const authLink = document.getElementById("authLink");
 
-    function escapeHTML(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
+    const optionsEl =
+      document.getElementById("options");
 
-    function escapeAttr(str) {
-      return String(str).replaceAll("'", "\\'");
-    }
+    const voteButton =
+      document.getElementById("voteButton");
 
-    function firstNameFromUser(user) {
-      const source = user.displayName || user.email || "there";
-      return source.split(" ")[0].split("@")[0];
-    }
+    const messageEl =
+      document.getElementById("message");
 
-    function setMessage(text, type = "") {
-      messageEl.textContent = text;
-      messageEl.className = "message show" + (type ? " " + type : "");
-    }
+    const authLink =
+      document.getElementById("authLink");
 
-    function clearMessage() {
-      messageEl.textContent = "";
-      messageEl.className = "message";
-    }
 
-    function getVoteRef(user) {
-      return doc(db, "name-hall-of-fame-votes", ROUND_ID, "votes", user.uid);
-    }
+    function escapeHTML(value) {
 
-    function safeFieldName(value) {
       return String(value)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "_")
-        .replace(/^_+|_+$/g, "") || "unknown";
-    }
 
-    function updateVoteButton() {
-      if (!authReady) {
-        voteButton.disabled = true;
-        voteButton.textContent = "Checking sign in...";
-        return;
-      }
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
 
-      if (!currentUser) {
-        voteButton.disabled = false;
-        voteButton.textContent = "Sign in to vote";
-        return;
-      }
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
 
-      if (existingVote) {
-        voteButton.disabled = true;
-        voteButton.textContent = "Already voted for " + existingVote.selected;
-        return;
-      }
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
 
-      voteButton.disabled = !selectedName;
-      voteButton.textContent = selectedName ? "Vote for " + selectedName : "Choose a name";
-    }
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
 
-    function renderOptions() {
-      const optionsDisabled = !currentUser || !!existingVote;
-
-      optionsEl.innerHTML = weeklyNames.map(item => {
-        const selected = selectedName === item.name;
-        return `
-          <button class="option ${selected ? "selected" : ""}" ${optionsDisabled ? "disabled" : ""} data-name="${escapeAttr(item.name)}">
-            <span class="option-image">
-              <img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.name)}" />
-            </span>
-            <span class="option-copy">
-              <span class="option-name">${escapeHTML(item.name)}</span>
-              <span class="option-meta">Week 7 Nominee</span>
-            </span>
-          </button>
-        `;
-      }).join("");
-
-      document.querySelectorAll(".option").forEach(button => {
-        button.addEventListener("click", () => {
-          if (!currentUser) {
-            window.location.href = "signin.html?redirect=vote.html";
-            return;
-          }
-
-          if (existingVote) return;
-
-          selectedName = button.dataset.name;
-          clearMessage();
-          renderOptions();
-          updateVoteButton();
-        });
-      });
-
-      updateVoteButton();
-    }
-
-    async function loadUserVote(user) {
-      const voteSnap = await getDoc(getVoteRef(user));
-      existingVote = voteSnap.exists() ? voteSnap.data() : null;
-
-      if (existingVote) {
-        setMessage("You already voted in this round.", "success");
-      } else {
-        clearMessage();
-      }
-
-      renderOptions();
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      authReady = true;
-
-      if (user) {
-        const name = firstNameFromUser(user);
-        authLink.innerHTML = '<span style="font-size:12px;font-weight:700;white-space:nowrap;">Hi, ' + escapeHTML(name) + '</span>';
-        authLink.href = "signin.html";
-        await loadUserVote(user);
-      } else {
-        existingVote = null;
-        selectedName = null;
-        authLink.innerHTML = '<i class="far fa-circle-user"></i>';
-        authLink.href = "signin.html?redirect=vote.html";
-        setMessage("Sign in to vote. Each account gets one vote per round.");
-        renderOptions();
-      }
-    });
-
-    voteButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        window.location.href = "signin.html?redirect=vote.html";
-        return;
-      }
-
-      if (existingVote) {
-        setMessage("You already voted in this round.", "success");
-        return;
-      }
-
-      if (!selectedName) return;
-
-      try {
-        voteButton.disabled = true;
-        voteButton.textContent = "Submitting...";
-
-        const voteRef = getVoteRef(currentUser);
-        const latestVoteSnap = await getDoc(voteRef);
-
-        if (latestVoteSnap.exists()) {
-          existingVote = latestVoteSnap.data();
-          renderOptions();
-          setMessage("You already voted in this round.", "success");
-          return;
-        }
-
-        const votePayload = {
-          week: WEEK,
-          round: ROUND,
-          selected: selectedName,
-          uid: currentUser.uid,
-          displayName: currentUser.displayName || "",
-          email: currentUser.email || "",
-          photoURL: currentUser.photoURL || "",
-          submittedAtLocal: new Date().toISOString(),
-          userAgent: navigator.userAgent,
-          page: window.location.pathname,
-          createdAt: serverTimestamp()
-        };
-
-        await setDoc(voteRef, votePayload);
-
-        const selectedKey = safeFieldName(selectedName);
-
-        await setDoc(
-          doc(db, "name-hall-of-fame-results", ROUND_ID),
-          {
-            week: WEEK,
-            round: ROUND,
-            totalVotes: increment(1),
-            [`votes.${selectedKey}`]: increment(1),
-            lastVoteAt: serverTimestamp()
-          },
-          { merge: true }
+        .replaceAll(
+          "'",
+          "&#039;"
         );
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          hasVoted: true,
-          selected: selectedName,
-          names: weeklyNames,
-          voteHistory: [
-            {
-              week: WEEK,
-              round: ROUND,
-              selected: selectedName,
-              submittedAtLocal: new Date().toISOString(),
-              page: window.location.pathname
-            }
-          ]
-        }));
+    }
 
-        window.location.href = "nextballot.html";
-      } catch (error) {
-        console.error("Vote save failed:", error);
-        setMessage("Could not submit vote. Check Firebase rules and try again.", "error");
-        updateVoteButton();
+
+    function firstNameFromUser(user) {
+
+      const source =
+
+        user.displayName ||
+
+        user.email ||
+
+        "there";
+
+
+      return source
+
+        .split(" ")[0]
+
+        .split("@")[0];
+
+    }
+
+
+    function setMessage(
+      text,
+      type = ""
+    ) {
+
+      messageEl.textContent =
+        text;
+
+
+      messageEl.className =
+
+        "message show" +
+
+        (
+          type
+            ? " " + type
+            : ""
+        );
+
+    }
+
+
+    function clearMessage() {
+
+      messageEl.textContent =
+        "";
+
+
+      messageEl.className =
+        "message";
+
+    }
+
+
+    function getVoteRef(user) {
+
+      return doc(
+
+        db,
+
+        "name-hall-of-fame-votes",
+
+        ROUND_ID,
+
+        "votes",
+
+        user.uid
+
+      );
+
+    }
+
+
+    function updateVoteButton() {
+
+      if (!authReady) {
+
+        voteButton.disabled =
+          true;
+
+        voteButton.textContent =
+          "Checking sign in...";
+
+        return;
+
       }
-    });
+
+
+      if (!currentUser) {
+
+        voteButton.disabled =
+          false;
+
+        voteButton.textContent =
+          "Sign in to vote";
+
+        return;
+
+      }
+
+
+      if (existingVote) {
+
+        voteButton.disabled =
+          true;
+
+        voteButton.textContent =
+
+          "Already voted for " +
+
+          existingVote.selected;
+
+        return;
+
+      }
+
+
+      voteButton.disabled =
+        !selectedName;
+
+
+      voteButton.textContent =
+
+        selectedName
+
+          ? "Vote for " +
+            selectedName
+
+          : "Choose a name";
+
+    }
+
+
+    function renderOptions() {
+
+      const optionsDisabled =
+
+        !currentUser ||
+
+        !!existingVote;
+
+
+      optionsEl.innerHTML =
+
+        weeklyNames
+
+          .map(item => {
+
+            const selected =
+
+              selectedName ===
+              item.name;
+
+
+            return `
+
+              <button
+
+                class="
+                  option
+                  ${selected
+                    ? "selected"
+                    : ""}
+                "
+
+                ${
+                  optionsDisabled
+                    ? "disabled"
+                    : ""
+                }
+
+                data-name="${escapeHTML(
+                  item.name
+                )}"
+
+              >
+
+                <span
+                  class="option-image"
+                >
+
+                  <img
+
+                    src="${escapeHTML(
+                      item.image
+                    )}"
+
+                    alt="${escapeHTML(
+                      item.name
+                    )}"
+
+                  >
+
+                </span>
+
+                <span
+                  class="option-copy"
+                >
+
+                  <span
+                    class="option-name"
+                  >
+
+                    ${escapeHTML(
+                      item.name
+                    )}
+
+                  </span>
+
+                  <span
+                    class="option-meta"
+                  >
+
+                    Week 8 Nominee
+
+                  </span>
+
+                </span>
+
+              </button>
+
+            `;
+
+          })
+
+          .join("");
+
+
+      document
+
+        .querySelectorAll(
+          ".option"
+        )
+
+        .forEach(button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              if (!currentUser) {
+
+                window.location.href =
+                  "signin.html?redirect=vote.html";
+
+                return;
+
+              }
+
+
+              if (existingVote) {
+
+                return;
+
+              }
+
+
+              selectedName =
+                button.dataset.name;
+
+
+              clearMessage();
+
+              renderOptions();
+
+              updateVoteButton();
+
+            }
+          );
+
+        });
+
+
+      updateVoteButton();
+
+    }
+
+
+    async function loadUserVote(user) {
+
+      try {
+
+        const voteSnap =
+
+          await getDoc(
+            getVoteRef(user)
+          );
+
+
+        existingVote =
+
+          voteSnap.exists()
+
+            ? voteSnap.data()
+
+            : null;
+
+
+        if (existingVote) {
+
+          setMessage(
+            "You already voted in this round.",
+            "success"
+          );
+
+        } else {
+
+          clearMessage();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Could not check existing vote:",
+          error
+        );
+
+
+        setMessage(
+
+          `Could not check your vote status: ${
+            error.code ||
+            "unknown"
+          } — ${
+            error.message ||
+            error
+          }`,
+
+          "error"
+
+        );
+
+      }
+
+
+      renderOptions();
+
+    }
+
+
+    onAuthStateChanged(
+      auth,
+      async user => {
+
+        currentUser =
+          user;
+
+        authReady =
+          true;
+
+
+        if (user) {
+
+          const name =
+            firstNameFromUser(user);
+
+
+          authLink.innerHTML =
+
+            `<span style="
+              font-size:12px;
+              font-weight:700;
+              white-space:nowrap;
+            ">
+              Hi, ${escapeHTML(name)}
+            </span>`;
+
+
+          authLink.href =
+            "signin.html";
+
+
+          await loadUserVote(user);
+
+        } else {
+
+          existingVote =
+            null;
+
+          selectedName =
+            null;
+
+
+          authLink.innerHTML =
+
+            '<i class="far fa-circle-user"></i>';
+
+
+          authLink.href =
+
+            "signin.html?redirect=vote.html";
+
+
+          setMessage(
+
+            "Sign in to vote. Each account gets one vote per round."
+
+          );
+
+
+          renderOptions();
+
+        }
+
+      }
+    );
+
+
+    voteButton.addEventListener(
+      "click",
+      async () => {
+
+        if (!currentUser) {
+
+          window.location.href =
+
+            "signin.html?redirect=vote.html";
+
+          return;
+
+        }
+
+
+        if (existingVote) {
+
+          setMessage(
+
+            "You already voted in this round.",
+
+            "success"
+
+          );
+
+          return;
+
+        }
+
+
+        if (!selectedName) {
+
+          return;
+
+        }
+
+
+        try {
+
+          voteButton.disabled =
+            true;
+
+          voteButton.textContent =
+            "Submitting...";
+
+
+          const voteRef =
+            getVoteRef(currentUser);
+
+
+          const latestVoteSnap =
+
+            await getDoc(
+              voteRef
+            );
+
+
+          if (latestVoteSnap.exists()) {
+
+            existingVote =
+              latestVoteSnap.data();
+
+
+            setMessage(
+
+              "You already voted in this round.",
+
+              "success"
+
+            );
+
+
+            renderOptions();
+
+            return;
+
+          }
+
+
+          const votePayload = {
+
+            week:
+              WEEK,
+
+            round:
+              ROUND,
+
+            selected:
+              selectedName,
+
+            uid:
+              currentUser.uid,
+
+            displayName:
+              currentUser.displayName ||
+              "",
+
+            email:
+              currentUser.email ||
+              "",
+
+            photoURL:
+              currentUser.photoURL ||
+              "",
+
+            submittedAtLocal:
+              new Date()
+                .toISOString(),
+
+            userAgent:
+              navigator.userAgent,
+
+            page:
+              window.location.pathname,
+
+            createdAt:
+              serverTimestamp()
+
+          };
+
+
+          /*
+            This is the ONLY
+            Firestore vote write.
+          */
+
+          await setDoc(
+
+            voteRef,
+
+            votePayload
+
+          );
+
+
+          existingVote = {
+
+            ...votePayload,
+
+            selected:
+              selectedName
+
+          };
+
+
+          localStorage.setItem(
+
+            STORAGE_KEY,
+
+            JSON.stringify({
+
+              hasVoted:
+                true,
+
+              selected:
+                selectedName,
+
+              names:
+                weeklyNames,
+
+              voteHistory: [
+
+                {
+
+                  week:
+                    WEEK,
+
+                  round:
+                    ROUND,
+
+                  selected:
+                    selectedName,
+
+                  submittedAtLocal:
+                    new Date()
+                      .toISOString(),
+
+                  page:
+                    window.location.pathname
+
+                }
+
+              ]
+
+            })
+
+          );
+
+
+          setMessage(
+
+            `Vote submitted for ${
+              selectedName
+            }!`,
+
+            "success"
+
+          );
+
+
+          voteButton.disabled =
+            true;
+
+          voteButton.textContent =
+            "Vote submitted";
+
+
+          setTimeout(
+            () => {
+
+              window.location.href =
+                "nextballot.html";
+
+            },
+            650
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Vote save failed:",
+            error
+          );
+
+
+          setMessage(
+
+            `Vote failed: ${
+              error.code ||
+              "unknown"
+            } — ${
+              error.message ||
+              error
+            }`,
+
+            "error"
+
+          );
+
+
+          updateVoteButton();
+
+        }
+
+      }
+    );
+
 
     renderOptions();
+
   </script>
 
 </body>

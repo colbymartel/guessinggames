@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VVCFY7WH7T');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Poll | GuessingGames.com</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root {
+    --bg:#fff;
+    --surface:#f2f2f2;
+    --surface-hover:#e5e5e5;
+    --text:#0f0f0f;
+    --muted:#606060;
+    --line:#e5e5e5;
+    --accent:#3b7bbf;
+    --accent-dark:#2d5f8f;
+    --success:#16824f;
+    --danger:#b42318;
+    --sidebar:232px;
+    --topbar:64px;
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  html { scroll-behavior:smooth; }
+
+  body {
+    min-height:100vh;
+    font-family:"Roboto", Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+  }
+
+  a { color:inherit; text-decoration:none; }
+  button,input { font:inherit; }
+
+  /* TOP BAR */
+  .topbar {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:1000;
+    height:var(--topbar);
+    display:grid;
+    grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
+    align-items:center;
+    gap:24px;
+    padding:0 20px;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid transparent;
+  }
+
+  .topbar.scrolled { border-bottom-color:var(--line); }
+
+  .brand-area,
+  .top-actions {
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+
+  .top-actions { justify-content:flex-end; }
+
+  .icon-btn {
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:50%;
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+    font-size:18px;
+  }
+
+  .icon-btn:hover { background:var(--surface); }
+
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-.7px;
+  }
+
+  .brand-mark {
+    width:31px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:var(--accent);
+    color:#fff;
+    font-size:11px;
+    box-shadow:0 3px 10px rgba(59,123,191,.22);
+  }
+
+  .brand-domain {
+    margin-left:-5px;
+    transform:translateY(-7px);
+    color:var(--muted);
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:0;
+  }
+
+  .search-wrap {
+    display:flex;
+    width:100%;
+    height:42px;
+  }
+
+  .search-wrap input {
+    flex:1;
+    min-width:0;
+    padding:0 18px;
+    border:1px solid #c6c6c6;
+    border-right:0;
+    border-radius:22px 0 0 22px;
+    outline:none;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
+    font-size:16px;
+  }
+
+  .search-wrap input:focus {
+    border-color:var(--accent);
+    box-shadow:inset 1px 0 0 var(--accent);
+  }
+
+  .search-btn {
+    width:64px;
+    border:1px solid #c6c6c6;
+    border-radius:0 22px 22px 0;
+    background:#f8f8f8;
+    cursor:pointer;
+    font-size:17px;
+  }
+
+  .search-btn:hover { background:#f0f0f0; }
+
+  .top-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    min-height:38px;
+    padding:0 14px;
+    border-radius:20px;
+    background:var(--surface);
+    white-space:nowrap;
+    font-size:14px;
+    font-weight:700;
+  }
+
+  .top-pill:hover { background:var(--surface-hover); }
+
+  .avatar {
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:14px;
+    font-weight:900;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position:fixed;
+    top:var(--topbar);
+    left:0;
+    bottom:0;
+    z-index:900;
+    width:var(--sidebar);
+    overflow-y:auto;
+    padding:12px 12px 28px;
+    background:#fff;
+  }
+
+  .nav-group {
+    padding:8px 0 12px;
+    margin-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-group:last-child { border-bottom:0; }
+
+  .nav-label {
+    padding:8px 12px 5px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .side-link {
+    display:flex;
+    align-items:center;
+    gap:22px;
+    min-height:42px;
+    padding:0 12px;
+    border-radius:10px;
+    font-size:14px;
+  }
+
+  .side-link i {
+    width:22px;
+    text-align:center;
+    font-size:18px;
+  }
+
+  .side-link:hover { background:var(--surface); }
+
+  .side-link.active {
+    background:var(--surface);
+    font-weight:700;
+  }
+
+  .sidebar-foot {
+    padding:10px 12px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.45;
+  }
+
+  /* MAIN */
+  .page {
+    margin-left:var(--sidebar);
+    padding-top:var(--topbar);
+  }
+
+  .chips-bar {
+    position:sticky;
+    top:var(--topbar);
+    z-index:800;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:12px 24px;
+    background:rgba(255,255,255,.98);
+    scrollbar-width:none;
+  }
+
+  .chips-bar::-webkit-scrollbar { display:none; }
+
+  .chip {
+    flex:0 0 auto;
+    padding:8px 13px;
+    border:0;
+    border-radius:9px;
+    background:var(--surface);
+    color:var(--text);
+    font-size:14px;
+    font-weight:500;
+  }
+
+  .chip:hover { background:var(--surface-hover); }
+  .chip.active { background:#0f0f0f; color:#fff; }
+
+  .content {
+    width:100%;
+    max-width:1280px;
+    margin:0 auto;
+    padding:24px 24px 64px;
+  }
+
+  /* BALLOT HEADER */
+  .ballot-header {
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:28px;
+    align-items:end;
+    margin-bottom:24px;
+  }
+
+  .ballot-kicker {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:8px;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .ballot-title {
+    font-size:clamp(34px,5vw,58px);
+    line-height:.95;
+    letter-spacing:-2px;
+    font-weight:900;
+  }
+
+  .ballot-sub {
+    max-width:680px;
+    margin-top:10px;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+  }
+
+  .round-badge {
+    padding:10px 14px;
+    border-radius:10px;
+    background:var(--surface);
+    color:var(--muted);
+    white-space:nowrap;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  /* VOTE OPTIONS */
+  .vote-panel {
+    width:100%;
+  }
+
+  .options {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:18px;
+    align-items:start;
+  }
+
+  .option {
+    width:100%;
+    min-width:0;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+  }
+
+  .option:disabled {
+    cursor:not-allowed;
+    opacity:.68;
+  }
+
+  .option-image {
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    border-radius:14px;
+    background:#ececec;
+    border:3px solid transparent;
+    transition:
+      border-color .16s ease,
+      transform .16s ease,
+      box-shadow .16s ease;
+  }
+
+  .option-image img {
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    transition:transform .22s ease;
+  }
+
+  .option:not(:disabled):hover .option-image img {
+    transform:scale(1.025);
+  }
+
+  .option:not(:disabled):hover .option-image {
+    transform:translateY(-2px);
+  }
+
+  .option.selected .option-image {
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(59,123,191,.15);
+  }
+
+  .option.selected .option-image::after {
+    content:"✓";
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+
+  .option-copy {
+    display:block;
+    padding:12px 2px 0;
+  }
+
+  .option-name {
+    display:block;
+    font-size:24px;
+    line-height:1.05;
+    letter-spacing:-.65px;
+    font-weight:900;
+  }
+
+  .option.selected .option-name {
+    color:var(--accent-dark);
+  }
+
+  .option-meta {
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:500;
+  }
+
+  /* STICKY VOTE AREA */
+  .vote-footer {
+    position:sticky;
+    bottom:14px;
+    z-index:50;
+    margin-top:26px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(14px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+  }
+
+  .vote-button {
+    width:100%;
+    min-height:48px;
+    border:0;
+    border-radius:24px;
+    background:#0f0f0f;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .vote-button:hover:not(:disabled) { background:#272727; }
+
+  .vote-button:disabled {
+    background:#cfcfcf;
+    color:#757575;
+    cursor:not-allowed;
+  }
+
+  .message {
+    display:none;
+    padding:9px 8px 0;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.4;
+    font-weight:600;
+  }
+
+  .message.show { display:block; }
+  .message.error { color:var(--danger); }
+  .message.success { color:var(--success); }
+
+  /* HOW IT WORKS */
+  .vote-note {
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-top:28px;
+    padding:18px;
+    border-radius:14px;
+    background:var(--surface);
+  }
+
+  .vote-note i {
+    margin-top:2px;
+    color:var(--accent);
+    font-size:18px;
+  }
+
+  .vote-note strong {
+    display:block;
+    margin-bottom:3px;
+    font-size:14px;
+  }
+
+  .vote-note span {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .footer {
+    padding:34px 0 6px;
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  @media (max-width:1200px) {
+    :root { --sidebar:78px; }
+
+    .sidebar { padding:8px 4px; }
+
+    .side-link {
+      min-height:66px;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      padding:7px 2px;
+      text-align:center;
+      font-size:10px;
+    }
+
+    .side-link i { font-size:18px; }
+
+    .nav-label,
+    .sidebar-foot,
+    .nav-group.secondary {
+      display:none;
+    }
+  }
+
+  @media (max-width:900px) {
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      gap:10px;
+      padding:0 10px;
+    }
+
+    .brand-domain,
+    .top-pill {
+      display:none;
+    }
+
+    .brand { font-size:17px; }
+    .search-wrap { height:38px; }
+
+    .options {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+  }
+
+  @media (max-width:650px) {
+    :root { --sidebar:0px; }
+
+    .sidebar { display:none; }
+
+    .topbar {
+      grid-template-columns:auto 1fr auto;
+      height:58px;
+    }
+
+    .topbar .brand-area .icon-btn {
+      display:none;
+    }
+
+    .brand span:not(.brand-mark) {
+      display:none;
+    }
+
+    .search-wrap input {
+      padding:0 12px;
+      font-size:14px;
+    }
+
+    .search-btn { width:46px; }
+
+    .chips-bar {
+      top:58px;
+      padding:10px 12px;
+    }
+
+    .page { padding-top:58px; }
+
+    .content {
+      padding:18px 12px 42px;
+    }
+
+    .ballot-header {
+      grid-template-columns:1fr;
+      gap:12px;
+      align-items:start;
+    }
+
+    .ballot-title {
+      font-size:38px;
+      letter-spacing:-1.2px;
+    }
+
+    .round-badge {
+      justify-self:start;
+    }
+
+    .options {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px 12px;
+    }
+
+    .option-name {
+      font-size:21px;
+    }
+
+    .vote-footer {
+      bottom:8px;
+    }
+  }
+
+
+  /* DAILY POLL */
+  .daily-wrap { max-width:1050px; margin:0 auto; }
+  .daily-header { display:grid; grid-template-columns:1fr auto; gap:28px; align-items:end; margin-bottom:22px; }
+  .daily-kicker { display:inline-flex; align-items:center; gap:7px; margin-bottom:8px; color:var(--accent); font-size:13px; font-weight:800; }
+  .daily-title { font-size:clamp(38px,5vw,60px); line-height:.95; letter-spacing:-2px; font-weight:900; }
+  .daily-sub { max-width:690px; margin-top:10px; color:var(--muted); font-size:15px; line-height:1.5; }
+  .day-badge { padding:10px 14px; border-radius:10px; background:var(--surface); color:var(--muted); white-space:nowrap; font-size:13px; font-weight:700; }
+
+  .yesterday-card { display:none; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:16px; margin-bottom:18px; padding:17px 18px; border:1px solid #ead48b; border-radius:15px; background:#fffaf0; }
+  .yesterday-card.show { display:grid; }
+  .winner-icon { width:46px; height:46px; display:grid; place-items:center; border-radius:50%; background:#fff1bd; color:#9b7100; font-size:20px; }
+  .winner-label { display:block; margin-bottom:3px; color:#8b6b12; font-size:10px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+  .winner-question { margin-bottom:4px; color:var(--muted); font-size:12px; line-height:1.3; }
+  .winner-answer { font-size:25px; line-height:1; letter-spacing:-.5px; font-weight:900; }
+  .winner-count { text-align:right; color:#8b6b12; font-size:12px; font-weight:800; }
+
+  .daily-card { overflow:hidden; border:1px solid var(--line); border-radius:17px; background:#fff; box-shadow:0 12px 30px rgba(0,0,0,.055); }
+  .daily-card-top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; border-bottom:1px solid var(--line); background:#fafafa; }
+  .daily-number { display:flex; align-items:center; gap:9px; font-size:12px; font-weight:800; }
+  .daily-number i { color:var(--accent); }
+  .daily-status { color:var(--muted); font-size:11px; font-weight:700; }
+  .daily-question-wrap { padding:38px 34px 18px; text-align:center; }
+  .daily-question-label { margin-bottom:8px; color:var(--accent); font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
+  .daily-question { max-width:780px; margin:0 auto; font-size:clamp(30px,5vw,48px); line-height:1.04; letter-spacing:-1.5px; font-weight:900; }
+
+  .daily-answer-area { max-width:720px; margin:0 auto; padding:12px 26px 34px; }
+  .daily-answer-form { display:flex; gap:9px; }
+  .daily-answer-input { flex:1; min-width:0; height:56px; padding:0 17px; border:1px solid #c6c6c6; border-radius:13px; outline:none; font-size:17px; }
+  .daily-answer-input:focus { border-color:var(--accent); box-shadow:0 0 0 2px rgba(59,123,191,.12); }
+  .daily-submit { min-width:122px; height:56px; padding:0 20px; border:0; border-radius:28px; background:#0f0f0f; color:#fff; font-size:15px; font-weight:800; cursor:pointer; }
+  .daily-submit:hover:not(:disabled) { background:#272727; }
+  .daily-submit:disabled { background:#cfcfcf; color:#747474; cursor:default; }
+  .daily-form-bottom { display:flex; justify-content:space-between; gap:12px; margin-top:7px; color:var(--muted); font-size:11px; }
+  .daily-message { display:none; margin-top:13px; padding:11px 13px; border-radius:10px; background:var(--surface); color:var(--muted); text-align:center; font-size:13px; line-height:1.4; font-weight:700; }
+  .daily-message.show { display:block; }
+  .daily-message.error { background:#fff1f0; color:var(--danger); }
+  .daily-message.success { background:#eaf7f0; color:var(--success); }
+
+  .submitted-card { display:none; max-width:720px; margin:0 auto; padding:0 26px 34px; }
+  .submitted-card.show { display:block; }
+  .submitted-inner { padding:18px; border-radius:13px; background:#eaf7f0; text-align:center; }
+  .submitted-inner i { margin-bottom:8px; color:var(--success); font-size:25px; }
+  .submitted-label { color:#39745a; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
+  .submitted-answer { margin-top:4px; font-size:28px; font-weight:900; letter-spacing:-.5px; }
+  .submitted-note { margin-top:5px; color:#39745a; font-size:12px; }
+  .daily-note { display:flex; align-items:flex-start; gap:12px; margin-top:22px; padding:18px; border-radius:14px; background:var(--surface); }
+  .daily-note i { margin-top:2px; color:var(--accent); font-size:18px; }
+  .daily-note strong { display:block; margin-bottom:3px; font-size:14px; }
+  .daily-note span { color:var(--muted); font-size:13px; line-height:1.45; }
+
+  @media (max-width:650px) {
+    .daily-header { grid-template-columns:1fr; gap:10px; margin-bottom:14px; }
+    .daily-title { font-size:38px; letter-spacing:-1.2px; }
+    .daily-sub { font-size:12px; }
+    .day-badge { justify-self:start; }
+    .yesterday-card { grid-template-columns:auto minmax(0,1fr); gap:11px; padding:13px; }
+    .winner-icon { width:39px; height:39px; font-size:16px; }
+    .winner-answer { font-size:21px; }
+    .winner-count { grid-column:2; text-align:left; margin-top:-5px; }
+    .daily-card-top { padding:12px 13px; }
+    .daily-question-wrap { padding:28px 15px 13px; }
+    .daily-question { font-size:31px; letter-spacing:-1px; }
+    .daily-answer-area { padding:10px 12px 22px; }
+    .daily-answer-form { gap:6px; }
+    .daily-answer-input { height:48px; padding:0 12px; font-size:16px; }
+    .daily-submit { height:48px; min-width:86px; padding:0 13px; font-size:13px; }
+    .submitted-card { padding:0 12px 22px; }
+    .daily-note { margin-top:14px; padding:14px; }
+  }
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="brand-area">
+    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <a href="index.html" class="brand" aria-label="GuessingGames.com home">
+      <span class="brand-mark"><i class="fas fa-play"></i></span>
+      <span>GuessingGames</span><span class="brand-domain">.com</span>
+    </a>
+  </div>
+
+  <form class="search-wrap" id="searchForm">
+    <input type="search" placeholder="Search GuessingGames..." aria-label="Search">
+    <button class="search-btn" type="submit" aria-label="Search">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+
+  <div class="top-actions">
+    <a class="top-pill" href="daily-poll.html">
+      <i class="fas fa-square-poll-vertical"></i>
+      Daily Poll
+    </a>
+
+    <a
+      class="icon-btn"
+      id="authLink"
+      href="signin.html?redirect=daily-poll.html"
+      aria-label="Sign in"
+    >
+      <i class="far fa-circle-user"></i>
+    </a>
+
+    <div class="avatar">G</div>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <div class="nav-group">
+    <a class="side-link" href="index.html">
+      <i class="fas fa-house"></i><span>Home</span>
+    </a>
+
+    <a class="side-link" href="index.html#play">
+      <i class="fas fa-gamepad"></i><span>Play</span>
+    </a>
+
+    <a class="side-link active" href="daily-poll.html">
+      <i class="fas fa-square-poll-vertical"></i><span>Daily Poll</span>
+    </a>
+
+    <a class="side-link" href="live.html">
+      <i class="fas fa-bolt"></i><span>Live Shows</span>
+    </a>
+  </div>
+
+  <div class="nav-group secondary">
+    <div class="nav-label">Community</div>
+
+    <a class="side-link active" href="daily-poll.html">
+      <i class="fas fa-comment-dots"></i><span>Answer Today</span>
+    </a>
+
+    <a class="side-link" href="halloffame.html">
+      <i class="fas fa-crown"></i><span>Inductees</span>
+    </a>
+  </div>
+
+  <div class="sidebar-foot">
+    One account.<br>
+    One answer per day.
+  </div>
+</aside>
+
+<main class="page">
+  <div class="chips-bar">
+    <span class="chip active">Daily Poll</span>
+    <a class="chip" href="vote.html">Hall of Names Vote</a>
+    <a class="chip" href="index.html#play">Play Games</a>
+    <a class="chip" href="halloffame.html">Hall of Names</a>
+  </div>
+
+  <div class="content daily-wrap">
+    <section class="daily-header">
+      <div>
+        <div class="daily-kicker"><i class="fas fa-comment-dots"></i> Community Question</div>
+        <h1 class="daily-title">Daily Poll</h1>
+        <p class="daily-sub">One question every day. Type your answer, come back tomorrow, and see which response was the most popular.</p>
+      </div>
+      <div class="day-badge" id="dayBadge">Loading today...</div>
+    </section>
+
+    <section class="yesterday-card" id="yesterdayCard">
+      <div class="winner-icon"><i class="fas fa-crown"></i></div>
+      <div>
+        <span class="winner-label">Yesterday's #1 answer</span>
+        <div class="winner-question" id="yesterdayQuestion"></div>
+        <div class="winner-answer" id="winnerAnswer">—</div>
+      </div>
+      <div class="winner-count" id="winnerCount"></div>
+    </section>
+
+    <section class="daily-card">
+      <div class="daily-card-top">
+        <div class="daily-number"><i class="fas fa-calendar-day"></i><span id="pollNumber">Today's Poll</span></div>
+        <div class="daily-status" id="pollStatus">Checking sign in...</div>
+      </div>
+
+      <div class="daily-question-wrap">
+        <div class="daily-question-label">Today's question</div>
+        <h2 class="daily-question" id="question">Loading today's question...</h2>
+      </div>
+
+      <div class="daily-answer-area" id="answerArea">
+        <form class="daily-answer-form" id="answerForm" autocomplete="off">
+          <input class="daily-answer-input" id="answerInput" type="text" maxlength="40" placeholder="Type your answer..." aria-label="Your answer" disabled>
+          <button class="daily-submit" id="submitButton" type="submit" disabled>Submit</button>
+        </form>
+        <div class="daily-form-bottom"><span>One answer per account.</span><span id="charCount">0 / 40</span></div>
+        <div class="daily-message" id="message"></div>
+      </div>
+
+      <div class="submitted-card" id="submittedCard">
+        <div class="submitted-inner">
+          <i class="fas fa-circle-check"></i>
+          <div class="submitted-label">Your answer today</div>
+          <div class="submitted-answer" id="submittedAnswer"></div>
+          <div class="submitted-note">Come back tomorrow to see the community's #1 answer.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="daily-note">
+      <i class="fas fa-circle-info"></i>
+      <div>
+        <strong>How the Daily Poll works</strong>
+        <span>Sign in and submit one response to today's question. Capitalization and punctuation are normalized so matching answers are counted together. Tomorrow, today's most popular answer appears above the new poll.</span>
+      </div>
+    </div>
+
+    <footer class="footer">© 2026 GuessingGames.com • Daily Poll</footer>
+  </div>
+</main>
+
+<script>
+  const topbar = document.getElementById('topbar');
+
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const page = document.querySelector('.page');
+
+    if (window.innerWidth > 650) {
+      const hidden = sidebar.style.display === 'none';
+
+      sidebar.style.display = hidden ? '' : 'none';
+      page.style.marginLeft = hidden ? '' : '0';
+    }
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs,
+    runTransaction, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+    authDomain: "guessinggames.firebaseapp.com",
+    projectId: "guessinggames",
+    storageBucket: "guessinggames.firebasestorage.app",
+    messagingSenderId: "431644741449",
+    appId: "1:431644741449:web:0b699b3acdec1f95b19498"
+  };
+
+  /* Add tomorrow's poll here before its date begins. */
+  const DAILY_POLLS = [
+    { date:"2026-09-26", day:1, question:"Tell me a name that's also a food." },
+    { date:"2026-09-27", day:2, question:"Tell me a name that's also an animal." },
+    { date:"2026-09-28", day:3, question:"Tell me a name that's also a color." }
+  ];
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const $ = id => document.getElementById(id);
+
+  const questionEl = $("question");
+  const dayBadge = $("dayBadge");
+  const pollNumber = $("pollNumber");
+  const pollStatus = $("pollStatus");
+  const answerArea = $("answerArea");
+  const answerForm = $("answerForm");
+  const answerInput = $("answerInput");
+  const submitButton = $("submitButton");
+  const charCount = $("charCount");
+  const messageEl = $("message");
+  const submittedCard = $("submittedCard");
+  const submittedAnswer = $("submittedAnswer");
+  const authLink = $("authLink");
+  const yesterdayCard = $("yesterdayCard");
+  const yesterdayQuestion = $("yesterdayQuestion");
+  const winnerAnswer = $("winnerAnswer");
+  const winnerCount = $("winnerCount");
+
+  let currentUser = null;
+  let authReady = false;
+  let todayPoll = null;
+  let yesterdayPoll = null;
+  let existingResponse = null;
+  let submitting = false;
+
+  function localDateKey(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2,"0");
+    const d = String(date.getDate()).padStart(2,"0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function previousDateKey(key) {
+    const [y,m,d] = key.split("-").map(Number);
+    const date = new Date(y,m - 1,d);
+    date.setDate(date.getDate() - 1);
+    return localDateKey(date);
+  }
+
+  function prettyDate(key) {
+    const [y,m,d] = key.split("-").map(Number);
+    return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(new Date(y,m - 1,d));
+  }
+
+  function normalizeAnswer(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .toLowerCase()
+      .replace(/&/g," and ")
+      .replace(/[^a-z0-9]+/g," ")
+      .trim()
+      .replace(/\s+/g," ");
+  }
+
+  function safeAnswerId(value) {
+    return value.replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,120) || "unknown";
+  }
+
+  function cleanDisplayAnswer(value) {
+    return String(value || "").trim().replace(/\s+/g," ").slice(0,40);
+  }
+
+  function escapeHTML(str) {
+    return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  function firstNameFromUser(user) {
+    const source = user.displayName || user.email || "there";
+    return source.split(" ")[0].split("@")[0];
+  }
+
+  function setMessage(text,type="") {
+    messageEl.textContent = text;
+    messageEl.className = "daily-message show" + (type ? " " + type : "");
+  }
+
+  function clearMessage() {
+    messageEl.textContent = "";
+    messageEl.className = "daily-message";
+  }
+
+  function getPollByDate(key) {
+    return DAILY_POLLS.find(p => p.date === key) || null;
+  }
+
+  function responseRef(user,poll) {
+    return doc(db,"daily-poll-responses",poll.date,"responses",user.uid);
+  }
+
+  function resultRef(poll,normalized) {
+    return doc(db,"daily-poll-results",poll.date,"answers",safeAnswerId(normalized));
+  }
+
+  function renderPoll() {
+    const todayKey = localDateKey();
+    todayPoll = getPollByDate(todayKey);
+    yesterdayPoll = getPollByDate(previousDateKey(todayKey));
+
+    if (!todayPoll) {
+      dayBadge.textContent = prettyDate(todayKey);
+      pollNumber.textContent = "No poll scheduled";
+      questionEl.textContent = "Come back for the next Daily Poll.";
+      pollStatus.textContent = "No question today";
+      answerInput.disabled = true;
+      submitButton.disabled = true;
+      return;
+    }
+
+    dayBadge.textContent = `Day ${todayPoll.day} • ${prettyDate(todayPoll.date)}`;
+    pollNumber.textContent = `Daily Poll #${todayPoll.day}`;
+    questionEl.textContent = todayPoll.question;
+    updateControls();
+  }
+
+  async function loadYesterdayWinner() {
+    if (!yesterdayPoll) {
+      yesterdayCard.classList.remove("show");
+      return;
+    }
+
+    try {
+      const q = query(
+        collection(db,"daily-poll-results",yesterdayPoll.date,"answers"),
+        orderBy("count","desc"),
+        limit(1)
+      );
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        yesterdayCard.classList.remove("show");
+        return;
+      }
+
+      const winner = snap.docs[0].data();
+      yesterdayQuestion.textContent = yesterdayPoll.question;
+      winnerAnswer.textContent = winner.displayAnswer || "—";
+      const count = Number(winner.count || 0);
+      winnerCount.textContent = `${count} ${count === 1 ? "response" : "responses"}`;
+      yesterdayCard.classList.add("show");
+    } catch (error) {
+      console.error("Could not load yesterday's winner:",error);
+      yesterdayCard.classList.remove("show");
+    }
+  }
+
+  function updateControls() {
+    if (!todayPoll) return;
+
+    if (!authReady) {
+      pollStatus.textContent = "Checking sign in...";
+      answerInput.disabled = true;
+      submitButton.disabled = true;
+      return;
+    }
+
+    if (!currentUser) {
+      pollStatus.textContent = "Sign in required";
+      answerInput.disabled = true;
+      submitButton.disabled = false;
+      submitButton.textContent = "Sign in";
+      return;
+    }
+
+    if (existingResponse) {
+      pollStatus.textContent = "Answered today";
+      answerArea.style.display = "none";
+      submittedAnswer.textContent = existingResponse.answer || "";
+      submittedCard.classList.add("show");
+      return;
+    }
+
+    answerArea.style.display = "";
+    submittedCard.classList.remove("show");
+    pollStatus.textContent = "Ready for your answer";
+    answerInput.disabled = submitting;
+    submitButton.disabled = submitting || !answerInput.value.trim();
+    submitButton.textContent = submitting ? "Submitting..." : "Submit";
+  }
+
+  async function loadExistingResponse(user) {
+    if (!todayPoll) return;
+    try {
+      const snap = await getDoc(responseRef(user,todayPoll));
+      existingResponse = snap.exists() ? snap.data() : null;
+      updateControls();
+    } catch (error) {
+      console.error("Could not load response:",error);
+      setMessage("Could not load today's response. Please refresh and try again.","error");
+      updateControls();
+    }
+  }
+
+  async function submitAnswer() {
+    if (!todayPoll) return;
+    if (!currentUser) {
+      window.location.href = "signin.html?redirect=daily-poll.html";
+      return;
+    }
+    if (existingResponse || submitting) return;
+
+    const answer = cleanDisplayAnswer(answerInput.value);
+    const normalized = normalizeAnswer(answer);
+
+    if (!normalized) {
+      setMessage("Type an answer first.","error");
+      return;
+    }
+
+    submitting = true;
+    clearMessage();
+    updateControls();
+
+    try {
+      const userResponseRef = responseRef(currentUser,todayPoll);
+      const tallyRef = resultRef(todayPoll,normalized);
+
+      await runTransaction(db,async transaction => {
+        const existingSnap = await transaction.get(userResponseRef);
+        if (existingSnap.exists()) throw new Error("ALREADY_ANSWERED");
+
+        const tallySnap = await transaction.get(tallyRef);
+        const priorCount = tallySnap.exists() ? Number(tallySnap.data().count || 0) : 0;
+
+        transaction.set(userResponseRef,{
+          pollDate:todayPoll.date,
+          pollDay:todayPoll.day,
+          question:todayPoll.question,
+          answer,
+          answerNormalized:normalized,
+          uid:currentUser.uid,
+          displayName:currentUser.displayName || "",
+          email:currentUser.email || "",
+          photoURL:currentUser.photoURL || "",
+          submittedAtLocal:new Date().toISOString(),
+          page:window.location.pathname,
+          createdAt:serverTimestamp()
+        });
+
+        transaction.set(tallyRef,{
+          pollDate:todayPoll.date,
+          pollDay:todayPoll.day,
+          question:todayPoll.question,
+          normalizedAnswer:normalized,
+          displayAnswer:tallySnap.exists() ? (tallySnap.data().displayAnswer || answer) : answer,
+          count:priorCount + 1,
+          updatedAt:serverTimestamp()
+        },{merge:true});
+      });
+
+      existingResponse = {answer,answerNormalized:normalized};
+      answerArea.style.display = "none";
+      submittedAnswer.textContent = answer;
+      submittedCard.classList.add("show");
+      pollStatus.textContent = "Answered today";
+    } catch (error) {
+      console.error("Daily poll submission failed:",error);
+      if (error?.message === "ALREADY_ANSWERED") {
+        await loadExistingResponse(currentUser);
+        setMessage("You've already answered today's poll.","success");
+      } else {
+        setMessage("Could not submit your answer. Check Firebase rules and try again.","error");
+      }
+    } finally {
+      submitting = false;
+      updateControls();
+    }
+  }
+
+  answerInput.addEventListener("input",() => {
+    charCount.textContent = `${answerInput.value.length} / 40`;
+    clearMessage();
+    updateControls();
+  });
+
+  answerForm.addEventListener("submit",e => {
+    e.preventDefault();
+    if (!currentUser) {
+      window.location.href = "signin.html?redirect=daily-poll.html";
+      return;
+    }
+    submitAnswer();
+  });
+
+  submitButton.addEventListener("click",() => {
+    if (authReady && !currentUser) window.location.href = "signin.html?redirect=daily-poll.html";
+  });
+
+  onAuthStateChanged(auth,async user => {
+    currentUser = user;
+    authReady = true;
+    existingResponse = null;
+
+    if (user) {
+      const name = firstNameFromUser(user);
+      authLink.innerHTML = '<span style="font-size:12px;font-weight:700;white-space:nowrap;">Hi, ' + escapeHTML(name) + '</span>';
+      authLink.href = "signin.html";
+      if (todayPoll) await loadExistingResponse(user);
+    } else {
+      authLink.innerHTML = '<i class="far fa-circle-user"></i>';
+      authLink.href = "signin.html?redirect=daily-poll.html";
+      setMessage("Sign in to answer today's poll.");
+      updateControls();
+    }
+  });
+
+  renderPoll();
+  loadYesterdayWinner();
+</script>
+
+</body>
+</html>
