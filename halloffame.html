@@ -1,1449 +1,2410 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <!-- Google tag (gtag.js) -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVCFY7WH7T"></script>
+
 <script>
+
   window.dataLayer = window.dataLayer || [];
+
   function gtag(){dataLayer.push(arguments);}
+
   gtag('js', new Date());
+
   gtag('config', 'G-VVCFY7WH7T');
+
 </script>
 
+
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Hall of Names | GuessingGames.com</title>
 
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
+
 <style>
+
   :root {
+
     --bg:#fff;
+
     --surface:#f2f2f2;
+
     --surface-hover:#e5e5e5;
+
     --text:#0f0f0f;
+
     --muted:#606060;
+
     --line:#e5e5e5;
+
     --accent:#3b7bbf;
+
     --accent-dark:#2d5f8f;
+
     --gold:#d5a52f;
+
     --gold-soft:#fff5cf;
+
     --sidebar:232px;
+
     --topbar:64px;
+
   }
+
+
 
   * { box-sizing:border-box; margin:0; padding:0; }
+
   html { scroll-behavior:smooth; }
+
   body {
+
     font-family:"Roboto", Arial, sans-serif;
+
     background:var(--bg);
+
     color:var(--text);
+
     overflow-x:hidden;
+
   }
+
   a { color:inherit; text-decoration:none; }
+
   button,input { font:inherit; }
 
+
+
   /* TOP BAR */
+
   .topbar {
+
     position:fixed;
+
     top:0; left:0; right:0;
+
     height:var(--topbar);
+
     z-index:1000;
+
     display:grid;
+
     grid-template-columns:minmax(215px,1fr) minmax(280px,660px) minmax(215px,1fr);
+
     align-items:center;
+
     gap:24px;
+
     padding:0 20px;
+
     background:rgba(255,255,255,.97);
+
     border-bottom:1px solid transparent;
+
   }
+
   .topbar.scrolled { border-bottom-color:var(--line); }
 
+
+
   .brand-area,.top-actions {
+
     display:flex;
+
     align-items:center;
+
     gap:16px;
+
   }
+
   .top-actions { justify-content:flex-end; }
 
+
+
   .icon-btn {
+
     width:40px; height:40px;
+
     display:grid; place-items:center;
+
     border:0;
+
     border-radius:50%;
+
     background:transparent;
+
     cursor:pointer;
+
     color:var(--text);
+
     font-size:18px;
+
     transition:background .16s ease;
+
   }
+
   .icon-btn:hover { background:var(--surface); }
 
+
+
   .brand {
+
     display:flex;
+
     align-items:center;
+
     gap:8px;
+
     font-weight:900;
+
     font-size:20px;
+
     letter-spacing:-.7px;
+
     white-space:nowrap;
+
   }
+
   .brand-mark {
+
     width:31px; height:22px;
+
     display:grid; place-items:center;
+
     border-radius:7px;
+
     background:var(--accent);
+
     color:#fff;
+
     font-size:11px;
+
     box-shadow:0 3px 10px rgba(59,123,191,.22);
+
   }
+
   .brand-domain {
+
     color:var(--muted);
+
     font-size:10px;
+
     font-weight:500;
+
     letter-spacing:0;
+
     margin-left:-5px;
+
     transform:translateY(-7px);
+
   }
+
+
 
   .search-wrap {
+
     display:flex;
+
     width:100%;
+
     height:42px;
+
   }
+
   .search-wrap input {
+
     flex:1;
+
     min-width:0;
+
     border:1px solid #c6c6c6;
+
     border-right:0;
+
     border-radius:22px 0 0 22px;
+
     padding:0 18px;
+
     font-size:16px;
+
     outline:none;
+
     box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
+
   }
+
   .search-wrap input:focus {
+
     border-color:var(--accent);
+
     box-shadow:inset 1px 0 0 var(--accent);
+
   }
+
   .search-btn {
+
     width:64px;
+
     border:1px solid #c6c6c6;
+
     border-radius:0 22px 22px 0;
+
     background:#f8f8f8;
+
     cursor:pointer;
+
     font-size:17px;
+
   }
+
   .search-btn:hover { background:#f0f0f0; }
 
+
+
   .top-pill {
+
     display:inline-flex;
+
     align-items:center;
+
     gap:7px;
+
     height:38px;
+
     padding:0 14px;
+
     border-radius:20px;
+
     background:var(--surface);
+
     font-size:14px;
+
     font-weight:700;
+
     white-space:nowrap;
+
   }
+
   .top-pill:hover { background:var(--surface-hover); }
 
+
+
   .avatar {
+
     width:34px; height:34px;
+
     display:grid; place-items:center;
+
     border-radius:50%;
+
     background:var(--accent);
+
     color:#fff;
+
     font-size:14px;
+
     font-weight:900;
+
   }
+
+
 
   /* SIDEBAR */
+
   .sidebar {
+
     position:fixed;
+
     top:var(--topbar);
+
     left:0;
+
     bottom:0;
+
     width:var(--sidebar);
+
     z-index:900;
+
     overflow-y:auto;
+
     padding:12px 12px 28px;
+
     background:#fff;
+
   }
+
+
 
   .nav-group {
+
     padding:8px 0 12px;
+
     border-bottom:1px solid var(--line);
+
     margin-bottom:8px;
+
   }
+
   .nav-group:last-child { border-bottom:0; }
 
+
+
   .nav-label {
+
     padding:8px 12px 5px;
+
     color:var(--muted);
+
     font-size:13px;
+
     font-weight:700;
+
   }
+
+
 
   .side-link {
+
     display:flex;
+
     align-items:center;
+
     gap:22px;
+
     min-height:42px;
+
     padding:0 12px;
+
     border-radius:10px;
+
     font-size:14px;
+
   }
+
   .side-link i {
+
     width:22px;
+
     text-align:center;
+
     font-size:18px;
+
   }
+
   .side-link:hover { background:var(--surface); }
+
   .side-link.active {
+
     background:var(--surface);
+
     font-weight:700;
+
   }
+
+
 
   .sidebar-foot {
+
     padding:10px 12px;
+
     color:var(--muted);
+
     font-size:11px;
+
     line-height:1.45;
+
   }
+
+
 
   /* MAIN */
+
   .page {
+
     margin-left:var(--sidebar);
+
     padding-top:var(--topbar);
+
   }
+
+
 
   .chips-bar {
+
     position:sticky;
+
     top:var(--topbar);
+
     z-index:800;
+
     display:flex;
+
     gap:10px;
+
     overflow-x:auto;
+
     padding:12px 24px;
+
     background:rgba(255,255,255,.98);
+
     scrollbar-width:none;
+
   }
+
   .chips-bar::-webkit-scrollbar { display:none; }
 
+
+
   .chip {
+
     flex:0 0 auto;
+
     border:0;
+
     border-radius:9px;
+
     padding:8px 13px;
+
     background:var(--surface);
+
     color:var(--text);
+
     font-size:14px;
+
     font-weight:500;
+
     cursor:pointer;
+
   }
+
   .chip:hover { background:var(--surface-hover); }
+
   .chip.active { background:#0f0f0f; color:#fff; }
 
+
+
   .content {
+
     width:100%;
+
     padding:18px 24px 64px;
+
   }
+
+
 
   /* CHANNEL HEADER */
+
   .channel-banner {
+
     position:relative;
+
     overflow:hidden;
+
     min-height:210px;
+
     border-radius:18px;
+
     background:
+
       radial-gradient(circle at 82% 20%, rgba(255,255,255,.17), transparent 20%),
+
       radial-gradient(circle at 15% 90%, rgba(255,255,255,.11), transparent 24%),
+
       linear-gradient(135deg,#153452 0%,#3b7bbf 55%,#75acd9 100%);
+
     margin-bottom:20px;
+
   }
+
+
 
   .banner-word {
+
     position:absolute;
+
     right:-22px;
+
     bottom:-27px;
+
     color:rgba(255,255,255,.08);
+
     font-size:clamp(90px,13vw,190px);
+
     line-height:.8;
+
     font-weight:900;
+
     letter-spacing:-9px;
+
     white-space:nowrap;
+
     user-select:none;
+
   }
 
+
+
   .channel-profile {
+
     display:flex;
+
     align-items:center;
+
     gap:20px;
+
     padding:0 14px 20px;
+
   }
+
+
 
   .channel-copy { flex:1; min-width:0; }
 
+
+
   .channel-title {
+
     font-size:32px;
+
     line-height:1;
+
     font-weight:900;
+
     letter-spacing:-1px;
+
     margin-bottom:7px;
+
   }
+
+
 
   .channel-meta {
+
     color:var(--muted);
+
     font-size:14px;
+
     line-height:1.4;
+
   }
+
+
 
   .channel-actions {
+
     display:flex;
+
     align-items:center;
+
     gap:10px;
+
     flex-wrap:wrap;
+
   }
+
+
 
   .primary-action,
+
   .secondary-action {
+
     display:inline-flex;
+
     align-items:center;
+
     justify-content:center;
+
     gap:8px;
+
     min-height:38px;
+
     padding:0 16px;
+
     border-radius:20px;
+
     font-size:14px;
+
     font-weight:700;
+
   }
+
+
 
   .primary-action {
+
     background:#0f0f0f;
+
     color:#fff;
+
   }
+
   .primary-action:hover { background:#272727; }
 
+
+
   .secondary-action { background:var(--surface); }
+
   .secondary-action:hover { background:var(--surface-hover); }
 
+
+
   /* FEATURED WINNER */
+
   .featured-row {
+
     display:grid;
+
     grid-template-columns:minmax(320px,.8fr) minmax(320px,1.2fr);
+
     gap:20px;
+
     margin:14px 0 34px;
+
   }
+
+
 
   .featured-thumb {
+
     position:relative;
+
     overflow:hidden;
+
     aspect-ratio:1 / 1;
+
     width:min(100%, 520px);
+
     border-radius:14px;
+
     background:#eee;
+
     border:7px solid var(--gold);
+
     box-shadow:
+
       0 0 0 2px rgba(213,165,47,.18),
+
       0 12px 28px rgba(138,101,16,.18);
+
   }
+
   .featured-thumb img {
+
     width:100%;
+
     height:100%;
+
     display:block;
+
     object-fit:cover;
+
     object-position:center;
+
   }
+
   .featured-thumb::after {
+
     content:"";
+
     position:absolute;
+
     inset:0;
+
     box-shadow:
+
       inset 0 0 0 2px rgba(255,239,181,.8),
+
       inset 0 0 0 4px rgba(213,165,47,.18);
+
     border-radius:8px;
+
     pointer-events:none;
+
   }
+
+
 
   .winner-badge {
+
     position:absolute;
+
     left:10px;
+
     top:10px;
+
     z-index:2;
+
     display:inline-flex;
+
     align-items:center;
+
     gap:6px;
+
     padding:6px 9px;
+
     border-radius:6px;
+
     background:rgba(0,0,0,.78);
+
     color:#fff;
+
     font-size:11px;
+
     font-weight:700;
+
     text-transform:uppercase;
+
     letter-spacing:.04em;
+
   }
+
   .winner-badge i { color:#f4c84e; }
 
+
+
   .featured-info {
+
     display:flex;
+
     flex-direction:column;
+
     justify-content:center;
+
     align-items:flex-start;
+
   }
+
+
 
   .featured-label {
+
     color:var(--muted);
+
     font-size:12px;
+
     font-weight:700;
+
     text-transform:uppercase;
+
     letter-spacing:.08em;
+
     margin-bottom:8px;
+
   }
+
+
 
   .featured-name {
+
     font-size:clamp(34px,4.3vw,60px);
+
     line-height:.95;
+
     font-weight:900;
+
     letter-spacing:-2px;
+
     margin-bottom:12px;
+
   }
+
+
 
   .featured-text {
+
     color:var(--muted);
+
     max-width:560px;
+
     font-size:14px;
+
     line-height:1.6;
+
     margin-bottom:18px;
+
   }
+
+
 
   /* VIDEO STYLE WINNER CARDS */
+
   .section {
+
     margin-bottom:38px;
+
   }
+
+
 
   .section-head {
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     gap:16px;
+
     margin-bottom:16px;
+
   }
+
+
 
   .section-title {
+
     font-size:21px;
+
     font-weight:900;
+
     letter-spacing:-.3px;
+
   }
 
+
+
   .video-grid {
+
     display:grid;
+
     grid-template-columns:repeat(4,minmax(0,1fr));
+
     gap:28px 16px;
+
   }
+
+
 
   .video-card { min-width:0; }
 
+
+
   .thumb {
+
     position:relative;
+
     width:100%;
+
     aspect-ratio:16/9;
+
     overflow:hidden;
+
     margin-bottom:11px;
+
     border-radius:12px;
+
     background:#ececec;
+
   }
 
+
+
   .thumb img {
+
     width:100%;
+
     height:100%;
+
     display:block;
+
     object-fit:cover;
+
     transition:transform .25s ease;
+
   }
+
+
 
   .video-card:hover .thumb img { transform:scale(1.025); }
 
+
+
   .week-pill,
+
   .locked-pill {
+
     position:absolute;
+
     left:7px;
+
     bottom:7px;
+
     padding:4px 6px;
+
     border-radius:4px;
+
     background:rgba(0,0,0,.78);
+
     color:#fff;
+
     font-size:11px;
+
     font-weight:700;
+
   }
+
+
 
   .gold-ring {
+
     position:absolute;
+
     inset:0;
+
     pointer-events:none;
+
     border:2px solid rgba(213,165,47,.78);
+
     border-radius:inherit;
+
   }
+
+
 
   .meta {
+
     display:grid;
+
     grid-template-columns:38px 1fr;
+
     gap:10px;
+
   }
+
+
 
   .channel-icon {
+
     width:36px;
+
     height:36px;
+
     display:grid;
+
     place-items:center;
+
     border-radius:50%;
+
     background:linear-gradient(145deg,#fff7cf,#dfa82a);
+
     color:#805d10;
+
     font-size:13px;
+
     font-weight:900;
+
   }
+
+
 
   .video-title {
+
     display:-webkit-box;
+
     -webkit-line-clamp:2;
+
     -webkit-box-orient:vertical;
+
     overflow:hidden;
+
     margin-bottom:4px;
+
     font-size:15px;
+
     line-height:1.35;
+
     font-weight:700;
+
   }
+
+
 
   .video-sub {
+
     color:var(--muted);
+
     font-size:13px;
+
     line-height:1.35;
+
   }
+
+
 
   /* LOCKED CARDS */
+
   .locked-card { opacity:.8; }
 
+
+
   .locked-thumb {
+
     display:grid;
+
     place-items:center;
+
     background:
+
       linear-gradient(135deg,#ededed,#f7f7f7);
+
   }
+
+
 
   .locked-icon {
+
     width:60px;
+
     height:60px;
+
     display:grid;
+
     place-items:center;
+
     border-radius:50%;
+
     background:#fff;
+
     border:1px solid #ddd;
+
     color:#777;
+
     font-size:22px;
+
     box-shadow:0 8px 20px rgba(0,0,0,.06);
+
   }
+
+
 
   /* VOTE BANNER */
+
   .vote-banner {
+
     position:relative;
+
     overflow:hidden;
+
     display:grid;
+
     grid-template-columns:1fr auto;
+
     gap:24px;
+
     align-items:center;
+
     padding:26px 28px;
+
     border-radius:16px;
+
     background:linear-gradient(135deg,#101010,#292929);
+
     color:#fff;
+
   }
+
+
 
   .vote-banner::after {
+
     content:"?";
+
     position:absolute;
+
     right:170px;
+
     top:-44px;
+
     color:rgba(255,255,255,.045);
+
     font-size:190px;
+
     line-height:1;
+
     font-weight:900;
+
   }
+
+
 
   .vote-title {
+
     position:relative;
+
     z-index:1;
+
     font-size:26px;
+
     line-height:1;
+
     font-weight:900;
+
     margin-bottom:6px;
+
   }
+
+
 
   .vote-copy {
+
     position:relative;
+
     z-index:1;
+
     color:rgba(255,255,255,.68);
+
     font-size:14px;
+
     line-height:1.5;
+
   }
 
+
+
   .vote-btn {
+
     position:relative;
+
     z-index:2;
+
     display:inline-flex;
+
     align-items:center;
+
     justify-content:center;
+
     gap:8px;
+
     min-height:42px;
+
     padding:0 18px;
+
     border-radius:22px;
+
     background:#fff;
+
     color:#111;
+
     font-size:14px;
+
     font-weight:700;
+
   }
+
+
 
   .vote-btn:hover { background:#ececec; }
 
+
+
   .footer {
+
     color:var(--muted);
+
     padding:28px 0 8px;
+
     font-size:12px;
+
   }
+
+
 
   .hidden-by-filter { display:none !important; }
 
 
+
+
+
   /* REFINED HALL CARD PRESENTATION */
+
   .video-grid {
+
     grid-template-columns:repeat(4,minmax(0,1fr));
+
   }
+
+
 
   .thumb {
+
     aspect-ratio:1 / 1;
+
   }
+
+
 
   .thumb img {
+
     object-fit:cover;
+
     object-position:center;
+
   }
+
+
 
   .winner-meta {
+
     padding:0 2px;
+
   }
+
+
 
   .winner-card-name {
+
     font-size:22px;
+
     line-height:1.05;
+
     font-weight:900;
+
     letter-spacing:-.55px;
+
     margin-bottom:5px;
+
   }
+
+
 
   .winner-card-sub {
+
     color:var(--muted);
+
     font-size:13px;
+
     line-height:1.3;
+
     font-weight:500;
+
   }
+
+
 
   .locked-card .meta {
+
     display:block;
+
   }
+
+
 
   .locked-card .video-title {
+
     font-size:18px;
+
     font-weight:800;
+
     margin-bottom:4px;
+
   }
+
+
 
   .channel-profile {
+
     padding-left:4px;
+
   }
+
+
 
   @media (max-width:1200px) {
+
     :root { --sidebar:78px; }
 
+
+
     .sidebar { padding:8px 4px; }
+
     .side-link {
+
       min-height:66px;
+
       flex-direction:column;
+
       justify-content:center;
+
       gap:5px;
+
       padding:7px 2px;
+
       font-size:10px;
+
       text-align:center;
+
     }
+
     .side-link i { font-size:18px; }
+
     .nav-label,.sidebar-foot,.nav-group.secondary { display:none; }
+
     .video-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+
   }
+
+
 
   @media (max-width:900px) {
+
     .topbar {
+
       grid-template-columns:auto 1fr auto;
+
       gap:10px;
+
       padding:0 10px;
+
     }
+
+
 
     .brand-domain,.top-pill,.top-actions .icon-btn { display:none; }
+
     .brand { font-size:17px; }
+
     .search-wrap { height:38px; }
 
+
+
     .featured-row { grid-template-columns:1fr; }
+
     .video-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
     .channel-profile { align-items:flex-end; flex-wrap:wrap; }
+
     .channel-actions { width:100%; padding-left:0; }
+
   }
 
+
+
   @media (max-width:650px) {
+
     :root { --sidebar:0px; }
 
+
+
     .sidebar { display:none; }
+
     .topbar {
+
       grid-template-columns:auto 1fr auto;
+
       height:58px;
+
     }
+
+
 
     .topbar .brand-area .icon-btn { display:none; }
+
     .brand span:not(.brand-mark) { display:none; }
 
+
+
     .search-wrap input {
+
       padding:0 12px;
+
       font-size:14px;
+
     }
+
     .search-btn { width:46px; }
 
+
+
     .chips-bar {
+
       top:58px;
+
       padding:10px 12px;
+
     }
+
+
 
     .page { padding-top:58px; }
+
     .content { padding:14px 12px 42px; }
 
+
+
     .channel-banner {
+
       min-height:150px;
+
       border-radius:12px;
+
     }
 
+
+
     .channel-profile {
+
       gap:13px;
+
       padding:0 4px 18px;
+
     }
+
+
 
     .channel-title { font-size:26px; }
 
+
+
     .channel-actions {
+
       width:100%;
+
       padding-left:0;
+
     }
+
+
 
     .primary-action,.secondary-action { flex:1; }
 
+
+
     .featured-name {
+
       font-size:38px;
+
       letter-spacing:-1.2px;
+
     }
+
+
 
     .video-grid {
+
       grid-template-columns:1fr;
+
       gap:26px;
+
     }
+
+
 
     .vote-banner {
+
       grid-template-columns:1fr;
+
       padding:22px;
+
     }
 
+
+
     .vote-btn {
+
       justify-self:start;
+
     }
+
   }
+
 </style>
+
 </head>
+
+
 
 <body>
 
+
+
 <header class="topbar" id="topbar">
+
   <div class="brand-area">
+
     <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu">
+
       <i class="fas fa-bars"></i>
+
     </button>
+
+
 
     <a href="index.html" class="brand" aria-label="GuessingGames.com home">
+
       <span class="brand-mark"><i class="fas fa-play"></i></span>
+
       <span>GuessingGames</span><span class="brand-domain">.com</span>
+
     </a>
+
   </div>
+
+
 
   <form class="search-wrap" id="searchForm">
+
     <input id="siteSearch" type="search" placeholder="Search Hall of Names..." aria-label="Search Hall of Names">
+
     <button class="search-btn" aria-label="Search">
+
       <i class="fas fa-search"></i>
+
     </button>
+
   </form>
 
+
+
   <div class="top-actions">
+
     <a class="top-pill" href="vote.html">
+
       <i class="fas fa-check"></i> Vote Now
+
     </a>
+
+
 
     <a class="icon-btn" href="signin.html?redirect=halloffame.html" aria-label="Sign in">
+
       <i class="far fa-circle-user"></i>
+
     </a>
+
+
 
     <div class="avatar">G</div>
+
   </div>
+
 </header>
 
+
+
 <aside class="sidebar" id="sidebar">
+
   <div class="nav-group">
+
     <a class="side-link" href="index.html">
+
       <i class="fas fa-house"></i><span>Home</span>
+
     </a>
+
+
 
     <a class="side-link" href="index.html#play">
+
       <i class="fas fa-gamepad"></i><span>Play</span>
+
     </a>
+
+
 
     <a class="side-link active" href="halloffame.html">
+
       <i class="fas fa-trophy"></i><span>Hall of Names</span>
+
     </a>
+
+
 
     <a class="side-link" href="live.html">
+
       <i class="fas fa-bolt"></i><span>Live Shows</span>
+
     </a>
+
   </div>
+
+
 
   <div class="nav-group secondary">
+
     <div class="nav-label">Hall of Names</div>
 
+
+
     <a class="side-link" href="#winners">
+
       <i class="fas fa-crown"></i><span>Inductees</span>
+
     </a>
+
+
 
     <a class="side-link" href="vote.html">
+
       <i class="fas fa-check-to-slot"></i><span>Vote</span>
+
     </a>
+
   </div>
 
+
+
   <div class="sidebar-foot">
+
     One winner every week.<br>
+
     Voted by the community.
+
   </div>
+
 </aside>
+
+
 
 <main class="page">
 
+
+
   <div class="chips-bar">
+
     <button class="chip active" data-filter="all">All</button>
+
     <button class="chip" data-filter="winner">Inductees</button>
+
     <button class="chip" data-filter="upcoming">Upcoming</button>
+
     <a class="chip" href="vote.html">Vote this week</a>
+
     <a class="chip" href="index.html#play">Play Games</a>
+
   </div>
+
+
 
   <div class="content">
 
+
+
     <section class="channel-banner" aria-label="Hall of Names banner">
+
       <div class="banner-word">NAMES</div>
+
     </section>
+
+
 
     <section class="channel-profile">
+
       <div class="channel-copy">
+
         <h1 class="channel-title">Hall of Names</h1>
+
         <div class="channel-meta">
+
           Weekly community-voted inductees • GuessingGames.com
+
         </div>
+
       </div>
+
+
 
       <div class="channel-actions">
+
         <a href="vote.html" class="primary-action">
+
           <i class="fas fa-check"></i> Vote
+
         </a>
 
+
+
         <a href="index.html" class="secondary-action">
+
           <i class="fas fa-house"></i> Home
+
         </a>
+
       </div>
+
     </section>
+
+
+
     <section class="featured-row filter-item" data-category="winner">
 
       <div class="featured-thumb">
-    
+
         <img
-          src="images/savvy.jpg"
-          alt="Savvy, Week 7 Hall of Names winner"
+          src="images/september.png"
+          alt="September, Week 8 Hall of Names winner"
         >
-    
+
         <div class="winner-badge">
+
           <i class="fas fa-crown"></i>
+
           Latest Winner
+
         </div>
-    
+
       </div>
-    
+
+
+
       <div class="featured-info">
-    
+
         <div class="featured-label">
-          Week 7 Inductee
+
+          Week 8 Inductee
+
         </div>
-    
+
+
+
         <h2 class="featured-name">
-          Savvy
+
+          September
+
         </h2>
-    
+
+
+
         <p class="featured-text">
+
           The newest name inducted into the Hall. Every week, the community votes
+
           on a new group of names and one earns a permanent spot here.
+
         </p>
-    
+
+
+
         <a href="vote.html" class="primary-action">
+
           Vote on this week's ballot
+
           <i class="fas fa-arrow-right"></i>
+
         </a>
-    
+
       </div>
-    
+
     </section>
-    
-    
+
+
+
     <section class="section" id="winners">
-    
+
       <div class="section-head">
-    
+
         <h2 class="section-title">
+
           Hall of Names Inductees
+
         </h2>
-    
+
       </div>
-    
+
+
+
       <div class="video-grid">
-    
-    
+
+
+
         <!-- WEEK 1 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/j.jpg"
-              alt="J"
-            >
-    
+
+            <img src="images/j.jpg" alt="J">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 1
-            </span>
-    
+
+            <span class="week-pill">Week 1</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              J
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 1 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">J</div>
+
+            <div class="winner-card-sub">Week 1 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 2 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/gengyzkhan.jpg"
-              alt="Gengyzkhan"
-            >
-    
+
+            <img src="images/gengyzkhan.jpg" alt="Gengyzkhan">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 2
-            </span>
-    
+
+            <span class="week-pill">Week 2</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Gengyzkhan
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 2 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Gengyzkhan</div>
+
+            <div class="winner-card-sub">Week 2 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 3 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/frog.png"
-              alt="Frog"
-            >
-    
+
+            <img src="images/frog.png" alt="Frog">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 3
-            </span>
-    
+
+            <span class="week-pill">Week 3</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Frog
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 3 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Frog</div>
+
+            <div class="winner-card-sub">Week 3 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 4 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/radio.png"
-              alt="Radio"
-            >
-    
+
+            <img src="images/radio.png" alt="Radio">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 4
-            </span>
-    
+
+            <span class="week-pill">Week 4</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Radio
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 4 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Radio</div>
+
+            <div class="winner-card-sub">Week 4 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 5 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/naruto.jpg"
-              alt="Naruto"
-            >
-    
+
+            <img src="images/naruto.jpg" alt="Naruto">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 5
-            </span>
-    
+
+            <span class="week-pill">Week 5</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Naruto
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 5 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Naruto</div>
+
+            <div class="winner-card-sub">Week 5 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 6 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/ryse.jpg"
-              alt="Ryse"
-            >
-    
+
+            <img src="images/ryse.jpg" alt="Ryse">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 6
-            </span>
-    
+
+            <span class="week-pill">Week 6</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Ryse
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 6 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Ryse</div>
+
+            <div class="winner-card-sub">Week 6 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
+
+
+
         <!-- WEEK 7 -->
-    
-        <article
-          class="video-card filter-item"
-          data-category="winner"
-        >
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
           <div class="thumb">
-    
-            <img
-              src="images/savvy.jpg"
-              alt="Savvy"
-            >
-    
+
+            <img src="images/savvy.jpg" alt="Savvy">
+
             <div class="gold-ring"></div>
-    
-            <span class="week-pill">
-              Week 7
-            </span>
-    
+
+            <span class="week-pill">Week 7</span>
+
           </div>
-    
+
+
+
           <div class="winner-meta">
-    
-            <div class="winner-card-name">
-              Savvy
-            </div>
-    
-            <div class="winner-card-sub">
-              Week 7 Inductee
-            </div>
-    
+
+            <div class="winner-card-name">Savvy</div>
+
+            <div class="winner-card-sub">Week 7 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
-      </div>
-    
-    </section>
-    
-    
-    <section class="section" id="upcoming">
-    
-      <div class="section-head">
-    
-        <h2 class="section-title">
-          Coming up
-        </h2>
-    
-      </div>
-    
-    
-      <div class="video-grid">
-    
-    
+
+
+
         <!-- WEEK 8 -->
-    
-        <article
-          class="video-card locked-card filter-item"
-          data-category="upcoming"
-        >
-    
-          <div class="thumb locked-thumb">
-    
-            <div class="locked-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-    
-            <span class="locked-pill">
-              Week 8
-            </span>
-    
+
+        <article class="video-card filter-item" data-category="winner">
+
+          <div class="thumb">
+
+            <img src="images/september.png" alt="September">
+
+            <div class="gold-ring"></div>
+
+            <span class="week-pill">Week 8</span>
+
           </div>
-    
-          <div class="meta">
-    
-            <div>
-    
-              <div class="video-title">
-                Week 8 Winner
-              </div>
-    
-              <div class="video-sub">
-                Not revealed yet
-              </div>
-    
-            </div>
-    
+
+
+
+          <div class="winner-meta">
+
+            <div class="winner-card-name">September</div>
+
+            <div class="winner-card-sub">Week 8 Inductee</div>
+
           </div>
-    
+
         </article>
-    
-    
-        <!-- WEEK 9 -->
-    
-        <article
-          class="video-card locked-card filter-item"
-          data-category="upcoming"
-        >
-    
-          <div class="thumb locked-thumb">
-    
-            <div class="locked-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-    
-            <span class="locked-pill">
-              Week 9
-            </span>
-    
-          </div>
-    
-          <div class="meta">
-    
-            <div>
-    
-              <div class="video-title">
-                Week 9 Winner
-              </div>
-    
-              <div class="video-sub">
-                Not revealed yet
-              </div>
-    
-            </div>
-    
-          </div>
-    
-        </article>
-    
-    
-        <!-- WEEK 10 -->
-    
-        <article
-          class="video-card locked-card filter-item"
-          data-category="upcoming"
-        >
-    
-          <div class="thumb locked-thumb">
-    
-            <div class="locked-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-    
-            <span class="locked-pill">
-              Week 10
-            </span>
-    
-          </div>
-    
-          <div class="meta">
-    
-            <div>
-    
-              <div class="video-title">
-                Week 10 Winner
-              </div>
-    
-              <div class="video-sub">
-                Not revealed yet
-              </div>
-    
-            </div>
-    
-          </div>
-    
-        </article>
-    
-    
-        <!-- WEEK 11 -->
-    
-        <article
-          class="video-card locked-card filter-item"
-          data-category="upcoming"
-        >
-    
-          <div class="thumb locked-thumb">
-    
-            <div class="locked-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-    
-            <span class="locked-pill">
-              Week 11
-            </span>
-    
-          </div>
-    
-          <div class="meta">
-    
-            <div>
-    
-              <div class="video-title">
-                Week 11 Winner
-              </div>
-    
-              <div class="video-sub">
-                Not revealed yet
-              </div>
-    
-            </div>
-    
-          </div>
-    
-        </article>
-    
-    
+
+
+
       </div>
-    
+
     </section>
-    <section class="vote-banner">
-      <div>
-        <h2 class="vote-title">Who gets inducted next?</h2>
-        <p class="vote-copy">
-          Cast your vote on this week's ballot and help decide the next Hall of Names winner.
-        </p>
+
+
+
+    <section class="section" id="upcoming">
+
+      <div class="section-head">
+
+        <h2 class="section-title">
+
+          Coming up
+
+        </h2>
+
       </div>
+
+
+
+      <div class="video-grid">
+
+
+
+        <!-- WEEK 9 -->
+
+        <article class="video-card locked-card filter-item" data-category="upcoming">
+
+          <div class="thumb locked-thumb">
+
+            <div class="locked-icon">
+
+              <i class="fas fa-lock"></i>
+
+            </div>
+
+
+
+            <span class="locked-pill">
+
+              Week 9
+
+            </span>
+
+          </div>
+
+
+
+          <div class="meta">
+
+            <div>
+
+              <div class="video-title">
+
+                Week 9 Winner
+
+              </div>
+
+
+
+              <div class="video-sub">
+
+                Not revealed yet
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- WEEK 10 -->
+
+        <article class="video-card locked-card filter-item" data-category="upcoming">
+
+          <div class="thumb locked-thumb">
+
+            <div class="locked-icon">
+
+              <i class="fas fa-lock"></i>
+
+            </div>
+
+
+
+            <span class="locked-pill">
+
+              Week 10
+
+            </span>
+
+          </div>
+
+
+
+          <div class="meta">
+
+            <div>
+
+              <div class="video-title">
+
+                Week 10 Winner
+
+              </div>
+
+
+
+              <div class="video-sub">
+
+                Not revealed yet
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- WEEK 11 -->
+
+        <article class="video-card locked-card filter-item" data-category="upcoming">
+
+          <div class="thumb locked-thumb">
+
+            <div class="locked-icon">
+
+              <i class="fas fa-lock"></i>
+
+            </div>
+
+
+
+            <span class="locked-pill">
+
+              Week 11
+
+            </span>
+
+          </div>
+
+
+
+          <div class="meta">
+
+            <div>
+
+              <div class="video-title">
+
+                Week 11 Winner
+
+              </div>
+
+
+
+              <div class="video-sub">
+
+                Not revealed yet
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+      </div>
+
+    </section>
+
+
+
+    <section class="vote-banner">
+
+      <div>
+
+        <h2 class="vote-title">Who gets inducted next?</h2>
+
+        <p class="vote-copy">
+
+          Cast your vote on this week's ballot and help decide the next Hall of Names winner.
+
+        </p>
+
+      </div>
+
+
 
       <a class="vote-btn" href="vote.html">
+
         Vote Now
+
         <i class="fas fa-arrow-right"></i>
+
       </a>
+
     </section>
 
+
+
     <footer class="footer">
+
       © 2026 GuessingGames.com • Hall of Names
+
     </footer>
 
+
+
   </div>
+
 </main>
 
+
+
 <script>
+
   const topbar = document.getElementById('topbar');
 
+
+
   window.addEventListener('scroll', () => {
+
     topbar.classList.toggle('scrolled', window.scrollY > 8);
+
   });
+
+
 
   const chips = [...document.querySelectorAll('.chip[data-filter]')];
+
   const items = [...document.querySelectorAll('.filter-item')];
 
+
+
   function applyFilter(filter) {
+
     chips.forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
 
+
+
     items.forEach(item => {
+
       const cats = (item.dataset.category || '').split(/\s+/);
+
       item.classList.toggle(
+
         'hidden-by-filter',
+
         filter !== 'all' && !cats.includes(filter)
+
       );
+
     });
+
   }
 
+
+
   chips.forEach(chip => {
+
     chip.addEventListener('click', () => applyFilter(chip.dataset.filter));
+
   });
 
+
+
   const searchForm = document.getElementById('searchForm');
+
   const searchInput = document.getElementById('siteSearch');
 
+
+
   searchForm.addEventListener('submit', (e) => {
+
     e.preventDefault();
+
+
 
     const q = searchInput.value.trim().toLowerCase();
 
+
+
     if (!q) {
+
       applyFilter('all');
+
       return;
+
     }
+
+
 
     chips.forEach(c => c.classList.remove('active'));
 
+
+
     items.forEach(item => {
+
       const haystack =
+
         item.textContent.toLowerCase() + ' ' + (item.dataset.category || '');
 
+
+
       item.classList.toggle('hidden-by-filter', !haystack.includes(q));
+
     });
+
+
 
     document.getElementById('winners').scrollIntoView({
+
       behavior:'smooth',
+
       block:'start'
+
     });
+
   });
+
+
 
   document.getElementById('sidebarToggle').addEventListener('click', () => {
+
     const sidebar = document.getElementById('sidebar');
+
     const page = document.querySelector('.page');
 
+
+
     if (window.innerWidth > 650) {
+
       const hidden = sidebar.style.display === 'none';
 
+
+
       sidebar.style.display = hidden ? '' : 'none';
+
       page.style.marginLeft = hidden ? '' : '0';
+
     }
+
   });
+
 </script>
 
+
+
 </body>
+
 </html>

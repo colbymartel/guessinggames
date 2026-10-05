@@ -1,3587 +1,3234 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Vote Results | Name Hall of Fame</title>
-
-  <style>
-    :root {
-      --brand: #4f86b3;
-      --brand-dark: #376f9c;
-      --bg: #f6f9fc;
-      --ink: #172331;
-      --muted: #66788a;
-      --line: #dbe6ef;
-      --soft: #edf4fa;
-      --white: #ffffff;
-      --success: #1f7a4d;
-      --danger: #b42318;
-      --danger-soft: #fef0ee;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-
-      color: var(--ink);
-      background: var(--bg);
-
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    /* =========================
-       NAV
-    ========================= */
-
-    nav {
-      position: fixed;
-
-      top: 0;
-      left: 0;
-      right: 0;
-
-      z-index: 999;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 20px;
-
-      padding: 1.2rem 2.5rem;
-
-      background:
-        rgba(247, 250, 252, 0.94);
-
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-
-      border-bottom:
-        1px solid var(--line);
-
-      transition:
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    nav.scrolled {
-      background:
-        rgba(247, 250, 252, 0.99);
-
-      box-shadow:
-        0 4px 24px
-        rgba(79, 134, 179, 0.10);
-    }
-
-    .nav-logo {
-      color: var(--brand);
-
-      font-size: 1.25rem;
-      font-weight: 850;
-      letter-spacing: 0.04em;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .nav-link {
-      color: var(--muted);
-
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-
-      text-transform: uppercase;
-    }
-
-    .nav-link:hover {
-      color: var(--brand);
-    }
-
-    .nav-account {
-      max-width: 190px;
-
-      padding: 9px 14px;
-
-      overflow: hidden;
-
-      color: var(--ink);
-      background: var(--white);
-
-      border:
-        1px solid var(--line);
-
-      border-radius: 999px;
-
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* =========================
-       PAGE
-    ========================= */
-
-    .page {
-      width:
-        min(100%, 1180px);
-
-      margin:
-        0 auto;
-
-      padding:
-        125px
-        24px
-        64px;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    .header {
-      margin-bottom: 34px;
-    }
-
-    .eyebrow {
-      margin-bottom: 10px;
-
-      color: var(--brand);
-
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: 0.16em;
-
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-
-      font-size:
-        clamp(46px, 7vw, 78px);
-
-      line-height: 0.95;
-      letter-spacing: -0.07em;
-
-      font-weight: 900;
-    }
-
-    .subtitle {
-      max-width: 650px;
-
-      margin:
-        16px 0 0;
-
-      color: var(--muted);
-
-      font-size: 17px;
-      line-height: 1.55;
-    }
-
-    /* =========================
-       TOTAL
-    ========================= */
-
-    .total-card {
-      margin-bottom: 26px;
-
-      padding: 24px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 24px;
-
-      background: var(--white);
-
-      border:
-        1px solid var(--line);
-
-      border-radius: 22px;
-
-      box-shadow:
-        0 14px 35px
-        rgba(23, 35, 49, 0.06);
-    }
-
-    .total-label {
-      color: var(--muted);
-
-      font-size: 13px;
-      font-weight: 750;
-      letter-spacing: 0.1em;
-
-      text-transform: uppercase;
-    }
-
-    .total-number {
-      margin-top: 4px;
-
-      font-size: 42px;
-      line-height: 1;
-
-      font-weight: 900;
-      letter-spacing: -0.05em;
-    }
-
-    .refresh-button {
-      min-height: 44px;
-
-      padding:
-        0 18px;
-
-      color: var(--brand-dark);
-      background: var(--soft);
-
-      border: 0;
-      border-radius: 999px;
-
-      font-weight: 750;
-    }
-
-    .refresh-button:hover:not(:disabled) {
-      background: #dcebf6;
-    }
-
-    .refresh-button:disabled {
-      opacity: 0.55;
-      cursor: wait;
-    }
-
-    /* =========================
-       WEEK
-    ========================= */
-
-    .week-section {
-      margin-top: 28px;
-
-      padding: 24px;
-
-      background:
-        rgba(255, 255, 255, 0.52);
-
-      border:
-        1px solid var(--line);
-
-      border-radius: 24px;
-    }
-
-    .week-section.current {
-      background:
-        linear-gradient(
-          180deg,
-          rgba(79, 134, 179, 0.08),
-          rgba(255,255,255,0.60)
-        );
-
-      border-color:
-        rgba(79, 134, 179, 0.38);
-
-      box-shadow:
-        0 15px 34px
-        rgba(79, 134, 179, 0.08);
-    }
-
-    .week-heading {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-
-      gap: 18px;
-
-      margin-bottom: 18px;
-    }
-
-    .week-kicker {
-      margin-bottom: 6px;
-
-      color: var(--brand);
-
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: 0.14em;
-
-      text-transform: uppercase;
-    }
-
-    .week-heading h2 {
-      margin: 0;
-
-      font-size: 34px;
-
-      letter-spacing: -0.05em;
-    }
-
-    .week-total {
-      color: var(--muted);
-
-      font-size: 14px;
-      font-weight: 700;
-
-      white-space: nowrap;
-    }
-
-    /* =========================
-       TALLY
-    ========================= */
-
-    .tally-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-      gap: 14px;
-
-      margin-bottom: 24px;
-    }
-
-    .tally-card {
-      padding: 20px;
-
-      background: var(--white);
-
-      border:
-        1px solid var(--line);
-
-      border-radius: 18px;
-
-      box-shadow:
-        0 10px 26px
-        rgba(23, 35, 49, 0.04);
-    }
-
-    .candidate {
-      margin-bottom: 14px;
-
-      font-size: 22px;
-      font-weight: 850;
-
-      letter-spacing: -0.04em;
-    }
-
-    .candidate-row {
-      display: flex;
-
-      align-items: flex-end;
-      justify-content: space-between;
-
-      gap: 10px;
-    }
-
-    .votes {
-      font-size: 34px;
-
-      line-height: 1;
-      font-weight: 900;
-    }
-
-    .percent {
-      color: var(--muted);
-
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    .bar {
-      width: 100%;
-      height: 8px;
-
-      margin-top: 16px;
-
-      overflow: hidden;
-
-      background: var(--soft);
-
-      border-radius: 999px;
-    }
-
-    .bar-fill {
-      height: 100%;
-
-      background: var(--brand);
-
-      border-radius: inherit;
-
-      transition:
-        width 0.3s ease;
-    }
-
-    /* =========================
-       SECTION HEADER
-    ========================= */
-
-    .section-head {
-      display: flex;
-
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 20px;
-
-      margin-bottom: 15px;
-    }
-
-    .section-head h3 {
-      margin: 0;
-
-      font-size: 21px;
-
-      letter-spacing: -0.03em;
-    }
-
-    .section-subtitle {
-      margin:
-        5px 0 0;
-
-      color: var(--muted);
-
-      font-size: 13px;
-    }
-
-    .week-votes-toggle {
-      min-height: 42px;
-
-      padding:
-        0 16px;
-
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      color: var(--brand-dark);
-      background: var(--soft);
-
-      border: 0;
-      border-radius: 999px;
-
-      font-weight: 750;
-    }
-
-    .week-votes-toggle:hover {
-      background: #dcebf6;
-    }
-
-    .toggle-arrow {
-      transition:
-        transform 0.18s ease;
-    }
-
-    .week-votes-toggle[aria-expanded="true"]
-    .toggle-arrow {
-      transform:
-        rotate(180deg);
-    }
-
-    .week-votes-panel[hidden] {
-      display: none;
-    }
-
-    /* =========================
-       TABLE
-    ========================= */
-
-    .table-card {
-      overflow: hidden;
-
-      margin-top: 16px;
-
-      background: var(--white);
-
-      border:
-        1px solid var(--line);
-
-      border-radius: 20px;
-
-      box-shadow:
-        0 14px 35px
-        rgba(23, 35, 49, 0.05);
-    }
-
-    .table-scroll {
-      width: 100%;
-
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-
-      min-width: 820px;
-
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      padding:
-        16px 18px;
-
-      text-align: left;
-
-      border-bottom:
-        1px solid var(--line);
-    }
-
-    th {
-      color: var(--muted);
-
-      background: #f9fbfd;
-
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-
-      text-transform: uppercase;
-    }
-
-    td {
-      font-size: 14px;
-
-      vertical-align: middle;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: 0;
-    }
-
-    tbody tr:hover {
-      background: #fafcff;
-    }
-
-    /* =========================
-       VOTER
-    ========================= */
-
-    .person {
-      display: flex;
-
-      align-items: center;
-
-      gap: 11px;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-
-      display: grid;
-
-      place-items: center;
-
-      flex:
-        0 0 auto;
-
-      overflow: hidden;
-
-      color: white;
-      background: var(--brand);
-
-      border-radius: 50%;
-
-      font-size: 13px;
-      font-weight: 850;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-
-      display: block;
-
-      object-fit: cover;
-    }
-
-    .person-name {
-      font-weight: 750;
-    }
-
-    .person-email {
-      margin-top: 3px;
-
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    .vote-chip {
-      display: inline-flex;
-
-      padding:
-        6px 10px;
-
-      color: var(--brand-dark);
-      background: var(--soft);
-
-      border-radius: 999px;
-
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .uid {
-      max-width: 170px;
-
-      overflow: hidden;
-
-      color: var(--muted);
-
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        monospace;
-
-      font-size: 11px;
-
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* =========================
-       DELETE
-    ========================= */
-
-    .delete-vote,
-    .delete-entry {
-      width: 36px;
-      height: 36px;
-
-      display: inline-grid;
-
-      place-items: center;
-
-      padding: 0;
-
-      color: var(--danger);
-      background: var(--danger-soft);
-
-      border: 0;
-      border-radius: 50%;
-
-      font-size: 21px;
-      font-weight: 700;
-
-      line-height: 1;
-    }
-
-    .delete-vote:hover,
-    .delete-entry:hover {
-      background: #fbd5d0;
-
-      transform:
-        scale(1.06);
-    }
-
-    .delete-vote:disabled,
-    .delete-entry:disabled {
-      opacity: 0.4;
-
-      cursor: wait;
-    }
-
-    /* =========================
-       STATUS
-    ========================= */
-
-    .status {
-      padding:
-        35px 20px;
-
-      color: var(--muted);
-
-      text-align: center;
-
-      line-height: 1.5;
-    }
-
-    .status.error {
-      color: var(--danger);
-    }
-
-    .status.success {
-      color: var(--success);
-    }
-
-    /* =========================
-       LOWER SECTIONS
-    ========================= */
-
-    .results-divider {
-      height: 1px;
-
-      margin:
-        52px 0;
-
-      background:
-        var(--line);
-    }
-
-    .main-section {
-      margin-bottom: 48px;
-    }
-
-    .main-section-head {
-      display: flex;
-
-      align-items: flex-end;
-      justify-content: space-between;
-
-      gap: 20px;
-
-      margin-bottom: 16px;
-    }
-
-    .main-section h2 {
-      margin: 0;
-
-      font-size: 31px;
-
-      letter-spacing: -0.05em;
-    }
-
-    .item-count {
-      color: var(--muted);
-
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .nomination-name {
-      font-size: 16px;
-      font-weight: 850;
-    }
-
-    .nomination-reason {
-      max-width: 440px;
-
-      color: var(--muted);
-
-      line-height: 1.5;
-    }
-
-    .footer {
-      padding:
-        30px 0 8px;
-
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 850px) {
-      .tally-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 620px) {
-      nav {
-        padding:
-          0.95rem 1rem;
-      }
-
-      .nav-logo {
-        font-size: 1rem;
-      }
-
-      .nav-link {
-        display: none;
-      }
-
-      .nav-account {
-        max-width: 145px;
-      }
-
-      .page {
-        padding:
-          100px
-          16px
-          44px;
-      }
-
-      .header {
-        text-align: center;
-      }
-
-      .subtitle {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .total-card {
-        align-items: stretch;
-
-        flex-direction: column;
-      }
-
-      .refresh-button {
-        width: 100%;
-      }
-
-      .week-section {
-        padding: 18px;
-      }
-
-      .week-heading {
-        align-items: flex-start;
-
-        flex-direction: column;
-      }
-
-      .week-heading h2 {
-        font-size: 28px;
-      }
-
-      .tally-grid {
-        gap: 9px;
-      }
-
-      .tally-card {
-        padding: 15px;
-      }
-
-      .candidate {
-        font-size: 18px;
-      }
-
-      .votes {
-        font-size: 27px;
-      }
-
-      .section-head {
-        align-items: stretch;
-
-        flex-direction: column;
-      }
-
-      .week-votes-toggle {
-        width: 100%;
-
-        justify-content: center;
-      }
-
-      .main-section-head {
-        align-items: flex-start;
-
-        flex-direction: column;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+<title>Vote Results | Name Hall of Fame</title>
+<style>
+:root {
+--brand: #4f86b3;
+--brand-dark: #376f9c;
+--bg: #f6f9fc;
+--ink: #172331;
+--muted: #66788a;
+--line: #dbe6ef;
+--soft: #edf4fa;
+--white: #ffffff;
+--success: #1f7a4d;
+--danger: #b42318;
+--danger-soft: #fef0ee;
+}
+* {
+box-sizing: border-box;
+}
+html {
+-webkit-text-size-adjust: 100%;
+}
+body {
+margin: 0;
+min-height: 100vh;
+color: var(--ink);
+background: var(--bg);
+font-family:
+Inter,
+ui-sans-serif,
+system-ui,
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+sans-serif;
+}
+a {
+color: inherit;
+text-decoration: none;
+}
+button,
+input {
+font: inherit;
+}
+button {
+cursor: pointer;
+}
+
+/* =========================
+NAV
+========================= */
+
+nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 999;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+padding: 1.2rem 2.5rem;
+background:
+rgba(247, 250, 252, 0.94);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-bottom:
+1px solid var(--line);
+transition:
+background 0.25s ease,
+box-shadow 0.25s ease;
+}
+
+nav.scrolled {
+background:
+rgba(247, 250, 252, 0.99);
+box-shadow:
+0 4px 24px
+rgba(79, 134, 179, 0.10);
+}
+
+.nav-logo {
+color: var(--brand);
+font-size: 1.25rem;
+font-weight: 850;
+letter-spacing: 0.04em;
+}
+
+.nav-actions {
+display: flex;
+align-items: center;
+gap: 18px;
+}
+
+.nav-link {
+color: var(--muted);
+font-size: 0.72rem;
+font-weight: 700;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+}
+
+.nav-link:hover {
+color: var(--brand);
+}
+
+.nav-account {
+max-width: 190px;
+padding: 9px 14px;
+overflow: hidden;
+color: var(--ink);
+background: var(--white);
+border:
+1px solid var(--line);
+border-radius: 999px;
+text-overflow: ellipsis;
+white-space: nowrap;
+font-size: 13px;
+font-weight: 700;
+}
+
+/* =========================
+PAGE
+========================= */
+
+.page {
+width:
+min(100%, 1180px);
+margin:
+0 auto;
+padding:
+125px
+24px
+64px;
+}
+
+/* =========================
+HEADER
+========================= */
+
+.header {
+margin-bottom: 34px;
+}
+
+.eyebrow {
+margin-bottom: 10px;
+color: var(--brand);
+font-size: 12px;
+font-weight: 850;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+}
+
+h1 {
+margin: 0;
+font-size:
+clamp(46px, 7vw, 78px);
+line-height: 0.95;
+letter-spacing: -0.07em;
+font-weight: 900;
+}
+
+.subtitle {
+max-width: 650px;
+margin:
+16px 0 0;
+color: var(--muted);
+font-size: 17px;
+line-height: 1.55;
+}
+
+/* =========================
+TOTAL
+========================= */
+
+.total-card {
+margin-bottom: 26px;
+padding: 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 24px;
+background: var(--white);
+border:
+1px solid var(--line);
+border-radius: 22px;
+box-shadow:
+0 14px 35px
+rgba(23, 35, 49, 0.06);
+}
+
+.total-label {
+color: var(--muted);
+font-size: 13px;
+font-weight: 750;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+}
+
+.total-number {
+margin-top: 4px;
+font-size: 42px;
+line-height: 1;
+font-weight: 900;
+letter-spacing: -0.05em;
+}
+
+.refresh-button {
+min-height: 44px;
+padding:
+0 18px;
+color: var(--brand-dark);
+background: var(--soft);
+border: 0;
+border-radius: 999px;
+font-weight: 750;
+}
+
+.refresh-button:hover:not(:disabled) {
+background: #dcebf6;
+}
+
+.refresh-button:disabled {
+opacity: 0.55;
+cursor: wait;
+}
+
+/* =========================
+WEEK
+========================= */
+
+.week-section {
+margin-top: 28px;
+padding: 24px;
+background:
+rgba(255, 255, 255, 0.52);
+border:
+1px solid var(--line);
+border-radius: 24px;
+}
+
+.week-section.current {
+background:
+linear-gradient(
+180deg,
+rgba(79, 134, 179, 0.08),
+rgba(255,255,255,0.60)
+);
+border-color:
+rgba(79, 134, 179, 0.38);
+box-shadow:
+0 15px 34px
+rgba(79, 134, 179, 0.08);
+}
+
+.week-heading {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 18px;
+margin-bottom: 18px;
+}
+
+.week-kicker {
+margin-bottom: 6px;
+color: var(--brand);
+font-size: 11px;
+font-weight: 850;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+}
+
+.week-heading h2 {
+margin: 0;
+font-size: 34px;
+letter-spacing: -0.05em;
+}
+
+.week-total {
+color: var(--muted);
+font-size: 14px;
+font-weight: 700;
+white-space: nowrap;
+}
+
+/* =========================
+TALLY
+========================= */
+
+.tally-grid {
+display: grid;
+grid-template-columns:
+repeat(4, minmax(0, 1fr));
+gap: 14px;
+margin-bottom: 24px;
+}
+
+.tally-card {
+padding: 20px;
+background: var(--white);
+border:
+1px solid var(--line);
+border-radius: 18px;
+box-shadow:
+0 10px 26px
+rgba(23, 35, 49, 0.04);
+}
+
+.candidate {
+margin-bottom: 14px;
+font-size: 22px;
+font-weight: 850;
+letter-spacing: -0.04em;
+}
+
+.candidate-row {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 10px;
+}
+
+.votes {
+font-size: 34px;
+line-height: 1;
+font-weight: 900;
+}
+
+.percent {
+color: var(--muted);
+font-size: 14px;
+font-weight: 750;
+}
+
+.bar {
+width: 100%;
+height: 8px;
+margin-top: 16px;
+overflow: hidden;
+background: var(--soft);
+border-radius: 999px;
+}
+
+.bar-fill {
+height: 100%;
+background: var(--brand);
+border-radius: inherit;
+transition:
+width 0.3s ease;
+}
+
+/* =========================
+SECTION HEADER
+========================= */
+
+.section-head {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+margin-bottom: 15px;
+}
+
+.section-head h3 {
+margin: 0;
+font-size: 21px;
+letter-spacing: -0.03em;
+}
+
+.section-subtitle {
+margin:
+5px 0 0;
+color: var(--muted);
+font-size: 13px;
+}
+
+.week-votes-toggle {
+min-height: 42px;
+padding:
+0 16px;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+color: var(--brand-dark);
+background: var(--soft);
+border: 0;
+border-radius: 999px;
+font-weight: 750;
+}
+
+.week-votes-toggle:hover {
+background: #dcebf6;
+}
+
+.toggle-arrow {
+transition:
+transform 0.18s ease;
+}
+
+.week-votes-toggle[aria-expanded="true"]
+.toggle-arrow {
+transform:
+rotate(180deg);
+}
+
+.week-votes-panel[hidden] {
+display: none;
+}
+
+/* =========================
+TABLE
+========================= */
+
+.table-card {
+overflow: hidden;
+margin-top: 16px;
+background: var(--white);
+border:
+1px solid var(--line);
+border-radius: 20px;
+box-shadow:
+0 14px 35px
+rgba(23, 35, 49, 0.05);
+}
+
+.table-scroll {
+width: 100%;
+overflow-x: auto;
+}
+
+table {
+width: 100%;
+min-width: 820px;
+border-collapse: collapse;
+}
+
+th,
+td {
+padding:
+16px 18px;
+text-align: left;
+border-bottom:
+1px solid var(--line);
+}
+
+th {
+color: var(--muted);
+background: #f9fbfd;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+}
+
+td {
+font-size: 14px;
+vertical-align: middle;
+}
+
+tbody tr:last-child td {
+border-bottom: 0;
+}
+
+tbody tr:hover {
+background: #fafcff;
+}
+
+/* =========================
+VOTER
+========================= */
+
+.person {
+display: flex;
+align-items: center;
+gap: 11px;
+}
+
+.avatar {
+width: 38px;
+height: 38px;
+display: grid;
+place-items: center;
+flex:
+0 0 auto;
+overflow: hidden;
+color: white;
+background: var(--brand);
+border-radius: 50%;
+font-size: 13px;
+font-weight: 850;
+}
+
+.avatar img {
+width: 100%;
+height: 100%;
+display: block;
+object-fit: cover;
+}
+
+.person-name {
+font-weight: 750;
+}
+
+.person-email {
+margin-top: 3px;
+color: var(--muted);
+font-size: 12px;
+}
+
+.vote-chip {
+display: inline-flex;
+padding:
+6px 10px;
+color: var(--brand-dark);
+background: var(--soft);
+border-radius: 999px;
+font-size: 12px;
+font-weight: 800;
+}
+
+.uid {
+max-width: 170px;
+overflow: hidden;
+color: var(--muted);
+font-family:
+ui-monospace,
+SFMono-Regular,
+Menlo,
+monospace;
+font-size: 11px;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+
+/* =========================
+DELETE
+========================= */
+
+.delete-vote,
+.delete-entry {
+width: 36px;
+height: 36px;
+display: inline-grid;
+place-items: center;
+padding: 0;
+color: var(--danger);
+background: var(--danger-soft);
+border: 0;
+border-radius: 50%;
+font-size: 21px;
+font-weight: 700;
+line-height: 1;
+}
+
+.delete-vote:hover,
+.delete-entry:hover {
+background: #fbd5d0;
+transform:
+scale(1.06);
+}
+
+.delete-vote:disabled,
+.delete-entry:disabled {
+opacity: 0.4;
+cursor: wait;
+}
+
+/* =========================
+STATUS
+========================= */
+
+.status {
+padding:
+35px 20px;
+color: var(--muted);
+text-align: center;
+line-height: 1.5;
+}
+
+.status.error {
+color: var(--danger);
+}
+
+.status.success {
+color: var(--success);
+}
+
+/* =========================
+LOWER SECTIONS
+========================= */
+
+.results-divider {
+height: 1px;
+margin:
+52px 0;
+background:
+var(--line);
+}
+
+.main-section {
+margin-bottom: 48px;
+}
+
+.main-section-head {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 20px;
+margin-bottom: 16px;
+}
+
+.main-section h2 {
+margin: 0;
+font-size: 31px;
+letter-spacing: -0.05em;
+}
+
+.item-count {
+color: var(--muted);
+font-size: 14px;
+font-weight: 700;
+}
+
+.nomination-name {
+font-size: 16px;
+font-weight: 850;
+}
+
+.nomination-reason {
+max-width: 440px;
+color: var(--muted);
+line-height: 1.5;
+}
+
+.footer {
+padding:
+30px 0 8px;
+color: var(--muted);
+font-size: 12px;
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media (max-width: 850px) {
+
+.tally-grid {
+grid-template-columns:
+repeat(2, minmax(0, 1fr));
+}
+
+}
+
+@media (max-width: 620px) {
+
+nav {
+padding:
+0.95rem 1rem;
+}
+
+.nav-logo {
+font-size: 1rem;
+}
+
+.nav-link {
+display: none;
+}
+
+.nav-account {
+max-width: 145px;
+}
+
+.page {
+padding:
+100px
+16px
+44px;
+}
+
+.header {
+text-align: center;
+}
+
+.subtitle {
+margin-left: auto;
+margin-right: auto;
+}
+
+.total-card {
+align-items: stretch;
+flex-direction: column;
+}
+
+.refresh-button {
+width: 100%;
+}
+
+.week-section {
+padding: 18px;
+}
+
+.week-heading {
+align-items: flex-start;
+flex-direction: column;
+}
+
+.week-heading h2 {
+font-size: 28px;
+}
+
+.tally-grid {
+gap: 9px;
+}
+
+.tally-card {
+padding: 15px;
+}
+
+.candidate {
+font-size: 18px;
+}
+
+.votes {
+font-size: 27px;
+}
+
+.section-head {
+align-items: stretch;
+flex-direction: column;
+}
+
+.week-votes-toggle {
+width: 100%;
+justify-content: center;
+}
+
+.main-section-head {
+align-items: flex-start;
+flex-direction: column;
+}
+
+}
+
+</style>
 </head>
-
 
 <body>
 
-  <nav id="nav">
+<nav id="nav">
 
-    <a
-      href="index.html"
-      class="nav-logo"
-    >
-      GuessingGames.com
-    </a>
+<a
+href="index.html"
+class="nav-logo"
+>
+GuessingGames.com
+</a>
 
-    <div class="nav-actions">
+<div class="nav-actions">
 
-      <a
-        href="vote.html"
-        class="nav-link"
-      >
-        Voting Page
-      </a>
+<a
+href="vote.html"
+class="nav-link"
+>
+Voting Page
+</a>
 
-      <a
-        href="signin.html?redirect=vote-results.html"
-        class="nav-account"
-        id="accountLink"
-      >
-        Admin
-      </a>
+<a
+href="signin.html?redirect=vote-results.html"
+class="nav-account"
+id="accountLink"
+>
+Admin
+</a>
 
-    </div>
+</div>
 
-  </nav>
+</nav>
 
+<main class="page">
 
-  <main class="page">
+<header class="header">
 
-    <header class="header">
+<div class="eyebrow">
+Admin · Name Hall of Fame
+</div>
 
-      <div class="eyebrow">
-        Admin · Name Hall of Fame
-      </div>
+<h1>
+Voting Results
+</h1>
 
-      <h1>
-        Voting Results
-      </h1>
+<p class="subtitle">
+Manage weekly Hall of Names results,
+individual account votes,
+and next-ballot nominations.
+</p>
 
-      <p class="subtitle">
-        Manage weekly Hall of Names results,
-        individual account votes,
-        and next-ballot nominations.
-      </p>
+</header>
 
-    </header>
+<section class="total-card">
 
+<div>
 
-    <section class="total-card">
+<div class="total-label">
+All visible votes
+</div>
 
-      <div>
+<div
+class="total-number"
+id="totalVotes"
+>
+—
+</div>
 
-        <div class="total-label">
-          All visible votes
-        </div>
+</div>
 
-        <div
-          class="total-number"
-          id="totalVotes"
-        >
-          —
-        </div>
+<button
+class="refresh-button"
+id="refreshButton"
+type="button"
+>
+Refresh all
+</button>
 
-      </div>
+</section>
 
-      <button
-        class="refresh-button"
-        id="refreshButton"
-        type="button"
-      >
-        Refresh all
-      </button>
+<!-- Weeks 1–9 generated here -->
 
-    </section>
+<div id="weeksContainer"></div>
 
+<div class="results-divider"></div>
 
-    <!-- Weeks 1–8 generated here -->
+<!-- UNIQUE VOTERS -->
 
-    <div id="weeksContainer"></div>
+<section class="main-section">
 
+<div class="main-section-head">
 
-    <div class="results-divider"></div>
+<div>
 
+<h2>
+Unique voters
+</h2>
 
-    <!-- UNIQUE VOTERS -->
+<p class="section-subtitle">
+All unique accounts that have voted
+across Weeks 1–9.
+</p>
 
-    <section class="main-section">
+</div>
 
-      <div class="main-section-head">
+<div
+class="item-count"
+id="uniqueVoterCount"
+>
+—
+</div>
 
-        <div>
+</div>
 
-          <h2>
-            Unique voters
-          </h2>
+<section class="table-card">
 
-          <p class="section-subtitle">
-            All unique accounts that have voted
-            across Weeks 1–8.
-          </p>
+<div
+class="status"
+id="uniqueVoterStatus"
+>
+Loading voters...
+</div>
 
-        </div>
+<div
+class="table-scroll"
+id="uniqueVoterTableContainer"
+hidden
+>
 
-        <div
-          class="item-count"
-          id="uniqueVoterCount"
-        >
-          —
-        </div>
+<table>
 
-      </div>
+<thead>
 
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Weeks</th>
+<th>Votes</th>
+<th>UID</th>
+</tr>
 
-      <section class="table-card">
+</thead>
 
-        <div
-          class="status"
-          id="uniqueVoterStatus"
-        >
-          Loading voters...
-        </div>
+<tbody id="uniqueVoterRows"></tbody>
 
-        <div
-          class="table-scroll"
-          id="uniqueVoterTableContainer"
-          hidden
-        >
+</table>
 
-          <table>
+</div>
 
-            <thead>
+</section>
 
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Weeks</th>
-                <th>Votes</th>
-                <th>UID</th>
-              </tr>
+</section>
 
-            </thead>
+<div class="results-divider"></div>
 
-            <tbody id="uniqueVoterRows"></tbody>
+<!-- NOMINATIONS -->
 
-          </table>
+<section class="main-section">
 
-        </div>
+<div class="main-section-head">
 
-      </section>
+<div>
 
-    </section>
+<h2>
+Next-ballot nominations
+</h2>
 
+<p class="section-subtitle">
+Community suggestions for future ballots.
+</p>
 
-    <div class="results-divider"></div>
+</div>
 
+<div
+class="item-count"
+id="nominationCount"
+>
+—
+</div>
 
-    <!-- NOMINATIONS -->
+</div>
 
-    <section class="main-section">
+<section class="table-card">
 
-      <div class="main-section-head">
+<div
+class="status"
+id="nominationStatus"
+>
+Loading nominations...
+</div>
 
-        <div>
+<div
+class="table-scroll"
+id="nominationTableContainer"
+hidden
+>
 
-          <h2>
-            Next-ballot nominations
-          </h2>
+<table>
 
-          <p class="section-subtitle">
-            Community suggestions for future ballots.
-          </p>
+<thead>
 
-        </div>
+<tr>
+<th>Name</th>
+<th>Reason</th>
+<th>Week</th>
+<th>Date</th>
+<th></th>
+</tr>
 
-        <div
-          class="item-count"
-          id="nominationCount"
-        >
-          —
-        </div>
+</thead>
 
-      </div>
+<tbody id="nominationRows"></tbody>
 
+</table>
 
-      <section class="table-card">
+</div>
 
-        <div
-          class="status"
-          id="nominationStatus"
-        >
-          Loading nominations...
-        </div>
+</section>
 
-        <div
-          class="table-scroll"
-          id="nominationTableContainer"
-          hidden
-        >
+</section>
 
-          <table>
+<footer class="footer">
+© 2026 GuessingGames.com · Hall of Names Admin
+</footer>
 
-            <thead>
+</main>
 
-              <tr>
-                <th>Name</th>
-                <th>Reason</th>
-                <th>Week</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
+<script type="module">
 
-            </thead>
+/* =========================
+FIREBASE IMPORTS
+========================= */
 
-            <tbody id="nominationRows"></tbody>
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-          </table>
+import {
+getAuth,
+onAuthStateChanged
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-        </div>
+import {
+getFirestore,
+collection,
+getDocs,
+doc,
+deleteDoc
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-      </section>
 
-    </section>
+/* =========================
+FIREBASE CONFIG
+========================= */
 
+const firebaseConfig = {
 
-    <footer class="footer">
-      © 2026 GuessingGames.com · Hall of Names Admin
-    </footer>
+apiKey:
+"AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
 
-  </main>
+authDomain:
+"guessinggames.firebaseapp.com",
 
+projectId:
+"guessinggames",
 
-  <script type="module">
+storageBucket:
+"guessinggames.firebasestorage.app",
 
-    /* =========================
-       FIREBASE IMPORTS
-    ========================= */
+messagingSenderId:
+"431644741449",
 
-    import {
-      initializeApp
-    }
-    from
-    "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+appId:
+"1:431644741449:web:0b699b3acdec1f95b19498"
 
+};
 
-    import {
-      getAuth,
-      onAuthStateChanged
-    }
-    from
-    "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+const app =
+initializeApp(
+firebaseConfig
+);
 
+const auth =
+getAuth(app);
 
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      doc,
-      deleteDoc
-    }
-    from
-    "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const db =
+getFirestore(app);
 
+const ADMIN_EMAIL =
+"colbyma23@gmail.com";
 
-    /* =========================
-       FIREBASE CONFIG
-    ========================= */
 
-    const firebaseConfig = {
+/* =========================
+ALL WEEKS
+========================= */
 
-      apiKey:
-        "AIzaSyB-N0Y02yh3xoXSPu6XsqSZGP3m0ZxprpI",
+const weeks = {
 
-      authDomain:
-        "guessinggames.firebaseapp.com",
+week1: {
 
-      projectId:
-        "guessinggames",
+number: 1,
 
-      storageBucket:
-        "guessinggames.firebasestorage.app",
+label:
+"Week 1",
 
-      messagingSenderId:
-        "431644741449",
+roundId:
+"week-1-round-1",
 
-      appId:
-        "1:431644741449:web:0b699b3acdec1f95b19498"
+candidates: [
+"Frog",
+"Gengyzkhan",
+"J",
+"Naruto"
+]
 
-    };
+},
 
+week2: {
 
-    const app =
-      initializeApp(
-        firebaseConfig
-      );
+number: 2,
 
+label:
+"Week 2",
 
-    const auth =
-      getAuth(app);
+roundId:
+"week-2-round-1",
 
+candidates: [
+"Frog",
+"Gengyzkhan",
+"Naruto",
+"Ryse"
+]
 
-    const db =
-      getFirestore(app);
+},
 
+week3: {
 
-    const ADMIN_EMAIL =
-      "colbyma23@gmail.com";
+number: 3,
 
+label:
+"Week 3",
 
-    /* =========================
-       ALL WEEKS
-    ========================= */
+roundId:
+"week-3-round-1",
 
-    const weeks = {
+candidates: [
+"Frog",
+"Radio",
+"Naruto",
+"Colby"
+]
 
-      week1: {
+},
 
-        number: 1,
+week4: {
 
-        label:
-          "Week 1",
+number: 4,
 
-        roundId:
-          "week-1-round-1",
+label:
+"Week 4",
 
-        candidates: [
-          "Frog",
-          "Gengyzkhan",
-          "J",
-          "Naruto"
-        ]
+roundId:
+"week-4-round-1",
 
-      },
+candidates: [
+"Colby",
+"Naruto",
+"Radio",
+"Ryse"
+]
 
+},
 
-      week2: {
+week5: {
 
-        number: 2,
+number: 5,
 
-        label:
-          "Week 2",
+label:
+"Week 5",
 
-        roundId:
-          "week-2-round-1",
+roundId:
+"week-5-round-1",
 
-        candidates: [
-          "Frog",
-          "Gengyzkhan",
-          "Naruto",
-          "Ryse"
-        ]
+candidates: [
+"Naruto",
+"Ryse",
+"Savvy",
+"Qad"
+]
 
-      },
+},
 
+week6: {
 
-      week3: {
+number: 6,
 
-        number: 3,
+label:
+"Week 6",
 
-        label:
-          "Week 3",
+roundId:
+"week-6-round-1",
 
-        roundId:
-          "week-3-round-1",
+candidates: [
+"Ocean",
+"Qad",
+"Savvy",
+"Ryse"
+]
 
-        candidates: [
-          "Frog",
-          "Radio",
-          "Naruto",
-          "Colby"
-        ]
+},
 
-      },
+week7: {
 
+number: 7,
 
-      week4: {
+label:
+"Week 7",
 
-        number: 4,
+roundId:
+"week-7-round-1",
 
-        label:
-          "Week 4",
+candidates: [
+"Ocean",
+"Qad",
+"Savvy",
+"Fox"
+]
 
-        roundId:
-          "week-4-round-1",
+},
 
-        candidates: [
-          "Colby",
-          "Naruto",
-          "Radio",
-          "Ryse"
-        ]
+week8: {
 
-      },
+number: 8,
 
+label:
+"Week 8",
 
-      week5: {
+roundId:
+"week-8-round-1",
 
-        number: 5,
+candidates: [
+"September",
+"Fox",
+"Qad",
+"Ocean"
+]
 
-        label:
-          "Week 5",
+},
 
-        roundId:
-          "week-5-round-1",
+week9: {
 
-        candidates: [
-          "Naruto",
-          "Ryse",
-          "Savvy",
-          "Qad"
-        ]
+number: 9,
 
-      },
+label:
+"Week 9",
 
+roundId:
+"week-9-round-1",
 
-      week6: {
+candidates: [
+"River",
+"Fox",
+"Qad",
+"Ocean"
+]
 
-        number: 6,
+}
 
-        label:
-          "Week 6",
+};
 
-        roundId:
-          "week-6-round-1",
+const CURRENT_WEEK =
+"week9";
 
-        candidates: [
-          "Ocean",
-          "Qad",
-          "Savvy",
-          "Ryse"
-        ]
 
-      },
+/* =========================
+ELEMENTS
+========================= */
 
+const nav =
+document.getElementById(
+"nav"
+);
 
-      week7: {
+const accountLink =
+document.getElementById(
+"accountLink"
+);
 
-        number: 7,
+const totalVotesEl =
+document.getElementById(
+"totalVotes"
+);
 
-        label:
-          "Week 7",
+const refreshButton =
+document.getElementById(
+"refreshButton"
+);
 
-        roundId:
-          "week-7-round-1",
+const weeksContainer =
+document.getElementById(
+"weeksContainer"
+);
 
-        candidates: [
-          "Ocean",
-          "Qad",
-          "Savvy",
-          "Fox"
-        ]
+const uniqueVoterCount =
+document.getElementById(
+"uniqueVoterCount"
+);
 
-      },
+const uniqueVoterStatus =
+document.getElementById(
+"uniqueVoterStatus"
+);
 
+const uniqueVoterTableContainer =
+document.getElementById(
+"uniqueVoterTableContainer"
+);
 
-      week8: {
+const uniqueVoterRows =
+document.getElementById(
+"uniqueVoterRows"
+);
 
-        number: 8,
+const nominationCount =
+document.getElementById(
+"nominationCount"
+);
 
-        label:
-          "Week 8",
+const nominationStatus =
+document.getElementById(
+"nominationStatus"
+);
 
-        roundId:
-          "week-8-round-1",
+const nominationTableContainer =
+document.getElementById(
+"nominationTableContainer"
+);
 
-        candidates: [
-          "September",
-          "Fox",
-          "Qad",
-          "Ocean"
-        ]
+const nominationRows =
+document.getElementById(
+"nominationRows"
+);
 
-      }
+const allWeekVotes =
+{};
 
-    };
 
+/* =========================
+HELPERS
+========================= */
 
-    const CURRENT_WEEK =
-      "week8";
+function escapeHTML(value) {
 
+return String(value ?? "")
 
-    /* =========================
-       ELEMENTS
-    ========================= */
+.replaceAll(
+"&",
+"&amp;"
+)
 
-    const nav =
-      document.getElementById(
-        "nav"
-      );
+.replaceAll(
+"<",
+"&lt;"
+)
 
+.replaceAll(
+">",
+"&gt;"
+)
 
-    const accountLink =
-      document.getElementById(
-        "accountLink"
-      );
+.replaceAll(
+'"',
+"&quot;"
+)
 
+.replaceAll(
+"'",
+"&#039;"
+);
 
-    const totalVotesEl =
-      document.getElementById(
-        "totalVotes"
-      );
+}
 
 
-    const refreshButton =
-      document.getElementById(
-        "refreshButton"
-      );
+function initials(voter) {
 
+const source =
+voter.displayName ||
+voter.email ||
+"?";
 
-    const weeksContainer =
-      document.getElementById(
-        "weeksContainer"
-      );
+return source
 
+.trim()
 
-    const uniqueVoterCount =
-      document.getElementById(
-        "uniqueVoterCount"
-      );
+.split(/\s+/)
 
+.filter(Boolean)
 
-    const uniqueVoterStatus =
-      document.getElementById(
-        "uniqueVoterStatus"
-      );
+.slice(0, 2)
 
+.map(
+part =>
+part
+.charAt(0)
+.toUpperCase()
+)
 
-    const uniqueVoterTableContainer =
-      document.getElementById(
-        "uniqueVoterTableContainer"
-      );
+.join("");
 
+}
 
-    const uniqueVoterRows =
-      document.getElementById(
-        "uniqueVoterRows"
-      );
 
+function formatDate(timestamp) {
 
-    const nominationCount =
-      document.getElementById(
-        "nominationCount"
-      );
+if (!timestamp) {
+return "—";
+}
 
+if (
+typeof timestamp.toDate ===
+"function"
+) {
 
-    const nominationStatus =
-      document.getElementById(
-        "nominationStatus"
-      );
+return timestamp
 
+.toDate()
 
-    const nominationTableContainer =
-      document.getElementById(
-        "nominationTableContainer"
-      );
+.toLocaleString(
+undefined,
+{
 
+month:
+"short",
 
-    const nominationRows =
-      document.getElementById(
-        "nominationRows"
-      );
+day:
+"numeric",
 
+year:
+"numeric",
 
-    const allWeekVotes =
-      {};
+hour:
+"numeric",
 
+minute:
+"2-digit"
 
-    /* =========================
-       HELPERS
-    ========================= */
+}
+);
 
-    function escapeHTML(value) {
+}
 
-      return String(value ?? "")
+return "—";
 
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
+}
 
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
 
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
+function getTimestampNumber(
+timestamp
+) {
 
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
+if (
+!timestamp
+) {
+return 0;
+}
 
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
+if (
+typeof timestamp.toMillis ===
+"function"
+) {
 
-    }
+return timestamp.toMillis();
 
+}
 
-    function initials(voter) {
+return 0;
 
-      const source =
+}
 
-        voter.displayName ||
 
-        voter.email ||
+function setRefreshBusy(
+isBusy
+) {
 
-        "?";
+refreshButton.disabled =
+isBusy;
 
+refreshButton.textContent =
 
-      return source
+isBusy
 
-        .trim()
+? "Refreshing..."
 
-        .split(/\s+/)
+: "Refresh all";
 
-        .filter(Boolean)
+}
 
-        .slice(0, 2)
 
-        .map(
-          part =>
-            part
-              .charAt(0)
-              .toUpperCase()
-        )
+/* =========================
+BUILD WEEK HTML
+========================= */
 
-        .join("");
+function createWeekHTML(
+weekKey,
+config
+) {
 
-    }
+const isCurrent =
+weekKey ===
+CURRENT_WEEK;
 
+return `
 
-    function formatDate(timestamp) {
+<section
 
-      if (!timestamp) {
+class="
+week-section
+${isCurrent ? "current" : ""}
+"
 
-        return "—";
+data-week-key="${weekKey}"
 
-      }
+>
 
+<div class="week-heading">
 
-      if (
-        typeof timestamp.toDate ===
-        "function"
-      ) {
+<div>
 
-        return timestamp
-          .toDate()
-          .toLocaleString(
-            undefined,
-            {
-              month:
-                "short",
+<div class="week-kicker">
 
-              day:
-                "numeric",
+${
+isCurrent
+? "Current Round"
+: "Archived Round"
+}
 
-              year:
-                "numeric",
+</div>
 
-              hour:
-                "numeric",
+<h2>
+${config.label}
+</h2>
 
-              minute:
-                "2-digit"
-            }
-          );
+</div>
 
-      }
+<div
+class="week-total"
+id="${weekKey}Count"
+>
+—
+</div>
 
+</div>
 
-      return "—";
 
-    }
+<div
+class="tally-grid"
+id="${weekKey}Tally"
+aria-label="${config.label} vote totals"
+></div>
 
 
-    function getTimestampNumber(
-      timestamp
-    ) {
+<div class="section-head">
 
-      if (
-        !timestamp
-      ) {
+<div>
 
-        return 0;
+<h3>
+Individual votes
+</h3>
 
-      }
+<p class="section-subtitle">
+Hidden by default to keep
+the admin page clean.
+</p>
 
+</div>
 
-      if (
-        typeof timestamp.toMillis ===
-        "function"
-      ) {
+<button
+class="week-votes-toggle"
+type="button"
+data-toggle-week="${weekKey}"
+aria-expanded="false"
+aria-controls="${weekKey}VotesPanel"
+>
 
-        return timestamp.toMillis();
+<span class="toggle-label">
+Show votes
+</span>
 
-      }
+<span
+class="toggle-arrow"
+aria-hidden="true"
+>
+▼
+</span>
 
+</button>
 
-      return 0;
+</div>
 
-    }
 
+<div
+class="week-votes-panel"
+id="${weekKey}VotesPanel"
+hidden
+>
 
-    function setRefreshBusy(
-      isBusy
-    ) {
+<section class="table-card">
 
-      refreshButton.disabled =
-        isBusy;
+<div
+class="status"
+id="${weekKey}Status"
+>
+Checking administrator access...
+</div>
 
 
-      refreshButton.textContent =
+<div
+class="table-scroll"
+id="${weekKey}TableContainer"
+hidden
+>
 
-        isBusy
+<table>
 
-          ? "Refreshing..."
+<thead>
 
-          : "Refresh all";
+<tr>
 
-    }
+<th>
+Account
+</th>
 
+<th>
+Vote
+</th>
 
-    /* =========================
-       BUILD WEEK HTML
-    ========================= */
+<th>
+Date
+</th>
 
-    function createWeekHTML(
-      weekKey,
-      config
-    ) {
+<th>
+UID
+</th>
 
-      const isCurrent =
+<th></th>
 
-        weekKey ===
-        CURRENT_WEEK;
+</tr>
 
+</thead>
 
-      return `
+<tbody
+id="${weekKey}Rows"
+></tbody>
 
-        <section
-          class="
-            week-section
-            ${isCurrent ? "current" : ""}
-          "
-          data-week-key="${weekKey}"
-        >
+</table>
 
-          <div class="week-heading">
+</div>
 
-            <div>
+</section>
 
-              <div class="week-kicker">
+</div>
 
-                ${
-                  isCurrent
-                    ? "Current Round"
-                    : "Archived Round"
-                }
+</section>
 
-              </div>
+`;
 
-              <h2>
-                ${config.label}
-              </h2>
+}
 
-            </div>
 
-            <div
-              class="week-total"
-              id="${weekKey}Count"
-            >
-              —
-            </div>
+function buildWeeks() {
 
-          </div>
+weeksContainer.innerHTML =
 
+Object
 
-          <div
-            class="tally-grid"
-            id="${weekKey}Tally"
-            aria-label="${config.label} vote totals"
-          ></div>
+.entries(weeks)
 
+.map(
+([weekKey, config]) =>
+createWeekHTML(
+weekKey,
+config
+)
+)
 
-          <div class="section-head">
+.join("");
 
-            <div>
+}
 
-              <h3>
-                Individual votes
-              </h3>
+buildWeeks();
 
-              <p class="section-subtitle">
-                Hidden by default to keep
-                the admin page clean.
-              </p>
 
-            </div>
+/* =========================
+WEEK ELEMENTS
+========================= */
 
+function weekElements(
+weekKey
+) {
 
-            <button
-              class="week-votes-toggle"
-              type="button"
-              data-toggle-week="${weekKey}"
-              aria-expanded="false"
-              aria-controls="${weekKey}VotesPanel"
-            >
+return {
 
-              <span class="toggle-label">
-                Show votes
-              </span>
+count:
+document.getElementById(
+`${weekKey}Count`
+),
 
-              <span
-                class="toggle-arrow"
-                aria-hidden="true"
-              >
-                ▼
-              </span>
+tally:
+document.getElementById(
+`${weekKey}Tally`
+),
 
-            </button>
+status:
+document.getElementById(
+`${weekKey}Status`
+),
 
-          </div>
+tableContainer:
+document.getElementById(
+`${weekKey}TableContainer`
+),
 
+rows:
+document.getElementById(
+`${weekKey}Rows`
+)
 
-          <div
-            class="week-votes-panel"
-            id="${weekKey}VotesPanel"
-            hidden
-          >
+};
 
-            <section class="table-card">
+}
 
-              <div
-                class="status"
-                id="${weekKey}Status"
-              >
-                Checking administrator access...
-              </div>
 
+/* =========================
+RENDER TALLY
+========================= */
 
-              <div
-                class="table-scroll"
-                id="${weekKey}TableContainer"
-                hidden
-              >
+function renderTally(
+weekKey,
+votes
+) {
 
-                <table>
+const config =
+weeks[weekKey];
 
-                  <thead>
+const elements =
+weekElements(
+weekKey
+);
 
-                    <tr>
+const counts = {};
 
-                      <th>
-                        Account
-                      </th>
+config.candidates.forEach(
+candidate => {
 
-                      <th>
-                        Vote
-                      </th>
+counts[candidate] =
+0;
 
-                      <th>
-                        Date
-                      </th>
+}
+);
 
-                      <th>
-                        UID
-                      </th>
+votes.forEach(
+vote => {
 
-                      <th></th>
+const selected =
+vote.selected;
 
-                    </tr>
+if (
+Object.prototype.hasOwnProperty.call(
+counts,
+selected
+)
+) {
 
-                  </thead>
+counts[selected]++;
 
+}
 
-                  <tbody
-                    id="${weekKey}Rows"
-                  ></tbody>
+}
+);
 
-                </table>
+const total =
+votes.length;
 
-              </div>
+elements.tally.innerHTML =
 
-            </section>
+config.candidates
 
-          </div>
+.map(
+candidate => {
 
-        </section>
+const count =
+counts[candidate] ||
+0;
 
-      `;
+const percentage =
 
-    }
+total > 0
 
+? (
+count /
+total *
+100
+)
 
-    function buildWeeks() {
+: 0;
 
-      weeksContainer.innerHTML =
+return `
 
-        Object
-          .entries(weeks)
+<article class="tally-card">
 
-          .map(
-            ([weekKey, config]) =>
+<div class="candidate">
+${escapeHTML(candidate)}
+</div>
 
-              createWeekHTML(
-                weekKey,
-                config
-              )
-          )
+<div class="candidate-row">
 
-          .join("");
+<div class="votes">
+${count}
+</div>
 
-    }
+<div class="percent">
 
+${
+percentage
+.toFixed(1)
+}%
 
-    buildWeeks();
+</div>
 
+</div>
 
-    /* =========================
-       WEEK ELEMENTS
-    ========================= */
+<div class="bar">
 
-    function weekElements(
-      weekKey
-    ) {
+<div
+class="bar-fill"
+style="
+width:
+${percentage}%;
+"
+></div>
 
-      return {
+</div>
 
-        count:
-          document.getElementById(
-            `${weekKey}Count`
-          ),
+</article>
 
-        tally:
-          document.getElementById(
-            `${weekKey}Tally`
-          ),
+`;
 
-        status:
-          document.getElementById(
-            `${weekKey}Status`
-          ),
+}
+)
 
-        tableContainer:
-          document.getElementById(
-            `${weekKey}TableContainer`
-          ),
+.join("");
 
-        rows:
-          document.getElementById(
-            `${weekKey}Rows`
-          )
+elements.count.textContent =
 
-      };
+`${total.toLocaleString()} vote${
+total === 1
+? ""
+: "s"
+}`;
 
-    }
+}
 
 
-    /* =========================
-       RENDER TALLY
-    ========================= */
+/* =========================
+RENDER INDIVIDUAL VOTES
+========================= */
 
-    function renderTally(
-      weekKey,
-      votes
-    ) {
+function renderVoteRows(
+weekKey,
+votes
+) {
 
-      const config =
-        weeks[weekKey];
+const elements =
+weekElements(
+weekKey
+);
 
+if (
+!votes.length
+) {
 
-      const elements =
-        weekElements(
-          weekKey
-        );
+elements.status.hidden =
+false;
 
+elements.status.className =
+"status";
 
-      const counts = {};
+elements.status.textContent =
+"No votes found for this round.";
 
+elements.tableContainer.hidden =
+true;
 
-      config.candidates.forEach(
-        candidate => {
+elements.rows.innerHTML =
+"";
 
-          counts[candidate] =
-            0;
+return;
 
-        }
-      );
+}
 
+const sortedVotes =
 
-      votes.forEach(
-        vote => {
+[...votes]
 
-          const selected =
-            vote.selected;
+.sort(
+(a, b) =>
+getTimestampNumber(
+b.createdAt
+)
+-
+getTimestampNumber(
+a.createdAt
+)
+);
 
+elements.rows.innerHTML =
 
-          if (
-            Object.prototype.hasOwnProperty.call(
-              counts,
-              selected
-            )
-          ) {
+sortedVotes
 
-            counts[selected]++;
+.map(
+vote => {
 
-          }
+const voterName =
 
-        }
-      );
+vote.displayName ||
 
+vote.email ||
 
-      const total =
-        votes.length;
+"Unknown voter";
 
 
-      elements.tally.innerHTML =
+const avatarHTML =
 
-        config.candidates
+vote.photoURL
 
-          .map(
-            candidate => {
+? `
 
+<img
+src="${escapeHTML(
+vote.photoURL
+)}"
+alt=""
+>
 
-              const count =
-                counts[candidate] ||
-                0;
+`
 
+: escapeHTML(
+initials(vote)
+);
 
-              const percentage =
 
-                total > 0
+return `
 
-                  ? (
-                      count /
-                      total *
-                      100
-                    )
+<tr>
 
-                  : 0;
+<td>
 
+<div class="person">
 
-              return `
+<div class="avatar">
 
-                <article class="tally-card">
+${avatarHTML}
 
-                  <div class="candidate">
+</div>
 
-                    ${escapeHTML(candidate)}
+<div>
 
-                  </div>
+<div class="person-name">
 
+${escapeHTML(
+voterName
+)}
 
-                  <div class="candidate-row">
+</div>
 
-                    <div class="votes">
+<div class="person-email">
 
-                      ${count}
+${escapeHTML(
+vote.email ||
+"No email"
+)}
 
-                    </div>
+</div>
 
-                    <div class="percent">
+</div>
 
-                      ${
-                        percentage
-                          .toFixed(1)
-                      }%
+</div>
 
-                    </div>
+</td>
 
-                  </div>
 
+<td>
 
-                  <div class="bar">
+<span class="vote-chip">
 
-                    <div
+${escapeHTML(
+vote.selected ||
+"Unknown"
+)}
 
-                      class="bar-fill"
+</span>
 
-                      style="
-                        width:
-                        ${percentage}%;
-                      "
+</td>
 
-                    ></div>
 
-                  </div>
+<td>
 
-                </article>
+${escapeHTML(
+formatDate(
+vote.createdAt
+)
+)}
 
-              `;
+</td>
 
-            }
-          )
 
-          .join("");
+<td>
 
+<div
+class="uid"
+title="${escapeHTML(
+vote.uid ||
+vote.id ||
+""
+)}"
+>
 
-      elements.count.textContent =
+${escapeHTML(
+vote.uid ||
+vote.id ||
+"—"
+)}
 
-        `${total.toLocaleString()} vote${
+</div>
 
-          total === 1
+</td>
 
-            ? ""
 
-            : "s"
+<td>
 
-        }`;
+<button
+class="delete-vote"
+type="button"
+title="Delete vote"
+data-week-key="${weekKey}"
+data-vote-id="${escapeHTML(
+vote.id
+)}"
+data-voter="${escapeHTML(
+voterName
+)}"
+data-selected="${escapeHTML(
+vote.selected ||
+""
+)}"
+>
 
-    }
+×
 
+</button>
 
-    /* =========================
-       RENDER INDIVIDUAL VOTES
-    ========================= */
+</td>
 
-    function renderVoteRows(
-      weekKey,
-      votes
-    ) {
+</tr>
 
-      const elements =
-        weekElements(
-          weekKey
-        );
+`;
 
+}
+)
 
-      if (
-        !votes.length
-      ) {
+.join("");
 
-        elements.status.hidden =
-          false;
+elements.status.hidden =
+true;
 
+elements.tableContainer.hidden =
+false;
 
-        elements.status.className =
-          "status";
+}
 
 
-        elements.status.textContent =
-          "No votes found for this round.";
+/* =========================
+LOAD WEEK
+========================= */
 
+async function loadWeekVotes(
+weekKey
+) {
 
-        elements.tableContainer.hidden =
-          true;
+const config =
+weeks[weekKey];
 
+const elements =
+weekElements(
+weekKey
+);
 
-        elements.rows.innerHTML =
-          "";
+elements.status.hidden =
+false;
 
+elements.status.className =
+"status";
 
-        return;
+elements.status.textContent =
+`Loading ${config.label} votes...`;
 
-      }
+try {
 
+const votesRef =
+collection(
+db,
+"name-hall-of-fame-votes",
+config.roundId,
+"votes"
+);
 
-      const sortedVotes =
+const snapshot =
+await getDocs(
+votesRef
+);
 
-        [...votes]
+const votes =
 
-          .sort(
-            (a, b) =>
+snapshot.docs.map(
+document => ({
 
-              getTimestampNumber(
-                b.createdAt
-              )
+id:
+document.id,
 
-              -
+...document.data()
 
-              getTimestampNumber(
-                a.createdAt
-              )
-          );
+})
+);
 
+allWeekVotes[weekKey] =
+votes;
 
-      elements.rows.innerHTML =
+renderTally(
+weekKey,
+votes
+);
 
-        sortedVotes
+renderVoteRows(
+weekKey,
+votes
+);
 
-          .map(
-            vote => {
+return votes.length;
 
+}
 
-              const voterName =
+catch (error) {
 
-                vote.displayName ||
+console.error(
+`Could not load ${config.label}:`,
+error
+);
 
-                vote.email ||
+elements.status.hidden =
+false;
 
-                "Unknown voter";
+elements.status.className =
+"status error";
 
+elements.status.textContent =
+`Could not load ${config.label}.`;
 
-              const avatarHTML =
+elements.tableContainer.hidden =
+true;
 
-                vote.photoURL
+return 0;
 
-                  ? `
+}
 
-                    <img
+}
 
-                      src="${escapeHTML(
-                        vote.photoURL
-                      )}"
 
-                      alt=""
+/* =========================
+DELETE VOTE
+========================= */
 
-                    >
+async function removeVote(
+weekKey,
+voteId,
+voter,
+selected,
+button
+) {
 
-                  `
+const config =
+weeks[weekKey];
 
-                  : escapeHTML(
-                      initials(vote)
-                    );
+if (
+!config ||
+!voteId
+) {
 
+return;
 
-              return `
+}
 
-                <tr>
+const confirmed =
 
-                  <td>
+window.confirm(
 
-                    <div class="person">
+`Remove ${voter}'s ${config.label} vote for ${selected}?\n\n` +
 
-                      <div class="avatar">
+"This account will be able to vote again in that round."
 
-                        ${avatarHTML}
+);
 
-                      </div>
+if (
+!confirmed
+) {
 
-                      <div>
+return;
 
-                        <div class="person-name">
+}
 
-                          ${escapeHTML(
-                            voterName
-                          )}
+button.disabled =
+true;
 
-                        </div>
+button.textContent =
+"…";
 
-                        <div class="person-email">
+try {
 
-                          ${escapeHTML(
-                            vote.email ||
-                            "No email"
-                          )}
+await deleteDoc(
 
-                        </div>
+doc(
 
-                      </div>
+db,
 
-                    </div>
+"name-hall-of-fame-votes",
 
-                  </td>
+config.roundId,
 
+"votes",
 
-                  <td>
+voteId
 
-                    <span class="vote-chip">
+)
 
-                      ${escapeHTML(
-                        vote.selected ||
-                        "Unknown"
-                      )}
+);
 
-                    </span>
+await refreshVoteSections();
 
-                  </td>
+}
 
+catch (error) {
 
-                  <td>
+console.error(
+"Could not delete vote:",
+error
+);
 
-                    ${escapeHTML(
-                      formatDate(
-                        vote.createdAt
-                      )
-                    )}
+window.alert(
+"Could not delete this vote. Check your Firestore permissions."
+);
 
-                  </td>
+button.disabled =
+false;
 
+button.textContent =
+"×";
 
-                  <td>
+}
 
-                    <div
-                      class="uid"
-                      title="${escapeHTML(
-                        vote.uid ||
-                        vote.id ||
-                        ""
-                      )}"
-                    >
+}
 
-                      ${escapeHTML(
-                        vote.uid ||
-                        vote.id ||
-                        "—"
-                      )}
 
-                    </div>
+document.addEventListener(
+"click",
+async event => {
 
-                  </td>
+const button =
 
+event.target.closest(
+".delete-vote"
+);
 
-                  <td>
+if (
+!button
+) {
 
-                    <button
+return;
 
-                      class="delete-vote"
+}
 
-                      type="button"
+await removeVote(
 
-                      title="Delete vote"
+button.dataset.weekKey,
 
-                      data-week-key="${weekKey}"
+button.dataset.voteId,
 
-                      data-vote-id="${escapeHTML(
-                        vote.id
-                      )}"
+button.dataset.voter,
 
-                      data-voter="${escapeHTML(
-                        voterName
-                      )}"
+button.dataset.selected,
 
-                      data-selected="${escapeHTML(
-                        vote.selected ||
-                        ""
-                      )}"
+button
 
-                    >
+);
 
-                      ×
+}
+);
 
-                    </button>
 
-                  </td>
+/* =========================
+UNIQUE VOTERS
+========================= */
 
-                </tr>
+function renderUniqueVoters() {
 
-              `;
+const voterMap =
+new Map();
 
-            }
-          )
+for (
+const [
+weekKey,
+votes
+]
+of
+Object.entries(
+allWeekVotes
+)
+) {
 
-          .join("");
+for (
+const vote
+of
+votes || []
+) {
 
+const uid =
 
-      elements.status.hidden =
-        true;
+String(
+vote.uid ||
+vote.id ||
+""
+)
+.trim();
 
+const email =
 
-      elements.tableContainer.hidden =
-        false;
+String(
+vote.email ||
+""
+)
+.trim();
 
-    }
+const key =
 
+uid ||
 
-    /* =========================
-       LOAD WEEK
-    ========================= */
+email.toLowerCase();
 
-    async function loadWeekVotes(
-      weekKey
-    ) {
+if (
+!key
+) {
 
-      const config =
-        weeks[weekKey];
+continue;
 
+}
 
-      const elements =
-        weekElements(
-          weekKey
-        );
+if (
+!voterMap.has(key)
+) {
 
+voterMap.set(
+key,
+{
 
-      elements.status.hidden =
-        false;
+uid,
 
+email,
 
-      elements.status.className =
-        "status";
+displayName:
+String(
+vote.displayName ||
+""
+)
+.trim(),
 
+weeks:
+new Set(),
 
-      elements.status.textContent =
-        `Loading ${config.label} votes...`;
+totalVotes:
+0
 
+}
+);
 
-      try {
+}
 
-        const votesRef =
+const voter =
+voterMap.get(key);
 
-          collection(
+if (
+!voter.displayName &&
+vote.displayName
+) {
 
-            db,
+voter.displayName =
 
-            "name-hall-of-fame-votes",
+String(
+vote.displayName
+)
+.trim();
 
-            config.roundId,
+}
 
-            "votes"
+if (
+!voter.email &&
+vote.email
+) {
 
-          );
+voter.email =
 
+String(
+vote.email
+)
+.trim();
 
-        const snapshot =
-          await getDocs(
-            votesRef
-          );
+}
 
+voter.weeks.add(
+weekKey
+);
 
-        const votes =
+voter.totalVotes++;
 
-          snapshot.docs.map(
-            document => ({
+}
 
-              id:
-                document.id,
+}
 
-              ...document.data()
+const voters =
 
-            })
-          );
+Array.from(
+voterMap.values()
+)
 
+.sort(
+(a, b) => {
 
-        allWeekVotes[weekKey] =
-          votes;
+const left =
 
+(
+a.displayName ||
+a.email ||
+a.uid
+)
+.toLowerCase();
 
-        renderTally(
-          weekKey,
-          votes
-        );
+const right =
 
+(
+b.displayName ||
+b.email ||
+b.uid
+)
+.toLowerCase();
 
-        renderVoteRows(
-          weekKey,
-          votes
-        );
+return left.localeCompare(
+right
+);
 
+}
+);
 
-        return votes.length;
 
-      }
+uniqueVoterCount.textContent =
 
-      catch (error) {
+`${voters.length.toLocaleString()} unique voter${
+voters.length === 1
+? ""
+: "s"
+}`;
 
-        console.error(
-          `Could not load ${config.label}:`,
-          error
-        );
 
+if (
+!voters.length
+) {
 
-        elements.status.hidden =
-          false;
+uniqueVoterStatus.hidden =
+false;
 
+uniqueVoterStatus.textContent =
+"No voters found yet.";
 
-        elements.status.className =
-          "status error";
+uniqueVoterTableContainer.hidden =
+true;
 
+return;
 
-        elements.status.textContent =
-          `Could not load ${config.label}.`;
+}
 
 
-        elements.tableContainer.hidden =
-          true;
+uniqueVoterRows.innerHTML =
 
+voters
 
-        return 0;
+.map(
+voter => {
 
-      }
+const weekLabels =
 
-    }
+Array.from(
+voter.weeks
+)
 
+.map(
+key =>
+weeks[key]
+?.label
+)
 
-    /* =========================
-       DELETE VOTE
-    ========================= */
+.filter(Boolean)
 
-    async function removeVote(
-      weekKey,
-      voteId,
-      voter,
-      selected,
-      button
-    ) {
+.join(", ");
 
-      const config =
-        weeks[weekKey];
 
+return `
 
-      if (
-        !config ||
-        !voteId
-      ) {
+<tr>
 
-        return;
+<td>
 
-      }
+<div class="person-name">
 
+${escapeHTML(
+voter.displayName ||
+"No name"
+)}
 
-      const confirmed =
+</div>
 
-        window.confirm(
+</td>
 
-          `Remove ${voter}'s ${config.label} vote for ${selected}?\n\n` +
 
-          "This account will be able to vote again in that round."
+<td>
 
-        );
+<div class="person-email">
 
+${escapeHTML(
+voter.email ||
+"No email"
+)}
 
-      if (
-        !confirmed
-      ) {
+</div>
 
-        return;
+</td>
 
-      }
 
+<td>
 
-      button.disabled =
-        true;
+${escapeHTML(
+weekLabels ||
+"—"
+)}
 
+</td>
 
-      button.textContent =
-        "…";
 
+<td>
 
-      try {
+${voter.totalVotes}
 
-        await deleteDoc(
+</td>
 
-          doc(
 
-            db,
+<td>
 
-            "name-hall-of-fame-votes",
+<div
+class="uid"
+title="${escapeHTML(
+voter.uid
+)}"
+>
 
-            config.roundId,
+${escapeHTML(
+voter.uid ||
+"—"
+)}
 
-            "votes",
+</div>
 
-            voteId
+</td>
 
-          )
+</tr>
 
-        );
+`;
 
+}
+)
 
-        await refreshVoteSections();
+.join("");
 
-      }
 
-      catch (error) {
+uniqueVoterStatus.hidden =
+true;
 
-        console.error(
-          "Could not delete vote:",
-          error
-        );
+uniqueVoterTableContainer.hidden =
+false;
 
+}
 
-        window.alert(
-          "Could not delete this vote. Check your Firestore permissions."
-        );
 
+/* =========================
+NOMINATIONS
+========================= */
 
-        button.disabled =
-          false;
+async function loadNominations() {
 
+nominationStatus.hidden =
+false;
 
-        button.textContent =
-          "×";
+nominationStatus.className =
+"status";
 
-      }
+nominationStatus.textContent =
+"Loading nominations...";
 
-    }
+try {
 
+const snapshot =
 
-    document.addEventListener(
-      "click",
-      async event => {
+await getDocs(
 
-        const button =
+collection(
+db,
+"next-ballot-suggestions"
+)
 
-          event.target.closest(
-            ".delete-vote"
-          );
+);
 
 
-        if (
-          !button
-        ) {
+const nominations =
 
-          return;
+snapshot.docs
 
-        }
+.map(
+document => ({
 
+id:
+document.id,
 
-        await removeVote(
+...document.data()
 
-          button.dataset.weekKey,
+})
+)
 
-          button.dataset.voteId,
+.sort(
+(a, b) =>
+getTimestampNumber(
+b.createdAt
+)
+-
+getTimestampNumber(
+a.createdAt
+)
+);
 
-          button.dataset.voter,
 
-          button.dataset.selected,
+nominationCount.textContent =
 
-          button
+`${nominations.length.toLocaleString()} nomination${
+nominations.length === 1
+? ""
+: "s"
+}`;
 
-        );
 
-      }
-    );
+if (
+!nominations.length
+) {
 
+nominationStatus.hidden =
+false;
 
-    /* =========================
-       UNIQUE VOTERS
-    ========================= */
+nominationStatus.textContent =
+"No nominations yet.";
 
-    function renderUniqueVoters() {
+nominationTableContainer.hidden =
+true;
 
-      const voterMap =
-        new Map();
+nominationRows.innerHTML =
+"";
 
+return;
 
-      for (
-        const [
-          weekKey,
-          votes
-        ]
+}
 
-        of
-        Object.entries(
-          allWeekVotes
-        )
-      ) {
 
-        for (
-          const vote
-          of
-          votes || []
-        ) {
+nominationRows.innerHTML =
 
-          const uid =
+nominations
 
-            String(
-              vote.uid ||
-              vote.id ||
-              ""
-            )
-            .trim();
+.map(
+nomination => `
 
+<tr>
 
-          const email =
+<td>
 
-            String(
-              vote.email ||
-              ""
-            )
-            .trim();
+<div class="nomination-name">
 
+${escapeHTML(
+nomination.name ||
+"Unnamed"
+)}
 
-          const key =
+</div>
 
-            uid ||
+</td>
 
-            email.toLowerCase();
 
+<td>
 
-          if (
-            !key
-          ) {
+<div class="nomination-reason">
 
-            continue;
+${escapeHTML(
+nomination.reason ||
+"—"
+)}
 
-          }
+</div>
 
+</td>
 
-          if (
-            !voterMap.has(key)
-          ) {
 
-            voterMap.set(
-              key,
-              {
+<td>
 
-                uid,
+Week ${
+Number(
+nomination.week
+) || "—"
+}
 
-                email,
+</td>
 
-                displayName:
-                  String(
-                    vote.displayName ||
-                    ""
-                  )
-                  .trim(),
 
-                weeks:
-                  new Set(),
+<td>
 
-                totalVotes:
-                  0
+${escapeHTML(
+formatDate(
+nomination.createdAt
+)
+)}
 
-              }
-            );
+</td>
 
-          }
 
+<td>
 
-          const voter =
-            voterMap.get(key);
+<button
 
+class="delete-entry"
 
-          if (
-            !voter.displayName &&
-            vote.displayName
-          ) {
+type="button"
 
-            voter.displayName =
-              String(
-                vote.displayName
-              )
-              .trim();
+title="Delete nomination"
 
-          }
+data-nomination-id="${escapeHTML(
+nomination.id
+)}"
 
+data-nomination-name="${escapeHTML(
+nomination.name ||
+"nomination"
+)}"
 
-          if (
-            !voter.email &&
-            vote.email
-          ) {
+>
 
-            voter.email =
-              String(
-                vote.email
-              )
-              .trim();
+×
 
-          }
+</button>
 
+</td>
 
-          voter.weeks.add(
-            weekKey
-          );
+</tr>
 
+`
+)
 
-          voter.totalVotes++;
+.join("");
 
-        }
 
-      }
+nominationStatus.hidden =
+true;
 
+nominationTableContainer.hidden =
+false;
 
-      const voters =
+}
 
-        Array.from(
-          voterMap.values()
-        )
+catch (error) {
 
-        .sort(
-          (a, b) => {
+console.error(
+"Could not load nominations:",
+error
+);
 
-            const left =
+nominationStatus.hidden =
+false;
 
-              (
-                a.displayName ||
-                a.email ||
-                a.uid
-              )
-              .toLowerCase();
+nominationStatus.className =
+"status error";
 
+nominationStatus.textContent =
+"Could not load nominations.";
 
-            const right =
+nominationTableContainer.hidden =
+true;
 
-              (
-                b.displayName ||
-                b.email ||
-                b.uid
-              )
-              .toLowerCase();
+}
 
+}
 
-            return left.localeCompare(
-              right
-            );
 
-          }
-        );
+/* =========================
+DELETE NOMINATION
+========================= */
 
+async function removeNomination(
+nominationId,
+nominationName,
+button
+) {
 
-      uniqueVoterCount.textContent =
+if (
+!nominationId
+) {
 
-        `${voters.length.toLocaleString()} unique voter${
+return;
 
-          voters.length === 1
+}
 
-            ? ""
+const confirmed =
 
-            : "s"
+window.confirm(
 
-        }`;
+`Delete "${nominationName}" from nominations?\n\n` +
 
+"This cannot be undone."
 
-      if (
-        !voters.length
-      ) {
+);
 
-        uniqueVoterStatus.hidden =
-          false;
+if (
+!confirmed
+) {
 
+return;
 
-        uniqueVoterStatus.textContent =
-          "No voters found yet.";
+}
 
+button.disabled =
+true;
 
-        uniqueVoterTableContainer.hidden =
-          true;
+button.textContent =
+"…";
 
+try {
 
-        return;
+await deleteDoc(
 
-      }
+doc(
 
+db,
 
-      uniqueVoterRows.innerHTML =
+"next-ballot-suggestions",
 
-        voters
+nominationId
 
-          .map(
-            voter => {
+)
 
+);
 
-              const weekLabels =
+await loadNominations();
 
-                Array.from(
-                  voter.weeks
-                )
+}
 
-                .map(
-                  key =>
-                    weeks[key]
-                      ?.label
-                )
+catch (error) {
 
-                .filter(Boolean)
+console.error(
+"Could not delete nomination:",
+error
+);
 
-                .join(", ");
+window.alert(
+"Could not delete this nomination. Check your Firestore permissions."
+);
 
+button.disabled =
+false;
 
-              return `
+button.textContent =
+"×";
 
-                <tr>
+}
 
-                  <td>
+}
 
-                    <div class="person-name">
 
-                      ${escapeHTML(
-                        voter.displayName ||
-                        "No name"
-                      )}
+nominationRows.addEventListener(
+"click",
+async event => {
 
-                    </div>
+const button =
 
-                  </td>
+event.target.closest(
+".delete-entry"
+);
 
+if (
+!button
+) {
 
-                  <td>
+return;
 
-                    <div class="person-email">
+}
 
-                      ${escapeHTML(
-                        voter.email ||
-                        "No email"
-                      )}
+await removeNomination(
 
-                    </div>
+button.dataset.nominationId,
 
-                  </td>
+button.dataset.nominationName,
 
+button
 
-                  <td>
+);
 
-                    ${escapeHTML(
-                      weekLabels ||
-                      "—"
-                    )}
+}
+);
 
-                  </td>
 
+/* =========================
+REFRESH ALL WEEKS
+========================= */
 
-                  <td>
+async function refreshVoteSections() {
 
-                    ${voter.totalVotes}
+const weekKeys =
+Object.keys(
+weeks
+);
 
-                  </td>
+const counts =
 
+await Promise.all(
 
-                  <td>
+weekKeys.map(
+weekKey =>
+loadWeekVotes(
+weekKey
+)
+)
 
-                    <div
-                      class="uid"
-                      title="${escapeHTML(
-                        voter.uid
-                      )}"
-                    >
+);
 
-                      ${escapeHTML(
-                        voter.uid ||
-                        "—"
-                      )}
+const totalVotes =
 
-                    </div>
+counts.reduce(
+(
+sum,
+count
+) =>
 
-                  </td>
+sum + count,
 
-                </tr>
+0
+);
 
-              `;
+totalVotesEl.textContent =
 
-            }
-          )
+totalVotes
+.toLocaleString();
 
-          .join("");
+renderUniqueVoters();
 
+}
 
-      uniqueVoterStatus.hidden =
-        true;
 
+async function loadEverything() {
 
-      uniqueVoterTableContainer.hidden =
-        false;
+setRefreshBusy(
+true
+);
 
-    }
+try {
 
+await Promise.all([
 
-    /* =========================
-       NOMINATIONS
-    ========================= */
+refreshVoteSections(),
 
-    async function loadNominations() {
+loadNominations()
 
-      nominationStatus.hidden =
-        false;
+]);
 
+}
 
-      nominationStatus.className =
-        "status";
+finally {
 
+setRefreshBusy(
+false
+);
 
-      nominationStatus.textContent =
-        "Loading nominations...";
+}
 
+}
 
-      try {
 
-        const snapshot =
+/* =========================
+VOTE PANEL TOGGLES
+========================= */
 
-          await getDocs(
+document.addEventListener(
+"click",
+event => {
 
-            collection(
-              db,
-              "next-ballot-suggestions"
-            )
+const button =
 
-          );
+event.target.closest(
+".week-votes-toggle"
+);
 
+if (
+!button
+) {
 
-        const nominations =
+return;
 
-          snapshot.docs
+}
 
-            .map(
-              document => ({
+const weekKey =
 
-                id:
-                  document.id,
+button.dataset.toggleWeek;
 
-                ...document.data()
+const panel =
 
-              })
-            )
+document.getElementById(
+`${weekKey}VotesPanel`
+);
 
-            .sort(
-              (a, b) =>
+const label =
 
-                getTimestampNumber(
-                  b.createdAt
-                )
+button.querySelector(
+".toggle-label"
+);
 
-                -
+const isOpen =
 
-                getTimestampNumber(
-                  a.createdAt
-                )
-            );
+button.getAttribute(
+"aria-expanded"
+)
 
+===
 
-        nominationCount.textContent =
+"true";
 
-          `${nominations.length.toLocaleString()} nomination${
+button.setAttribute(
 
-            nominations.length === 1
+"aria-expanded",
 
-              ? ""
+String(
+!isOpen
+)
 
-              : "s"
+);
 
-          }`;
+panel.hidden =
+isOpen;
 
+label.textContent =
 
-        if (
-          !nominations.length
-        ) {
+isOpen
 
-          nominationStatus.hidden =
-            false;
+? "Show votes"
 
+: "Hide votes";
 
-          nominationStatus.textContent =
-            "No nominations yet.";
+}
+);
 
 
-          nominationTableContainer.hidden =
-            true;
+/* =========================
+REFRESH BUTTON
+========================= */
 
+refreshButton.addEventListener(
+"click",
+loadEverything
+);
 
-          nominationRows.innerHTML =
-            "";
 
+/* =========================
+NAV SCROLL
+========================= */
 
-          return;
+window.addEventListener(
+"scroll",
+() => {
 
-        }
+nav.classList.toggle(
 
+"scrolled",
 
-        nominationRows.innerHTML =
+window.scrollY > 50
 
-          nominations
+);
 
-            .map(
-              nomination => `
+}
+);
 
-                <tr>
 
-                  <td>
+/* =========================
+ADMIN AUTH
+========================= */
 
-                    <div class="nomination-name">
+onAuthStateChanged(
 
-                      ${escapeHTML(
-                        nomination.name ||
-                        "Unnamed"
-                      )}
+auth,
 
-                    </div>
+async user => {
 
-                  </td>
+if (
+!user
+) {
 
+window.location.replace(
 
-                  <td>
+"signin.html?redirect=vote-results.html"
 
-                    <div class="nomination-reason">
+);
 
-                      ${escapeHTML(
-                        nomination.reason ||
-                        "—"
-                      )}
+return;
 
-                    </div>
+}
 
-                  </td>
 
+accountLink.textContent =
 
-                  <td>
+user.displayName
 
-                    Week ${
-                      Number(
-                        nomination.week
-                      ) || "—"
-                    }
+? `Hi, ${
+user.displayName
+.split(" ")[0]
+}`
 
-                  </td>
+: user.email ||
 
+"Admin";
 
-                  <td>
 
-                    ${escapeHTML(
-                      formatDate(
-                        nomination.createdAt
-                      )
-                    )}
+try {
 
-                  </td>
+const token =
 
+await user
+.getIdTokenResult(
+true
+);
 
-                  <td>
 
-                    <button
+const emailMatches =
 
-                      class="delete-entry"
+user.email
+?.trim()
+.toLowerCase()
 
-                      type="button"
+===
 
-                      title="Delete nomination"
+ADMIN_EMAIL
+.toLowerCase();
 
-                      data-nomination-id="${escapeHTML(
-                        nomination.id
-                      )}"
 
-                      data-nomination-name="${escapeHTML(
-                        nomination.name ||
-                        "nomination"
-                      )}"
+const isAdmin =
 
-                    >
+emailMatches ||
 
-                      ×
+token.claims.admin ===
+true;
 
-                    </button>
 
-                  </td>
+if (
+!isAdmin
+) {
 
-                </tr>
+document.body.innerHTML = `
 
-              `
-            )
+<div
+style="
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:30px;
+font-family:system-ui,sans-serif;
+background:#f6f9fc;
+color:#172331;
+"
+>
 
-            .join("");
+<div
+style="
+max-width:500px;
+padding:35px;
+background:white;
+border:1px solid #dbe6ef;
+border-radius:24px;
+text-align:center;
+"
+>
 
+<h1
+style="
+font-size:36px;
+margin:0 0 12px;
+letter-spacing:-1.5px;
+"
+>
+Access denied
+</h1>
 
-        nominationStatus.hidden =
-          true;
+<p
+style="
+color:#66788a;
+line-height:1.6;
+"
+>
+This page is restricted
+to the Hall of Names
+administrator.
+</p>
 
+</div>
 
-        nominationTableContainer.hidden =
-          false;
+</div>
 
-      }
+`;
 
-      catch (error) {
+return;
 
-        console.error(
-          "Could not load nominations:",
-          error
-        );
+}
 
+await loadEverything();
 
-        nominationStatus.hidden =
-          false;
+}
 
+catch (error) {
 
-        nominationStatus.className =
-          "status error";
+console.error(
+"Admin check failed:",
+error
+);
 
+totalVotesEl.textContent =
+"Error";
 
-        nominationStatus.textContent =
-          "Could not load nominations.";
+refreshButton.disabled =
+true;
 
+refreshButton.textContent =
+"Could not verify admin";
 
-        nominationTableContainer.hidden =
-          true;
+}
 
-      }
+}
 
-    }
+);
 
-
-    /* =========================
-       DELETE NOMINATION
-    ========================= */
-
-    async function removeNomination(
-      nominationId,
-      nominationName,
-      button
-    ) {
-
-      if (
-        !nominationId
-      ) {
-
-        return;
-
-      }
-
-
-      const confirmed =
-
-        window.confirm(
-
-          `Delete "${nominationName}" from nominations?\n\n` +
-
-          "This cannot be undone."
-
-        );
-
-
-      if (
-        !confirmed
-      ) {
-
-        return;
-
-      }
-
-
-      button.disabled =
-        true;
-
-
-      button.textContent =
-        "…";
-
-
-      try {
-
-        await deleteDoc(
-
-          doc(
-
-            db,
-
-            "next-ballot-suggestions",
-
-            nominationId
-
-          )
-
-        );
-
-
-        await loadNominations();
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "Could not delete nomination:",
-          error
-        );
-
-
-        window.alert(
-          "Could not delete this nomination. Check your Firestore permissions."
-        );
-
-
-        button.disabled =
-          false;
-
-
-        button.textContent =
-          "×";
-
-      }
-
-    }
-
-
-    nominationRows.addEventListener(
-      "click",
-      async event => {
-
-        const button =
-
-          event.target.closest(
-            ".delete-entry"
-          );
-
-
-        if (
-          !button
-        ) {
-
-          return;
-
-        }
-
-
-        await removeNomination(
-
-          button.dataset.nominationId,
-
-          button.dataset.nominationName,
-
-          button
-
-        );
-
-      }
-    );
-
-
-    /* =========================
-       REFRESH ALL WEEKS
-    ========================= */
-
-    async function refreshVoteSections() {
-
-      const weekKeys =
-        Object.keys(
-          weeks
-        );
-
-
-      const counts =
-
-        await Promise.all(
-
-          weekKeys.map(
-            weekKey =>
-              loadWeekVotes(
-                weekKey
-              )
-          )
-
-        );
-
-
-      const totalVotes =
-
-        counts.reduce(
-          (
-            sum,
-            count
-          ) =>
-
-            sum + count,
-
-          0
-        );
-
-
-      totalVotesEl.textContent =
-
-        totalVotes
-          .toLocaleString();
-
-
-      renderUniqueVoters();
-
-    }
-
-
-    async function loadEverything() {
-
-      setRefreshBusy(
-        true
-      );
-
-
-      try {
-
-        await Promise.all([
-
-          refreshVoteSections(),
-
-          loadNominations()
-
-        ]);
-
-      }
-
-      finally {
-
-        setRefreshBusy(
-          false
-        );
-
-      }
-
-    }
-
-
-    /* =========================
-       VOTE PANEL TOGGLES
-    ========================= */
-
-    document.addEventListener(
-      "click",
-      event => {
-
-        const button =
-
-          event.target.closest(
-            ".week-votes-toggle"
-          );
-
-
-        if (
-          !button
-        ) {
-
-          return;
-
-        }
-
-
-        const weekKey =
-
-          button.dataset.toggleWeek;
-
-
-        const panel =
-
-          document.getElementById(
-            `${weekKey}VotesPanel`
-          );
-
-
-        const label =
-
-          button.querySelector(
-            ".toggle-label"
-          );
-
-
-        const isOpen =
-
-          button.getAttribute(
-            "aria-expanded"
-          )
-
-          ===
-
-          "true";
-
-
-        button.setAttribute(
-
-          "aria-expanded",
-
-          String(
-            !isOpen
-          )
-
-        );
-
-
-        panel.hidden =
-          isOpen;
-
-
-        label.textContent =
-
-          isOpen
-
-            ? "Show votes"
-
-            : "Hide votes";
-
-      }
-    );
-
-
-    /* =========================
-       REFRESH BUTTON
-    ========================= */
-
-    refreshButton.addEventListener(
-      "click",
-      loadEverything
-    );
-
-
-    /* =========================
-       NAV SCROLL
-    ========================= */
-
-    window.addEventListener(
-      "scroll",
-      () => {
-
-        nav.classList.toggle(
-
-          "scrolled",
-
-          window.scrollY > 50
-
-        );
-
-      }
-    );
-
-
-    /* =========================
-       ADMIN AUTH
-    ========================= */
-
-    onAuthStateChanged(
-
-      auth,
-
-      async user => {
-
-
-        if (
-          !user
-        ) {
-
-          window.location.replace(
-
-            "signin.html?redirect=vote-results.html"
-
-          );
-
-
-          return;
-
-        }
-
-
-        accountLink.textContent =
-
-          user.displayName
-
-            ? `Hi, ${
-                user.displayName
-                  .split(" ")[0]
-              }`
-
-            : user.email ||
-
-              "Admin";
-
-
-        try {
-
-          const token =
-
-            await user
-              .getIdTokenResult(
-                true
-              );
-
-
-          const emailMatches =
-
-            user.email
-              ?.trim()
-              .toLowerCase()
-
-            ===
-
-            ADMIN_EMAIL
-              .toLowerCase();
-
-
-          const isAdmin =
-
-            emailMatches ||
-
-            token.claims.admin ===
-              true;
-
-
-          if (
-            !isAdmin
-          ) {
-
-            document.body.innerHTML = `
-
-              <div
-                style="
-                  min-height:100vh;
-                  display:grid;
-                  place-items:center;
-                  padding:30px;
-                  font-family:system-ui,sans-serif;
-                  background:#f6f9fc;
-                  color:#172331;
-                "
-              >
-
-                <div
-                  style="
-                    max-width:500px;
-                    padding:35px;
-                    background:white;
-                    border:1px solid #dbe6ef;
-                    border-radius:24px;
-                    text-align:center;
-                  "
-                >
-
-                  <h1
-                    style="
-                      font-size:36px;
-                      margin:0 0 12px;
-                      letter-spacing:-1.5px;
-                    "
-                  >
-                    Access denied
-                  </h1>
-
-                  <p
-                    style="
-                      color:#66788a;
-                      line-height:1.6;
-                    "
-                  >
-                    This page is restricted
-                    to the Hall of Names
-                    administrator.
-                  </p>
-
-                </div>
-
-              </div>
-
-            `;
-
-
-            return;
-
-          }
-
-
-          await loadEverything();
-
-        }
-
-        catch (error) {
-
-          console.error(
-            "Admin check failed:",
-            error
-          );
-
-
-          totalVotesEl.textContent =
-            "Error";
-
-
-          refreshButton.disabled =
-            true;
-
-
-          refreshButton.textContent =
-            "Could not verify admin";
-
-        }
-
-      }
-
-    );
-
-  </script>
+</script>
 
 </body>
-
 </html>
