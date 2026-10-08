@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creator Collabs | GuessingGames.com</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #fff;
+  --surface: #f2f2f2;
+  --text: #0f0f0f;
+  --muted: #606060;
+  --line: #e5e5e5;
+  --accent: #3b7bbf;
+  --sidebar: 232px;
+  --topbar: 64px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.topbar {
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--topbar);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(255,255,255,.97);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 23px;
+}
+
+.menu:hover { background: var(--surface); }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -.7px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+}
+
+.domain {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0;
+  margin-left: -5px;
+  align-self: flex-start;
+}
+
+.top-pill {
+  padding: 10px 16px;
+  background: var(--surface);
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sidebar {
+  position: fixed;
+  top: var(--topbar);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar);
+  padding: 20px 12px;
+  background: white;
+}
+
+.side-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.side-link:hover,
+.side-link.active { background: var(--surface); }
+
+.side-link.active { font-weight: 700; }
+
+.nav-icon {
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.sidebar-foot {
+  margin: 24px 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.page {
+  margin-left: var(--sidebar);
+  padding: calc(var(--topbar) + 32px) 28px 40px;
+}
+
+.intro { margin-bottom: 24px; }
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+
+.description {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* LEFT-ALIGNED YOUTUBE SORT TABS */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.filter {
+  border: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filter:hover { background: #e5e5e5; }
+
+.filter.active {
+  background: #0f0f0f;
+  color: white;
+}
+
+/* CREATOR GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px 16px;
+  list-style: none;
+}
+
+.card { min-width: 0; }
+
+.thumbnail {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #eaf2fb;
+}
+
+.thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .22s ease;
+}
+
+.card:hover .thumbnail img {
+  transform: scale(1.04);
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 12px 0 5px;
+  overflow-wrap: anywhere;
+}
+
+.count {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.note {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.nav-hidden .sidebar { display: none; }
+.nav-hidden .page { margin-left: 0; }
+
+@media (max-width: 1400px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1200px) {
+  :root { --sidebar: 78px; }
+  .sidebar { padding: 12px 4px; }
+
+  .side-link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 2px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .sidebar-foot { display: none; }
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 12px;
+  }
+
+  .name { font-size: 15px; }
+  .count { font-size: 13px; }
+}
+
+@media (max-width: 650px) {
+  :root { --sidebar: 0px; --topbar: 58px; }
+  .sidebar, .menu { display: none; }
+  .topbar { padding: 0 14px; }
+  .brand { font-size: 16px; }
+  .top-pill { font-size: 12px; padding: 9px 12px; }
+  .page { padding: 82px 14px 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbnail img { transition: none; }
+  .card:hover .thumbnail img { transform: none; }
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand-area">
+    <button
+      class="menu"
+      id="menu"
+      aria-label="Toggle navigation"
+      aria-controls="sidebar"
+      aria-expanded="true"
+    >☰</button>
+
+    <a class="brand" href="https://guessinggames.com/">
+      <span class="brand-mark">▶</span>
+      GuessingGames<span class="domain">.com</span>
+    </a>
+  </div>
+
+  <a class="top-pill" href="https://guessinggames.com/live.html">
+    Live Shows
+  </a>
+</header>
+
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
+  <a class="side-link" href="https://guessinggames.com/">
+    <span class="nav-icon" aria-hidden="true">⌂</span>
+    <span>Home</span>
+  </a>
+
+  <a class="side-link" href="https://guessinggames.com/geography.html">
+    <span class="nav-icon" aria-hidden="true">◎</span>
+    <span>Play</span>
+  </a>
+
+  <a class="side-link" href="https://guessinggames.com/halloffame.html">
+    <span class="nav-icon" aria-hidden="true">☆</span>
+    <span>Hall of Names</span>
+  </a>
+
+  <a class="side-link" href="https://guessinggames.com/live.html">
+    <span class="nav-icon" aria-hidden="true">ϟ</span>
+    <span>Live Shows</span>
+  </a>
+
+  <a class="side-link active" href="#collabs" aria-current="page">
+    <span class="nav-icon" aria-hidden="true">◉</span>
+    <span>Creator Collabs</span>
+  </a>
+
+  <div class="sidebar-foot">
+    GuessingGames.com<br>
+    Play, watch, compete, connect.
+  </div>
+</nav>
+
+<main class="page" id="collabs">
+  <header class="intro">
+    <h1>Creators I've collabed with</h1>
+    <p class="description">
+    </p>
+  </header>
+
+  <div class="filters" aria-label="Sort creators">
+    <button
+      class="filter"
+      data-sort="newest"
+      aria-pressed="false"
+    >Newest</button>
+
+    <button
+      class="filter active"
+      data-sort="popular"
+      aria-pressed="true"
+    >Most popular</button>
+  </div>
+
+  <ol class="grid" id="grid" aria-label="Creator collaborations"></ol>
+
+
+  <footer class="footer">
+    © 2026 GuessingGames.com · Colby Martel ·
+    <a href="https://unavatar.io/"
+       target="_blank"
+       rel="noopener noreferrer">Avatars by unavatar</a>
+  </footer>
+</main>
+
+<script>
+/*
+Each row:
+[name, subscribers, YouTube handle, custom photo, collab link, date]
+
+Custom photo:
+"images/collabs/futcrunch.jpg"
+
+Collab link:
+"https://www.youtube.com/shorts/YOUR_VIDEO_ID"
+
+Date:
+"2026-10-07"
+
+Leave custom photo blank to use the channel profile picture.
+Add a handle or custom photo for creators currently missing one.
+Leave date null when unknown.
+*/
+
+const creators = [
+  ["Futcrunch", 23800000, "futcrunch", "", "", null],
+  ["Landen Purifoy", 16650000, "landenpurifoy", "", "", null],
+  ["SoupTimmy", 6600000, "souptimmy", "", "", null],
+  ["Sambucha", 12250000, "sambucha", "", "", null],
+  ["Addie Bowley", 4720000, "realaddiebowley", "", "", null],
+  ["Yikes", 2050000, "yikes.", "", "", null],
+  ["Anthpo", 2010000, "anthpo", "", "", null],
+  ["Salish Matter", 4420000, "salishmatter", "", "", null],
+  ["Hudson Matter", 2220000, "hudsonmatter", "", "", null],
+  ["Tyler Vitelli", 9160000, "tyler.vitelli", "", "", null],
+  ["Nick Wilkins", 9010000, "nickwilkins", "", "", null],
+  ["NickTGuy", 2150000, "nicktguy", "", "", null],
+  ["Lily Hevesh", 4630000, "hevesh5", "", "", null],
+  ["Tyler Blanchard", 5020000, "tylerblanchard", "", "", null],
+  ["Haley Pham", 3980000, "haleypham", "", "", null],
+  ["Mindsquire", 835000, "mindsquire", "", "", null],
+  ["GvoKids", 4400000, "gvokids", "", "", null],
+  ["James Seo", 4520000, "jamesseo", "", "", null],
+  ["ManniiShow", 15800000, "themanniishow", "", "", null],
+  ["Daniel Wall", 1310000, "danielswall", "", "", null],
+  ["Andy Morris", 2360000, "andy.morris", "", "", null],
+  ["Josh Krueger", 937000, "joshkreuger", "", "", null],
+  ["Jack Gordon", 862000, "jackgordon", "", "", null],
+  ["Carson Hockey", 4600000, "carson_hockey", "", "", null],
+  ["Merrick Hanna", 17150000, "merrickhanna", "", "", null],
+  ["Horchata Soto", 4350000, "horchatasoto", "", "", null],
+  ["Jenny Hoyos", 12450000, "jennyhoyos", "", "", null],
+  ["Wyatt Eiden", 1210000, "wyattei", "", "", null],
+  ["Kelly Wakasa", 2000000, "kellywakasa", "", "", null],
+  ["Chef Rush", 9470000, "chefrush", "", "", null],
+  ["Sofie Dossi", 10150000, "sofiedossi", "", "", null],
+  ["AJ and Big Justice", 1070000, "a.j.befumo", "", "", null],
+  ["KingSammelot", 1620000, "kingsammelot", "", "", null],
+  ["AshMagic", 3470000, "ashmagic", "", "", null]
+];
+
+let sortMode = "popular";
+const grid = document.getElementById("grid");
+
+function formatSubscribers(number) {
+  return number >= 1000000
+    ? +(number / 1000000).toFixed(2) + "M"
+    : +(number / 1000).toFixed(1) + "K";
+}
+
+function fallbackPhoto(name) {
+  const initials = name
+    .split(/\s+/)
+    .map(word => word[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;");
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="600" height="900">
+      <rect width="600" height="900" fill="#eaf2fb"/>
+      <text
+        x="300"
+        y="470"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="100"
+        font-weight="bold"
+        fill="#3b7bbf"
+      >${initials}</text>
+    </svg>
+  `;
+
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+function render() {
+  grid.replaceChildren();
+
+  const sorted = creators
+    .map((creator, index) => ({ creator, index }))
+    .sort((a, b) => {
+      if (sortMode === "popular") {
+        return (b.creator[1] ?? -1) - (a.creator[1] ?? -1) ||
+          a.creator[0].localeCompare(b.creator[0]);
+      }
+
+      return (Date.parse(b.creator[5]) || 0) -
+        (Date.parse(a.creator[5]) || 0) ||
+        a.index - b.index;
+    });
+
+  sorted.forEach(({ creator }) => {
+    const [name, subs, handle, photo, video, date] = creator;
+
+    const card = document.createElement("li");
+    card.className = "card";
+
+    const thumbnail = document.createElement(video ? "a" : "div");
+    thumbnail.className = "thumbnail";
+
+    if (video) {
+      thumbnail.href = video;
+      thumbnail.target = "_blank";
+      thumbnail.rel = "noopener noreferrer";
+      thumbnail.setAttribute("aria-label", "Watch my collab with " + name);
+    }
+
+    const image = document.createElement("img");
+    image.alt = name;
+    image.loading = "lazy";
+    image.referrerPolicy = "no-referrer";
+
+    let triedAvatar = !photo;
+    let usedFallback = false;
+
+    image.src = photo || (
+      handle
+        ? "https://unavatar.io/youtube/" + encodeURIComponent(handle)
+        : fallbackPhoto(name)
+    );
+
+    image.addEventListener("error", () => {
+      if (!triedAvatar && handle) {
+        triedAvatar = true;
+        image.src =
+          "https://unavatar.io/youtube/" + encodeURIComponent(handle);
+      } else if (!usedFallback) {
+        usedFallback = true;
+        image.src = fallbackPhoto(name);
+      }
+    });
+
+    thumbnail.append(image);
+    card.append(thumbnail);
+
+    const title = document.createElement("h3");
+    title.className = "name";
+
+    if (video) {
+      const link = document.createElement("a");
+      link.href = video;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = name;
+      title.append(link);
+    } else {
+      title.textContent = name;
+    }
+
+    card.append(title);
+
+    const count = document.createElement("p");
+    count.className = "count";
+    count.textContent = subs === null
+      ? "Subscriber count pending"
+      : formatSubscribers(subs) + " subscribers";
+
+    card.append(count);
+    grid.append(card);
+  });
+}
+
+document.querySelectorAll(".filter").forEach(button => {
+  button.addEventListener("click", () => {
+    sortMode = button.dataset.sort;
+
+    document.querySelectorAll(".filter").forEach(tab => {
+      const active = tab === button;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-pressed", String(active));
+    });
+
+    render();
+  });
+});
+
+document.getElementById("menu").addEventListener("click", event => {
+  const hidden = document.body.classList.toggle("nav-hidden");
+  event.currentTarget.setAttribute("aria-expanded", String(!hidden));
+});
+
+render();
+</script>
+</body>
+</html>
