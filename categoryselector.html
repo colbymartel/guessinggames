@@ -1,0 +1,1024 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie & TV Selector | Guessing Games Live</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg: #fff;
+  --surface: #f2f2f2;
+  --text: #0f0f0f;
+  --muted: #606060;
+  --line: #e5e5e5;
+  --accent: #3b7bbf;
+  --accent-dark: #2d5f8f;
+  --item-height: 92px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+
+.topbar {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 30px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -.7px;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 25px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+}
+
+.brand-domain {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-left: -6px;
+  align-self: flex-start;
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-pill {
+  padding: 8px 13px;
+  border-radius: 30px;
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  background: var(--surface);
+  border: 0;
+  border-radius: 50%;
+  color: var(--text);
+}
+
+.icon-button:hover { background: var(--line); }
+
+main {
+  width: min(100%, 1050px);
+  margin: auto;
+  padding: 48px 22px 70px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-size: 13px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(36px, 5.8vw, 66px);
+  letter-spacing: -2.5px;
+  line-height: 1.04;
+  font-weight: 900;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 16px;
+  margin: 17px 0 32px;
+}
+
+.selector-card {
+  margin: auto;
+  max-width: 850px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 8px 35px rgba(0,0,0,.035);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 19px;
+  gap: 10px;
+}
+
+.card-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+}
+
+.count {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 7px 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* SLOT MACHINE */
+
+.slot-shell {
+  position: relative;
+  padding: 0 12px;
+}
+
+.reel-window {
+  position: relative;
+  height: calc(var(--item-height) * 3);
+  overflow: hidden;
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 17px;
+  isolation: isolate;
+}
+
+.reel-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.reel-item {
+  height: var(--item-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: clamp(18px, 3.3vw, 34px);
+  font-weight: 900;
+  letter-spacing: -.8px;
+  color: #a2a2a2;
+  text-align: center;
+}
+
+.reel-item.winning {
+  color: #fff;
+}
+
+/* The selected row stays fixed in the center */
+.selection-frame {
+  position: absolute;
+  top: var(--item-height);
+  left: 0;
+  right: 0;
+  height: var(--item-height);
+  background: var(--accent);
+  z-index: -1;
+}
+
+/* Instead of covering the winning text,
+   highlight its item with a transparent blue row. */
+.selection-overlay {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--item-height);
+  height: var(--item-height);
+  border: 3px solid var(--accent);
+  border-radius: 10px;
+  z-index: 4;
+}
+
+/* White fade at top and bottom */
+.reel-window:before,
+.reel-window:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--item-height);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.reel-window:before {
+  top: 0;
+  background: linear-gradient(#fafafa 0%, rgba(250,250,250,.6) 65%, transparent);
+}
+
+.reel-window:after {
+  bottom: 0;
+  background: linear-gradient(transparent, rgba(250,250,250,.6) 35%, #fafafa);
+}
+
+/* Center selection indicator */
+.center-indicator {
+  position: absolute;
+  top: var(--item-height);
+  left: 0;
+  right: 0;
+  height: var(--item-height);
+  background: rgba(59,123,191,.105);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pointer {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  color: var(--accent);
+  font-size: 21px;
+}
+
+.pointer.left { left: -9px; }
+.pointer.right { right: -9px; }
+
+.reel-item.is-center {
+  color: var(--accent-dark);
+  position: relative;
+  z-index: 2;
+}
+
+/* Result display */
+
+.result {
+  margin-top: 22px;
+  min-height: 73px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.result-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.result-name {
+  font-size: clamp(22px, 4vw, 37px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.result-name.reveal {
+  animation: pop .35s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(.88); opacity: .3; }
+  65% { transform: scale(1.055); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.spin-btn {
+  border: 0;
+  color: white;
+  background: var(--accent);
+  border-radius: 30px;
+  padding: 16px 43px;
+  font-size: 17px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  transition: background .2s, transform .2s;
+}
+
+.spin-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+.spin-btn:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.secondary-btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 15px 22px;
+  border-radius: 28px;
+  font-weight: 700;
+}
+
+.secondary-btn:hover {
+  background: var(--line);
+}
+
+.controls {
+  margin: 20px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 22px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+
+.history {
+  max-width: 850px;
+  margin: 30px auto 0;
+  text-align: left;
+}
+
+.history-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.history h2 {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.clear-btn {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.history-chip {
+  background: var(--surface);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 12px 0;
+}
+
+.footer {
+  margin-top: 55px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Fullscreen stage mode */
+body.stage-mode .topbar,
+body.stage-mode .history,
+body.stage-mode .footer {
+  display: none;
+}
+
+body.stage-mode main {
+  max-width: 1250px;
+  padding-top: 5vh;
+}
+
+body.stage-mode .selector-card {
+  max-width: 1100px;
+}
+
+body.stage-mode {
+  --item-height: 120px;
+}
+
+/* Mobile */
+@media(max-width:600px) {
+  :root { --item-height: 80px; }
+  .topbar { padding: 0 14px; }
+  .brand { font-size: 16px; }
+  .brand-domain { display: none; }
+  main { padding: 36px 12px; }
+  h1 { letter-spacing: -1.3px; }
+  .selector-card { padding: 16px 10px; }
+  .slot-shell { padding: 0 9px; }
+  .reel-item { font-size: 20px; }
+  .spin-btn { padding: 15px 30px; }
+  .subtitle { margin-bottom: 24px; }
+  body.stage-mode { --item-height: 85px; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .result-name.reveal { animation: none; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <i class="fas fa-play"></i>
+    </div>
+    GuessingGames
+    <span class="brand-domain">.com</span>
+  </div>
+
+  <div class="top-right">
+    <div class="live-pill">GUESSING GAMES LIVE</div>
+    <button class="icon-button" id="fullscreenBtn"
+            aria-label="Fullscreen">
+      <i class="fas fa-expand"></i>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="eyebrow">
+    <i class="fas fa-film"></i>
+    &nbsp; Movie & TV
+  </div>
+
+  <h1>Category Selector</h1>
+
+  <p class="subtitle">
+    Spin the reel to reveal your next category!
+  </p>
+
+  <section class="selector-card">
+    <div class="card-top">
+      <span class="card-label">
+        <i class="fas fa-clapperboard"></i>
+        &nbsp; Random Category
+      </span>
+      <span class="count" id="categoryCount">
+        25 Categories
+      </span>
+    </div>
+
+    <div class="slot-shell">
+      <span class="pointer left">
+        <i class="fas fa-caret-right"></i>
+      </span>
+
+      <div class="reel-window">
+        <div class="center-indicator"></div>
+        <div class="reel-track" id="reelTrack"></div>
+        <div class="selection-overlay"></div>
+      </div>
+
+      <span class="pointer right">
+        <i class="fas fa-caret-left"></i>
+      </span>
+    </div>
+
+    <div class="result" aria-live="polite">
+      <div class="result-label" id="resultLabel">
+        Ready to spin
+      </div>
+      <div class="result-name" id="resultName">
+        ???
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="spin-btn" id="spinBtn">
+        <i class="fas fa-play"></i>
+        <span id="spinText">SPIN CATEGORY</span>
+      </button>
+
+      <button class="secondary-btn" id="resetBtn">
+        <i class="fas fa-rotate-left"></i>
+        Reset
+      </button>
+    </div>
+
+    <div class="controls">
+      <label class="toggle">
+        <input type="checkbox" id="noRepeat" checked>
+        No repeat categories
+      </label>
+
+      <label class="toggle">
+        <input type="checkbox" id="soundEnabled" checked>
+        Sound effects
+      </label>
+    </div>
+  </section>
+
+  <section class="history">
+    <div class="history-heading">
+      <h2>Previous Selections</h2>
+      <button class="clear-btn" id="clearHistory">
+        Clear History
+      </button>
+    </div>
+
+    <div class="history-list" id="historyList">
+      <span class="empty">No categories selected yet.</span>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 2026 GuessingGames.com • Colby Martel
+  </footer>
+</main>
+
+<script>
+/* ============================================
+   MOVIE & TV CATEGORIES
+   Edit this list to add or remove options.
+============================================ */
+
+const CATEGORIES = [
+  "Avengers",
+  "Marvel Characters",
+  "DC Superheroes",
+  "Disney Characters",
+  "Disney Princesses",
+  "Pixar Characters",
+  "Harry Potter Characters",
+  "Star Wars Characters",
+  "Star Wars Planets",
+  "Lord of the Rings Characters",
+  "Stranger Things Characters",
+  "SpongeBob Characters",
+  "Simpsons Characters",
+  "Family Guy Characters",
+  "Pokémon",
+  "Minions",
+  "DreamWorks Characters",
+  "Cartoon Villains",
+  "Horror Movie Characters",
+  "Movie Posters",
+  "Famous Movie Quotes",
+  "Netflix Shows",
+  "Sitcom Characters",
+  "Animated Movies",
+  "Oscar-Winning Movies"
+];
+
+/* ============================================
+   SETTINGS
+============================================ */
+
+const SPIN_DURATION = 5500;
+const REPEATS = 11;
+const START_REPEAT = 3;
+const END_REPEAT = 8;
+
+const track = document.getElementById("reelTrack");
+const spinBtn = document.getElementById("spinBtn");
+const spinText = document.getElementById("spinText");
+const resetBtn = document.getElementById("resetBtn");
+const resultName = document.getElementById("resultName");
+const resultLabel = document.getElementById("resultLabel");
+const historyList = document.getElementById("historyList");
+const noRepeat = document.getElementById("noRepeat");
+const soundEnabled = document.getElementById("soundEnabled");
+
+let spinning = false;
+let currentIndex = 0;
+let selected = [];
+let spinHistory = [];
+let audioContext = null;
+let finishTimer = null;
+
+/* ============================================
+   CREATE REEL
+============================================ */
+
+function buildReel() {
+  track.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+
+  for (let repeat = 0; repeat < REPEATS; repeat++) {
+    CATEGORIES.forEach((category, index) => {
+      const item = document.createElement("div");
+      item.className = "reel-item";
+      item.textContent = category;
+      item.dataset.index = index;
+
+      fragment.appendChild(item);
+    });
+  }
+
+  track.appendChild(fragment);
+
+  document.getElementById("categoryCount").textContent =
+    CATEGORIES.length + " Categories";
+}
+
+function getItemHeight() {
+  return track.querySelector(".reel-item")
+    .getBoundingClientRect().height;
+}
+
+function setReelPosition(absoluteIndex, animate = false) {
+  const itemHeight = getItemHeight();
+
+  track.style.transition = animate
+    ? `transform ${SPIN_DURATION}ms cubic-bezier(.12,.72,.09,1)`
+    : "none";
+
+  // Center the category inside the middle row.
+  const offset = itemHeight * (1 - absoluteIndex);
+
+  track.style.transform = `translate3d(0,${offset}px,0)`;
+}
+
+function highlightCenter(categoryIndex) {
+  track.querySelectorAll(".is-center").forEach(item => {
+    item.classList.remove("is-center");
+  });
+
+  const absoluteIndex =
+    START_REPEAT * CATEGORIES.length + categoryIndex;
+
+  const item = track.children[absoluteIndex];
+
+  if (item) item.classList.add("is-center");
+}
+
+/* ============================================
+   SOUND EFFECTS
+============================================ */
+
+function tone(frequency, duration, volume = .07) {
+  if (!soundEnabled.checked) return;
+
+  try {
+    const AudioCtx =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioCtx) return;
+
+    audioContext ||= new AudioCtx();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(
+      volume,
+      audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioContext.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+  } catch(e) {
+    // Sound is optional.
+  }
+}
+
+function winningSound() {
+  tone(523, .25);
+  setTimeout(() => tone(659, .25), 130);
+  setTimeout(() => tone(784, .42), 260);
+}
+
+/* ============================================
+   PICK WINNER
+============================================ */
+
+function chooseWinner() {
+  let available = CATEGORIES.map((_, index) => index);
+
+  if (noRepeat.checked) {
+    available = available.filter(index => {
+      return !selected.includes(index);
+    });
+  }
+
+  if (available.length === 0) return null;
+
+  const randomPosition = Math.floor(
+    Math.random() * available.length
+  );
+
+  return available[randomPosition];
+}
+
+/* ============================================
+   SPIN ANIMATION
+============================================ */
+
+function spin() {
+  if (spinning) return;
+
+  const winner = chooseWinner();
+
+  if (winner === null) {
+    resultLabel.textContent = "All categories selected";
+    resultName.textContent = "All Done!";
+    spinText.textContent = "ALL COMPLETE";
+    tone(380, .2);
+    return;
+  }
+
+  spinning = true;
+  spinBtn.disabled = true;
+  resetBtn.disabled = true;
+
+  resultLabel.textContent = "Selecting category...";
+  resultName.textContent = "SPINNING...";
+  resultName.classList.remove("reveal");
+  spinText.textContent = "SPINNING...";
+
+  track.querySelectorAll(".is-center").forEach(item => {
+    item.classList.remove("is-center");
+  });
+
+  tone(440, .15);
+
+  // Start from the previous winner.
+  const startAbsolute =
+    START_REPEAT * CATEGORIES.length + currentIndex;
+
+  // Spin through several complete cycles.
+  const endAbsolute =
+    END_REPEAT * CATEGORIES.length + winner;
+
+  setReelPosition(startAbsolute, false);
+
+  // Force browser to apply the starting position.
+  void track.offsetHeight;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setReelPosition(endAbsolute, true);
+    });
+  });
+
+  // Use one completion timer per spin.
+  clearTimeout(finishTimer);
+
+  finishTimer = setTimeout(() => {
+    finishSpin(winner);
+  }, SPIN_DURATION + 100);
+}
+
+function finishSpin(winner) {
+  currentIndex = winner;
+
+  selected.push(winner);
+  spinHistory.unshift(CATEGORIES[winner]);
+
+  // Instantly move back to the center of the
+  // repeated reel to allow unlimited future spins.
+  setReelPosition(
+    START_REPEAT * CATEGORIES.length + winner,
+    false
+  );
+
+  highlightCenter(winner);
+
+  resultLabel.textContent = "Your category is";
+  resultName.textContent = CATEGORIES[winner];
+
+  resultName.classList.remove("reveal");
+  void resultName.offsetHeight;
+  resultName.classList.add("reveal");
+
+  winningSound();
+  renderHistory();
+
+  spinning = false;
+  spinBtn.disabled = false;
+  resetBtn.disabled = false;
+
+  const allUsed =
+    noRepeat.checked &&
+    selected.length >= CATEGORIES.length;
+
+  spinText.textContent = allUsed
+    ? "ALL COMPLETE"
+    : "SPIN AGAIN";
+}
+
+/* ============================================
+   HISTORY
+============================================ */
+
+function renderHistory() {
+  historyList.innerHTML = "";
+
+  if (!spinHistory.length) {
+    historyList.innerHTML =
+      '<span class="empty">No categories selected yet.</span>';
+    return;
+  }
+
+  spinHistory.forEach((name, index) => {
+    const chip = document.createElement("span");
+    chip.className = "history-chip";
+    chip.textContent = `${spinHistory.length - index}. ${name}`;
+    historyList.appendChild(chip);
+  });
+}
+
+/* ============================================
+   RESET
+============================================ */
+
+function resetGame() {
+  if (spinning) return;
+
+  clearTimeout(finishTimer);
+  selected = [];
+  spinHistory = [];
+  currentIndex = 0;
+
+  resultLabel.textContent = "Ready to spin";
+  resultName.textContent = "???";
+  resultName.classList.remove("reveal");
+
+  spinBtn.disabled = false;
+  spinText.textContent = "SPIN CATEGORY";
+
+  setReelPosition(
+    START_REPEAT * CATEGORIES.length,
+    false
+  );
+
+  highlightCenter(0);
+  renderHistory();
+}
+
+/* ============================================
+   FULLSCREEN
+============================================ */
+
+async function toggleFullscreen() {
+  try {
+    if (!document.fullscreenElement) {
+      await document.documentElement.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  } catch(e) {
+    // Fullscreen may be unavailable in some browsers.
+  }
+}
+
+document.addEventListener("fullscreenchange", () => {
+  document.body.classList.toggle(
+    "stage-mode",
+    Boolean(document.fullscreenElement)
+  );
+
+  const icon = document.querySelector("#fullscreenBtn i");
+
+  icon.className = document.fullscreenElement
+    ? "fas fa-compress"
+    : "fas fa-expand";
+
+  // Recenter current item after any layout change.
+  if (!spinning) {
+    setReelPosition(
+      START_REPEAT * CATEGORIES.length + currentIndex,
+      false
+    );
+  }
+});
+
+/* ============================================
+   EVENTS
+============================================ */
+
+spinBtn.addEventListener("click", spin);
+resetBtn.addEventListener("click", resetGame);
+
+document.getElementById("clearHistory")
+  .addEventListener("click", () => {
+    if (spinning) return;
+    selected = [];
+    spinHistory = [];
+    renderHistory();
+    spinText.textContent = "SPIN CATEGORY";
+  });
+
+document.getElementById("fullscreenBtn")
+  .addEventListener("click", toggleFullscreen);
+
+// Press spacebar to spin, except when interacting
+// with a button or input.
+document.addEventListener("keydown", e => {
+  const tag = document.activeElement.tagName;
+
+  if (e.code === "Space" &&
+      tag !== "BUTTON" &&
+      tag !== "INPUT") {
+    e.preventDefault();
+    spin();
+  }
+});
+
+// Update reel position on screen resize.
+window.addEventListener("resize", () => {
+  if (!spinning) {
+    setReelPosition(
+      START_REPEAT * CATEGORIES.length + currentIndex,
+      false
+    );
+  }
+});
+
+// If a device changes layout while spinning,
+// finish the current selection normally.
+
+// Initialize
+buildReel();
+resetGame();
+
+</script>
+</body>
+</html>
